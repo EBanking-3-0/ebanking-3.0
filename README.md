@@ -478,7 +478,7 @@ E-Banking-3.0/
 
 3. **Start infrastructure**
    ```bash
-   docker-compose up -d postgres mongodb redis kafka zookeeper keycloak
+   docker compose up -d postgres mongodb redis kafka zookeeper keycloak
    ```
 
 4. **Run services**
@@ -584,7 +584,7 @@ npm run docker:build       # Rebuild images
 
 ### Docker Compose (Local)
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Kubernetes (Production)
