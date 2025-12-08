@@ -89,11 +89,12 @@ export class UserService {
 
   getUser(id: string): Observable<User> {
     return this.apollo
-      .watchQuery<{ user: User }>({
+      .query<{ user: User }>({
         query: GET_USER,
         variables: { id },
+        fetchPolicy: 'network-only'
       })
-      .valueChanges.pipe(
+      .pipe(
         map(result => result.data?.user as User)
       );
   }

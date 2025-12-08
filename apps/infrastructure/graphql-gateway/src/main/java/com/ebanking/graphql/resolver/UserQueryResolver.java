@@ -21,8 +21,13 @@ public class UserQueryResolver {
     }
 
     @QueryMapping
-    public UserDTO user(@Argument Long id) {
-        return userServiceClient.getUserById(id);
+    public UserDTO user(@Argument String id) {
+        try {
+            Long userId = Long.parseLong(id);
+            return userServiceClient.getUserById(userId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid user ID format: " + id);
+        }
     }
 
     @QueryMapping

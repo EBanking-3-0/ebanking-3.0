@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.ebanking.shared.kafka.config.KafkaEventsAutoConfiguration
+

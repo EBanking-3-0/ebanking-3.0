@@ -26,17 +26,27 @@ public class UserMutationResolver {
     }
 
     @MutationMapping
-    public UserDTO updateUser(@Argument Long id, @Argument Map<String, Object> input) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setFirstName((String) input.get("firstName"));
-        userDTO.setLastName((String) input.get("lastName"));
-        userDTO.setPhone((String) input.get("phone"));
-        return userServiceClient.updateUser(id, userDTO);
+    public UserDTO updateUser(@Argument String id, @Argument Map<String, Object> input) {
+        try {
+            Long userId = Long.parseLong(id);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setFirstName((String) input.get("firstName"));
+            userDTO.setLastName((String) input.get("lastName"));
+            userDTO.setPhone((String) input.get("phone"));
+            return userServiceClient.updateUser(userId, userDTO);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid user ID format: " + id);
+        }
     }
 
     @MutationMapping
-    public Boolean deleteUser(@Argument Long id) {
-        userServiceClient.deleteUser(id);
-        return true;
+    public Boolean deleteUser(@Argument String id) {
+        try {
+            Long userId = Long.parseLong(id);
+            userServiceClient.deleteUser(userId);
+            return true;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid user ID format: " + id);
+        }
     }
 }
