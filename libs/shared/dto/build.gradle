@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management'
+}
+
+description = 'DTOs - Data Transfer Objects'
+
+dependencies {
+    api project(':libs:shared:common')
+
+    api 'org.springframework.boot:spring-boot-starter-validation'
+    api 'com.fasterxml.jackson.core:jackson-annotations'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

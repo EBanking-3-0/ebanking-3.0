@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management'
+}
+
+description = 'Exceptions - Custom Exception Handling'
+
+dependencies {
+    api project(':libs:shared:common')
+
+    api 'org.springframework.boot:spring-boot-starter-web'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

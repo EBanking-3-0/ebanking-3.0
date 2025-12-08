@@ -1,0 +1,45 @@
+<div class="user-list-container">
+  <div class="header">
+    <h1>E-Banking 3.0 - User Management</h1>
+    <button class="btn btn-primary" routerLink="/users/new">
+      <span>➕</span> Create New User
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading users...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>⚠️ Error loading users: {{ error.message }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="users-grid">
+    <div *ngIf="users.length === 0" class="no-users">
+      <p>No users found. Create your first user!</p>
+    </div>
+
+    <div *ngFor="let user of users" class="user-card">
+      <div class="user-header">
+        <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+        <span class="status-badge" [class.active]="user.status === 'ACTIVE'">
+          {{ user.status }}
+        </span>
+      </div>
+      <div class="user-details">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+        <p><strong>ID:</strong> {{ user.id }}</p>
+      </div>
+      <div class="user-actions">
+        <button class="btn btn-secondary" [routerLink]="['/users/edit', user.id]">
+          ✏️ Edit
+        </button>
+        <button class="btn btn-danger" (click)="deleteUser(user.id)">
+          🗑️ Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

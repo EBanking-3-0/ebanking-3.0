@@ -1,0 +1,450 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Infrastructure - Databases & Message Queue
+  # ==========================================
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ebanking-postgres
+    environment:
+      POSTGRES_USER: ebanking
+      POSTGRES_PASSWORD: ebanking123
+      POSTGRES_DB: ebanking
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./tools/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - ebanking-network
+
+  mongodb:
+    image: mongo:7
+    container_name: ebanking-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ebanking
+      MONGO_INITDB_ROOT_PASSWORD: ebanking123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ebanking-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ebanking-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ebanking-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: ebanking-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - ebanking-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: ebanking-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ebanking-network
+
+  # ==========================================
+  # Infrastructure - IAM
+  # ==========================================
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: ebanking-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: ebanking
+      KC_DB_PASSWORD: ebanking123
+    command: start-dev
+    ports:
+      - "8092:8080"
+    depends_on:
+      - postgres
+    networks:
+      - ebanking-network
+
+  # ==========================================
+  # Infrastructure - Observability
+  # ==========================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ebanking-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./tools/docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - ebanking-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ebanking-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - ebanking-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: ebanking-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - ebanking-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: ebanking-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - ebanking-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: ebanking-jaeger
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: :9411
+    networks:
+      - ebanking-network
+
+  # ==========================================
+  # Microservices - Infrastructure
+  # ==========================================
+
+  service-discovery:
+    build:
+      context: ./apps/infrastructure/service-discovery
+      dockerfile: Dockerfile
+    container_name: ebanking-service-discovery
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - ebanking-network
+
+  config-server:
+    build:
+      context: ./apps/infrastructure/config-server
+      dockerfile: Dockerfile
+    container_name: ebanking-config-server
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+    depends_on:
+      - service-discovery
+    networks:
+      - ebanking-network
+
+  api-gateway:
+    build:
+      context: ./apps/infrastructure/api-gateway
+      dockerfile: Dockerfile
+    container_name: ebanking-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      - service-discovery
+      - redis
+    networks:
+      - ebanking-network
+
+  graphql-gateway:
+    build:
+      context: ./apps/infrastructure/graphql-gateway
+      dockerfile: Dockerfile
+    container_name: ebanking-graphql-gateway
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+    depends_on:
+      - service-discovery
+    networks:
+      - ebanking-network
+
+  # ==========================================
+  # Microservices - Business Services
+  # ==========================================
+
+  auth-service:
+    build:
+      context: ./apps/services/auth-service
+      dockerfile: Dockerfile
+    container_name: ebanking-auth-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - redis
+      - kafka
+      - keycloak
+    networks:
+      - ebanking-network
+
+  user-service:
+    build:
+      context: ./apps/services/user-service
+      dockerfile: Dockerfile
+    container_name: ebanking-user-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - kafka
+    networks:
+      - ebanking-network
+
+  account-service:
+    build:
+      context: ./apps/services/account-service
+      dockerfile: Dockerfile
+    container_name: ebanking-account-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - ebanking-network
+
+  payment-service:
+    build:
+      context: ./apps/services/payment-service
+      dockerfile: Dockerfile
+    container_name: ebanking-payment-service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - ebanking-network
+
+  legacy-adapter-service:
+    build:
+      context: ./apps/services/legacy-adapter-service
+      dockerfile: Dockerfile
+    container_name: ebanking-legacy-adapter-service
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - kafka
+    networks:
+      - ebanking-network
+
+  crypto-service:
+    build:
+      context: ./apps/services/crypto-service
+      dockerfile: Dockerfile
+    container_name: ebanking-crypto-service
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_DATA_MONGODB_URI: mongodb://ebanking:ebanking123@mongodb:27017/ebanking
+      SPRING_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - mongodb
+      - redis
+      - kafka
+    networks:
+      - ebanking-network
+
+  notification-service:
+    build:
+      context: ./apps/services/notification-service
+      dockerfile: Dockerfile
+    container_name: ebanking-notification-service
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - kafka
+    networks:
+      - ebanking-network
+
+  analytics-service:
+    build:
+      context: ./apps/services/analytics-service
+      dockerfile: Dockerfile
+    container_name: ebanking-analytics-service
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebanking
+      SPRING_DATA_MONGODB_URI: mongodb://ebanking:ebanking123@mongodb:27017/ebanking
+      SPRING_REDIS_HOST: redis
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - postgres
+      - mongodb
+      - redis
+      - kafka
+    networks:
+      - ebanking-network
+
+  ai-assistant-service:
+    build:
+      context: ./apps/services/ai-assistant-service
+      dockerfile: Dockerfile
+    container_name: ebanking-ai-assistant-service
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATA_MONGODB_URI: mongodb://ebanking:ebanking123@mongodb:27017/ebanking
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - mongodb
+      - kafka
+    networks:
+      - ebanking-network
+
+  audit-service:
+    build:
+      context: ./apps/services/audit-service
+      dockerfile: Dockerfile
+    container_name: ebanking-audit-service
+    ports:
+      - "8091:8091"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
+      SPRING_DATA_MONGODB_URI: mongodb://ebanking:ebanking123@mongodb:27017/ebanking
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - service-discovery
+      - mongodb
+      - kafka
+    networks:
+      - ebanking-network
+
+networks:
+  ebanking-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:

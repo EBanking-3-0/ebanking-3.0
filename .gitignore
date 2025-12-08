@@ -1,0 +1,72 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.pdf
+
+# Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+dist/
+tmp/
+.nx/cache/
+.angular/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+
+# Docker
+*.pid
+
+# Logs
+logs/
+*.log.*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Nx
+.nx/cache

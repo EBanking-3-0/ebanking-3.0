@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+ext {
+    set('springBootVersion', '3.3.5')
+    set('springCloudVersion', '2023.0.3')
+    set('kafkaVersion', '3.6.1')
+    set('lombokVersion', '1.18.36')
+    set('mapstructVersion', '1.5.5.Final')
+    set('junitVersion', '5.10.1')
+    set('mockitoVersion', '5.8.0')
+}
+
+allprojects {
+    group = 'com.ebanking'
+    version = '3.0.0'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+}

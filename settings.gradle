@@ -1,0 +1,26 @@
+rootProject.name = 'e-banking-3.0'
+
+// Infrastructure Services
+include ':apps:infrastructure:service-discovery'
+include ':apps:infrastructure:config-server'
+include ':apps:infrastructure:api-gateway'
+include ':apps:infrastructure:graphql-gateway'
+
+// Business Services
+include ':apps:services:auth-service'
+include ':apps:services:user-service'
+include ':apps:services:account-service'
+include ':apps:services:payment-service'
+include ':apps:services:legacy-adapter-service'
+include ':apps:services:crypto-service'
+include ':apps:services:notification-service'
+include ':apps:services:analytics-service'
+include ':apps:services:ai-assistant-service'
+include ':apps:services:audit-service'
+
+// Shared Libraries
+include ':libs:shared:common'
+include ':libs:shared:kafka-events'
+include ':libs:shared:security'
+include ':libs:shared:dto'
+include ':libs:shared:exceptions'

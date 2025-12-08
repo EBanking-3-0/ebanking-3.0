@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management'
+}
+
+description = 'Common Utilities - Shared Utilities and Helpers'
+
+dependencies {
+    api 'org.springframework.boot:spring-boot-starter'
+    api 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Utilities
+    api 'org.apache.commons:commons-lang3'
+    api 'com.fasterxml.jackson.core:jackson-databind'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

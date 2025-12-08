@@ -1,0 +1,81 @@
+<div class="form-container">
+  <div class="form-card">
+    <h2>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h2>
+
+    <div *ngIf="loading && isEditMode" class="loading">
+      <div class="spinner"></div>
+      <p>Loading user data...</p>
+    </div>
+
+    <div *ngIf="error" class="error">
+      <p>⚠️ Error: {{ error.message }}</p>
+    </div>
+
+    <form *ngIf="!loading || !isEditMode" (ngSubmit)="onSubmit()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="user.email"
+          [disabled]="isEditMode"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          placeholder="user@example.com"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            [(ngModel)]="user.firstName"
+            required
+            placeholder="John"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name *</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="user.lastName"
+            required
+            placeholder="Doe"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone *</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          [(ngModel)]="user.phone"
+          required
+          placeholder="+1234567890"
+        />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!userForm.valid || loading"
+        >
+          {{ loading ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
