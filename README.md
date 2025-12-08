@@ -464,8 +464,8 @@ E-Banking-3.0/
 
 1. **Clone and install**
    ```bash
-   git clone <repository-url>
-   cd E-Banking-3.0
+   git clone https://github.com/EBanking-3-0/ebanking-3.0.git
+   cd ebanking-3.0
    npm install
    ```
 
