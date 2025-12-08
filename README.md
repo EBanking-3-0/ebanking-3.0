@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
 ![Java](https://img.shields.io/badge/Java-21-orange.svg)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-green.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-green.svg)
 ![Gradle](https://img.shields.io/badge/Gradle-9.2.1-blue.svg)
 ![Nx](https://img.shields.io/badge/Nx-22.1.3-purple.svg)
 
@@ -329,7 +329,7 @@ sequenceDiagram
 ### Core Technologies
 - **Monorepo**: Nx 22.1.3 (unified build system, dependency graph, caching)
 - **Build Tool**: Gradle 9.2.1 (multi-project builds for Java services)
-- **Backend**: Spring Boot 3.2.1, Spring Cloud 2023.0.0
+- **Backend**: Spring Boot 3.3.5, Spring Cloud 2023.0.0
 - **Frontend**: Angular 19+ with Apollo GraphQL Client
 - **API**: GraphQL Gateway + REST APIs
 - **Event Bus**: Apache Kafka 3.6.1
