@@ -1,6 +1,6 @@
-package com.ebanking.user.repository;
+package com.ebanking.user.domain.repository;
 
-import com.ebanking.user.model.User;
+import com.ebanking.user.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

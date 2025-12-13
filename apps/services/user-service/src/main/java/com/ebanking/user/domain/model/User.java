@@ -1,15 +1,14 @@
-package com.ebanking.user.model;
+package com.ebanking.user.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users", schema = "users")
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -29,10 +28,18 @@ public class User {
 
     @Column(nullable = false)
     private String phone;
+    
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE; // General account status
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserStatus status = UserStatus.ACTIVE;
+    private KycStatus kycStatus = KycStatus.PENDING; // KYC verification state [cite: 25]
+
+    @Column(nullable = false)
+    private boolean rgpdConsent = false; // User data consent [cite: 36]
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -42,5 +49,9 @@ public class User {
 
     public enum UserStatus {
         ACTIVE, INACTIVE, SUSPENDED
+    }
+    
+    public enum KycStatus {
+        PENDING, VERIFIED, REJECTED
     }
 }
