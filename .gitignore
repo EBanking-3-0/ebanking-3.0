@@ -94,3 +94,7 @@ test-results/ # Gradle test results
 .nx/workspace-data/
 .angular/cache/21.0.2/frontend
 .nx/workspace-data
+
+
+# Project pdf reqs
+*.pdf
