@@ -1,0 +1,67 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: ai-assistant-service
+  data:
+    mongodb:
+      host: ${MONGODB_HOST:localhost}
+      port: ${MONGODB_PORT:27017}
+      database: ${MONGODB_DATABASE:ebanking}
+      # Only set username/password if they are provided (non-empty)
+      # This prevents binding errors with empty strings
+      uri: ${MONGODB_URI:mongodb://${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:ebanking}}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: ${spring.application.name}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# AI Assistant Configuration
+ai:
+  assistant:
+    provider: ${AI_PROVIDER:openai}
+    model: ${AI_MODEL:gpt-4-turbo-preview}
+    api-key: ${OPENAI_API_KEY:}
+    temperature: ${AI_TEMPERATURE:0.7}
+    max-tokens: ${AI_MAX_TOKENS:1000}
+    enable-actions: ${AI_ENABLE_ACTIONS:true}
+    conversation:
+      ttl-days: ${CONVERSATION_TTL_DAYS:90}
+      max-messages: ${CONVERSATION_MAX_MESSAGES:100}
+
+# Kafka Topics
+kafka:
+  topics:
+    user-created: user.created
+    account-created: account.created
+    transaction-completed: transaction.completed
+    balance-updated: balance.updated
