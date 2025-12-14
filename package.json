@@ -4,16 +4,19 @@
   "description": "E-Banking 3.0 - Modern microservices architecture with Nx monorepo, Spring Boot, GraphQL, and Kafka",
   "scripts": {
     "start": "nx serve frontend",
+    "dev": "npm run docker:up && npm run dev:backend",
+    "dev:infra": "nx run-many -t serve -p service-discovery graphql-gateway --parallel=2",
+    "dev:backend": "nx run-many -t serve -p service-discovery graphql-gateway auth-service user-service account-service --parallel=5",
     "build": "nx run-many -t build --all",
     "build:affected": "nx affected -t build",
     "test": "nx run-many -t test --all",
     "test:affected": "nx affected -t test",
     "gradle:build": "./gradlew build",
     "gradle:clean": "./gradlew clean",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "docker:build": "docker-compose build"
+    "docker:infra:up": "docker compose up -d postgres kafka keycloak --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:build": "docker compose build"
   },
   "keywords": [
     "e-banking",
@@ -27,12 +30,13 @@
   "author": "E-Banking Team",
   "license": "ISC",
   "devDependencies": {
-    "nx": "22.1.3",
-    "@nx/gradle": "^22.1.3"
+    "@nx/gradle": "22.2.3",
+    "nx": "22.1.3"
   },
   "nx": {},
   "workspaces": [
     "apps/**",
     "libs/**"
-  ]
+  ],
+  "dependencies": {}
 }

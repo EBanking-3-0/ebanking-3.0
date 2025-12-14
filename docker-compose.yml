@@ -177,21 +177,6 @@ services:
     networks:
       - ebanking-network
 
-  config-server:
-    build:
-      context: ./apps/infrastructure/config-server
-      dockerfile: Dockerfile
-    container_name: ebanking-config-server
-    ports:
-      - "8888:8888"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery:8761/eureka/
-    depends_on:
-      - service-discovery
-    networks:
-      - ebanking-network
-
 
   graphql-gateway:
     build:

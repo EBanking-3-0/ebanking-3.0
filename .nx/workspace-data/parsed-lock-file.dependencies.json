@@ -3715,6 +3715,36 @@
     "type": "static"
   },
   {
+    "source": "npm:keycloak-angular",
+    "target": "npm:@angular/common",
+    "type": "static"
+  },
+  {
+    "source": "npm:keycloak-angular",
+    "target": "npm:@angular/core",
+    "type": "static"
+  },
+  {
+    "source": "npm:keycloak-angular",
+    "target": "npm:@angular/router",
+    "type": "static"
+  },
+  {
+    "source": "npm:keycloak-angular",
+    "target": "npm:keycloak-js",
+    "type": "static"
+  },
+  {
+    "source": "npm:keycloak-angular",
+    "target": "npm:rxjs",
+    "type": "static"
+  },
+  {
+    "source": "npm:keycloak-angular",
+    "target": "npm:tslib",
+    "type": "static"
+  },
+  {
     "source": "npm:listr2",
     "target": "npm:cli-truncate",
     "type": "static"

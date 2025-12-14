@@ -1,5 +1,1823 @@
 {
   "nodes": {
+    "service-discovery": {
+      "name": "service-discovery",
+      "type": "app",
+      "data": {
+        "root": "apps/infrastructure/service-discovery",
+        "name": "service-discovery",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/infrastructure/service-discovery/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/infrastructure/service-discovery"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/infrastructure/service-discovery"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/infrastructure/service-discovery"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/infrastructure/service-discovery"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/infrastructure/service-discovery"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/infrastructure/service-discovery"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/infrastructure/service-discovery"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/infrastructure/service-discovery"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t service-discovery:local -f apps/infrastructure/service-discovery/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "legacy-adapter-service": {
+      "name": "legacy-adapter-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/legacy-adapter-service",
+        "name": "legacy-adapter-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/legacy-adapter-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/legacy-adapter-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/legacy-adapter-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/legacy-adapter-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/legacy-adapter-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/legacy-adapter-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/legacy-adapter-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/legacy-adapter-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/legacy-adapter-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t legacy-adapter-service:local -f apps/services/legacy-adapter-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "graphql-gateway": {
+      "name": "graphql-gateway",
+      "type": "app",
+      "data": {
+        "root": "apps/infrastructure/graphql-gateway",
+        "name": "graphql-gateway",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/infrastructure/graphql-gateway/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/infrastructure/graphql-gateway"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/infrastructure/graphql-gateway"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/infrastructure/graphql-gateway"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "// dependsOn": [
+              "service-discovery:serve"
+            ],
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/infrastructure/graphql-gateway"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/infrastructure/graphql-gateway"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/infrastructure/graphql-gateway"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/infrastructure/graphql-gateway"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/infrastructure/graphql-gateway"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t graphql-gateway:local -f apps/infrastructure/graphql-gateway/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "ai-assistant-service": {
+      "name": "ai-assistant-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/ai-assistant-service",
+        "name": "ai-assistant-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/ai-assistant-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/ai-assistant-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/ai-assistant-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/ai-assistant-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/ai-assistant-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/ai-assistant-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/ai-assistant-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/ai-assistant-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/ai-assistant-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t ai-assistant-service:local -f apps/services/ai-assistant-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "notification-service": {
+      "name": "notification-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/notification-service",
+        "name": "notification-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/notification-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/notification-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/notification-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/notification-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/notification-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/notification-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/notification-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/notification-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/notification-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t notification-service:local -f apps/services/notification-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "analytics-service": {
+      "name": "analytics-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/analytics-service",
+        "name": "analytics-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/analytics-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/analytics-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/analytics-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/analytics-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/analytics-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/analytics-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/analytics-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/analytics-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/analytics-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t analytics-service:local -f apps/services/analytics-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "account-service": {
+      "name": "account-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/account-service",
+        "name": "account-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/account-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/account-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/account-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/account-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/account-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/account-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/account-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/account-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/account-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t account-service:local -f apps/services/account-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "payment-service": {
+      "name": "payment-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/payment-service",
+        "name": "payment-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/payment-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/payment-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/payment-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/payment-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/payment-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/payment-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/payment-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/payment-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/payment-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t payment-service:local -f apps/services/payment-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "crypto-service": {
+      "name": "crypto-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/crypto-service",
+        "name": "crypto-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/crypto-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/crypto-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/crypto-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/crypto-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/crypto-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/crypto-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/crypto-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/crypto-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/crypto-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t crypto-service:local -f apps/services/crypto-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "audit-service": {
+      "name": "audit-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/audit-service",
+        "name": "audit-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/audit-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/audit-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/audit-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/audit-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/audit-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/audit-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/audit-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/audit-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/audit-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t audit-service:local -f apps/services/audit-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "auth-service": {
+      "name": "auth-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/auth-service",
+        "name": "auth-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/auth-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/auth-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/auth-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/auth-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/auth-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/auth-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/auth-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/auth-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/auth-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t auth-service:local -f apps/services/auth-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "user-service": {
+      "name": "user-service",
+      "type": "app",
+      "data": {
+        "root": "apps/services/user-service",
+        "name": "user-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/services/user-service/src",
+        "tags": [],
+        "implicitDependencies": [
+          "service-discovery"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/user-service"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "apps/services/user-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "apps/services/user-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "nx:run-commands",
+            "// dependsOn": [
+              "service-discovery:serve"
+            ],
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+                "cwd": "apps/services/user-service"
+              },
+              "development": {
+                "command": "../../../gradlew bootRun",
+                "cwd": "apps/services/user-service"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "apps/services/user-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "apps/services/user-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "apps/services/user-service"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker:build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t user-service:local -f apps/services/user-service/Dockerfile .",
+              "cwd": "."
+            },
+            "dependsOn": [
+              "build"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        }
+      }
+    },
+    "kafka-events": {
+      "name": "kafka-events",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/kafka-events",
+        "name": "kafka-events",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/kafka-events/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/kafka-events"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/kafka-events"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "libs/shared/kafka-events"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "libs/shared/kafka-events"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "libs/shared/kafka-events"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "libs/shared/kafka-events"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "exceptions": {
+      "name": "exceptions",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/exceptions",
+        "name": "exceptions",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/exceptions/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/exceptions"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/exceptions"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "libs/shared/exceptions"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "libs/shared/exceptions"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "libs/shared/exceptions"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "libs/shared/exceptions"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
     "frontend": {
       "name": "frontend",
       "type": "app",
@@ -14,9 +1832,7 @@
             "NPM Scripts": [
               "ng",
               "start",
-              "build",
-              "watch",
-              "test"
+              "watch"
             ]
           },
           "js": {
@@ -50,22 +1866,6 @@
             "configurations": {},
             "parallelism": true
           },
-          "build": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "build"
-            },
-            "metadata": {
-              "scriptContent": "ng build",
-              "runCommand": "pnpm run build"
-            },
-            "configurations": {},
-            "parallelism": true,
-            "cache": true,
-            "dependsOn": [
-              "^build"
-            ]
-          },
           "watch": {
             "executor": "nx:run-script",
             "options": {
@@ -78,18 +1878,418 @@
             "configurations": {},
             "parallelism": true
           },
-          "test": {
-            "executor": "nx:run-script",
+          "build": {
+            "executor": "@angular/build:application",
             "options": {
-              "script": "test"
+              "outputPath": "dist/apps/frontend/web-app",
+              "index": "apps/frontend/web-app/src/index.html",
+              "browser": "apps/frontend/web-app/src/main.ts",
+              "polyfills": [
+                "zone.js"
+              ],
+              "tsConfig": "apps/frontend/web-app/tsconfig.app.json",
+              "inlineStyleLanguage": "scss",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "apps/frontend/web-app/public"
+                }
+              ],
+              "styles": [
+                "apps/frontend/web-app/src/styles.scss"
+              ],
+              "scripts": []
             },
-            "metadata": {
-              "scriptContent": "ng test",
-              "runCommand": "pnpm run test"
+            "configurations": {
+              "production": {
+                "budgets": [
+                  {
+                    "type": "initial",
+                    "maximumWarning": "500kB",
+                    "maximumError": "1MB"
+                  },
+                  {
+                    "type": "anyComponentStyle",
+                    "maximumWarning": "4kB",
+                    "maximumError": "8kB"
+                  }
+                ],
+                "outputHashing": "all"
+              },
+              "development": {
+                "optimization": false,
+                "extractLicenses": false,
+                "sourceMap": true
+              }
+            },
+            "defaultConfiguration": "production",
+            "parallelism": true,
+            "cache": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "serve": {
+            "executor": "@angular/build:dev-server",
+            "configurations": {
+              "production": {
+                "buildTarget": "frontend:build:production"
+              },
+              "development": {
+                "buildTarget": "frontend:build:development"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {},
+            "parallelism": true
+          },
+          "extract-i18n": {
+            "executor": "@angular/build:extract-i18n",
+            "options": {
+              "buildTarget": "frontend:build"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "@angular/build:unit-test",
+            "options": {
+              "polyfills": [
+                "zone.js"
+              ],
+              "tsConfig": "apps/frontend/web-app/tsconfig.spec.json",
+              "inlineStyleLanguage": "scss",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "apps/frontend/web-app/public"
+                }
+              ],
+              "styles": [
+                "apps/frontend/web-app/src/styles.scss"
+              ],
+              "scripts": []
             },
             "configurations": {},
             "parallelism": true,
             "cache": true
+          }
+        },
+        "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "prefix": "app",
+        "sourceRoot": "apps/frontend/web-app/src",
+        "implicitDependencies": []
+      }
+    },
+    "security": {
+      "name": "security",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/security",
+        "name": "security",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/security/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/security"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/security"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "libs/shared/security"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "libs/shared/security"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "libs/shared/security"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "libs/shared/security"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "common": {
+      "name": "common",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/common",
+        "name": "common",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/common/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/common"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/common"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "libs/shared/common"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "libs/shared/common"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "libs/shared/common"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "libs/shared/common"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "dto": {
+      "name": "dto",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/dto",
+        "name": "dto",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/dto/src",
+        "tags": [],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "production": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/dto"
+              },
+              "development": {
+                "command": "../../../gradlew build -x test",
+                "cwd": "libs/shared/dto"
+              }
+            },
+            "defaultConfiguration": "development",
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/**/*"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "options": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew test",
+              "cwd": "libs/shared/dto"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/reports/tests",
+              "{projectRoot}/build/test-results"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew clean",
+              "cwd": "libs/shared/dto"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessCheck",
+              "cwd": "libs/shared/dto"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "configurations": {},
+            "parallelism": true
+          },
+          "format": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "../../../gradlew spotlessApply",
+              "cwd": "libs/shared/dto"
+            },
+            "cache": true,
+            "inputs": [
+              "default",
+              "{projectRoot}/build.gradle",
+              "{projectRoot}/src/**/*.java"
+            ],
+            "outputs": [
+              "{projectRoot}/build/libs"
+            ],
+            "configurations": {},
+            "parallelism": true
           }
         },
         "implicitDependencies": []
@@ -115,13 +2315,16 @@
           "targetGroups": {
             "NPM Scripts": [
               "start",
+              "dev",
+              "dev:infra",
+              "dev:backend",
               "build",
               "build:affected",
               "test",
               "test:affected",
               "gradle:build",
               "gradle:clean",
-              "docker:up",
+              "docker:infra:up",
               "docker:down",
               "docker:logs",
               "docker:build"
@@ -143,6 +2346,42 @@
             "metadata": {
               "scriptContent": "nx serve frontend",
               "runCommand": "pnpm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev"
+            },
+            "metadata": {
+              "scriptContent": "npm run docker:up && npm run dev:backend",
+              "runCommand": "pnpm run dev"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "dev:infra": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev:infra"
+            },
+            "metadata": {
+              "scriptContent": "nx run-many -t serve -p service-discovery graphql-gateway --parallel=2",
+              "runCommand": "pnpm run dev:infra"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "dev:backend": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev:backend"
+            },
+            "metadata": {
+              "scriptContent": "nx run-many -t serve -p service-discovery graphql-gateway auth-service user-service account-service --parallel=5",
+              "runCommand": "pnpm run dev:backend"
             },
             "configurations": {},
             "parallelism": true
@@ -224,14 +2463,14 @@
             "configurations": {},
             "parallelism": true
           },
-          "docker:up": {
+          "docker:infra:up": {
             "executor": "nx:run-script",
             "options": {
-              "script": "docker:up"
+              "script": "docker:infra:up"
             },
             "metadata": {
-              "scriptContent": "docker-compose up -d",
-              "runCommand": "pnpm run docker:up"
+              "scriptContent": "docker compose up -d postgres kafka keycloak --build",
+              "runCommand": "pnpm run docker:infra:up"
             },
             "configurations": {},
             "parallelism": true
@@ -242,7 +2481,7 @@
               "script": "docker:down"
             },
             "metadata": {
-              "scriptContent": "docker-compose down",
+              "scriptContent": "docker compose down",
               "runCommand": "pnpm run docker:down"
             },
             "configurations": {},
@@ -254,7 +2493,7 @@
               "script": "docker:logs"
             },
             "metadata": {
-              "scriptContent": "docker-compose logs -f",
+              "scriptContent": "docker compose logs -f",
               "runCommand": "pnpm run docker:logs"
             },
             "configurations": {},
@@ -266,7 +2505,7 @@
               "script": "docker:build"
             },
             "metadata": {
-              "scriptContent": "docker-compose build",
+              "scriptContent": "docker compose build",
               "runCommand": "pnpm run docker:build"
             },
             "configurations": {},
@@ -4625,6 +6864,24 @@
         "hash": "sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg=="
       }
     },
+    "npm:keycloak-angular": {
+      "type": "npm",
+      "name": "npm:keycloak-angular",
+      "data": {
+        "version": "20.0.0",
+        "packageName": "keycloak-angular",
+        "hash": "sha512-p9ThVUN8TNz15M2dd11VRDdHzgEDRSSxvyRGtK4N45lTbfs52DeNK+YXcpgt8ZX0/YN27GjU9GjiB4odI4/A2Q=="
+      }
+    },
+    "npm:keycloak-js": {
+      "type": "npm",
+      "name": "npm:keycloak-js",
+      "data": {
+        "version": "26.2.2",
+        "packageName": "keycloak-js",
+        "hash": "sha512-ug7pNZ1xNkd7PPkerOJCEU2VnUhS7CYStDOCFJgqCNQ64h53ppxaKrh4iXH0xM8hFu5b1W6e6lsyYWqBMvaQFg=="
+      }
+    },
     "npm:lines-and-columns": {
       "type": "npm",
       "name": "npm:lines-and-columns",
@@ -6679,6 +8936,86 @@
     }
   },
   "dependencies": {
+    "service-discovery": [],
+    "legacy-adapter-service": [
+      {
+        "source": "legacy-adapter-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "graphql-gateway": [
+      {
+        "source": "graphql-gateway",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "ai-assistant-service": [
+      {
+        "source": "ai-assistant-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "notification-service": [
+      {
+        "source": "notification-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "analytics-service": [
+      {
+        "source": "analytics-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "account-service": [
+      {
+        "source": "account-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "payment-service": [
+      {
+        "source": "payment-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "crypto-service": [
+      {
+        "source": "crypto-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "audit-service": [
+      {
+        "source": "audit-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "auth-service": [
+      {
+        "source": "auth-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "user-service": [
+      {
+        "source": "user-service",
+        "target": "service-discovery",
+        "type": "implicit"
+      }
+    ],
+    "kafka-events": [],
+    "exceptions": [],
     "frontend": [
       {
         "source": "frontend",
@@ -6757,6 +9094,16 @@
       },
       {
         "source": "frontend",
+        "target": "npm:keycloak-angular",
+        "type": "static"
+      },
+      {
+        "source": "frontend",
+        "target": "npm:keycloak-js",
+        "type": "static"
+      },
+      {
+        "source": "frontend",
         "target": "npm:rxjs",
         "type": "static"
       },
@@ -6766,15 +9113,18 @@
         "type": "static"
       }
     ],
+    "security": [],
+    "common": [],
+    "dto": [],
     "e-banking-3.0": [
       {
         "source": "e-banking-3.0",
-        "target": "npm:nx",
+        "target": "npm:@nx/gradle",
         "type": "static"
       },
       {
         "source": "e-banking-3.0",
-        "target": "npm:@nx/gradle",
+        "target": "npm:nx",
         "type": "static"
       }
     ],
@@ -10883,6 +13233,38 @@
         "type": "static"
       }
     ],
+    "npm:keycloak-angular": [
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:@angular/common",
+        "type": "static"
+      },
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:@angular/core",
+        "type": "static"
+      },
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:@angular/router",
+        "type": "static"
+      },
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:keycloak-js",
+        "type": "static"
+      },
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "npm:keycloak-angular",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
     "npm:listr2": [
       {
         "source": "npm:listr2",
@@ -13367,5 +15749,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1765666603024
+  "computedAt": 1765714968823
 }

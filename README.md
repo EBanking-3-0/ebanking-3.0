@@ -1,9 +1,86 @@
+# E-Banking 3.0 Project Setup and Running Guide
+
+This guide provides the necessary steps to set up and run the e-Banking 3.0 microservices project. Ensure you have the following prerequisites installed:
+
+*   Java Development Kit (JDK) 17+
+*   Docker and Docker Compose
+*   Node.js (LTS recommended)
+*   npm or pnpm (pnpm is used in package.json)
+*   Nx CLI (optional, but recommended for running tasks)
+
+## Getting Started
+
+To get the full application stack running, please follow these steps sequentially:
+
+### 1. Start the Frontend Application
+
+The frontend serves as the user interface for the e-Banking system.
+
+```bash
+nx serve frontend
+```
+
+### 2. Start Service Discovery
+
+Service Discovery (Eureka) is crucial for microservices to register and find each other. This must be started before any other backend service.
+
+```bash
+nx serve service-discovery
+```
+
+### 3. Start the GraphQL API Gateway
+
+The GraphQL Gateway acts as the entry point for frontend requests, routing them to the appropriate microservices and enforcing authentication.
+
+```bash
+nx serve graphql-gateway
+```
+
+### 4. Start Core Infrastructure Services (Docker)
+
+These essential services (Postgres, Kafka, Keycloak) are containerized and managed by Docker Compose.
+
+```bash
+docker compose up -d postgres kafka keycloak --build
+```
+
+### 5. Start Backend Microservices
+
+Once the core infrastructure is up, you can start the individual backend services. It's recommended to start them in the following order due to their interdependencies (e.g., Auth service might need User service).
+
+**5.1. User Service**
+Manages user profiles and information.
+```bash
+nx serve user-service
+```
+
+**5.2. Auth Service**
+Handles authentication and authorization logic, interacting with Keycloak.
+```bash
+nx serve auth-service
+```
+
+**5.3. Account Service**
+Manages user bank accounts and balances.
+```bash
+nx serve account-service
+```
+
+### Troubleshooting
+
+*   Verify all required Docker containers are running (`docker ps`).
+*   Check service logs for specific error messages.
+*   Ensure all necessary ports are available.
+*   If you encounter build issues, ensure all `node_modules` and Gradle dependencies are up to date.
+
+---
+
 # E-Banking 3.0 - Nx Monorepo Microservices Architecture
 
 ![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
 ![Java](https://img.shields.io/badge/Java-21-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-green.svg)
-![Gradle](https://img.shields.io/badge/Gradle-9.2.1-blue.svg)
+![Gradle](https://imgшилd.io/badge/Gradle-9.2.1-blue.svg)
 ![Nx](https://img.shields.io/badge/Nx-22.1.3-purple.svg)
 
 ## Executive Summary
@@ -71,7 +148,6 @@ graph TB
 
     subgraph "Infrastructure Services"
         EUREKA[Service Discovery<br/>Eureka :8761]
-        CONFIG[Config Server<br/>:8888]
         KC[Keycloak<br/>IAM :8092]
     end
 
@@ -334,7 +410,6 @@ sequenceDiagram
 - **API**: GraphQL Gateway + REST APIs
 - **Event Bus**: Apache Kafka 3.6.1
 - **Service Discovery**: Netflix Eureka
-- **Configuration**: Spring Cloud Config Server
 - **Security**: Keycloak (OAuth2/OIDC), JWT, MFA
 
 ### Databases
@@ -361,9 +436,8 @@ E-Banking-3.0/
 ├── apps/
 │   ├── infrastructure/              # Infrastructure microservices
 │   │   ├── service-discovery/       # Eureka Server (8761)
-│   │   ├── config-server/           # Spring Cloud Config (8888)
-│   │   ├── api-gateway/             # REST API Gateway (8080)
-│   │   └── graphql-gateway/         # GraphQL Gateway (8081)
+│   ├── api-gateway/             # REST API Gateway (8080)
+│   └── graphql-gateway/         # GraphQL Gateway (8081)
 │   │
 │   ├── services/                    # Business microservices
 │   │   ├── auth-service/            # Authentication & MFA (8082)
@@ -413,7 +487,6 @@ E-Banking-3.0/
 | Service | Port | Purpose | Tech Stack |
 |---------|------|---------|------------|
 | **Service Discovery** | 8761 | Service registration & discovery | Eureka Server |
-| **Config Server** | 8888 | Centralized configuration | Spring Cloud Config |
 | **API Gateway** | 8080 | Request routing, load balancing | Spring Cloud Gateway |
 | **GraphQL Gateway** | 8081 | Unified GraphQL API | Spring GraphQL |
 
@@ -450,72 +523,7 @@ E-Banking-3.0/
 - SOAP adapter for legacy banking core
 - Example: Payment validation, balance sync
 
-## Getting Started
 
-### Prerequisites
-
-- **Java 21**
-- **Gradle 9.2.1** (or use wrapper: `./gradlew`)
-- **Node.js 18+** and npm
-- **Docker & Docker Compose**
-- **Nx CLI**: `npm install -g nx` (optional)
-
-### Quick Start
-
-1. **Clone and install**
-   ```bash
-   git clone https://github.com/EBanking-3-0/ebanking-3.0.git
-   cd ebanking-3.0
-   npm install
-   ```
-
-2. **Build all services**
-   ```bash
-   ./gradlew build
-   # or
-   npm run gradle:build
-   ```
-
-3. **Start infrastructure**
-   ```bash
-   docker compose up -d postgres mongodb redis kafka zookeeper keycloak
-   ```
-
-4. **Run services**
-   ```bash
-   # Option 1: Run specific service with Gradle
-   ./gradlew :apps:services:user-service:bootRun
-
-   # Option 2: Start all services with Docker
-   npm run docker:up
-   ```
-
-### Development Commands
-
-#### Nx Commands
-```bash
-npm run build              # Build all projects
-npm run build:affected     # Build only affected projects
-npm run test               # Run all tests
-nx graph                   # View dependency graph
-```
-
-#### Gradle Commands
-```bash
-./gradlew build                                    # Build all services
-./gradlew :apps:services:user-service:build       # Build specific service
-./gradlew :apps:services:user-service:bootRun     # Run specific service
-./gradlew test                                     # Run all tests
-./gradlew clean                                    # Clean build artifacts
-```
-
-#### Docker Commands
-```bash
-npm run docker:up          # Start all services
-npm run docker:down        # Stop all services
-npm run docker:logs        # View logs
-npm run docker:build       # Rebuild images
-```
 
 ## Kafka Event Topics
 

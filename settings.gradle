@@ -10,7 +10,6 @@ rootProject.name = 'e-banking-3.0'
 
 // Infrastructure Services
 include ':apps:infrastructure:service-discovery'
-include ':apps:infrastructure:config-server'
 include ':apps:infrastructure:graphql-gateway'
 
 // Business Services

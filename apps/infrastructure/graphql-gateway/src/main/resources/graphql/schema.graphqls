@@ -2,12 +2,14 @@ type Query {
     users: [User]
     user(id: ID!): User
     userByEmail(email: String!): User
+    myAccounts(userId: ID!): [Account]
 }
 
 type Mutation {
     createUser(input: CreateUserInput!): User
     updateUser(id: ID!, input: UpdateUserInput!): User
     deleteUser(id: ID!): Boolean
+    createAccount(input: CreateAccountInput!): Account
 }
 
 type User {
@@ -17,6 +19,17 @@ type User {
     lastName: String!
     phone: String!
     status: String!
+}
+
+type Account {
+    id: ID!
+    accountNumber: String!
+    userId: ID!
+    balance: Float!
+    currency: String!
+    type: String!
+    status: String!
+    createdAt: String
 }
 
 input CreateUserInput {
@@ -30,4 +43,10 @@ input UpdateUserInput {
     firstName: String!
     lastName: String!
     phone: String!
+}
+
+input CreateAccountInput {
+    userId: ID!
+    type: String!
+    currency: String!
 }
