@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: ebanking_test
+  kafka:
+    bootstrap-servers: localhost:9092
+
+ai:
+  assistant:
+    provider: openai
+    api-key: test-key
+    model: gpt-3.5-turbo
