@@ -1,0 +1,109 @@
+{
+  "name": "legacy-adapter-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/services/legacy-adapter-service/src",
+  "tags": [], "implicitDependencies": ["service-discovery"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "configurations": {
+        "production": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "apps/services/legacy-adapter-service"
+        },
+        "development": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "apps/services/legacy-adapter-service"
+        }
+      },
+      "defaultConfiguration": "development",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew test",
+        "cwd": "apps/services/legacy-adapter-service"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests",
+        "{projectRoot}/build/test-results"
+      ]
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "configurations": {
+        "production": {
+          "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
+          "cwd": "apps/services/legacy-adapter-service"
+        },
+        "development": {
+          "command": "../../../gradlew bootRun",
+          "cwd": "apps/services/legacy-adapter-service"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew clean",
+        "cwd": "apps/services/legacy-adapter-service"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessCheck",
+        "cwd": "apps/services/legacy-adapter-service"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessApply",
+        "cwd": "apps/services/legacy-adapter-service"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t legacy-adapter-service:local -f apps/services/legacy-adapter-service/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ]
+    }
+  }
+}

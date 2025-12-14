@@ -1,0 +1,799 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.1.3",
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "exceptions": [
+        {
+          "file": "libs/shared/exceptions/build.gradle",
+          "hash": "13996769339406858408"
+        },
+        {
+          "file": "libs/shared/exceptions/project.json",
+          "hash": "15488419949788941208"
+        }
+      ],
+      "graphql-gateway": [
+        {
+          "file": "apps/infrastructure/graphql-gateway/Dockerfile",
+          "hash": "1113345868186805902"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/README.md",
+          "hash": "985683474226344092"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/build.gradle",
+          "hash": "7888691317105098474"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/project.json",
+          "hash": "3991398115007646290"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/GraphQLGatewayApplication.java",
+          "hash": "15375963332087794187"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/client/AccountClient.java",
+          "hash": "6722110236689328815"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/client/UserServiceClient.java",
+          "hash": "3304768119837755284"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/config/FeignConfig.java",
+          "hash": "1472971428909665946"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/model/AccountDTO.java",
+          "hash": "1467083976471640495"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/model/CreateAccountInput.java",
+          "hash": "13300255598056998970"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/model/UserDTO.java",
+          "hash": "5641341756793518482"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/resolver/AccountResolver.java",
+          "hash": "14553460309975516160"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/resolver/UserMutationResolver.java",
+          "hash": "9497906975060968649"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/java/com/ebanking/graphql/resolver/UserQueryResolver.java",
+          "hash": "3901508769776802106"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/resources/application.yml",
+          "hash": "12616130779319173866"
+        },
+        {
+          "file": "apps/infrastructure/graphql-gateway/src/main/resources/graphql/schema.graphqls",
+          "hash": "12860312069786111946"
+        }
+      ],
+      "user-service": [
+        {
+          "file": "apps/services/user-service/Dockerfile",
+          "hash": "9654890700017715521"
+        },
+        {
+          "file": "apps/services/user-service/README.md",
+          "hash": "15015796920182943953"
+        },
+        {
+          "file": "apps/services/user-service/build.gradle",
+          "hash": "4100658338243444315"
+        },
+        {
+          "file": "apps/services/user-service/project.json",
+          "hash": "12813889135429630750"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/UserServiceApplication.java",
+          "hash": "8164742101677221257"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/controller/UserController.java",
+          "hash": "12608879745450320174"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/dto/UserDTO.java",
+          "hash": "9772803122083843031"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/model/User.java",
+          "hash": "9857267384005412728"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/repository/UserRepository.java",
+          "hash": "14202477149069657649"
+        },
+        {
+          "file": "apps/services/user-service/src/main/java/com/ebanking/user/service/UserService.java",
+          "hash": "13436390518020992079"
+        },
+        {
+          "file": "apps/services/user-service/src/main/resources/application.yml",
+          "hash": "13713232447098293312"
+        }
+      ],
+      "ai-assistant-service": [
+        {
+          "file": "apps/services/ai-assistant-service/Dockerfile",
+          "hash": "9783250110422414035"
+        },
+        {
+          "file": "apps/services/ai-assistant-service/README.md",
+          "hash": "1060198867538959993"
+        },
+        {
+          "file": "apps/services/ai-assistant-service/build.gradle",
+          "hash": "12845896836018580020"
+        },
+        {
+          "file": "apps/services/ai-assistant-service/project.json",
+          "hash": "13210333678738236078"
+        }
+      ],
+      "service-discovery": [
+        {
+          "file": "apps/infrastructure/service-discovery/Dockerfile",
+          "hash": "8746904910837632620"
+        },
+        {
+          "file": "apps/infrastructure/service-discovery/README.md",
+          "hash": "16300303683259372034"
+        },
+        {
+          "file": "apps/infrastructure/service-discovery/build.gradle",
+          "hash": "10236565766981166732"
+        },
+        {
+          "file": "apps/infrastructure/service-discovery/project.json",
+          "hash": "5387812030712681412"
+        },
+        {
+          "file": "apps/infrastructure/service-discovery/src/main/java/com/ebanking/discovery/ServiceDiscoveryApplication.java",
+          "hash": "3520626807183239546"
+        },
+        {
+          "file": "apps/infrastructure/service-discovery/src/main/resources/application.yml",
+          "hash": "10310995241818716345"
+        }
+      ],
+      "notification-service": [
+        {
+          "file": "apps/services/notification-service/Dockerfile",
+          "hash": "1566588638123773140"
+        },
+        {
+          "file": "apps/services/notification-service/README.md",
+          "hash": "4580177178400326129"
+        },
+        {
+          "file": "apps/services/notification-service/build.gradle",
+          "hash": "4300866453153995071"
+        },
+        {
+          "file": "apps/services/notification-service/project.json",
+          "hash": "2994789265640439957"
+        },
+        {
+          "file": "apps/services/notification-service/src/main/java/com/ebanking/notification/NotificationServiceApplication.java",
+          "hash": "4173484113616062151"
+        },
+        {
+          "file": "apps/services/notification-service/src/main/java/com/ebanking/notification/consumer/NotificationConsumer.java",
+          "hash": "15645997502824784432"
+        },
+        {
+          "file": "apps/services/notification-service/src/main/resources/application.yml",
+          "hash": "8023861580756868955"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "apps/frontend/web-app/.editorconfig",
+          "hash": "4165385352547808172"
+        },
+        {
+          "file": "apps/frontend/web-app/.gitignore",
+          "hash": "8735202651818384803"
+        },
+        {
+          "file": "apps/frontend/web-app/README.md",
+          "hash": "17778162136132268645"
+        },
+        {
+          "file": "apps/frontend/web-app/package.json",
+          "hash": "5706733124737180351",
+          "deps": [
+            "npm:@angular/build",
+            "npm:@angular/cli",
+            "npm:@angular/compiler-cli",
+            "npm:jsdom",
+            "npm:typescript",
+            "npm:vitest",
+            "npm:@angular/common",
+            "npm:@angular/compiler",
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@angular/platform-browser",
+            "npm:@angular/router",
+            "npm:@apollo/client",
+            "npm:apollo-angular",
+            "npm:graphql",
+            "npm:keycloak-angular",
+            "npm:keycloak-js",
+            "npm:rxjs",
+            "npm:tslib"
+          ]
+        },
+        {
+          "file": "apps/frontend/web-app/project.json",
+          "hash": "10825602657164904238"
+        },
+        {
+          "file": "apps/frontend/web-app/public/assets/silent-check-sso.html",
+          "hash": "3699984063136526761"
+        },
+        {
+          "file": "apps/frontend/web-app/public/favicon.ico",
+          "hash": "3988961587069885523"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/app.component.html",
+          "hash": "9789850806091242696"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/app.component.scss",
+          "hash": "10258037638549012271"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/app.component.ts",
+          "hash": "13327938113128970412"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/app.config.ts",
+          "hash": "14652820430260026087"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/app.routes.ts",
+          "hash": "3318681732400364277"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-form/user-form.component.html",
+          "hash": "2612106323019002716"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-form/user-form.component.scss",
+          "hash": "16803797686093212969"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-form/user-form.component.ts",
+          "hash": "7323998168368740906"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-list/user-list.component.html",
+          "hash": "10948667606134156100"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-list/user-list.component.scss",
+          "hash": "13908877176420408723"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/components/user-list/user-list.component.ts",
+          "hash": "8271261133022215294"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/core/auth/keycloak-init.factory.ts",
+          "hash": "4770815972436787107"
+        },
+        {
+          "file": "apps/frontend/web-app/src/app/services/user.service.ts",
+          "hash": "11821822964432413857"
+        },
+        {
+          "file": "apps/frontend/web-app/src/environments/environment.development.ts",
+          "hash": "10721923029840856992"
+        },
+        {
+          "file": "apps/frontend/web-app/src/environments/environment.ts",
+          "hash": "5896719416142660903"
+        },
+        {
+          "file": "apps/frontend/web-app/src/index.html",
+          "hash": "1933636353302221412"
+        },
+        {
+          "file": "apps/frontend/web-app/src/main.ts",
+          "hash": "4927504514031276065"
+        },
+        {
+          "file": "apps/frontend/web-app/src/styles.scss",
+          "hash": "5195668842064076916"
+        },
+        {
+          "file": "apps/frontend/web-app/tsconfig.app.json",
+          "hash": "8369321240499881643"
+        },
+        {
+          "file": "apps/frontend/web-app/tsconfig.json",
+          "hash": "5656778633894759594"
+        },
+        {
+          "file": "apps/frontend/web-app/tsconfig.spec.json",
+          "hash": "17063073924005338580"
+        }
+      ],
+      "legacy-adapter-service": [
+        {
+          "file": "apps/services/legacy-adapter-service/Dockerfile",
+          "hash": "12374821070454683306"
+        },
+        {
+          "file": "apps/services/legacy-adapter-service/README.md",
+          "hash": "15689661752488991636"
+        },
+        {
+          "file": "apps/services/legacy-adapter-service/build.gradle",
+          "hash": "16169441321322561237"
+        },
+        {
+          "file": "apps/services/legacy-adapter-service/project.json",
+          "hash": "12506477799383495965"
+        }
+      ],
+      "dto": [
+        {
+          "file": "libs/shared/dto/build.gradle",
+          "hash": "14225445837288088859"
+        },
+        {
+          "file": "libs/shared/dto/project.json",
+          "hash": "6902625536406516646"
+        }
+      ],
+      "common": [
+        {
+          "file": "libs/shared/common/build.gradle",
+          "hash": "1047552240681987855"
+        },
+        {
+          "file": "libs/shared/common/project.json",
+          "hash": "15175766588603656536"
+        }
+      ],
+      "analytics-service": [
+        {
+          "file": "apps/services/analytics-service/Dockerfile",
+          "hash": "5044370668027036984"
+        },
+        {
+          "file": "apps/services/analytics-service/README.md",
+          "hash": "12891892818700470357"
+        },
+        {
+          "file": "apps/services/analytics-service/build.gradle",
+          "hash": "17482209132487764411"
+        },
+        {
+          "file": "apps/services/analytics-service/project.json",
+          "hash": "7921177866666548125"
+        },
+        {
+          "file": "apps/services/analytics-service/src/main/java/com/ebanking/analytics/AnalyticsServiceApplication.java",
+          "hash": "6363976082121228438"
+        },
+        {
+          "file": "apps/services/analytics-service/src/main/java/com/ebanking/analytics/consumer/AnalyticsConsumer.java",
+          "hash": "12102364022673242394"
+        },
+        {
+          "file": "apps/services/analytics-service/src/main/java/com/ebanking/analytics/service/AnalyticsService.java",
+          "hash": "15917255813932108708"
+        },
+        {
+          "file": "apps/services/analytics-service/src/main/resources/application.yml",
+          "hash": "17643928432571159335"
+        }
+      ],
+      "e-banking-3.0": [
+        {
+          "file": ".gitignore",
+          "hash": "15684718303771128245"
+        },
+        {
+          "file": "HOW_TO_RUN.md",
+          "hash": "10036210080411294446"
+        },
+        {
+          "file": "KAFKA_INTEGRATION_PLAN.md",
+          "hash": "5757206319825799815"
+        },
+        {
+          "file": "README.md",
+          "hash": "12569813940813372176"
+        },
+        {
+          "file": "build.gradle",
+          "hash": "7627057406900465257"
+        },
+        {
+          "file": "docker-compose.yml",
+          "hash": "6518941695249173771"
+        },
+        {
+          "file": "gradle/wrapper/gradle-wrapper.properties",
+          "hash": "5454378894883809943"
+        },
+        {
+          "file": "gradlew",
+          "hash": "18228996197658660565"
+        },
+        {
+          "file": "gradlew.bat",
+          "hash": "8232202015247706579"
+        },
+        {
+          "file": "nx.json",
+          "hash": "15563037193153267939"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "148690786610644366"
+        },
+        {
+          "file": "package.json",
+          "hash": "11351726778603064640",
+          "deps": [
+            "npm:@nx/gradle",
+            "npm:nx"
+          ]
+        },
+        {
+          "file": "pnpm-lock.yaml",
+          "hash": "14428932729736544023"
+        },
+        {
+          "file": "pnpm-workspace.yaml",
+          "hash": "3420418947836620170"
+        },
+        {
+          "file": "settings.gradle",
+          "hash": "4819605219104412784"
+        },
+        {
+          "file": "tools/docker/init-db.sql",
+          "hash": "617709192199071727"
+        },
+        {
+          "file": "tools/docker/prometheus.yml",
+          "hash": "6032079905605609174"
+        },
+        {
+          "file": "tools/docker/realm-export.json",
+          "hash": "721815074438621710"
+        },
+        {
+          "file": "tools/kubernetes/README.md",
+          "hash": "7069151180755702410"
+        }
+      ],
+      "account-service": [
+        {
+          "file": "apps/services/account-service/Dockerfile",
+          "hash": "8519815070736385448"
+        },
+        {
+          "file": "apps/services/account-service/README.md",
+          "hash": "7414198235146973285"
+        },
+        {
+          "file": "apps/services/account-service/build.gradle",
+          "hash": "16745648741130178709"
+        },
+        {
+          "file": "apps/services/account-service/project.json",
+          "hash": "2594943276174547631"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/AccountServiceApplication.java",
+          "hash": "2321833503320473324"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/consumer/AccountConsumer.java",
+          "hash": "13414809862061412889"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/controller/AccountController.java",
+          "hash": "16067939869580237398"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/dto/AccountDTO.java",
+          "hash": "404498836671776065"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/model/Account.java",
+          "hash": "14721941688324119067"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/repository/AccountRepository.java",
+          "hash": "13244727317838125481"
+        },
+        {
+          "file": "apps/services/account-service/src/main/java/com/ebanking/account/service/AccountService.java",
+          "hash": "12640844970620695963"
+        },
+        {
+          "file": "apps/services/account-service/src/main/resources/application.yml",
+          "hash": "17874301548624533837"
+        }
+      ],
+      "kafka-events": [
+        {
+          "file": "libs/shared/kafka-events/README.md",
+          "hash": "5708303360464478288"
+        },
+        {
+          "file": "libs/shared/kafka-events/build.gradle",
+          "hash": "6966148950323752755"
+        },
+        {
+          "file": "libs/shared/kafka-events/project.json",
+          "hash": "17529883014530047637"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/KafkaTopics.java",
+          "hash": "12964892264003593801"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/config/KafkaConsumerConfig.java",
+          "hash": "10742392082023590524"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/config/KafkaEventsAutoConfiguration.java",
+          "hash": "5916618329016475193"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/config/KafkaProducerConfig.java",
+          "hash": "6425916330143256393"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/config/KafkaProperties.java",
+          "hash": "18041459034480170304"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/consumer/BaseEventConsumer.java",
+          "hash": "13938228572937250375"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/consumer/EventConsumer.java",
+          "hash": "17368217144894805463"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/AccountCreatedEvent.java",
+          "hash": "7141801249535491116"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/AlertTriggeredEvent.java",
+          "hash": "17364475939394768430"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/AuthLoginEvent.java",
+          "hash": "1590476929227307868"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/BalanceUpdatedEvent.java",
+          "hash": "7500168650433229868"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/BaseEvent.java",
+          "hash": "3064315505108778055"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/CryptoTradeExecutedEvent.java",
+          "hash": "5430044329937600634"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/FraudDetectedEvent.java",
+          "hash": "13305540875220860994"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/MfaVerifiedEvent.java",
+          "hash": "14848776514215287622"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/NotificationSentEvent.java",
+          "hash": "15327217962816631735"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/PaymentFailedEvent.java",
+          "hash": "15441638526015955055"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/TransactionCompletedEvent.java",
+          "hash": "11831224975015105744"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/UserCreatedEvent.java",
+          "hash": "16430323211142173289"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/events/UserUpdatedEvent.java",
+          "hash": "17431550905802845195"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/producer/EventProducer.java",
+          "hash": "10525059723722914976"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/java/com/ebanking/shared/kafka/producer/TypedEventProducer.java",
+          "hash": "13559833432097602970"
+        },
+        {
+          "file": "libs/shared/kafka-events/src/main/resources/META-INF/spring.factories",
+          "hash": "11119973882211251351"
+        }
+      ],
+      "auth-service": [
+        {
+          "file": "apps/services/auth-service/Dockerfile",
+          "hash": "3170316226042713781"
+        },
+        {
+          "file": "apps/services/auth-service/README.md",
+          "hash": "7024574034778941329"
+        },
+        {
+          "file": "apps/services/auth-service/build.gradle",
+          "hash": "2527252671963542956"
+        },
+        {
+          "file": "apps/services/auth-service/project.json",
+          "hash": "11755378771943586371"
+        },
+        {
+          "file": "apps/services/auth-service/src/main/java/com/ebanking/auth/AuthServiceApplication.java",
+          "hash": "7162816376518159330"
+        },
+        {
+          "file": "apps/services/auth-service/src/main/java/com/ebanking/auth/service/AuthService.java",
+          "hash": "11033211515757061645"
+        },
+        {
+          "file": "apps/services/auth-service/src/main/java/com/ebanking/auth/web/TestController.java",
+          "hash": "9790491335242015803"
+        },
+        {
+          "file": "apps/services/auth-service/src/main/resources/application.yml",
+          "hash": "9926085701762951861"
+        }
+      ],
+      "security": [
+        {
+          "file": "libs/shared/security/build.gradle",
+          "hash": "3822823145985007207"
+        },
+        {
+          "file": "libs/shared/security/project.json",
+          "hash": "11418361412345668127"
+        },
+        {
+          "file": "libs/shared/security/src/main/java/com/ebanking/security/JwtAuthConverter.java",
+          "hash": "17132760047739857706"
+        },
+        {
+          "file": "libs/shared/security/src/main/java/com/ebanking/security/SecurityConfig.java",
+          "hash": "2938241320483266265"
+        }
+      ],
+      "crypto-service": [
+        {
+          "file": "apps/services/crypto-service/Dockerfile",
+          "hash": "6974335615191534975"
+        },
+        {
+          "file": "apps/services/crypto-service/README.md",
+          "hash": "8221049583914093894"
+        },
+        {
+          "file": "apps/services/crypto-service/build.gradle",
+          "hash": "13664950255946100283"
+        },
+        {
+          "file": "apps/services/crypto-service/project.json",
+          "hash": "10374889661997250614"
+        },
+        {
+          "file": "apps/services/crypto-service/src/main/java/com/ebanking/crypto/CryptoServiceApplication.java",
+          "hash": "6672017857595328913"
+        },
+        {
+          "file": "apps/services/crypto-service/src/main/java/com/ebanking/crypto/consumer/CryptoConsumer.java",
+          "hash": "7517377451330923997"
+        },
+        {
+          "file": "apps/services/crypto-service/src/main/java/com/ebanking/crypto/service/CryptoService.java",
+          "hash": "5743196397490005960"
+        },
+        {
+          "file": "apps/services/crypto-service/src/main/resources/application.yml",
+          "hash": "13178720207770634766"
+        }
+      ],
+      "payment-service": [
+        {
+          "file": "apps/services/payment-service/Dockerfile",
+          "hash": "3725090833478295729"
+        },
+        {
+          "file": "apps/services/payment-service/README.md",
+          "hash": "4571167510405144383"
+        },
+        {
+          "file": "apps/services/payment-service/build.gradle",
+          "hash": "9096665462467003123"
+        },
+        {
+          "file": "apps/services/payment-service/project.json",
+          "hash": "3091777288782268147"
+        },
+        {
+          "file": "apps/services/payment-service/src/main/java/com/ebanking/payment/PaymentServiceApplication.java",
+          "hash": "9433377295677725767"
+        },
+        {
+          "file": "apps/services/payment-service/src/main/java/com/ebanking/payment/service/PaymentService.java",
+          "hash": "18307354509959432280"
+        },
+        {
+          "file": "apps/services/payment-service/src/main/resources/application.yml",
+          "hash": "17799063690560933879"
+        }
+      ],
+      "audit-service": [
+        {
+          "file": "apps/services/audit-service/Dockerfile",
+          "hash": "16896988015576748874"
+        },
+        {
+          "file": "apps/services/audit-service/README.md",
+          "hash": "17900507535066980568"
+        },
+        {
+          "file": "apps/services/audit-service/build.gradle",
+          "hash": "3138540958745310646"
+        },
+        {
+          "file": "apps/services/audit-service/project.json",
+          "hash": "8147154299611763960"
+        },
+        {
+          "file": "apps/services/audit-service/src/main/java/com/ebanking/audit/AuditServiceApplication.java",
+          "hash": "9825795678970358559"
+        },
+        {
+          "file": "apps/services/audit-service/src/main/java/com/ebanking/audit/consumer/AuditConsumer.java",
+          "hash": "16944010448170000180"
+        },
+        {
+          "file": "apps/services/audit-service/src/main/resources/application.yml",
+          "hash": "9159758454882602351"
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "16651845052560143244"
+}

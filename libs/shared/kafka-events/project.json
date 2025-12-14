@@ -1,0 +1,84 @@
+{
+  "name": "kafka-events",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/kafka-events/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "configurations": {
+        "production": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "libs/shared/kafka-events"
+        },
+        "development": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "libs/shared/kafka-events"
+        }
+      },
+      "defaultConfiguration": "development",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew test",
+        "cwd": "libs/shared/kafka-events"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests",
+        "{projectRoot}/build/test-results"
+      ]
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew clean",
+        "cwd": "libs/shared/kafka-events"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessCheck",
+        "cwd": "libs/shared/kafka-events"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessApply",
+        "cwd": "libs/shared/kafka-events"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    }
+  }
+}

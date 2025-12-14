@@ -4,6 +4,13 @@
       <h1>🏦 E-Banking 3.0</h1>
       <p>Nx Monorepo Microservices Architecture</p>
     </div>
+    <div class="auth-controls">
+      <button *ngIf="!isLoggedIn" (click)="login()">Login</button>
+      <div *ngIf="isLoggedIn">
+        <span>Welcome, {{ userProfile?.username }}</span>
+        <button (click)="logout()">Logout</button>
+      </div>
+    </div>
   </header>
 
   <main class="app-main">
