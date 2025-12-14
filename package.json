@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "E-Banking 3.0 - Modern microservices architecture with Nx monorepo, Spring Boot, GraphQL, and Kafka",
   "scripts": {
+    "start": "nx serve frontend",
     "build": "nx run-many -t build --all",
     "build:affected": "nx affected -t build",
     "test": "nx run-many -t test --all",

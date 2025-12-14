@@ -24,6 +24,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+    
+    // Shared Security
+    implementation project(':libs:shared:security')
 
     // GraphQL
     implementation 'com.graphql-java:graphql-java-extended-scalars:21.0'

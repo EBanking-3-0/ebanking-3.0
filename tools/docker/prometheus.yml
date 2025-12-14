@@ -13,11 +13,6 @@ scrape_configs:
     static_configs:
       - targets: ['config-server:8888']
 
-  - job_name: 'api-gateway'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['api-gateway:8080']
-
   - job_name: 'graphql-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:

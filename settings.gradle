@@ -1,9 +1,16 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+}
+
 rootProject.name = 'e-banking-3.0'
 
 // Infrastructure Services
 include ':apps:infrastructure:service-discovery'
 include ':apps:infrastructure:config-server'
-include ':apps:infrastructure:api-gateway'
 include ':apps:infrastructure:graphql-gateway'
 
 // Business Services

@@ -2,7 +2,7 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-COPY target/user-service-*.jar app.jar
+COPY build/libs/user-service.jar app.jar
 
 EXPOSE 8083
 
