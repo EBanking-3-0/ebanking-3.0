@@ -6,7 +6,17 @@ plugins {
 
 description = 'AI Assistant Service - ChatGPT/Dialogflow Integration'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
     // Shared libraries
     implementation project(':libs:shared:common')
     implementation project(':libs:shared:kafka-events')
@@ -22,6 +32,12 @@ dependencies {
 
     // Spring Cloud
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // LangChain4j
+    implementation 'dev.langchain4j:langchain4j:0.29.1'
+    implementation 'dev.langchain4j:langchain4j-open-ai:0.29.1'
+    implementation 'dev.langchain4j:langchain4j-spring-boot-starter:0.29.1'
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
@@ -32,6 +48,13 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+    failOnNoDiscoveredTests = false
 }
 
 bootJar {
