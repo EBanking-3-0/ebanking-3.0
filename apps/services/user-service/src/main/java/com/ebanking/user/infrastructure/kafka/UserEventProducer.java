@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-// For simplicity, we use String payloads here.
 
 @Component
 @RequiredArgsConstructor
