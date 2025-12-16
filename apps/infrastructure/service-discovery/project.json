@@ -46,7 +46,6 @@
     },
     "serve": {
       "executor": "@nx/gradle:gradle",
-      "continuous": true,
       "options": {
         "taskName": ":apps:infrastructure:service-discovery:bootRun"
       },

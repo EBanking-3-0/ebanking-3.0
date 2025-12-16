@@ -98,5 +98,3 @@ test-results/ # Gradle test results
 
 # Project pdf reqs
 *.pdf
-.nx/workspace-data/*
-.nx/workspace-data
