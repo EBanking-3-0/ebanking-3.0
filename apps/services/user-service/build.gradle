@@ -15,7 +15,7 @@ dependencyManagement {
 dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    annt -botationProcessor 'org.projectlombok:lombok'
 
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
