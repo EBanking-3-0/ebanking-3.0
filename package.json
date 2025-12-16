@@ -30,13 +30,12 @@
   "author": "E-Banking Team",
   "license": "ISC",
   "devDependencies": {
-    "@nx/gradle": "22.2.3",
+    "@nx/gradle": "^22.2.3",
     "nx": "22.1.3"
   },
   "nx": {},
   "workspaces": [
     "apps/**",
     "libs/**"
-  ],
-  "dependencies": {}
+  ]
 }
