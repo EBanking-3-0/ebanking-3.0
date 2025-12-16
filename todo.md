@@ -1,0 +1,1 @@
+- [ ] add migrations after the first deployment
