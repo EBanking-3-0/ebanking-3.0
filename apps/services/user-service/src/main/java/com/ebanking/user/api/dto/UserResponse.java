@@ -4,10 +4,34 @@
  */
 package com.ebanking.user.api.dto;
 
-/**
- *
- * @author Lenovo
- */
+import com.ebanking.user.domain.model.User;
+import lombok.Builder;
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
+@Builder
 public class UserResponse {
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String status;
+    private String kycStatus;
+    private LocalDateTime createdAt;
     
+    // Mapping method to convert Domain Entity to DTO
+    public static UserResponse fromEntity(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phone(user.getPhone())
+                .status(user.getStatus().name())
+                .kycStatus(user.getKycStatus().name())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
 }
