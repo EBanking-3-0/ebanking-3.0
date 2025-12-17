@@ -32,9 +32,9 @@ public class ActionController {
             @Valid @RequestBody ActionRequest request,
             HttpServletRequest httpRequest) {
         
-        Long userId = securityUtil.extractUserIdFromHeader(httpRequest);
+        String userId = securityUtil.extractUserIdFromHeader(httpRequest);
         if (userId == null) {
-            userId = request.getUserId(); // Fallback to request userId
+            userId = request.getUserId() != null ? request.getUserId().toString() : null; // Fallback to request userId
         }
         
         if (userId == null) {
