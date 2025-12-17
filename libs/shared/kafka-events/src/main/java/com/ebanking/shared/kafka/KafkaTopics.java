@@ -39,6 +39,12 @@ public final class KafkaTopics {
     // Analytics Events
     public static final String ALERT_TRIGGERED = "alert.triggered";
     
+    // AI Assistant Events
+    public static final String ASSISTANT_MESSAGE_RECEIVED = "assistant.message.received";
+    public static final String ASSISTANT_ACTION_EXECUTED = "assistant.action.executed";
+    public static final String ASSISTANT_CONVERSATION_STARTED = "assistant.conversation.started";
+    public static final String ASSISTANT_ERROR_OCCURRED = "assistant.error.occurred";
+    
     // Audit Events (consumed by audit service)
     public static final String AUDIT_LOG_CREATED = "audit.log.created";
     public static final String COMPLIANCE_ALERT = "compliance.alert";
