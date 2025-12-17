@@ -1,0 +1,110 @@
+<div class="ai-chat-container">
+  <h2>AI Assistant Test Interface</h2>
+
+  <!-- Chat Section -->
+  <div class="chat-section">
+    <h3>Chat with AI Assistant</h3>
+    
+    <div class="conversation-info" *ngIf="conversationId">
+      <p><strong>Conversation ID:</strong> {{ conversationId }}</p>
+      <p><strong>Session ID:</strong> {{ sessionId }}</p>
+    </div>
+
+    <div class="messages-container">
+      <div *ngFor="let msg of messages" 
+           [class]="'message ' + msg.role">
+        <div class="message-header">
+          <span class="role">{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}</span>
+          <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+        </div>
+        <div class="message-content">{{ msg.content }}</div>
+        
+        <div *ngIf="msg.intent" class="message-meta">
+          <strong>Intent:</strong> {{ msg.intent }}
+        </div>
+        
+        <div *ngIf="msg.actionExecuted" class="message-meta">
+          <strong>Action:</strong> {{ msg.actionExecuted }}
+        </div>
+        
+        <div *ngIf="msg.actionResult" class="message-meta">
+          <strong>Result:</strong>
+          <pre>{{ msg.actionResult | json }}</pre>
+        </div>
+      </div>
+      
+      <div *ngIf="loading" class="message assistant loading">
+        <div class="message-content">Thinking...</div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <textarea 
+        [(ngModel)]="message"
+        (keydown.enter)="onEnterKey($any($event))"
+        placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+        rows="3"
+        [disabled]="loading"></textarea>
+      <div class="button-group">
+        <button (click)="sendMessage()" [disabled]="!message.trim() || loading">
+          Send Message
+        </button>
+        <button (click)="clearChat()" class="secondary">
+          Clear Chat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Execution Section -->
+  <div class="action-section">
+    <h3>Direct Action Execution (Admin/Testing)</h3>
+    
+    <div class="form-group">
+      <label for="actionName">Action Name:</label>
+      <input 
+        id="actionName"
+        type="text" 
+        [(ngModel)]="actionName"
+        placeholder="e.g., get_account_balance"
+        [disabled]="loading" />
+    </div>
+
+    <div class="form-group">
+      <label for="actionParams">Parameters (JSON):</label>
+      <textarea 
+        id="actionParams"
+        [(ngModel)]="actionParams"
+        placeholder='{"key": "value"}'
+        rows="4"
+        [disabled]="loading"></textarea>
+    </div>
+
+    <div class="button-group">
+      <button (click)="executeAction()" [disabled]="!actionName.trim() || loading">
+        Execute Action
+      </button>
+      <button (click)="clearActionResult()" class="secondary" *ngIf="actionResult">
+        Clear Result
+      </button>
+    </div>
+
+    <div *ngIf="actionResult" class="action-result">
+      <h4>Action Result:</h4>
+      <pre>{{ actionResult | json }}</pre>
+    </div>
+  </div>
+
+  <!-- Example Prompts -->
+  <div class="examples-section">
+    <h3>Example Prompts to Try:</h3>
+    <ul>
+      <li>"What's my account balance?"</li>
+      <li>"Show me my recent transactions"</li>
+      <li>"Transfer $100 to account 123456"</li>
+      <li>"What's the current Bitcoin price?"</li>
+      <li>"Show me my spending analytics"</li>
+      <li>"Help me with crypto trading"</li>
+    </ul>
+  </div>
+</div>
