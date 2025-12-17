@@ -53,9 +53,9 @@ logging:
 # AI Assistant Configuration
 ai:
   assistant:
-    provider: ${AI_PROVIDER:gemini}
-    model: ${AI_MODEL:gemini-2.0-flash}
-    api-key: ${GOOGLE_API_KEY:${OPENAI_API_KEY:}}
+    provider: ${AI_PROVIDER:openai}
+    model: ${AI_MODEL:gpt-4o-mini}
+    api-key: ${OPENAI_API_KEY}
     temperature: ${AI_TEMPERATURE:0.7}
     max-tokens: ${AI_MAX_TOKENS:1000}
     enable-actions: ${AI_ENABLE_ACTIONS:true}
