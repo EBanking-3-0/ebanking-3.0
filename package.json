@@ -13,8 +13,8 @@
     "test:affected": "nx affected -t test",
     "gradle:build": "./gradlew build",
     "gradle:clean": "./gradlew clean",
-    "docker:infra:up": "docker compose up -d postgres kafka keycloak --build",
-    "docker:infra:down": "docker compose down postgres kafka keycloak",
+    "docker:infra:up": "docker compose up -d postgres mongodb kafka keycloak --build",
+    "docker:infra:down": "docker compose down postgres mongodb kafka keycloak",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "docker:build": "docker compose build"
