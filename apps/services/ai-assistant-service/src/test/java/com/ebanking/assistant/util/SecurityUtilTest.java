@@ -26,18 +26,19 @@ class SecurityUtilTest {
     
     @Test
     void testExtractUserIdFromHeader() {
-        when(request.getHeader("X-User-Id")).thenReturn("123");
+        when(request.getHeader("X-User-Id")).thenReturn("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08");
         
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         
-        assertEquals(123L, userId);
+        assertEquals("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08", userId);
     }
     
     @Test
     void testExtractUserIdFromHeaderInvalid() {
-        when(request.getHeader("X-User-Id")).thenReturn("invalid");
+        when(request.getHeader("X-User-Id")).thenReturn(null);
+        when(request.getHeader("Authorization")).thenReturn("Bearer invalid-token");
         
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         
         assertNull(userId);
     }
@@ -47,7 +48,7 @@ class SecurityUtilTest {
         when(request.getHeader("X-User-Id")).thenReturn(null);
         when(request.getHeader("Authorization")).thenReturn(null);
         
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         
         assertNull(userId);
     }
@@ -55,21 +56,21 @@ class SecurityUtilTest {
     @Test
     void testExtractUserIdFromJwtUserIdClaimAsString() {
         when(request.getHeader("X-User-Id")).thenReturn(null);
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + buildJwt("{\"userId\":\"456\"}"));
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + buildJwt("{\"sub\":\"b5d8c0a1-2e3f-4ee0-9d94-3b6d39e0bf09\"}"));
 
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
 
-        assertEquals(456L, userId);
+        assertEquals("b5d8c0a1-2e3f-4ee0-9d94-3b6d39e0bf09", userId);
     }
 
     @Test
     void testExtractUserIdFromJwtSubClaimAsString() {
         when(request.getHeader("X-User-Id")).thenReturn(null);
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + buildJwt("{\"sub\":\"789\"}"));
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + buildJwt("{\"sub\":\"c7e9f1b2-4a5d-4ee0-8d94-5c7e49f0cf10\"}"));
 
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
 
-        assertEquals(789L, userId);
+        assertEquals("c7e9f1b2-4a5d-4ee0-8d94-5c7e49f0cf10", userId);
     }
 
     @Test
@@ -77,7 +78,7 @@ class SecurityUtilTest {
         when(request.getHeader("X-User-Id")).thenReturn(null);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + buildJwt("{\"foo\":\"bar\"}"));
 
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
 
         assertNull(userId);
     }
