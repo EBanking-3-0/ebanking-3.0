@@ -1,11 +1,10 @@
 package com.ebanking.assistant.config;
 
+import com.ebanking.assistant.config.provider.ChatModelProviderFactory;
 import com.ebanking.assistant.tool.BankingTools;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.service.AiServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LangChainConfig {
     
-    @Value("${ai.assistant.provider:openai}")
+@Value("${ai.assistant.provider:gemini}")
     private String provider;
-    
-    @Value("${ai.assistant.model:gpt-4-turbo-preview}")
+
+    @Value("${ai.assistant.model:gemini-2.0-flash}")
     private String model;
     
     @Value("${ai.assistant.api-key:}")
@@ -31,44 +30,44 @@ public class LangChainConfig {
     @Value("${ai.assistant.max-tokens:1000}")
     private Integer maxTokens;
     
+    private final ChatModelProviderFactory providerFactory;
+    
+    public LangChainConfig(ChatModelProviderFactory providerFactory) {
+        this.providerFactory = providerFactory;
+    }
+    
     @Bean
     public ChatLanguageModel chatLanguageModel() {
         if (apiKey == null || apiKey.isEmpty()) {
-            log.warn("OpenAI API key not configured. Using mock/fallback model for testing.");
+            log.warn("AI API key not configured. Using mock/fallback model for testing.");
             // Return a simple mock model for testing without API key
             return new ChatLanguageModel() {
                 @Override
                 public String generate(String userMessage) {
-                    return "I'm a test AI assistant. To use full AI capabilities, please configure OPENAI_API_KEY environment variable.";
+                    return "I'm a test AI assistant. To use full AI capabilities, please configure an API key:\n"
+                        + "- For Gemini: export GOOGLE_API_KEY=your-key\n"
+                        + "- For OpenAI: export OPENAI_API_KEY=your-key";
                 }
                 
                 @Override
                 public dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage> generate(
                         java.util.List<dev.langchain4j.data.message.ChatMessage> messages) {
                     dev.langchain4j.data.message.AiMessage aiMessage = dev.langchain4j.data.message.AiMessage.from(
-                        "I'm a test AI assistant. To use full AI capabilities, please configure OPENAI_API_KEY environment variable."
+                        "I'm a test AI assistant. To use full AI capabilities, please configure an API key."
                     );
                     return new dev.langchain4j.model.output.Response<>(aiMessage);
                 }
             };
         }
         
-        // Map model string to enum, default to GPT-4 Turbo
-        OpenAiChatModelName modelName;
         try {
-            modelName = OpenAiChatModelName.valueOf(model.toUpperCase().replace("-", "_"));
-        } catch (IllegalArgumentException e) {
-            // Default to GPT-4 Turbo if model name not found
-            log.warn("Model {} not found, using GPT_4_TURBO_PREVIEW", model);
-            modelName = OpenAiChatModelName.GPT_4_TURBO_PREVIEW;
+            log.info("Initializing AI model with provider: {}, model: {}", provider, model);
+            return providerFactory.getProvider(provider)
+                    .createModel(apiKey, model, temperature, maxTokens);
+        } catch (Exception e) {
+            log.error("Failed to initialize AI model", e);
+            throw new RuntimeException("Failed to initialize AI model: " + e.getMessage(), e);
         }
-        
-        return OpenAiChatModel.builder()
-                .apiKey(apiKey)
-                .modelName(modelName)
-                .temperature(temperature)
-                .maxTokens(maxTokens)
-                .build();
     }
     
     @Bean

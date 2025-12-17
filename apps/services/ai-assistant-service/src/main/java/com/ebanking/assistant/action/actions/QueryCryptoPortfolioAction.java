@@ -29,17 +29,30 @@ public class QueryCryptoPortfolioAction implements ActionExecutor {
     }
     
     @Override
-    public Map<String, Object> execute(Long userId, Map<String, Object> parameters) throws ActionExecutionException {
+    public Map<String, Object> execute(String userId, Map<String, Object> parameters) throws ActionExecutionException {
         try {
+            // For now, try to convert userId to Long for legacy service clients
+            Long userIdLong = null;
+            try {
+                userIdLong = Long.parseLong(userId);
+            } catch (NumberFormatException e) {
+                // UUID userId, keep as null for now
+                log.warn("Cannot convert UUID userId to Long for legacy clients: {}", userId);
+            }
+            
             Object userIdObj = parameters.get("userId");
             
-            Long targetUserId = userId;
+            Long targetUserId = userIdLong;
             if (userIdObj != null) {
                 if (userIdObj instanceof Number) {
                     targetUserId = ((Number) userIdObj).longValue();
                 } else {
                     targetUserId = Long.parseLong(userIdObj.toString());
                 }
+            }
+            
+            if (targetUserId == null) {
+                throw new ActionExecutionException("Cannot query crypto portfolio: userId is not numeric and no userId parameter provided");
             }
             
             log.info("Querying crypto portfolio for user {}", targetUserId);
