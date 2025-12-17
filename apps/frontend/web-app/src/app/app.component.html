@@ -13,6 +13,11 @@
     </div>
   </header>
 
+  <nav class="app-nav" *ngIf="isLoggedIn">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Users</a>
+    <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
+  </nav>
+
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
