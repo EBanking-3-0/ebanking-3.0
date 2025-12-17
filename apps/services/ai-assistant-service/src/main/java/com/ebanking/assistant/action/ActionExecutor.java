@@ -25,7 +25,7 @@ public interface ActionExecutor {
      * @return Result of the action execution
      * @throws ActionExecutionException if the action fails
      */
-    Map<String, Object> execute(Long userId, Map<String, Object> parameters) throws ActionExecutionException;
+    Map<String, Object> execute(String userId, Map<String, Object> parameters) throws ActionExecutionException;
     
     /**
      * Check if the user has permission to execute this action
@@ -34,7 +34,7 @@ public interface ActionExecutor {
      * @param parameters Action parameters
      * @return true if authorized, false otherwise
      */
-    default boolean isAuthorized(Long userId, Map<String, Object> parameters) {
+    default boolean isAuthorized(String userId, Map<String, Object> parameters) {
         return true; // Default: all actions are authorized (can be overridden)
     }
 }

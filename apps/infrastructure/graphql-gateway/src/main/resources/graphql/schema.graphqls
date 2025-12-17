@@ -3,6 +3,9 @@ type Query {
     user(id: ID!): User
     userByEmail(email: String!): User
     myAccounts(userId: ID!): [Account]
+    
+    # AI Assistant queries
+    conversation(id: ID!): Conversation
 }
 
 type Mutation {
@@ -10,6 +13,10 @@ type Mutation {
     updateUser(id: ID!, input: UpdateUserInput!): User
     deleteUser(id: ID!): Boolean
     createAccount(input: CreateAccountInput!): Account
+    
+    # AI Assistant mutations
+    sendChatMessage(input: ChatMessageInput!): ChatResponse
+    executeAction(input: ActionExecutionInput!): ActionExecutionResponse
 }
 
 type User {
@@ -49,4 +56,49 @@ input CreateAccountInput {
     userId: ID!
     type: String!
     currency: String!
+}
+
+# AI Assistant Types
+type Conversation {
+    id: ID!
+    userId: String
+    sessionId: String
+    messages: [Message]
+    createdAt: String
+    updatedAt: String
+}
+
+type Message {
+    role: String!
+    content: String!
+    timestamp: String!
+    intent: String
+    actionExecuted: String
+    actionResult: String
+}
+
+type ChatResponse {
+    conversationId: ID
+    sessionId: String
+    response: String!
+    intent: String
+    actionExecuted: String
+    actionResult: String
+}
+
+type ActionExecutionResponse {
+    success: Boolean!
+    result: String
+    error: String
+}
+
+input ChatMessageInput {
+    message: String!
+    conversationId: ID
+    sessionId: String
+}
+
+input ActionExecutionInput {
+    actionName: String!
+    parameters: String!
 }
