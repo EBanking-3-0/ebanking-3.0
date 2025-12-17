@@ -1,11 +1,14 @@
 package com.ebanking.assistant.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Base64;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,13 +20,13 @@ import java.util.regex.Pattern;
 @Component
 public class SecurityUtil {
     
-    private static final Pattern USER_ID_PATTERN = Pattern.compile("\"userId\"\\s*:\\s*(\\d+)");
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     
     /**
      * Extract user ID from JWT token in Authorization header.
-     * This is a simplified implementation - in production, properly validate and decode JWT.
+     * Extracts the 'sub' claim which contains the user's UUID.
      */
-    public Long extractUserId(HttpServletRequest request) {
+    public String extractUserId(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
             log.warn("No valid Authorization header found");
@@ -32,6 +35,7 @@ public class SecurityUtil {
         
         String token = authHeader.substring(7);
         try {
+            log.debug("Auth header present, token length={}", token.length());
             // Decode JWT payload (simplified - in production, use proper JWT library)
             String[] parts = token.split("\\.");
             if (parts.length < 2) {
@@ -39,21 +43,29 @@ public class SecurityUtil {
                 return null;
             }
             
-            String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
-            Matcher matcher = USER_ID_PATTERN.matcher(payload);
-            if (matcher.find()) {
-                return Long.parseLong(matcher.group(1));
+            String headerJson = new String(Base64.getUrlDecoder().decode(parts[0]));
+            String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]));
+
+            log.debug("JWT header: {}", headerJson);
+            log.debug("JWT payload: {}", payloadJson);
+
+            Map<String, Object> claims = OBJECT_MAPPER.readValue(payloadJson, new TypeReference<>() {});
+            log.debug("JWT claims keys: {}", claims.keySet());
+
+            // Extract sub claim (UUID) as userId
+            String userId = extractStringClaim(claims.get("sub"));
+            log.debug("Resolved sub claim as userId: {}", userId);
+            if (userId != null) {
+                return userId;
             }
-            
-            // Fallback: try to extract from "sub" claim or other fields
-            if (payload.contains("\"sub\"")) {
-                Pattern subPattern = Pattern.compile("\"sub\"\\s*:\\s*\"(\\d+)\"");
-                Matcher subMatcher = subPattern.matcher(payload);
-                if (subMatcher.find()) {
-                    return Long.parseLong(subMatcher.group(1));
-                }
+
+            // Fallback to preferred_username if sub is not available
+            userId = extractStringClaim(claims.get("preferred_username"));
+            log.debug("Resolved preferred_username as userId: {}", userId);
+            if (userId != null) {
+                return userId;
             }
-            
+
             log.warn("Could not extract userId from JWT token");
             return null;
         } catch (Exception e) {
@@ -61,18 +73,26 @@ public class SecurityUtil {
             return null;
         }
     }
+
+    private String extractStringClaim(Object claim) {
+        if (claim == null) {
+            return null;
+        }
+
+        if (claim instanceof String stringValue && StringUtils.hasText(stringValue)) {
+            return stringValue.trim();
+        }
+
+        return claim.toString();
+    }
     
     /**
      * For testing/development: allow userId to be passed as a header
      */
-    public Long extractUserIdFromHeader(HttpServletRequest request) {
+    public String extractUserIdFromHeader(HttpServletRequest request) {
         String userIdHeader = request.getHeader("X-User-Id");
         if (StringUtils.hasText(userIdHeader)) {
-            try {
-                return Long.parseLong(userIdHeader);
-            } catch (NumberFormatException e) {
-                log.warn("Invalid X-User-Id header: {}", userIdHeader);
-            }
+            return userIdHeader;
         }
         return extractUserId(request);
     }

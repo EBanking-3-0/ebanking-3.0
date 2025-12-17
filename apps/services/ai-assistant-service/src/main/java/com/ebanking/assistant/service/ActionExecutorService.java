@@ -16,7 +16,7 @@ public class ActionExecutorService {
     
     private final ActionRegistry actionRegistry;
     
-    public Map<String, Object> executeAction(String actionName, Long userId, Map<String, Object> parameters) 
+    public Map<String, Object> executeAction(String actionName, String userId, Map<String, Object> parameters) 
             throws ActionExecutionException {
         
         ActionExecutor executor = actionRegistry.getAction(actionName)
