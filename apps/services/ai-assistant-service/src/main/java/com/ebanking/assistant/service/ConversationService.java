@@ -19,7 +19,7 @@ public class ConversationService {
     
     private final ConversationRepository conversationRepository;
     
-    public Conversation createConversation(Long userId, String sessionId) {
+    public Conversation createConversation(String userId, String sessionId) {
         Conversation conversation = Conversation.builder()
                 .userId(userId)
                 .sessionId(sessionId != null ? sessionId : UUID.randomUUID().toString())
@@ -32,7 +32,7 @@ public class ConversationService {
         return saved;
     }
     
-    public Conversation getOrCreateConversation(Long userId, String conversationId, String sessionId) {
+    public Conversation getOrCreateConversation(String userId, String conversationId, String sessionId) {
         if (conversationId != null && !conversationId.isEmpty()) {
             Optional<Conversation> existing = conversationRepository.findById(conversationId);
             if (existing.isPresent() && existing.get().getUserId().equals(userId)) {
@@ -66,7 +66,7 @@ public class ConversationService {
         return conversationRepository.findById(conversationId);
     }
     
-    public List<Conversation> getUserConversations(Long userId) {
+    public List<Conversation> getUserConversations(String userId) {
         return conversationRepository.findByUserIdOrderByUpdatedAtDesc(userId);
     }
     

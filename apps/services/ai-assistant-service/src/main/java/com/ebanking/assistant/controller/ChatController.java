@@ -37,7 +37,7 @@ public class ChatController {
             @Valid @RequestBody ChatRequest request,
             HttpServletRequest httpRequest) {
         
-        Long userId = securityUtil.extractUserIdFromHeader(httpRequest);
+        String userId = securityUtil.extractUserIdFromHeader(httpRequest);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ChatResponse.builder()
@@ -59,9 +59,6 @@ public class ChatController {
                 eventProducer.publishConversationStarted(userId, conversation.getId(), conversation.getSessionId());
             }
             
-            // Publish message received event
-            eventProducer.publishMessageReceived(userId, conversation.getId(), request.getMessage());
-            
             // Save user message
             Message userMessage = Message.builder()
                     .role(Message.Role.USER)
@@ -76,6 +73,9 @@ public class ChatController {
                     userId,
                     memoryId
             );
+            
+            // Publish message received event with response
+            eventProducer.publishMessageReceived(userId, conversation.getId(), request.getMessage(), response.getResponse());
             
             // Save AI response
             Message aiMessage = Message.builder()
@@ -104,7 +104,7 @@ public class ChatController {
     
     @GetMapping("/conversations")
     public ResponseEntity<List<Conversation>> getUserConversations(HttpServletRequest request) {
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -118,7 +118,7 @@ public class ChatController {
             @PathVariable String id,
             HttpServletRequest request) {
         
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -142,7 +142,7 @@ public class ChatController {
             @PathVariable String id,
             HttpServletRequest request) {
         
-        Long userId = securityUtil.extractUserIdFromHeader(request);
+        String userId = securityUtil.extractUserIdFromHeader(request);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

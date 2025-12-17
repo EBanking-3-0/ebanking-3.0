@@ -47,7 +47,7 @@ public class AiService {
         If you don't have enough information to execute an action, ask the user for clarification.
         """;
     
-    public ChatResponse processMessage(String userMessage, Long userId, String memoryId) {
+    public ChatResponse processMessage(String userMessage, String userId, String memoryId) {
         try {
             // Set userId in ThreadLocal context for tools to access
             com.ebanking.assistant.tool.BankingTools.setUserId(userId);
@@ -81,8 +81,8 @@ public class AiService {
                     
         } catch (Exception e) {
             log.error("Error processing message", e);
-            eventProducer.publishErrorOccurred(userId, "MESSAGE_PROCESSING_ERROR", 
-                    e.getMessage(), memoryId);
+            eventProducer.publishErrorOccurred(userId, memoryId, "MESSAGE_PROCESSING_ERROR", 
+                    e.getMessage());
             return ChatResponse.builder()
                     .response("I apologize, but I encountered an error processing your request. Please try again.")
                     .build();
@@ -117,7 +117,7 @@ public class AiService {
         return null;
     }
     
-    private Map<String, Object> extractParameters(String message, String actionName, Long userId) {
+    private Map<String, Object> extractParameters(String message, String actionName, String userId) {
         Map<String, Object> parameters = new HashMap<>();
         
         // Simple parameter extraction - in production, use more sophisticated NLP

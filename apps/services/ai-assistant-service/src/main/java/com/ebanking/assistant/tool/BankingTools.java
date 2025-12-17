@@ -23,13 +23,13 @@ public class BankingTools {
     private final ActionExecutorService actionExecutorService;
     
     // ThreadLocal to store userId context for tool execution
-    private static final ThreadLocal<Long> userIdContext = new ThreadLocal<>();
+    private static final ThreadLocal<String> userIdContext = new ThreadLocal<>();
     
-    public static void setUserId(Long userId) {
+    public static void setUserId(String userId) {
         userIdContext.set(userId);
     }
     
-    public static Long getUserId() {
+    public static String getUserId() {
         return userIdContext.get();
     }
     
@@ -40,7 +40,7 @@ public class BankingTools {
     @Tool("Query the balance of a bank account. Requires accountId parameter.")
     public String queryBalance(Long accountId) {
         try {
-            Long userId = getUserId();
+            String userId = getUserId();
             if (userId == null) {
                 return "Error: User context not available";
             }
@@ -57,7 +57,7 @@ public class BankingTools {
     @Tool("Query transaction history for an account or user. Requires accountId parameter, and optional limit (default 10).")
     public String queryTransactions(Long accountId, Integer limit) {
         try {
-            Long userId = getUserId();
+            String userId = getUserId();
             if (userId == null) {
                 return "Error: User context not available";
             }
@@ -81,7 +81,7 @@ public class BankingTools {
     @Tool("Query account information including account type, currency, and status. Requires accountId parameter (optional, defaults to user's accounts).")
     public String queryAccountInfo(Long accountId) {
         try {
-            Long userId = getUserId();
+            String userId = getUserId();
             if (userId == null) {
                 return "Error: User context not available";
             }
@@ -102,7 +102,7 @@ public class BankingTools {
     @Tool("Query user profile information including name, email, and phone for the current user.")
     public String queryUserInfo() {
         try {
-            Long userId = getUserId();
+            String userId = getUserId();
             if (userId == null) {
                 return "Error: User context not available";
             }
@@ -119,7 +119,7 @@ public class BankingTools {
     @Tool("Query cryptocurrency portfolio including holdings and total value for the current user.")
     public String queryCryptoPortfolio() {
         try {
-            Long userId = getUserId();
+            String userId = getUserId();
             if (userId == null) {
                 return "Error: User context not available";
             }
