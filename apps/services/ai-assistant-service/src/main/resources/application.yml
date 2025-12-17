@@ -4,14 +4,15 @@ server:
 spring:
   application:
     name: ai-assistant-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
   data:
     mongodb:
-      host: ${MONGODB_HOST:localhost}
-      port: ${MONGODB_PORT:27017}
-      database: ${MONGODB_DATABASE:ebanking}
-      # Only set username/password if they are provided (non-empty)
-      # This prevents binding errors with empty strings
-      uri: ${MONGODB_URI:mongodb://${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/${MONGODB_DATABASE:ebanking}}
+      uri: mongodb://ebanking:ebanking123@localhost:27017/ebanking?authSource=admin
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -45,12 +46,16 @@ management:
       prometheus:
         enabled: true
 
+logging:
+  level:
+    com.ebanking.assistant.util.SecurityUtil: DEBUG
+
 # AI Assistant Configuration
 ai:
   assistant:
-    provider: ${AI_PROVIDER:openai}
-    model: ${AI_MODEL:gpt-4-turbo-preview}
-    api-key: ${OPENAI_API_KEY:}
+    provider: ${AI_PROVIDER:gemini}
+    model: ${AI_MODEL:gemini-2.0-flash}
+    api-key: ${GOOGLE_API_KEY:${OPENAI_API_KEY:}}
     temperature: ${AI_TEMPERATURE:0.7}
     max-tokens: ${AI_MAX_TOKENS:1000}
     enable-actions: ${AI_ENABLE_ACTIONS:true}
