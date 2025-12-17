@@ -6,6 +6,12 @@ plugins {
 
 description = 'Legacy Adapter Service - SOAP to REST Bridge'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
     // Shared libraries
     implementation project(':libs:shared:common')
@@ -41,4 +47,5 @@ dependencies {
 
 bootJar {
     archiveFileName = 'legacy-adapter-service.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
