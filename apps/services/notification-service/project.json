@@ -3,19 +3,23 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/services/notification-service/src",
-  "tags": [], "implicitDependencies": ["service-discovery"],
+  "tags": [],
+  "implicitDependencies": [
+    "service-discovery"
+  ],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:notification-service:build",
+        "args": [
+          "-x",
+          "test"
+        ]
+      },
       "configurations": {
-        "production": {
-          "command": "../../../gradlew build -x test",
-          "cwd": "apps/services/notification-service"
-        },
-        "development": {
-          "command": "../../../gradlew build -x test",
-          "cwd": "apps/services/notification-service"
-        }
+        "production": {},
+        "development": {}
       },
       "defaultConfiguration": "development",
       "cache": true,
@@ -28,10 +32,9 @@
       ]
     },
     "test": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/gradle:gradle",
       "options": {
-        "command": "../../../gradlew test",
-        "cwd": "apps/services/notification-service"
+        "taskName": ":apps:services:notification-service:test"
       },
       "cache": true,
       "inputs": [
@@ -45,32 +48,34 @@
       ]
     },
     "serve": {
+      "executor": "@nx/gradle:gradle",
       "continuous": true,
-      "executor": "nx:run-commands",
+      "options": {
+        "taskName": ":apps:services:notification-service:bootRun"
+      },
       "configurations": {
         "production": {
-          "command": "../../../gradlew bootRun --args='--spring.profiles.active=prod'",
-          "cwd": "apps/services/notification-service"
+          "args": [
+            "--args=--spring.profiles.active=prod"
+          ]
         },
-        "development": {
-          "command": "../../../gradlew bootRun",
-          "cwd": "apps/services/notification-service"
-        }
+        "development": {}
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ]
     },
     "clean": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/gradle:gradle",
       "options": {
-        "command": "../../../gradlew clean",
-        "cwd": "apps/services/notification-service"
+        "taskName": ":apps:services:notification-service:clean"
       }
     },
     "lint": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/gradle:gradle",
       "options": {
-        "command": "../../../gradlew spotlessCheck",
-        "cwd": "apps/services/notification-service"
+        "taskName": ":apps:services:notification-service:spotlessCheck"
       },
       "cache": true,
       "inputs": [
@@ -80,10 +85,9 @@
       ]
     },
     "format": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/gradle:gradle",
       "options": {
-        "command": "../../../gradlew spotlessApply",
-        "cwd": "apps/services/notification-service"
+        "taskName": ":apps:services:notification-service:spotlessApply"
       },
       "cache": true,
       "inputs": [
