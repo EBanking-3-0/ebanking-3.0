@@ -6,7 +6,17 @@ plugins {
 
 description = 'Notification Service - Email, SMS, and Push Notifications'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
     // Shared libraries
     implementation project(':libs:shared:common')
     implementation project(':libs:shared:kafka-events')
