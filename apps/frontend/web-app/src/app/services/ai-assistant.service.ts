@@ -42,6 +42,8 @@ export class AiAssistantService {
   constructor(private apollo: Apollo) {}
 
   sendMessage(message: string, conversationId?: string, sessionId?: string): Observable<ChatResponse> {
+    console.log('Sending message:', { message, conversationId, sessionId });
+    
     return this.apollo.mutate<{ sendChatMessage: ChatResponse }>({
       mutation: SEND_CHAT_MESSAGE,
       variables: {
@@ -52,7 +54,13 @@ export class AiAssistantService {
         }
       }
     }).pipe(
-      map(result => result.data!.sendChatMessage)
+      map(result => {
+        console.log('GraphQL Result:', result);
+        if (!result.data) {
+          throw new Error('No data received from server');
+        }
+        return result.data.sendChatMessage;
+      })
     );
   }
 
