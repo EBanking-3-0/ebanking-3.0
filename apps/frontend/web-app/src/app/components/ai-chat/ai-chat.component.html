@@ -5,37 +5,48 @@
   <div class="chat-section">
     <h3>Chat with AI Assistant</h3>
     
-    <div class="conversation-info" *ngIf="conversationId">
-      <p><strong>Conversation ID:</strong> {{ conversationId }}</p>
-      <p><strong>Session ID:</strong> {{ sessionId }}</p>
-    </div>
+    @if (conversationId) {
+      <div class="conversation-info">
+        <p><strong>Conversation ID:</strong> {{ conversationId }}</p>
+        <p><strong>Session ID:</strong> {{ sessionId }}</p>
+      </div>
+    }
 
     <div class="messages-container">
-      <div *ngFor="let msg of messages" 
-           [class]="'message ' + msg.role">
-        <div class="message-header">
-          <span class="role">{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}</span>
-          <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+      @for (msg of messages; track msg.timestamp) {
+        <div [class]="'message ' + msg.role">
+          <div class="message-header">
+            <span class="role">{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}</span>
+            <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+          </div>
+          <div class="message-content">{{ msg.content }}</div>
+          
+          @if (msg.intent) {
+            <div class="message-meta">
+              <strong>Intent:</strong> {{ msg.intent }}
+            </div>
+          }
+          
+          @if (msg.actionExecuted) {
+            <div class="message-meta">
+              <strong>Action:</strong> {{ msg.actionExecuted }}
+            </div>
+          }
+          
+          @if (msg.actionResult) {
+            <div class="message-meta">
+              <strong>Result:</strong>
+              <pre>{{ msg.actionResult | json }}</pre>
+            </div>
+          }
         </div>
-        <div class="message-content">{{ msg.content }}</div>
-        
-        <div *ngIf="msg.intent" class="message-meta">
-          <strong>Intent:</strong> {{ msg.intent }}
-        </div>
-        
-        <div *ngIf="msg.actionExecuted" class="message-meta">
-          <strong>Action:</strong> {{ msg.actionExecuted }}
-        </div>
-        
-        <div *ngIf="msg.actionResult" class="message-meta">
-          <strong>Result:</strong>
-          <pre>{{ msg.actionResult | json }}</pre>
-        </div>
-      </div>
+      }
       
-      <div *ngIf="loading" class="message assistant loading">
-        <div class="message-content">Thinking...</div>
-      </div>
+      @if (loading) {
+        <div class="message assistant loading">
+          <div class="message-content">Thinking...</div>
+        </div>
+      }
     </div>
 
     <div class="input-area">
@@ -84,15 +95,19 @@
       <button (click)="executeAction()" [disabled]="!actionName.trim() || loading">
         Execute Action
       </button>
-      <button (click)="clearActionResult()" class="secondary" *ngIf="actionResult">
-        Clear Result
-      </button>
+      @if (actionResult) {
+        <button (click)="clearActionResult()" class="secondary">
+          Clear Result
+        </button>
+      }
     </div>
 
-    <div *ngIf="actionResult" class="action-result">
-      <h4>Action Result:</h4>
-      <pre>{{ actionResult | json }}</pre>
-    </div>
+    @if (actionResult) {
+      <div class="action-result">
+        <h4>Action Result:</h4>
+        <pre>{{ actionResult | json }}</pre>
+      </div>
+    }
   </div>
 
   <!-- Example Prompts -->

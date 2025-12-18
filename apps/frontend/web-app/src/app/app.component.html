@@ -5,18 +5,22 @@
       <p>Nx Monorepo Microservices Architecture</p>
     </div>
     <div class="auth-controls">
-      <button *ngIf="!isLoggedIn" (click)="login()">Login</button>
-      <div *ngIf="isLoggedIn">
+      @if (!isLoggedIn) {
+        <button (click)="login()">Login</button>
+      }
+      @if (isLoggedIn) {
         <span>Welcome, {{ userProfile?.username }}</span>
         <button (click)="logout()">Logout</button>
-      </div>
+      }
     </div>
   </header>
 
-  <nav class="app-nav" *ngIf="isLoggedIn">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Users</a>
-    <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
-  </nav>
+  @if (isLoggedIn) {
+    <nav class="app-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Users</a>
+      <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
+    </nav>
+  }
 
   <main class="app-main">
     <router-outlet></router-outlet>
