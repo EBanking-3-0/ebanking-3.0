@@ -31,7 +31,11 @@ import java.util.UUID;
     @JsonSubTypes.Type(value = MfaVerifiedEvent.class, name = "mfa.verified"),
     @JsonSubTypes.Type(value = CryptoTradeExecutedEvent.class, name = "crypto.trade.executed"),
     @JsonSubTypes.Type(value = NotificationSentEvent.class, name = "notification.sent"),
-    @JsonSubTypes.Type(value = AlertTriggeredEvent.class, name = "alert.triggered")
+    @JsonSubTypes.Type(value = AlertTriggeredEvent.class, name = "alert.triggered"),
+    @JsonSubTypes.Type(value = AssistantMessageReceivedEvent.class, name = "assistant.message.received"),
+    @JsonSubTypes.Type(value = AssistantActionExecutedEvent.class, name = "assistant.action.executed"),
+    @JsonSubTypes.Type(value = AssistantConversationStartedEvent.class, name = "assistant.conversation.started"),
+    @JsonSubTypes.Type(value = AssistantErrorOccurredEvent.class, name = "assistant.error.occurred")
 })
 public abstract class BaseEvent {
     
