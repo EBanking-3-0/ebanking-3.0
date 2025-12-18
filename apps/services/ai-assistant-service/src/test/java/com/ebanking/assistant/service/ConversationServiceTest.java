@@ -37,17 +37,17 @@ class ConversationServiceTest {
     void testCreateConversation() {
         Conversation savedConversation = Conversation.builder()
                 .id("test-id")
-                .userId("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08")
+                .userId(1L)
                 .sessionId("session-123")
                 .createdAt(LocalDateTime.now())
                 .build();
         
         when(conversationRepository.save(any(Conversation.class))).thenReturn(savedConversation);
         
-        Conversation conversation = conversationService.createConversation("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08", "session-123");
+        Conversation conversation = conversationService.createConversation(1L, "session-123");
         
         assertNotNull(conversation.getId());
-        assertEquals("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08", conversation.getUserId());
+        assertEquals(1L, conversation.getUserId());
         assertEquals("session-123", conversation.getSessionId());
         verify(conversationRepository, times(1)).save(any(Conversation.class));
     }
@@ -56,7 +56,7 @@ class ConversationServiceTest {
     void testAddMessage() {
         Conversation existing = Conversation.builder()
                 .id("test-id")
-                .userId("d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08")
+                .userId(1L)
                 .sessionId("session-123")
                 .messages(new ArrayList<>())
                 .build();
@@ -78,13 +78,12 @@ class ConversationServiceTest {
     @Test
     void testGetUserConversations() {
         List<Conversation> conversations = new ArrayList<>();
-        String testUserId = "d81804c0-1e7f-4ee0-8d94-2b6d39e0bf08";
-        conversations.add(Conversation.builder().id("1").userId(testUserId).build());
-        conversations.add(Conversation.builder().id("2").userId(testUserId).build());
+        conversations.add(Conversation.builder().id("1").userId(1L).build());
+        conversations.add(Conversation.builder().id("2").userId(1L).build());
         
-        when(conversationRepository.findByUserIdOrderByUpdatedAtDesc(testUserId)).thenReturn(conversations);
+        when(conversationRepository.findByUserIdOrderByUpdatedAtDesc(1L)).thenReturn(conversations);
         
-        List<Conversation> userConversations = conversationService.getUserConversations(testUserId);
+        List<Conversation> userConversations = conversationService.getUserConversations(1L);
         
         assertEquals(2, userConversations.size());
     }
