@@ -7,13 +7,13 @@ import com.ebanking.assistant.model.Message;
 import com.ebanking.assistant.producer.AssistantEventProducer;
 import com.ebanking.assistant.service.AiService;
 import com.ebanking.assistant.service.ConversationService;
-import com.ebanking.assistant.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,15 +29,14 @@ public class ChatController {
     
     private final AiService aiService;
     private final ConversationService conversationService;
-    private final SecurityUtil securityUtil;
     private final AssistantEventProducer eventProducer;
     
     @PostMapping
     public ResponseEntity<ChatResponse> sendMessage(
             @Valid @RequestBody ChatRequest request,
-            HttpServletRequest httpRequest) {
+            Authentication authentication) {
         
-        String userId = securityUtil.extractUserIdFromHeader(httpRequest);
+        Long userId = extractUserId(authentication);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ChatResponse.builder()
@@ -59,6 +58,9 @@ public class ChatController {
                 eventProducer.publishConversationStarted(userId, conversation.getId(), conversation.getSessionId());
             }
             
+            // Publish message received event
+            eventProducer.publishMessageReceived(userId, conversation.getId(), request.getMessage());
+            
             // Save user message
             Message userMessage = Message.builder()
                     .role(Message.Role.USER)
@@ -73,9 +75,6 @@ public class ChatController {
                     userId,
                     memoryId
             );
-            
-            // Publish message received event with response
-            eventProducer.publishMessageReceived(userId, conversation.getId(), request.getMessage(), response.getResponse());
             
             // Save AI response
             Message aiMessage = Message.builder()
@@ -103,8 +102,8 @@ public class ChatController {
     }
     
     @GetMapping("/conversations")
-    public ResponseEntity<List<Conversation>> getUserConversations(HttpServletRequest request) {
-        String userId = securityUtil.extractUserIdFromHeader(request);
+    public ResponseEntity<List<Conversation>> getUserConversations(Authentication authentication) {
+        Long userId = extractUserId(authentication);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -116,9 +115,9 @@ public class ChatController {
     @GetMapping("/conversations/{id}")
     public ResponseEntity<Conversation> getConversation(
             @PathVariable String id,
-            HttpServletRequest request) {
+            Authentication authentication) {
         
-        String userId = securityUtil.extractUserIdFromHeader(request);
+        Long userId = extractUserId(authentication);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -140,9 +139,9 @@ public class ChatController {
     @DeleteMapping("/conversations/{id}")
     public ResponseEntity<Void> deleteConversation(
             @PathVariable String id,
-            HttpServletRequest request) {
+            Authentication authentication) {
         
-        String userId = securityUtil.extractUserIdFromHeader(request);
+        Long userId = extractUserId(authentication);
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -165,5 +164,37 @@ public class ChatController {
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("AI Assistant Service is UP!");
+    }
+    
+    /**
+     * Extract user ID from JWT token
+     */
+    private Long extractUserId(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
+            return null;
+        }
+        
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        
+        // Try different claim names for userId
+        Object userIdClaim = jwt.getClaim("userId");
+        if (userIdClaim != null) {
+            return Long.valueOf(userIdClaim.toString());
+        }
+        
+        // Try sub claim as fallback
+        String sub = jwt.getSubject();
+        if (sub != null) {
+            try {
+                return Long.valueOf(sub);
+            } catch (NumberFormatException e) {
+                // If sub is a UUID, convert it to a Long using hashCode
+                // This provides a stable numeric ID for the session
+                log.info("Converting UUID sub to numeric userId: {}", sub);
+                return (long) Math.abs(sub.hashCode());
+            }
+        }
+        
+        return null;
     }
 }

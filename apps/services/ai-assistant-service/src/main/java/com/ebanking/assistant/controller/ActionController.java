@@ -2,13 +2,13 @@ package com.ebanking.assistant.controller;
 
 import com.ebanking.assistant.model.ActionRequest;
 import com.ebanking.assistant.service.ActionExecutorService;
-import com.ebanking.assistant.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,16 +25,15 @@ import java.util.Map;
 public class ActionController {
     
     private final ActionExecutorService actionExecutorService;
-    private final SecurityUtil securityUtil;
     
     @PostMapping("/execute")
     public ResponseEntity<Map<String, Object>> executeAction(
             @Valid @RequestBody ActionRequest request,
-            HttpServletRequest httpRequest) {
+            Authentication authentication) {
         
-        String userId = securityUtil.extractUserIdFromHeader(httpRequest);
+        Long userId = extractUserId(authentication);
         if (userId == null) {
-            userId = request.getUserId() != null ? request.getUserId().toString() : null; // Fallback to request userId
+            userId = request.getUserId(); // Fallback to request userId
         }
         
         if (userId == null) {
@@ -54,5 +53,37 @@ public class ActionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+    
+    /**
+     * Extract user ID from JWT token
+     */
+    private Long extractUserId(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
+            return null;
+        }
+        
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        
+        // Try different claim names for userId
+        Object userIdClaim = jwt.getClaim("userId");
+        if (userIdClaim != null) {
+            return Long.valueOf(userIdClaim.toString());
+        }
+        
+        // Try sub claim as fallback
+        String sub = jwt.getSubject();
+        if (sub != null) {
+            try {
+                return Long.valueOf(sub);
+            } catch (NumberFormatException e) {
+                // If sub is a UUID, convert it to a Long using hashCode
+                // This provides a stable numeric ID for the session
+                log.info("Converting UUID sub to numeric userId: {}", sub);
+                return (long) Math.abs(sub.hashCode());
+            }
+        }
+        
+        return null;
     }
 }
