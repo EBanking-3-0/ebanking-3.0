@@ -28,17 +28,8 @@ public class QueryUserInfoAction implements ActionExecutor {
     }
     
     @Override
-    public Map<String, Object> execute(String userId, Map<String, Object> parameters) throws ActionExecutionException {
+    public Map<String, Object> execute(Long userId, Map<String, Object> parameters) throws ActionExecutionException {
         try {
-            // For now, try to convert userId to Long for legacy service clients
-            Long userIdLong = null;
-            try {
-                userIdLong = Long.parseLong(userId);
-            } catch (NumberFormatException e) {
-                // UUID userId, keep as null for now
-                log.warn("Cannot convert UUID userId to Long for legacy clients: {}", userId);
-            }
-            
             Object userIdObj = parameters.get("userId");
             Object emailObj = parameters.get("email");
             
@@ -60,11 +51,8 @@ public class QueryUserInfoAction implements ActionExecutor {
                 userInfo = userServiceClient.getUserById(targetUserId);
             } else {
                 // Default to current user
-                if (userIdLong == null) {
-                    throw new ActionExecutionException("Cannot query user info: userId is not numeric and no userId/email parameter provided");
-                }
-                log.info("Querying user info for current user {}", userIdLong);
-                userInfo = userServiceClient.getUserById(userIdLong);
+                log.info("Querying user info for current user {}", userId);
+                userInfo = userServiceClient.getUserById(userId);
             }
             
             Map<String, Object> result = new HashMap<>();

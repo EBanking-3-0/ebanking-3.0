@@ -28,7 +28,7 @@ public class QueryBalanceAction implements ActionExecutor {
     }
     
     @Override
-    public Map<String, Object> execute(String userId, Map<String, Object> parameters) throws ActionExecutionException {
+    public Map<String, Object> execute(Long userId, Map<String, Object> parameters) throws ActionExecutionException {
         try {
             Object accountIdObj = parameters.get("accountId");
             if (accountIdObj == null) {

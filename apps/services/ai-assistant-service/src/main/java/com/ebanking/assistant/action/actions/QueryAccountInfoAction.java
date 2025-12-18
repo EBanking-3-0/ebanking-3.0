@@ -29,17 +29,8 @@ public class QueryAccountInfoAction implements ActionExecutor {
     }
     
     @Override
-    public Map<String, Object> execute(String userId, Map<String, Object> parameters) throws ActionExecutionException {
+    public Map<String, Object> execute(Long userId, Map<String, Object> parameters) throws ActionExecutionException {
         try {
-            // For now, try to convert userId to Long for legacy service clients
-            Long userIdLong = null;
-            try {
-                userIdLong = Long.parseLong(userId);
-            } catch (NumberFormatException e) {
-                // UUID userId, keep as null for now
-                log.warn("Cannot convert UUID userId to Long for legacy clients: {}", userId);
-            }
-            
             Object accountIdObj = parameters.get("accountId");
             Object userIdObj = parameters.get("userId");
             
@@ -70,11 +61,8 @@ public class QueryAccountInfoAction implements ActionExecutor {
                 result.put("count", accounts != null ? accounts.size() : 0);
             } else {
                 // Default to current user
-                if (userIdLong == null) {
-                    throw new ActionExecutionException("Cannot query accounts: userId is not numeric and no accountId/userId parameter provided");
-                }
-                log.info("Querying accounts for user {}", userIdLong);
-                List<Map<String, Object>> accounts = accountServiceClient.getAccountsByUserId(userIdLong);
+                log.info("Querying accounts for user {}", userId);
+                List<Map<String, Object>> accounts = accountServiceClient.getAccountsByUserId(userId);
                 result.put("accounts", accounts);
                 result.put("count", accounts != null ? accounts.size() : 0);
             }
