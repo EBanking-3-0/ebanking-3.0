@@ -23,7 +23,7 @@ public class Conversation {
     @Id
     private String id;
     
-    private String userId;
+    private Long userId;
     
     private String sessionId;
     
