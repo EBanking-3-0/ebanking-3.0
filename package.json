@@ -32,7 +32,7 @@
   "license": "ISC",
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.2.0",
-    "@angular/platform-browser-dynamic": "^21.0.6",
+    "@angular/platform-browser-dynamic": "21.0.3",
     "@nx/gradle": "^22.2.3",
     "@nx/vite": "^22.3.1",
     "nx": "22.1.3"
