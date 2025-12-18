@@ -4,15 +4,15 @@ server:
 spring:
   application:
     name: ai-assistant-service
+  data:
+    mongodb:
+      # Using URI with authentication credentials
+      uri: ${MONGODB_URI:mongodb://ebanking:ebanking123@localhost:27017/ebanking?authSource=admin}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
-          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
-  data:
-    mongodb:
-      uri: mongodb://ebanking:ebanking123@localhost:27017/ebanking?authSource=admin
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -46,16 +46,12 @@ management:
       prometheus:
         enabled: true
 
-logging:
-  level:
-    com.ebanking.assistant.util.SecurityUtil: DEBUG
-
 # AI Assistant Configuration
 ai:
   assistant:
     provider: ${AI_PROVIDER:openai}
     model: ${AI_MODEL:gpt-4o-mini}
-    api-key: ${OPENAI_API_KEY}
+    api-key: ${OPENAI_API_KEY:}
     temperature: ${AI_TEMPERATURE:0.7}
     max-tokens: ${AI_MAX_TOKENS:1000}
     enable-actions: ${AI_ENABLE_ACTIONS:true}

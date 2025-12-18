@@ -12,33 +12,29 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ActionExecutorService {
-
-  private final ActionRegistry actionRegistry;
-
-  public Map<String, Object> executeAction(
-      String actionName, String userId, Map<String, Object> parameters)
-      throws ActionExecutionException {
-
-    ActionExecutor executor =
-        actionRegistry
-            .getAction(actionName)
-            .orElseThrow(() -> new ActionExecutionException("Unknown action: " + actionName));
-
-    // Check authorization
-    if (!executor.isAuthorized(userId, parameters)) {
-      throw new ActionExecutionException(
-          "User " + userId + " is not authorized to execute action: " + actionName);
+    
+    private final ActionRegistry actionRegistry;
+    
+    public Map<String, Object> executeAction(String actionName, Long userId, Map<String, Object> parameters) 
+            throws ActionExecutionException {
+        
+        ActionExecutor executor = actionRegistry.getAction(actionName)
+                .orElseThrow(() -> new ActionExecutionException("Unknown action: " + actionName));
+        
+        // Check authorization
+        if (!executor.isAuthorized(userId, parameters)) {
+            throw new ActionExecutionException("User " + userId + " is not authorized to execute action: " + actionName);
+        }
+        
+        log.info("Executing action {} for user {} with parameters {}", actionName, userId, parameters);
+        
+        try {
+            Map<String, Object> result = executor.execute(userId, parameters);
+            log.info("Action {} executed successfully for user {}", actionName, userId);
+            return result;
+        } catch (ActionExecutionException e) {
+            log.error("Action execution failed: {}", e.getMessage());
+            throw e;
+        }
     }
-
-    log.info("Executing action {} for user {} with parameters {}", actionName, userId, parameters);
-
-    try {
-      Map<String, Object> result = executor.execute(userId, parameters);
-      log.info("Action {} executed successfully for user {}", actionName, userId);
-      return result;
-    } catch (ActionExecutionException e) {
-      log.error("Action execution failed: {}", e.getMessage());
-      throw e;
-    }
-  }
 }
