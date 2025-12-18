@@ -7,12 +7,11 @@ export function initializeKeycloak(keycloak: KeycloakService) {
       config: {
         url: environment.keycloak.url,
         realm: environment.keycloak.realm,
-        clientId: environment.keycloak.clientId
+        clientId: environment.keycloak.clientId,
       },
       initOptions: {
         onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/assets/silent-check-sso.html'
+        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
       },
       enableBearerInterceptor: true,
       bearerPrefix: 'Bearer',

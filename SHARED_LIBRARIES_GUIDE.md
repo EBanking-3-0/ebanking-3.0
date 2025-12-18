@@ -84,6 +84,7 @@ public class PaymentProcessedEvent extends BaseEvent {
 ```
 
 **Key Points**:
+
 - Must extend `BaseEvent`
 - Use `@SuperBuilder` (not `@Builder`)
 - Add `@EqualsAndHashCode(callSuper=true)` to properly handle inherited fields
@@ -96,7 +97,7 @@ Add your event topics to `KafkaTopics.java` in the kafka-events library:
 ```java
 public class KafkaTopics {
     // Existing topics...
-    
+
     // Payment Service
     public static final String PAYMENT_PROCESSED = "payment.processed";
     public static final String PAYMENT_FAILED = "payment.failed";
@@ -115,10 +116,10 @@ import com.ebanking.shared.kafka.KafkaTopics;
 @RequiredArgsConstructor
 public class PaymentService {
     private final EventProducer eventProducer;
-    
+
     public void processPayment(String paymentId, String userId, Double amount) {
         // Process payment...
-        
+
         PaymentProcessedEvent event = PaymentProcessedEvent.builder()
             .paymentId(paymentId)
             .userId(userId)
@@ -127,7 +128,7 @@ public class PaymentService {
             .source("payment-service")
             .correlationId(userId) // Link related events
             .build();
-        
+
         eventProducer.publishEvent(KafkaTopics.PAYMENT_PROCESSED, event);
     }
 }
@@ -143,7 +144,7 @@ import com.ebanking.shared.kafka.consumer.BaseEventConsumer;
 @Service
 @Slf4j
 public class PaymentEventConsumer extends BaseEventConsumer<PaymentProcessedEvent> {
-    
+
     @Override
     @KafkaListener(topics = KafkaTopics.PAYMENT_PROCESSED, groupId = "notification-service")
     public void consume(PaymentProcessedEvent event) {
@@ -186,7 +187,7 @@ import com.ebanking.shared.dto.ChatResponseDTO;
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
-    
+
     @PostMapping
     public ResponseEntity<ChatResponseDTO> sendMessage(
             @Valid @RequestBody ChatRequestDTO request) {
@@ -215,14 +216,14 @@ import jakarta.validation.constraints.*;
 public class PaymentDTO {
     @NotBlank
     private String paymentId;
-    
+
     @NotNull
     @Positive
     private Double amount;
-    
+
     @NotBlank
     private String currency;
-    
+
     @NotBlank
     private String status;
 }
@@ -267,23 +268,23 @@ import com.ebanking.shared.exceptions.BusinessException;
 
 @Service
 public class PaymentService {
-    
+
     public Payment getPayment(String paymentId) {
         return paymentRepository.findById(paymentId)
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Payment not found: " + paymentId
             ));
     }
-    
+
     public void cancelPayment(String paymentId) {
         Payment payment = getPayment(paymentId);
-        
+
         if (!payment.canBeCancelled()) {
             throw new BusinessException(
                 "Payment cannot be cancelled in status: " + payment.getStatus()
             );
         }
-        
+
         // Cancel logic...
     }
 }
@@ -324,13 +325,13 @@ import com.ebanking.shared.common.config.CommonConfig;
 
 @Service
 public class MyService {
-    
+
     public void processData(String input) {
         // Use common utilities
         if (StringUtils.isNullOrEmpty(input)) {
             throw new ValidationException("Input cannot be empty");
         }
-        
+
         String processed = StringUtils.sanitize(input);
         // Continue processing...
     }
@@ -383,11 +384,11 @@ import com.ebanking.shared.security.SecurityUtil;
 
 @Service
 public class UserService {
-    
+
     public UserProfile getCurrentUserProfile() {
         String userId = SecurityUtil.getCurrentUserId(); // From JWT "sub" claim
         String username = SecurityUtil.getCurrentUsername();
-        
+
         return userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException(
                 "User not found: " + userId
@@ -404,14 +405,14 @@ Endpoints are protected by default via Spring Security. Use annotations to fine-
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
-    
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO payment) {
         // Only users with USER role can access
         return ResponseEntity.ok(paymentService.create(payment));
     }
-    
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PaymentDTO> getPayment(@PathVariable String id) {
@@ -438,7 +439,7 @@ dependencies {
     implementation project(':libs:shared:exceptions')
     implementation project(':libs:shared:kafka-events')
     implementation project(':libs:shared:security')
-    
+
     // Other dependencies...
 }
 ```
@@ -447,17 +448,17 @@ dependencies {
 
 ```yaml
 server:
-  port: 8085  # Unique port for your service
+  port: 8085 # Unique port for your service
 
 spring:
   application:
-    name: your-service  # Must match Eureka registration name
-  
+    name: your-service # Must match Eureka registration name
+
   # Database
   data:
     mongodb:
       uri: mongodb://ebanking:ebanking123@localhost:27017/ebanking?authSource=admin
-  
+
   # Kafka
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
@@ -470,7 +471,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-  
+
   # Security
   security:
     oauth2:
@@ -504,7 +505,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 public class YourServiceApplication {
-    
+
     public static void main(String[] args) {
         SpringApplication.run(YourServiceApplication.class, args);
     }
@@ -525,16 +526,16 @@ Use shared DTOs and exceptions:
 @RequiredArgsConstructor
 @Slf4j
 public class ResourceController {
-    
+
     private final ResourceService resourceService;
     private final EventProducer eventProducer;
-    
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResourceDTO> create(@Valid @RequestBody CreateResourceDTO request) {
         try {
             ResourceDTO resource = resourceService.create(request);
-            
+
             // Publish event
             ResourceCreatedEvent event = ResourceCreatedEvent.builder()
                 .resourceId(resource.getId())
@@ -542,14 +543,14 @@ public class ResourceController {
                 .source("your-service")
                 .build();
             eventProducer.publishEvent(KafkaTopics.RESOURCE_CREATED, event);
-            
+
             return ResponseEntity.status(HttpStatus.CREATED).body(resource);
         } catch (BusinessException e) {
             log.error("Business error creating resource", e);
             throw e;
         }
     }
-    
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ResourceDTO> get(@PathVariable String id) {
@@ -565,12 +566,14 @@ public class ResourceController {
 ### 1. Event Design
 
 ✅ **DO**:
+
 - Create a new event class for each significant business event
 - Include correlation IDs for tracing related events
 - Use immutable field types
 - Document event semantics
 
 ❌ **DON'T**:
+
 - Reuse generic event classes
 - Include sensitive data in events
 - Use mutable collections
@@ -578,12 +581,14 @@ public class ResourceController {
 ### 2. Exception Handling
 
 ✅ **DO**:
+
 - Throw specific exceptions (`BusinessException`, `ResourceNotFoundException`)
 - Include meaningful error messages
 - Catch and log exceptions at service boundaries
 - Let Spring's exception handlers convert to HTTP responses
 
 ❌ **DON'T**:
+
 - Catch generic `Exception`
 - Return errors in successful HTTP responses
 - Log sensitive data in error messages
@@ -591,12 +596,14 @@ public class ResourceController {
 ### 3. Security
 
 ✅ **DO**:
+
 - Use `@PreAuthorize` for role-based access control
 - Extract user context using `SecurityUtil`
 - Validate JWT tokens (automatic)
 - Use correlation IDs for audit trails
 
 ❌ **DON'T**:
+
 - Bypass security checks
 - Store sensitive data unencrypted
 - Log authentication tokens
@@ -604,12 +611,14 @@ public class ResourceController {
 ### 4. Kafka Events
 
 ✅ **DO**:
+
 - Use events for inter-service communication
 - Include timestamps and versions in events
 - Consume events asynchronously
 - Implement idempotent consumers
 
 ❌ **DON'T**:
+
 - Use events for synchronous operations (use Feign/REST instead)
 - Include large binary data in events
 - Create events without business meaning
@@ -617,12 +626,14 @@ public class ResourceController {
 ### 5. DTOs
 
 ✅ **DO**:
+
 - Use shared DTOs for cross-service communication
 - Add validation annotations
 - Version your DTOs if schema changes occur
 - Use specific, immutable types
 
 ❌ **DON'T**:
+
 - Use domain entities as DTOs
 - Accept unvalidated input
 - Return all fields (use projections)
@@ -636,6 +647,7 @@ public class ResourceController {
 **Symptom**: `EventProducer` bean not found
 
 **Solution**:
+
 1. Verify `spring.kafka.bootstrap-servers` is configured in `application.yml`
 2. Rebuild kafka-events library: `nx build kafka-events`
 3. Check that `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` exists
@@ -645,6 +657,7 @@ public class ResourceController {
 **Symptom**: 401 Unauthorized on protected endpoints
 
 **Solution**:
+
 1. Verify Keycloak is running on port 8092
 2. Check `SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI` environment variable
 3. Ensure JWT token is included in `Authorization: Bearer <token>` header
@@ -654,6 +667,7 @@ public class ResourceController {
 **Symptom**: No messages in Kafka topics
 
 **Solution**:
+
 1. Verify Kafka is running on port 9092
 2. Check service logs for exceptions
 3. Verify topic names in `KafkaTopics` class
@@ -664,6 +678,7 @@ public class ResourceController {
 **Symptom**: Invalid data accepted by API
 
 **Solution**:
+
 1. Add `@Valid` annotation to controller parameters
 2. Add validation annotations (`@NotNull`, `@NotBlank`, etc.) to DTO fields
 3. Ensure `spring-boot-starter-validation` dependency is present
@@ -672,13 +687,13 @@ public class ResourceController {
 
 ## Quick Reference
 
-| Library | Purpose | Key Classes | Setup |
-|---------|---------|-------------|-------|
-| `kafka-events` | Event-driven architecture | `EventProducer`, `BaseEvent` | Configure `spring.kafka` |
-| `dto` | Data transfer | `*DTO` classes | Import and use |
-| `exceptions` | Error handling | `BusinessException`, `ResourceNotFoundException` | Throw in services |
-| `common` | Utilities | `StringUtils`, `DateUtils` | Use static methods |
-| `security` | Auth/JWT | `SecurityUtil`, `JwtAuthConverter` | Configure OAuth2 |
+| Library        | Purpose                   | Key Classes                                      | Setup                    |
+| -------------- | ------------------------- | ------------------------------------------------ | ------------------------ |
+| `kafka-events` | Event-driven architecture | `EventProducer`, `BaseEvent`                     | Configure `spring.kafka` |
+| `dto`          | Data transfer             | `*DTO` classes                                   | Import and use           |
+| `exceptions`   | Error handling            | `BusinessException`, `ResourceNotFoundException` | Throw in services        |
+| `common`       | Utilities                 | `StringUtils`, `DateUtils`                       | Use static methods       |
+| `security`     | Auth/JWT                  | `SecurityUtil`, `JwtAuthConverter`               | Configure OAuth2         |
 
 ---
 
@@ -688,4 +703,3 @@ public class ResourceController {
 - [Spring Security OAuth2](https://spring.io/projects/spring-security-oauth)
 - [Spring Data MongoDB](https://spring.io/projects/spring-data-mongodb)
 - [Keycloak Documentation](https://www.keycloak.org/documentation)
-

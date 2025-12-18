@@ -4,7 +4,7 @@
   <!-- Chat Section -->
   <div class="chat-section">
     <h3>Chat with AI Assistant</h3>
-    
+
     @if (conversationId) {
       <div class="conversation-info">
         <p><strong>Conversation ID:</strong> {{ conversationId }}</p>
@@ -17,22 +17,18 @@
         <div [class]="'message ' + msg.role">
           <div class="message-header">
             <span class="role">{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}</span>
-            <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+            <span class="timestamp">{{ msg.timestamp | date: 'short' }}</span>
           </div>
           <div class="message-content">{{ msg.content }}</div>
-          
+
           @if (msg.intent) {
-            <div class="message-meta">
-              <strong>Intent:</strong> {{ msg.intent }}
-            </div>
+            <div class="message-meta"><strong>Intent:</strong> {{ msg.intent }}</div>
           }
-          
+
           @if (msg.actionExecuted) {
-            <div class="message-meta">
-              <strong>Action:</strong> {{ msg.actionExecuted }}
-            </div>
+            <div class="message-meta"><strong>Action:</strong> {{ msg.actionExecuted }}</div>
           }
-          
+
           @if (msg.actionResult) {
             <div class="message-meta">
               <strong>Result:</strong>
@@ -41,7 +37,7 @@
           }
         </div>
       }
-      
+
       @if (loading) {
         <div class="message assistant loading">
           <div class="message-content">Thinking...</div>
@@ -50,19 +46,18 @@
     </div>
 
     <div class="input-area">
-      <textarea 
+      <textarea
         [(ngModel)]="message"
         (keydown.enter)="onEnterKey($any($event))"
         placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
         rows="3"
-        [disabled]="loading"></textarea>
+        [disabled]="loading"
+      ></textarea>
       <div class="button-group">
         <button (click)="sendMessage()" [disabled]="!message.trim() || loading">
           Send Message
         </button>
-        <button (click)="clearChat()" class="secondary">
-          Clear Chat
-        </button>
+        <button (click)="clearChat()" class="secondary">Clear Chat</button>
       </div>
     </div>
   </div>
@@ -70,25 +65,27 @@
   <!-- Action Execution Section -->
   <div class="action-section">
     <h3>Direct Action Execution (Admin/Testing)</h3>
-    
+
     <div class="form-group">
       <label for="actionName">Action Name:</label>
-      <input 
+      <input
         id="actionName"
-        type="text" 
+        type="text"
         [(ngModel)]="actionName"
         placeholder="e.g., get_account_balance"
-        [disabled]="loading" />
+        [disabled]="loading"
+      />
     </div>
 
     <div class="form-group">
       <label for="actionParams">Parameters (JSON):</label>
-      <textarea 
+      <textarea
         id="actionParams"
         [(ngModel)]="actionParams"
         placeholder='{"key": "value"}'
         rows="4"
-        [disabled]="loading"></textarea>
+        [disabled]="loading"
+      ></textarea>
     </div>
 
     <div class="button-group">
@@ -96,9 +93,7 @@
         Execute Action
       </button>
       @if (actionResult) {
-        <button (click)="clearActionResult()" class="secondary">
-          Clear Result
-        </button>
+        <button (click)="clearActionResult()" class="secondary">Clear Result</button>
       }
     </div>
 

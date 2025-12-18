@@ -70,15 +70,9 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" (click)="cancel()">
-            Cancel
-          </button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="!userForm.valid || loading"
-          >
-            {{ loading ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User') }}
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid || loading">
+            {{ loading ? 'Saving...' : isEditMode ? 'Update User' : 'Create User' }}
           </button>
         </div>
       </form>

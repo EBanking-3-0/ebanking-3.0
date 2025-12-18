@@ -100,7 +100,7 @@ services:
       - ./tools/docker/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - ebanking-network
 
@@ -176,7 +176,6 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     networks:
       - ebanking-network
-
 
 networks:
   ebanking-network:

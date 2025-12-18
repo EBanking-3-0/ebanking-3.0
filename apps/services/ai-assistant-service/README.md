@@ -80,7 +80,7 @@ GET    /api/chat/health             # Health check
 ```yaml
 ai:
   assistant:
-    provider: openai  # or anthropic
+    provider: openai # or anthropic
     model: gpt-4o-mini
     api-key: ${OPENAI_API_KEY}
     temperature: 0.7
@@ -103,6 +103,7 @@ ai:
 ## Authentication
 
 The service uses JWT tokens for authentication:
+
 - Extract `userId` from JWT token in `Authorization` header
 - For development/testing: Use `X-User-Id` header as fallback
 - All actions verify user authorization before execution

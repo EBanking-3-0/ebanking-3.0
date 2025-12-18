@@ -11,7 +11,7 @@ describe('App', () => {
       isLoggedIn: vi.fn().mockResolvedValue(false),
       getKeycloakInstance: vi.fn().mockReturnValue({ idTokenParsed: {} }),
       login: vi.fn(),
-      logout: vi.fn()
+      logout: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe('App', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: KeycloakService, useValue: keycloakMock }
+        { provide: KeycloakService, useValue: keycloakMock },
       ],
     }).compileComponents();
   });

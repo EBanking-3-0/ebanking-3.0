@@ -8,5 +8,5 @@ export const routes: Routes = [
   { path: 'users/new', component: UserFormComponent },
   { path: 'users/edit/:id', component: UserFormComponent },
   { path: 'ai-chat', component: AiChatComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

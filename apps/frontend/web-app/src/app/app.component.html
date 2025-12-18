@@ -17,7 +17,9 @@
 
   @if (isLoggedIn) {
     <nav class="app-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Users</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Users</a
+      >
       <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
     </nav>
   }

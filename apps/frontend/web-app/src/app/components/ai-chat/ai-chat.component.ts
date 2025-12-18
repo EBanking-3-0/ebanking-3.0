@@ -17,7 +17,7 @@ interface Message {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './ai-chat.component.html',
-  styleUrls: ['./ai-chat.component.scss']
+  styleUrls: ['./ai-chat.component.scss'],
 })
 export class AiChatComponent {
   message: string = '';
@@ -33,7 +33,7 @@ export class AiChatComponent {
 
   constructor(
     private aiService: AiAssistantService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   sendMessage() {
@@ -42,7 +42,7 @@ export class AiChatComponent {
     const userMessage: Message = {
       role: 'user',
       content: this.message,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
     this.messages.push(userMessage);
 
@@ -50,44 +50,43 @@ export class AiChatComponent {
     const messageText = this.message;
     this.message = '';
 
-    this.aiService.sendMessage(messageText, this.conversationId, this.sessionId)
-      .subscribe({
-        next: (response) => {
-          console.log('AI Response:', response);
-          
-          const assistantMessage: Message = {
-            role: 'assistant',
-            content: response.response,
-            intent: response.intent,
-            actionExecuted: response.actionExecuted,
-            actionResult: response.actionResult,
-            timestamp: new Date()
-          };
-          this.messages.push(assistantMessage);
-          
-          // Update conversation IDs
-          if (response.conversationId) {
-            this.conversationId = response.conversationId;
-          }
-          if (response.sessionId) {
-            this.sessionId = response.sessionId;
-          }
-          
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error sending message:', error);
-          const errorMessage: Message = {
-            role: 'assistant',
-            content: 'Sorry, I encountered an error. Please try again.',
-            timestamp: new Date()
-          };
-          this.messages.push(errorMessage);
-          this.loading = false;
-          this.cdr.detectChanges();
+    this.aiService.sendMessage(messageText, this.conversationId, this.sessionId).subscribe({
+      next: (response) => {
+        console.log('AI Response:', response);
+
+        const assistantMessage: Message = {
+          role: 'assistant',
+          content: response.response,
+          intent: response.intent,
+          actionExecuted: response.actionExecuted,
+          actionResult: response.actionResult,
+          timestamp: new Date(),
+        };
+        this.messages.push(assistantMessage);
+
+        // Update conversation IDs
+        if (response.conversationId) {
+          this.conversationId = response.conversationId;
         }
-      });
+        if (response.sessionId) {
+          this.sessionId = response.sessionId;
+        }
+
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error sending message:', error);
+        const errorMessage: Message = {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+          timestamp: new Date(),
+        };
+        this.messages.push(errorMessage);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   executeAction() {
@@ -97,18 +96,17 @@ export class AiChatComponent {
       const params = JSON.parse(this.actionParams);
       this.loading = true;
 
-      this.aiService.executeAction(this.actionName, params)
-        .subscribe({
-          next: (result) => {
-            this.actionResult = result;
-            this.loading = false;
-          },
-          error: (error) => {
-            console.error('Error executing action:', error);
-            this.actionResult = { error: error.message || 'Action execution failed' };
-            this.loading = false;
-          }
-        });
+      this.aiService.executeAction(this.actionName, params).subscribe({
+        next: (result) => {
+          this.actionResult = result;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error executing action:', error);
+          this.actionResult = { error: error.message || 'Action execution failed' };
+          this.loading = false;
+        },
+      });
     } catch (e) {
       this.actionResult = { error: 'Invalid JSON parameters' };
     }

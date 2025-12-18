@@ -3,19 +3,12 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "@angular/build:application": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "test": {
       "cache": true
@@ -25,9 +18,7 @@
     }
   },
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*"
-    ],
+    "default": ["{projectRoot}/**/*"],
     "production": [
       "!{projectRoot}/**/*.spec.ts",
       "!{projectRoot}/test/**/*",

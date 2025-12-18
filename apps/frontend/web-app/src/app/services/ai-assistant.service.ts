@@ -36,45 +36,51 @@ const EXECUTE_ACTION = gql`
 `;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AiAssistantService {
   constructor(private apollo: Apollo) {}
 
-  sendMessage(message: string, conversationId?: string, sessionId?: string): Observable<ChatResponse> {
+  sendMessage(
+    message: string,
+    conversationId?: string,
+    sessionId?: string,
+  ): Observable<ChatResponse> {
     console.log('Sending message:', { message, conversationId, sessionId });
-    
-    return this.apollo.mutate<{ sendChatMessage: ChatResponse }>({
-      mutation: SEND_CHAT_MESSAGE,
-      variables: {
-        input: {
-          message,
-          conversationId,
-          sessionId
-        }
-      }
-    }).pipe(
-      map(result => {
-        console.log('GraphQL Result:', result);
-        if (!result.data) {
-          throw new Error('No data received from server');
-        }
-        return result.data.sendChatMessage;
+
+    return this.apollo
+      .mutate<{ sendChatMessage: ChatResponse }>({
+        mutation: SEND_CHAT_MESSAGE,
+        variables: {
+          input: {
+            message,
+            conversationId,
+            sessionId,
+          },
+        },
       })
-    );
+      .pipe(
+        map((result) => {
+          console.log('GraphQL Result:', result);
+          if (!result.data) {
+            throw new Error('No data received from server');
+          }
+          return result.data.sendChatMessage;
+        }),
+      );
   }
 
   executeAction(actionName: string, parameters: Record<string, any>): Observable<any> {
-    return this.apollo.mutate<{ executeAction: any }>({
-      mutation: EXECUTE_ACTION,
-      variables: {
-        input: {
-          actionName,
-          parameters: JSON.stringify(parameters)
-        }
-      }
-    }).pipe(
-      map(result => result.data!.executeAction)
-    );
+    return this.apollo
+      .mutate<{ executeAction: any }>({
+        mutation: EXECUTE_ACTION,
+        variables: {
+          input: {
+            actionName,
+            parameters: JSON.stringify(parameters),
+          },
+        },
+      })
+      .pipe(map((result) => result.data!.executeAction));
   }
 }
