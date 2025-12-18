@@ -25,6 +25,9 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
+    
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false)
     private String phone;
@@ -32,19 +35,24 @@ public class User {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private UserStatus status = UserStatus.ACTIVE; // General account status
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private KycStatus kycStatus = KycStatus.PENDING; // KYC verification state [cite: 25]
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean rgpdConsent = false; // User data consent [cite: 36]
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public enum UserStatus {

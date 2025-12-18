@@ -23,6 +23,11 @@ public class UserController {
         User createdUser = userService.createUser(userToCreate);
         return new ResponseEntity<>(UserResponse.fromEntity(createdUser), HttpStatus.CREATED);
     }
+    
+    @GetMapping("/test")
+    public String testendpoint(){
+        return "test successful";
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {

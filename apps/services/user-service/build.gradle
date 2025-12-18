@@ -12,10 +12,16 @@ dependencyManagement {
     }
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
-    // Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annt -botationProcessor 'org.projectlombok:lombok'
+    // Shared libraries (add these to match other services; remove if not needed)
+    implementation project(':libs:shared:common')
+    implementation project(':libs:shared:kafka-events')
+    implementation project(':libs:shared:security')
+    implementation project(':libs:shared:dto')
 
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -27,9 +33,6 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-    // Shared libraries
-    implementation project(':libs:shared:kafka-events')
-
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
 
@@ -39,6 +42,11 @@ dependencies {
     // Observability
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'

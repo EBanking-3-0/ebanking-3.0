@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+            jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
   datasource:
     url: jdbc:postgresql://localhost:5432/ebanking
     username: ebanking

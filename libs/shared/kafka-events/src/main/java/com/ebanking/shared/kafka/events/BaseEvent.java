@@ -22,6 +22,8 @@ import java.util.UUID;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = UserCreatedEvent.class, name = "user.created"),
     @JsonSubTypes.Type(value = UserUpdatedEvent.class, name = "user.updated"),
+    @JsonSubTypes.Type(value = UserDeletedEvent.class, name = "user.deleted"),
+    @JsonSubTypes.Type(value = KycUpdatedEvent.class, name = "user.kyc.updated"),
     @JsonSubTypes.Type(value = AccountCreatedEvent.class, name = "account.created"),
     @JsonSubTypes.Type(value = BalanceUpdatedEvent.class, name = "balance.updated"),
     @JsonSubTypes.Type(value = TransactionCompletedEvent.class, name = "transaction.completed"),
