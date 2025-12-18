@@ -14,8 +14,8 @@ dependencyManagement {
 
 dependencies {
     // Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     // Shared libraries
     implementation project(':libs:shared:common')
@@ -54,6 +54,10 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+
+springBoot {
+    mainClass = 'com.ebanking.assistant.AiAssistantApplication'
 }
 
 test {
