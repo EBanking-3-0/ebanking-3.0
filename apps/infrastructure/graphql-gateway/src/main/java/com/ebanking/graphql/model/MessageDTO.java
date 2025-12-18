@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDTO {
-    private String role;
-    private String content;
-    private String timestamp;
-    private String intent;
-    private String actionExecuted;
-    private Object actionResult;
+  private String role;
+  private String content;
+  private String timestamp;
+  private String intent;
+  private String actionExecuted;
+  private Object actionResult;
 }

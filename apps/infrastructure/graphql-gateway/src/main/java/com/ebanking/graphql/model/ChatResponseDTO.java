@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatResponseDTO {
-    private String conversationId;
-    private String sessionId;
-    private String response;
-    private String intent;
-    private String actionExecuted;
-    private Object actionResult;
+  private String conversationId;
+  private String sessionId;
+  private String response;
+  private String intent;
+  private String actionExecuted;
+  private Object actionResult;
 }

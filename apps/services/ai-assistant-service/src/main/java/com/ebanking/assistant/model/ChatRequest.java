@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRequest {
-    
-    @NotBlank(message = "Message cannot be blank")
-    private String message;
-    
-    private String conversationId;
-    
-    private String sessionId;
+
+  @NotBlank(message = "Message cannot be blank")
+  private String message;
+
+  private String conversationId;
+
+  private String sessionId;
 }

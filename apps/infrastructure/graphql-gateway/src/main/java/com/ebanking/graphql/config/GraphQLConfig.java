@@ -8,9 +8,8 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 @Configuration
 public class GraphQLConfig {
 
-    @Bean
-    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder
-                .scalar(ExtendedScalars.Json);
-    }
+  @Bean
+  public RuntimeWiringConfigurer runtimeWiringConfigurer() {
+    return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Json);
+  }
 }

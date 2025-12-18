@@ -9,14 +9,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class AiAssistantQueryResolver {
 
-    private final AiAssistantServiceClient aiAssistantServiceClient;
+  private final AiAssistantServiceClient aiAssistantServiceClient;
 
-    public AiAssistantQueryResolver(AiAssistantServiceClient aiAssistantServiceClient) {
-        this.aiAssistantServiceClient = aiAssistantServiceClient;
-    }
+  public AiAssistantQueryResolver(AiAssistantServiceClient aiAssistantServiceClient) {
+    this.aiAssistantServiceClient = aiAssistantServiceClient;
+  }
 
-    @QueryMapping
-    public ConversationDTO conversation(@Argument String id) {
-        return aiAssistantServiceClient.getConversation(id);
-    }
+  @QueryMapping
+  public ConversationDTO conversation(@Argument String id) {
+    return aiAssistantServiceClient.getConversation(id);
+  }
 }

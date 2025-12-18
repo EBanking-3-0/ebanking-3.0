@@ -7,24 +7,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.stereotype.Component;
 
-/**
- * Consumer for audit events.
- * Logs all events to MongoDB for compliance and audit trail.
- */
+/** Consumer for audit events. Logs all events to MongoDB for compliance and audit trail. */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuditConsumer extends BaseEventConsumer {
 
-    // Would inject AuditRepository here
-    // private final AuditRepository auditRepository;
+  // Would inject AuditRepository here
+  // private final AuditRepository auditRepository;
 
-    @KafkaListener(topics = {
+  @KafkaListener(
+      topics = {
         KafkaTopics.USER_CREATED,
         KafkaTopics.USER_UPDATED,
         KafkaTopics.ACCOUNT_CREATED,
@@ -37,32 +35,38 @@ public class AuditConsumer extends BaseEventConsumer {
         KafkaTopics.CRYPTO_TRADE_EXECUTED,
         KafkaTopics.NOTIFICATION_SENT,
         KafkaTopics.ALERT_TRIGGERED
-    })
-    public void handleAuditEvent(
-            @Payload BaseEvent event,
-            Acknowledgment acknowledgment,
-            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
-            @Header(KafkaHeaders.OFFSET) long offset) {
-        
-        processEvent(event, acknowledgment, partition, offset, () -> {
-            // Log event to audit trail
-            log.info("Audit log - Event: {} | ID: {} | Source: {} | Timestamp: {}", 
-                event.getEventType(), event.getEventId(), event.getSource(), event.getTimestamp());
-            
-            // In production, would save to MongoDB:
-            // AuditLog auditLog = AuditLog.builder()
-            //     .eventId(event.getEventId())
-            //     .eventType(event.getEventType())
-            //     .timestamp(event.getTimestamp())
-            //     .source(event.getSource())
-            //     .correlationId(event.getCorrelationId())
-            //     .version(event.getVersion())
-            //     .payload(event) // Serialized event
-            //     .build();
-            // auditRepository.save(auditLog);
+      })
+  public void handleAuditEvent(
+      @Payload BaseEvent event,
+      Acknowledgment acknowledgment,
+      @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
+      @Header(KafkaHeaders.OFFSET) long offset) {
+
+    processEvent(
+        event,
+        acknowledgment,
+        partition,
+        offset,
+        () -> {
+          // Log event to audit trail
+          log.info(
+              "Audit log - Event: {} | ID: {} | Source: {} | Timestamp: {}",
+              event.getEventType(),
+              event.getEventId(),
+              event.getSource(),
+              event.getTimestamp());
+
+          // In production, would save to MongoDB:
+          // AuditLog auditLog = AuditLog.builder()
+          //     .eventId(event.getEventId())
+          //     .eventType(event.getEventType())
+          //     .timestamp(event.getTimestamp())
+          //     .source(event.getSource())
+          //     .correlationId(event.getCorrelationId())
+          //     .version(event.getVersion())
+          //     .payload(event) // Serialized event
+          //     .build();
+          // auditRepository.save(auditLog);
         });
-    }
-
-
+  }
 }
-

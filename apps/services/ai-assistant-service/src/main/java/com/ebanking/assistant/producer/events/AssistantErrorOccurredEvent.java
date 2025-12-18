@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Event published when an error occurs in the AI assistant service
- */
+/** Event published when an error occurs in the AI assistant service */
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor@lombok.EqualsAndHashCode(callSuper=true)public class AssistantErrorOccurredEvent extends BaseEvent {
-    private String userId;
-    private String conversationId;
-    private String errorType;
-    private String errorMessage;
+@AllArgsConstructor
+@lombok.EqualsAndHashCode(callSuper = true)
+public class AssistantErrorOccurredEvent extends BaseEvent {
+  private String userId;
+  private String conversationId;
+  private String errorType;
+  private String errorMessage;
 }

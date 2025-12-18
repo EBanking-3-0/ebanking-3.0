@@ -45,3 +45,6 @@ jobs:
 
       - name: Build Affected
         run: npx nx affected -t build --parallel=3
+
+      - name: Lint Affected
+        run: npx nx affected -t lint --parallel=3

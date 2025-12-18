@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class GraphQLGatewayApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GraphQLGatewayApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(GraphQLGatewayApplication.class, args);
+  }
 }

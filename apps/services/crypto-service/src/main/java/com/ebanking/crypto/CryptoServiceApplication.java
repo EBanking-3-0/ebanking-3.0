@@ -8,8 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class CryptoServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CryptoServiceApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(CryptoServiceApplication.class, args);
+  }
 }
-

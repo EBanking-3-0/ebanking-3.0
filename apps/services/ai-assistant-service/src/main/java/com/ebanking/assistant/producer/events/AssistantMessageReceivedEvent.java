@@ -6,17 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Event published when AI assistant processes a user message
- */
+/** Event published when AI assistant processes a user message */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@lombok.EqualsAndHashCode(callSuper=true)
+@lombok.EqualsAndHashCode(callSuper = true)
 public class AssistantMessageReceivedEvent extends BaseEvent {
-    private String userId;
-    private String conversationId;
-    private String message;
-    private String response;
+  private String userId;
+  private String conversationId;
+  private String message;
+  private String response;
 }

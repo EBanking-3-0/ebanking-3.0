@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Event published when a new conversation is started with the AI assistant
- */
+/** Event published when a new conversation is started with the AI assistant */
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor@lombok.EqualsAndHashCode(callSuper=true)public class AssistantConversationStartedEvent extends BaseEvent {
-    private String userId;
-    private String conversationId;
-    private String sessionId;
+@AllArgsConstructor
+@lombok.EqualsAndHashCode(callSuper = true)
+public class AssistantConversationStartedEvent extends BaseEvent {
+  private String userId;
+  private String conversationId;
+  private String sessionId;
 }

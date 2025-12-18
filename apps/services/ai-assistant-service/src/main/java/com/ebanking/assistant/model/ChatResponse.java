@@ -1,12 +1,11 @@
 package com.ebanking.assistant.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Data
 @Builder
@@ -15,15 +14,15 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatResponse {
 
-    private String response;
+  private String response;
 
-    private String conversationId;
+  private String conversationId;
 
-    private String sessionId;
+  private String sessionId;
 
-    private String intent;
+  private String intent;
 
-    private String actionExecuted;
+  private String actionExecuted;
 
-    private Map<String, Object> actionResult;
+  private Map<String, Object> actionResult;
 }
