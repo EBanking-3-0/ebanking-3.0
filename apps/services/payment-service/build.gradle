@@ -6,7 +6,17 @@ plugins {
 
 description = 'Payment Service - Transfers and Anti-Fraud'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
     // Shared libraries
     implementation project(':libs:shared:common')
     implementation project(':libs:shared:kafka-events')

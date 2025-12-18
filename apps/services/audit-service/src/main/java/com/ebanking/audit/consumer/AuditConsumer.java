@@ -63,10 +63,6 @@ public class AuditConsumer extends BaseEventConsumer {
         });
     }
 
-    @Override
-    protected void handleEvent(BaseEvent event) {
-        // This method is not used since we override processEvent directly
-        // But required by abstract class
-    }
+
 }
 
