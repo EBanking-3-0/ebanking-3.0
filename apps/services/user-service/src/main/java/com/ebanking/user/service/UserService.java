@@ -1,9 +1,9 @@
 package com.ebanking.user.service;
 
+import com.ebanking.shared.dto.UserDTO;
 import com.ebanking.shared.kafka.events.UserCreatedEvent;
 import com.ebanking.shared.kafka.events.UserUpdatedEvent;
 import com.ebanking.shared.kafka.producer.TypedEventProducer;
-import com.ebanking.user.dto.UserDTO;
 import com.ebanking.user.model.User;
 import com.ebanking.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -23,20 +23,20 @@ public class UserService {
   private final TypedEventProducer eventProducer;
 
   public List<UserDTO> getAllUsers() {
-    return userRepository.findAll().stream().map(UserDTO::fromEntity).collect(Collectors.toList());
+    return userRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
   }
 
   public UserDTO getUserById(Long id) {
     return userRepository
         .findById(id)
-        .map(UserDTO::fromEntity)
+        .map(this::mapToDTO)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
   }
 
   public UserDTO getUserByEmail(String email) {
     return userRepository
         .findByEmail(email)
-        .map(UserDTO::fromEntity)
+        .map(this::mapToDTO)
         .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
   }
 
@@ -68,7 +68,7 @@ public class UserService {
     eventProducer.publishUserCreated(event);
     log.info("Published user.created event for user: {}", savedUser.getId());
 
-    return UserDTO.fromEntity(savedUser);
+    return mapToDTO(savedUser);
   }
 
   @Transactional
@@ -120,11 +120,21 @@ public class UserService {
     eventProducer.publishUserUpdated(event);
     log.info("Published user.updated event for user: {}", updatedUser.getId());
 
-    return UserDTO.fromEntity(updatedUser);
+    return mapToDTO(updatedUser);
   }
 
   @Transactional
   public void deleteUser(Long id) {
     userRepository.deleteById(id);
+  }
+
+  private UserDTO mapToDTO(User user) {
+    return new UserDTO(
+        user.getId(),
+        user.getEmail(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getPhone(),
+        user.getStatus().name());
   }
 }

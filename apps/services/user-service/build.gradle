@@ -29,6 +29,7 @@ dependencies {
 
     // Shared libraries
     implementation project(':libs:shared:kafka-events')
+    implementation project(':libs:shared:dto')
 
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'

@@ -1,6 +1,6 @@
 package com.ebanking.user.controller;
 
-import com.ebanking.user.dto.UserDTO;
+import com.ebanking.shared.dto.UserDTO;
 import com.ebanking.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
