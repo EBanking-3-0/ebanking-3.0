@@ -9,11 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@ComponentScan(basePackages = {
-        "com.ebanking.assistant",
-        "com.ebanking.security",
-        "com.ebanking.shared.kafka"
-})
+@ComponentScan(
+    basePackages = {"com.ebanking.assistant", "com.ebanking.security", "com.ebanking.shared.kafka"})
 public class AiAssistantApplication {
 
   public static void main(String[] args) {

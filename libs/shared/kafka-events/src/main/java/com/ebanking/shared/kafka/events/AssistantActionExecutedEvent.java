@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AssistantActionExecutedEvent extends BaseEvent {
-    private Long userId;
-    private String conversationId;
-    private String actionName;
-    private Map<String, Object> actionResult;
-    private boolean success;
+  private Long userId;
+  private String conversationId;
+  private String actionName;
+  private Map<String, Object> actionResult;
+  private boolean success;
 }

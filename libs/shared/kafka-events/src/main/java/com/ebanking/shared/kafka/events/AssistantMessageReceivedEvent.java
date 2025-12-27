@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AssistantMessageReceivedEvent extends BaseEvent {
-    private Long userId;
-    private String conversationId;
-    private String message;
-    private String response;
+  private Long userId;
+  private String conversationId;
+  private String message;
+  private String response;
 }

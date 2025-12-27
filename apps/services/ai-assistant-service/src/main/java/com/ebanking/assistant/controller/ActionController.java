@@ -22,67 +22,62 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ActionController {
-    
-    private final ActionExecutorService actionExecutorService;
-    
-    @PostMapping("/execute")
-    public ResponseEntity<Map<String, Object>> executeAction(
-            @Valid @RequestBody ActionRequest request,
-            Authentication authentication) {
-        
-        Long userId = extractUserId(authentication);
-        if (userId == null) {
-            userId = request.getUserId(); // Fallback to request userId
-        }
-        
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "User ID is required"));
-        }
-        
-        try {
-            Map<String, Object> result = actionExecutorService.executeAction(
-                    request.getActionName(),
-                    userId,
-                    request.getParameters()
-            );
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            log.error("Error executing action", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", e.getMessage()));
-        }
+
+  private final ActionExecutorService actionExecutorService;
+
+  @PostMapping("/execute")
+  public ResponseEntity<Map<String, Object>> executeAction(
+      @Valid @RequestBody ActionRequest request, Authentication authentication) {
+
+    Long userId = extractUserId(authentication);
+    if (userId == null) {
+      userId = request.getUserId(); // Fallback to request userId
     }
-    
-    /**
-     * Extract user ID from JWT token
-     */
-    private Long extractUserId(Authentication authentication) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
-            return null;
-        }
-        
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        
-        // Try different claim names for userId
-        Object userIdClaim = jwt.getClaim("userId");
-        if (userIdClaim != null) {
-            return Long.valueOf(userIdClaim.toString());
-        }
-        
-        // Try sub claim as fallback
-        String sub = jwt.getSubject();
-        if (sub != null) {
-            try {
-                return Long.valueOf(sub);
-            } catch (NumberFormatException e) {
-                // If sub is a UUID, convert it to a Long using hashCode
-                // This provides a stable numeric ID for the session
-                log.info("Converting UUID sub to numeric userId: {}", sub);
-                return (long) Math.abs(sub.hashCode());
-            }
-        }
-        
-        return null;
+
+    if (userId == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(Map.of("error", "User ID is required"));
     }
+
+    try {
+      Map<String, Object> result =
+          actionExecutorService.executeAction(
+              request.getActionName(), userId, request.getParameters());
+      return ResponseEntity.ok(result);
+    } catch (Exception e) {
+      log.error("Error executing action", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  /** Extract user ID from JWT token */
+  private Long extractUserId(Authentication authentication) {
+    if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
+      return null;
+    }
+
+    Jwt jwt = (Jwt) authentication.getPrincipal();
+
+    // Try different claim names for userId
+    Object userIdClaim = jwt.getClaim("userId");
+    if (userIdClaim != null) {
+      return Long.valueOf(userIdClaim.toString());
+    }
+
+    // Try sub claim as fallback
+    String sub = jwt.getSubject();
+    if (sub != null) {
+      try {
+        return Long.valueOf(sub);
+      } catch (NumberFormatException e) {
+        // If sub is a UUID, convert it to a Long using hashCode
+        // This provides a stable numeric ID for the session
+        log.info("Converting UUID sub to numeric userId: {}", sub);
+        return (long) Math.abs(sub.hashCode());
+      }
+    }
+
+    return null;
+  }
 }

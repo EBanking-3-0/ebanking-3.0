@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AssistantConversationStartedEvent extends BaseEvent {
-    private Long userId;
-    private String conversationId;
-    private String sessionId;
+  private Long userId;
+  private String conversationId;
+  private String sessionId;
 }

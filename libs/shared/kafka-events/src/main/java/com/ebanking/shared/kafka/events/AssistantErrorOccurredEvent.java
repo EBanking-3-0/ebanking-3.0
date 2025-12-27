@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AssistantErrorOccurredEvent extends BaseEvent {
-    private Long userId;
-    private String conversationId;
-    private String errorType;
-    private String errorMessage;
+  private Long userId;
+  private String conversationId;
+  private String errorType;
+  private String errorMessage;
 }
