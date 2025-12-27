@@ -45,10 +45,10 @@ import lombok.experimental.SuperBuilder;
 public abstract class BaseEvent {
 
   /** Unique identifier for this event instance */
-  private String eventId = UUID.randomUUID().toString();
+  @lombok.Builder.Default private String eventId = UUID.randomUUID().toString();
 
   /** Timestamp when the event was created */
-  private Instant timestamp = Instant.now();
+  @lombok.Builder.Default private Instant timestamp = Instant.now();
 
   /** Type of the event (e.g., "user.created", "transaction.completed") */
   private String eventType;
@@ -60,7 +60,7 @@ public abstract class BaseEvent {
   private String correlationId;
 
   /** Version of the event schema */
-  private String version = "1.0";
+  @lombok.Builder.Default private String version = "1.0";
 
   protected BaseEvent(String eventType) {
     this.eventType = eventType;

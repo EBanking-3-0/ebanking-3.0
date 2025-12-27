@@ -5,6 +5,12 @@ plugins {
 
 description = 'Exceptions - Custom Exception Handling'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
 dependencies {
     api project(':libs:shared:common')
 

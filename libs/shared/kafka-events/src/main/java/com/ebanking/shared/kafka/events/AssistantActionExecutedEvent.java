@@ -1,5 +1,6 @@
 package com.ebanking.shared.kafka.events;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

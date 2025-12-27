@@ -22,4 +22,5 @@ dependencies {
 
 bootJar {
     archiveFileName = 'service-discovery.jar'
+    mainClass = 'com.ebanking.discovery.ServiceDiscoveryApplication'
 }
