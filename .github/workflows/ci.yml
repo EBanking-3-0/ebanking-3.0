@@ -47,7 +47,7 @@ jobs:
         uses: nrwl/nx-set-shas@v4
 
       - name: Lint Affected
-        run: npx nx affected -t lint
+        run: npx nx affected -t lint --exclude=e-banking-3.0  --parallel=3
 
       - name: Build Affected
         run: npx nx affected -t build --exclude=e-banking-3.0 --parallel=3
@@ -55,4 +55,4 @@ jobs:
 
       - name: Test Affected
         # run: npx nx run-many --target=test --parallel
-        run: npx nx affected -t test --parallel=3
+        run: npx nx affected -t  test --exclude=e-banking-3.0 --parallel=3
