@@ -76,3 +76,17 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: npx nx affected -t sonar --exclude=e-banking-3.0 --parallel=3
+
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Images
+        if: github.event_name != 'pull_request'
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          TAG: ${{ github.sha }}
+        run: npx nx affected -t docker-push --exclude=e-banking-3.0 --parallel=3
