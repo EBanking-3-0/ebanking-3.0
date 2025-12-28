@@ -92,6 +92,28 @@
         "{projectRoot}/src/**/*",
         "{projectRoot}/sonar-project.properties"
       ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-frontend:${TAG:-latest} -f apps/frontend/web-app/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-frontend:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
     }
   }
 }

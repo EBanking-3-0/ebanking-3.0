@@ -99,16 +99,6 @@
         "{projectRoot}/build/libs"
       ]
     },
-    "docker:build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "docker build -t ai-assistant-service:local -f apps/services/ai-assistant-service/Dockerfile .",
-        "cwd": "."
-      },
-      "dependsOn": [
-        "build"
-      ]
-    },
     "sonar": {
       "executor": "@nx/gradle:gradle",
       "options": {
@@ -120,6 +110,28 @@
         "{projectRoot}/src/**/*",
         "{projectRoot}/build.gradle"
       ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-ai-assistant-service:${TAG:-latest} -f apps/services/ai-assistant-service/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": true
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-ai-assistant-service:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
     }
   }
 }
