@@ -109,10 +109,7 @@
     "sonar": {
       "executor": "@nx/gradle:gradle",
       "options": {
-        "taskName": ":apps:infrastructure:service-discovery:sonar",
-        "args": [
-          "-Dsonar.token=${SONAR_TOKEN}"
-        ]
+        "taskName": ":apps:infrastructure:service-discovery:sonar"
       }
     }
   }

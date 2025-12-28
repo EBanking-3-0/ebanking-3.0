@@ -112,10 +112,7 @@
     "sonar": {
       "executor": "@nx/gradle:gradle",
       "options": {
-        "taskName": ":apps:services:payment-service:sonar",
-        "args": [
-          "-Dsonar.token=${SONAR_TOKEN}"
-        ]
+        "taskName": ":apps:services:payment-service:sonar"
       }
     }
   }
