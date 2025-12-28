@@ -117,7 +117,7 @@
       "dependsOn": [
         "build"
       ],
-      "cache": true
+      "cache": false
     },
     "docker-push": {
       "executor": "nx:run-commands",
