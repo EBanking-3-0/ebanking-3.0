@@ -9,7 +9,10 @@
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:infrastructure:service-discovery:build",
-        "args": ["-x", "test"]
+        "args": [
+          "-x",
+          "test"
+        ]
       },
       "configurations": {
         "production": {},
@@ -17,8 +20,13 @@
       },
       "defaultConfiguration": "development",
       "cache": true,
-      "inputs": ["default", "{projectRoot}/**/*"],
-      "outputs": ["{projectRoot}/build/libs"]
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
     },
     "test": {
       "executor": "@nx/gradle:gradle",
@@ -44,12 +52,16 @@
       "continuous": true,
       "configurations": {
         "production": {
-          "args": ["--args=--spring.profiles.active=prod"]
+          "args": [
+            "--args=--spring.profiles.active=prod"
+          ]
         },
         "development": {}
       },
       "defaultConfiguration": "development",
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     },
     "clean": {
       "executor": "@nx/gradle:gradle",
@@ -80,7 +92,9 @@
         "{projectRoot}/build.gradle",
         "{projectRoot}/src/**/*.java"
       ],
-      "outputs": ["{projectRoot}/build/libs"]
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
     },
     "docker:build": {
       "executor": "nx:run-commands",
@@ -88,7 +102,18 @@
         "command": "docker build -t service-discovery:local -f apps/infrastructure/service-discovery/Dockerfile .",
         "cwd": "."
       },
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:sonar",
+        "args": [
+          "-Dsonar.token=${SONAR_TOKEN}"
+        ]
+      }
     }
   }
 }

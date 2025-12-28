@@ -56,3 +56,8 @@ jobs:
       - name: Test Affected
         # run: npx nx run-many --target=test --parallel
         run: npx nx affected -t  test --exclude=e-banking-3.0 --parallel=3
+
+      - name: Sonar Analysis Affected
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: npx nx affected -t sonar --exclude=e-banking-3.0 --parallel=3

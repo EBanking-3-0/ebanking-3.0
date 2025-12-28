@@ -12,7 +12,9 @@
         "outputPath": "dist/apps/frontend/web-app",
         "index": "apps/frontend/web-app/src/index.html",
         "browser": "apps/frontend/web-app/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/frontend/web-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -21,7 +23,9 @@
             "input": "apps/frontend/web-app/public"
           }
         ],
-        "styles": ["apps/frontend/web-app/src/styles.scss"],
+        "styles": [
+          "apps/frontend/web-app/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -69,9 +73,18 @@
     "test": {
       "executor": "@nx/vitest:test",
       "cache": true,
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
         "reportsDirectory": "../../coverage/apps/angular-demo"
+      }
+    },
+    "sonar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx sonarqube-scanner",
+        "cwd": "apps/frontend/web-app"
       }
     }
   }

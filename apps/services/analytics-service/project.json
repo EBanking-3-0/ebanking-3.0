@@ -4,13 +4,18 @@
   "projectType": "application",
   "sourceRoot": "apps/services/analytics-service/src",
   "tags": [],
-  "implicitDependencies": ["service-discovery"],
+  "implicitDependencies": [
+    "service-discovery"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:services:analytics-service:build",
-        "args": ["-x", "test"]
+        "args": [
+          "-x",
+          "test"
+        ]
       },
       "configurations": {
         "production": {},
@@ -18,8 +23,13 @@
       },
       "defaultConfiguration": "development",
       "cache": true,
-      "inputs": ["default", "{projectRoot}/**/*"],
-      "outputs": ["{projectRoot}/build/libs"]
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
     },
     "test": {
       "executor": "@nx/gradle:gradle",
@@ -45,12 +55,16 @@
       },
       "configurations": {
         "production": {
-          "args": ["--args=--spring.profiles.active=prod"]
+          "args": [
+            "--args=--spring.profiles.active=prod"
+          ]
         },
         "development": {}
       },
       "defaultConfiguration": "development",
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     },
     "clean": {
       "executor": "@nx/gradle:gradle",
@@ -81,7 +95,9 @@
         "{projectRoot}/build.gradle",
         "{projectRoot}/src/**/*.java"
       ],
-      "outputs": ["{projectRoot}/build/libs"]
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
     },
     "docker:build": {
       "executor": "nx:run-commands",
@@ -89,7 +105,18 @@
         "command": "docker build -t analytics-service:local -f apps/services/analytics-service/Dockerfile .",
         "cwd": "."
       },
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:analytics-service:sonar",
+        "args": [
+          "-Dsonar.token=${SONAR_TOKEN}"
+        ]
+      }
     }
   }
 }
