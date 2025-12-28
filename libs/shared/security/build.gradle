@@ -22,9 +22,15 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
+apply plugin: "org.sonarqube"
+
 sonar {
   properties {
     property "sonar.projectKey", "ebanking-security"
     property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
   }
+}
+tasks.named("sonar") {
+    dependsOn test
 }

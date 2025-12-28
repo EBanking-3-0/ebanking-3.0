@@ -55,3 +55,18 @@ dependencies {
 bootJar {
     archiveFileName = 'payment-service.jar'
 }
+
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-payment-service"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
+tasks.named("sonar") {
+    dependsOn test
+}
