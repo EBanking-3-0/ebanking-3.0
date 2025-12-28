@@ -22,7 +22,7 @@ public class AccountController {
   @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
-    // todo: In a real app, extract userId from token or look it up.
+    // todo:k In a real app, extract userId from token or look it up.
     // For simplicity, we trust the request or use a hardcoded/looked-up ID if available in token.
     // Ideally: Long userId = Long.parseLong(authentication.getName()); // if subject is ID
     // Or using JwtAuthConverter to put ID in principal.

@@ -25,9 +25,12 @@ bootJar {
     mainClass = 'com.ebanking.discovery.ServiceDiscoveryApplication'
 }
 
+apply plugin: "org.sonarqube"
+
 sonar {
   properties {
     property "sonar.projectKey", "ebanking_service-discovery"
     property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
   }
 }

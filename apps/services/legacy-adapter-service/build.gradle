@@ -50,9 +50,12 @@ bootJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+apply plugin: "org.sonarqube"
+
 sonar {
   properties {
     property "sonar.projectKey", "ebanking-legacy-adapter-service"
     property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
   }
 }
