@@ -24,3 +24,10 @@ bootJar {
     archiveFileName = 'service-discovery.jar'
     mainClass = 'com.ebanking.discovery.ServiceDiscoveryApplication'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking_service-discovery"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

@@ -58,3 +58,10 @@ dependencies {
 bootJar {
     archiveFileName = 'auth-service.jar'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-auth-service"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

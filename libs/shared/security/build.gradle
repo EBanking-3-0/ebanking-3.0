@@ -21,3 +21,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-security"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

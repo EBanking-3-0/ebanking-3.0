@@ -22,3 +22,10 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-dto"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

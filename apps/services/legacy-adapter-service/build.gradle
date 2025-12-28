@@ -49,3 +49,10 @@ bootJar {
     archiveFileName = 'legacy-adapter-service.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-legacy-adapter-service"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

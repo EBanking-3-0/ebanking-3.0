@@ -68,3 +68,10 @@ test {
 bootJar {
     archiveFileName = 'ai-assistant-service.jar'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-ai-assistant-service"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}

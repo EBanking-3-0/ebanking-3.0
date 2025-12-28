@@ -39,3 +39,10 @@ dependencies {
 bootJar {
     archiveFileName = 'graphql-gateway.jar'
 }
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-graphql-gateway"
+    property "sonar.organization", "ebanking-3-0"
+  }
+}
