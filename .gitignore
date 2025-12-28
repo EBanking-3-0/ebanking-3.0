@@ -98,3 +98,4 @@ test-results/ # Gradle test results
 
 # Project pdf reqs
 *.pdf
+apps/frontend/web-app/.scannerwork
