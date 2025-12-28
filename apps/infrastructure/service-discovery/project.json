@@ -110,7 +110,13 @@
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:infrastructure:service-discovery:sonar"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
     }
   }
 }

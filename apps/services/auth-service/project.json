@@ -113,7 +113,13 @@
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:services:auth-service:sonar"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
     }
   }
 }

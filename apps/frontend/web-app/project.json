@@ -85,7 +85,13 @@
       "options": {
         "command": "npx sonarqube-scanner",
         "cwd": "apps/frontend/web-app"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/sonar-project.properties"
+      ]
     }
   }
 }
