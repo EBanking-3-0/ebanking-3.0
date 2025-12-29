@@ -28,6 +28,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
       enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "*"
   security:
     oauth2:
       resourceserver:
@@ -53,3 +55,35 @@ management:
     metrics:
       export:
         enabled: true
+
+# Notification Service Configuration
+notification:
+  email:
+    enabled: true
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME:your-email@gmail.com}
+    password: ${EMAIL_PASSWORD:your-app-password}
+    from-address: ${EMAIL_FROM:noreply@ebanking.com}
+    from-name: E-Banking Platform
+    smtp-auth: true
+    smtp-starttls-enable: true
+    smtp-starttls-required: false
+    smtp-connection-timeout: 5000
+    smtp-timeout: 5000
+    smtp-write-timeout: 5000
+    mail-debug: false
+
+  twilio:
+    enabled: false
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    phone-number: ${TWILIO_PHONE_NUMBER:}
+
+  template:
+    base-path: notifications/
+    default-locale: en
+    cache-enabled: true
+    max-retries: 3
+    retry-delay-millis: 5000
+    retry-enabled: true
