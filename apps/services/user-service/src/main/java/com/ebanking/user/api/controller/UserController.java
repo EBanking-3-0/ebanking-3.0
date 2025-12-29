@@ -1,9 +1,10 @@
 package com.ebanking.user.api.controller;
 
-import com.ebanking.user.api.dto.UserRequest;
-import com.ebanking.user.api.dto.UserResponse;
+import com.ebanking.shared.dto.UserRequest;
+import com.ebanking.shared.dto.UserResponse;
 import com.ebanking.user.application.service.UserService;
 import com.ebanking.user.domain.model.User;
+import com.ebanking.user.api.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,21 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
-        User userToCreate = request.toEntity();
+        // Map shared DTO to domain entity using mapper
+        User userToCreate = userMapper.toEntity(request);
+
         User createdUser = userService.createUser(userToCreate);
-        return new ResponseEntity<>(UserResponse.fromEntity(createdUser), HttpStatus.CREATED);
+
+        // Map domain entity to shared DTO using mapper
+        UserResponse response = userMapper.toResponse(createdUser);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    
+
     @GetMapping("/test")
     public String testendpoint(){
         return "test successful";
@@ -32,16 +40,17 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(UserResponse.fromEntity(user));
+        UserResponse response = userMapper.toResponse(user);
+        return ResponseEntity.ok(response);
     }
-    
-    
+
     @PutMapping("/{id}/kyc/{newStatus}")
     public ResponseEntity<UserResponse> updateKycStatus(@PathVariable Long id, @PathVariable User.KycStatus newStatus) {
         User updatedUser = userService.updateKycStatus(id, newStatus);
-        return ResponseEntity.ok(UserResponse.fromEntity(updatedUser));
+        UserResponse response = userMapper.toResponse(updatedUser);
+        return ResponseEntity.ok(response);
     }
-    
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {

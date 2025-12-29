@@ -5,11 +5,24 @@ plugins {
 
 description = 'DTOs - Data Transfer Objects'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api project(':libs:shared:common')
 
     api 'org.springframework.boot:spring-boot-starter-validation'
     api 'com.fasterxml.jackson.core:jackson-annotations'
+
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
