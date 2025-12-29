@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Consumer for notification-related events.
- * Sends notifications (email/SMS/push) when events occur.
+ * Consumer for notification-related events. Sends notifications (email/SMS/push) when events occur.
  */
 @Slf4j
 @Component

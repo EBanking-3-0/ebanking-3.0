@@ -79,6 +79,19 @@
       "outputs": [
         "{projectRoot}/build/libs"
       ]
+    },
+    "sonar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew sonar",
+        "cwd": "libs/shared/dto"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
     }
   }
 }

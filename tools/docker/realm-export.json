@@ -12,7 +12,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": [ "user" ],
+      "realmRoles": ["user"],
       "clientRoles": {
         "ebanking-client": ["user"]
       }
@@ -27,7 +27,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": [ "admin" ]
+      "realmRoles": ["admin"]
     }
   ],
   "roles": {
@@ -49,14 +49,8 @@
       "publicClient": true,
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
-      "redirectUris": [
-        "http://localhost:4200/*",
-        "http://localhost:8081/*"
-      ],
-      "webOrigins": [
-        "http://localhost:4200",
-        "http://localhost:8081"
-      ]
+      "redirectUris": ["http://localhost:4200/*", "http://localhost:8081/*"],
+      "webOrigins": ["http://localhost:4200", "http://localhost:8081"]
     },
     {
       "clientId": "auth-service",

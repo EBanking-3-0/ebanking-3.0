@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Type-safe event producer that automatically maps event types to topics.
- * Provides convenience methods for publishing specific event types.
- * 
- * This class is automatically configured via KafkaEventsAutoConfiguration.
- * We can also create it manually if needed.
+ * Type-safe event producer that automatically maps event types to topics. Provides convenience
+ * methods for publishing specific event types.
+ *
+ * <p>This class is automatically configured via KafkaEventsAutoConfiguration. We can also create it
+ * manually if needed.
  */
 @Slf4j
 @RequiredArgsConstructor

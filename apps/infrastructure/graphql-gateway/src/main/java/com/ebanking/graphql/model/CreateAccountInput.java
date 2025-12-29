@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CreateAccountInput {
-    private Long userId;
-    private String type;
-    private String currency;
+  private Long userId;
+  private String type;
+  private String currency;
 }

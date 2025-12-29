@@ -4,6 +4,6 @@ export const environment = {
   keycloak: {
     url: 'http://localhost:8092',
     realm: 'ebanking-realm',
-    clientId: 'ebanking-client'
-  }
+    clientId: 'ebanking-client',
+  },
 };

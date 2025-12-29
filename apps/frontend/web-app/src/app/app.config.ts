@@ -1,4 +1,8 @@
-import { APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideApollo } from 'apollo-angular';
@@ -19,13 +23,13 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService]
+      deps: [KeycloakService],
     },
     KeycloakService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: KeycloakBearerInterceptor,
-      multi: true
+      multi: true,
     },
     provideApollo(() => {
       const httpLink = inject(HttpLink);
@@ -34,5 +38,5 @@ export const appConfig: ApplicationConfig = {
         cache: new InMemoryCache(),
       };
     }),
-  ]
+  ],
 };
