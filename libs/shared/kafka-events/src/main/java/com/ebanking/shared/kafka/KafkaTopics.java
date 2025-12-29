@@ -35,6 +35,7 @@ public final class KafkaTopics {
 
   // Notification Events
   public static final String NOTIFICATION_SENT = "notification.sent";
+  public static final String NOTIFICATION_FAILED = "notification.failed";
 
   // Analytics Events
   public static final String ALERT_TRIGGERED = "alert.triggered";
