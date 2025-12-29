@@ -111,3 +111,12 @@ override.tf
 override.tf.json
 _override.tf
 **/*/.terraform/**/*
+
+# helm
+**/charts/*.tgz
+**/charts/
+*.tgz
+*-local.yaml
+*secret*.yaml
+.env
+.helm/
