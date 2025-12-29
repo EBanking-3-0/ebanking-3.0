@@ -1,14 +1,19 @@
 package com.ebanking.notification.consumer;
 
+import com.ebanking.notification.entity.Notification;
+import com.ebanking.notification.service.NotificationService;
 import com.ebanking.shared.kafka.KafkaTopics;
 import com.ebanking.shared.kafka.events.*;
-import com.ebanking.shared.kafka.producer.TypedEventProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Consumer for notification-related events.
@@ -19,32 +24,29 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationConsumer {
 
-    private final TypedEventProducer eventProducer;
+    private final NotificationService notificationService;
 
     @KafkaListener(topics = KafkaTopics.USER_CREATED)
     public void handleUserCreated(@Payload UserCreatedEvent event, Acknowledgment acknowledgment) {
         try {
             log.info("Received user.created event for user: {}", event.getUserId());
-            
-            // Send welcome email
-            sendWelcomeEmail(event.getEmail(), event.getFirstName());
-            
-            // Publish notification sent event
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getUserId())
-                .recipient(event.getEmail())
-                .notificationType("EMAIL")
-                .subject("Welcome to E-Banking")
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
-            
+
+            // Send welcome email using template
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("firstName", event.getFirstName());
+            templateData.put("email", event.getEmail());
+            templateData.put("userId", event.getUserId());
+            templateData.put("registrationDate", LocalDateTime.now());
+
+            notificationService.sendTemplatedEmail(
+                    event.getUserId(),
+                    event.getEmail(),
+                    "welcome-email",
+                    templateData);
+
             acknowledgment.acknowledge();
             log.info("Processed user.created event for user: {}", event.getUserId());
-            
+
         } catch (Exception e) {
             log.error("Failed to process user.created event: {}", event.getEventId(), e);
             acknowledgment.acknowledge(); // Acknowledge to prevent blocking
@@ -56,20 +58,23 @@ public class NotificationConsumer {
         try {
             log.info("Received transaction.completed event: {}", event.getTransactionId());
             
-            // Send transaction notification
-            sendTransactionNotification(event.getToAccountId(), event.getAmount(), event.getCurrency());
+            // Send transaction notification using template
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("transactionId", event.getTransactionId());
+            templateData.put("fromAccount", formatAccountId(event.getFromAccountId()));
+            templateData.put("toAccount", formatAccountId(event.getToAccountId()));
+            templateData.put("amount", event.getAmount());
+            templateData.put("currency", event.getCurrency());
+            templateData.put("transactionDate", LocalDateTime.now());
             
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getToAccountId()) // Using account ID as placeholder
-                .recipient("user@example.com") // Would get from account
-                .notificationType("EMAIL")
-                .subject("Transaction Completed")
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
+            // Note: In production, fetch user email from account service
+            // For now, using a placeholder
+            notificationService.sendTemplatedEmail(
+                event.getToAccountId(), // Using account ID as userId placeholder
+                "user@example.com", // Would fetch from user/account service
+                "transaction-email",
+                templateData
+            );
             
             acknowledgment.acknowledge();
             
@@ -84,20 +89,20 @@ public class NotificationConsumer {
         try {
             log.info("Received payment.failed event: {}", event.getTransactionId());
             
-            // Send failure notification
-            sendFailureNotification(event.getAccountId(), event.getFailureReason());
+            // Send payment failure notification
+            String message = String.format(
+                "Your payment transaction %s has failed. Reason: %s. Please try again or contact support.",
+                event.getTransactionId(),
+                event.getFailureReason()
+            );
             
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getAccountId())
-                .recipient("user@example.com")
-                .notificationType("EMAIL")
-                .subject("Payment Failed")
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
+            notificationService.sendSimpleEmail(
+                event.getAccountId(),
+                "user@example.com", // Would fetch from account service
+                "Payment Failed",
+                message,
+                Notification.NotificationType.PAYMENT_FAILED
+            );
             
             acknowledgment.acknowledge();
             
@@ -112,20 +117,20 @@ public class NotificationConsumer {
         try {
             log.warn("Received fraud.detected event: {} - Severity: {}", event.getTransactionId(), event.getSeverity());
             
-            // Send fraud alert
-            sendFraudAlert(event.getAccountId(), event.getFraudType(), event.getSeverity());
+            // Send fraud alert using template
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("fraudType", event.getFraudType());
+            templateData.put("severity", event.getSeverity());
+            templateData.put("transactionId", event.getTransactionId());
+            templateData.put("detectedAt", LocalDateTime.now());
+            templateData.put("description", event.getDescription());
             
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getAccountId())
-                .recipient("user@example.com")
-                .notificationType("EMAIL")
-                .subject("Fraud Alert")
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
+            notificationService.sendTemplatedEmail(
+                event.getAccountId(),
+                "user@example.com", // Would fetch from account service
+                "fraud-alert-email",
+                templateData
+            );
             
             acknowledgment.acknowledge();
             
@@ -141,19 +146,27 @@ public class NotificationConsumer {
             log.info("Received crypto.trade.executed event: {}", event.getTradeId());
             
             // Send trade confirmation
-            sendTradeConfirmation(event.getUserId(), event.getCryptoCurrency(), event.getTradeType());
-            
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getUserId())
-                .recipient("user@example.com")
-                .notificationType("EMAIL")
-                .subject("Crypto Trade Executed")
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
+            String message = String.format(
+                "Your crypto trade has been executed successfully.\n" +
+                "Trade ID: %s\n" +
+                "Type: %s\n" +
+                "Cryptocurrency: %s\n" +
+                "Amount: %s\n" +
+                "Price: %s %s",
+                event.getTradeId(),
+                event.getTradeType(),
+                event.getCryptoCurrency(),
+                event.getCryptoAmount(),
+                event.getFiatAmount(),
+                event.getFiatCurrency()
+            );
+            notificationService.sendSimpleEmail(
+                event.getUserId(),
+                "user@example.com", // Would fetch from user service
+                "Crypto Trade Executed",
+                message,
+                Notification.NotificationType.CRYPTO_TRADE
+            );
             
             acknowledgment.acknowledge();
             
@@ -168,20 +181,18 @@ public class NotificationConsumer {
         try {
             log.info("Received alert.triggered event: {} - Type: {}", event.getAlertId(), event.getAlertType());
             
-            // Send alert notification
-            sendAlertNotification(event.getUserId(), event.getAlertType(), event.getMessage());
+            // Send alert notification using template
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("subject", "Alert: " + event.getAlertType());
+            templateData.put("alertType", event.getAlertType());
+            templateData.put("message", event.getMessage());
             
-            NotificationSentEvent notificationEvent = NotificationSentEvent.builder()
-                .userId(event.getUserId())
-                .recipient("user@example.com")
-                .notificationType("EMAIL")
-                .subject("Alert: " + event.getAlertType())
-                .status("SENT")
-                .channel("EMAIL")
-                .source("notification-service")
-                .build();
-            
-            eventProducer.publishNotificationSent(notificationEvent);
+            notificationService.sendTemplatedEmail(
+                event.getUserId(),
+                "user@example.com", // Would fetch from user service
+                "alert-email",
+                templateData
+            );
             
             acknowledgment.acknowledge();
             
@@ -191,35 +202,17 @@ public class NotificationConsumer {
         }
     }
 
-    // Placeholder methods - would be implemented with actual email/SMS/push services
-    private void sendWelcomeEmail(String email, String firstName) {
-        log.info("Sending welcome email to: {} for user: {}", email, firstName);
-        // Implementation would use email service
-    }
-
-    private void sendTransactionNotification(Long accountId, java.math.BigDecimal amount, String currency) {
-        log.info("Sending transaction notification for account: {} - Amount: {} {}", accountId, amount, currency);
-        // Implementation would use notification service
-    }
-
-    private void sendFailureNotification(Long accountId, String reason) {
-        log.info("Sending failure notification for account: {} - Reason: {}", accountId, reason);
-        // Implementation would use notification service
-    }
-
-    private void sendFraudAlert(Long accountId, String fraudType, String severity) {
-        log.warn("Sending fraud alert for account: {} - Type: {} - Severity: {}", accountId, fraudType, severity);
-        // Implementation would use notification service
-    }
-
-    private void sendTradeConfirmation(Long userId, String cryptoCurrency, String tradeType) {
-        log.info("Sending trade confirmation for user: {} - Crypto: {} - Type: {}", userId, cryptoCurrency, tradeType);
-        // Implementation would use notification service
-    }
-
-    private void sendAlertNotification(Long userId, String alertType, String message) {
-        log.info("Sending alert notification for user: {} - Type: {} - Message: {}", userId, alertType, message);
-        // Implementation would use notification service
+    /**
+     * Helper method to format account ID for display
+     */
+    private String formatAccountId(Long accountId) {
+        if (accountId == null) {
+            return "****";
+        }
+        String id = accountId.toString();
+        if (id.length() > 4) {
+            return "****" + id.substring(id.length() - 4);
+        }
+        return "****" + id;
     }
 }
-
