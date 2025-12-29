@@ -99,3 +99,15 @@ test-results/ # Gradle test results
 # Project pdf reqs
 *.pdf
 apps/frontend/web-app/.scannerwork
+
+# terraform
+*/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+_override.tf
+**/*/.terraform/**/*
