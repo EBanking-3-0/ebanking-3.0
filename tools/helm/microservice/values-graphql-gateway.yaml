@@ -1,0 +1,23 @@
+# values.yaml for graphql-gateway
+replicaCount: 1
+
+image:
+  repository: ebanking/graphql-gateway
+  tag: local
+  pullPolicy: Never # Use local image from Minikube
+
+service:
+  type: ClusterIP
+  port: 80 # External port for the service
+  targetPort: 8081 # Internal port of the graphql-gateway application
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes # Activate Kubernetes profile if available
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://ebanking-infra-keycloak:8080/realms/master
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  EUREKA_CLIENT_ENABLED: "false" # Disable Eureka client as K8s service discovery is used
+  # Add other necessary environment variables if any
+
+serviceAccount:
+  create: true
+  name: graphql-gateway-microservice

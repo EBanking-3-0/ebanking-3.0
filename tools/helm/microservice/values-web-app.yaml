@@ -1,0 +1,20 @@
+# values.yaml for web-app
+replicaCount: 1
+
+image:
+  repository: ebanking/frontend
+  tag: local
+  pullPolicy: Never # Use local image from Minikube
+
+service:
+  type: ClusterIP
+  port: 80 # External port for the service
+  targetPort: 80 # Nginx serves on port 80
+
+env: # Angular apps usually bake env vars into the build, but this might be for something else.
+  # Keycloak and API URLs need to be set during Angular build.
+  # We will modify src/environments/environment.ts directly before building.
+
+serviceAccount:
+  create: true
+  name: frontend-web-app-microservice
