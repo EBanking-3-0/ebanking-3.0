@@ -58,20 +58,27 @@ public class AccountService {
   public Account updateAccount(Long id, AccountDTO account) {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
+      log.info("Account not found: {}", id);
       return null;
     }
     existingAccount.get().setBalance(account.getBalance());
     existingAccount.get().setStatus(account.getStatus());
     existingAccount.get().setUpdatedAt(LocalDateTime.now());
+
+    log.info("Updated account: {} for user: {}", existingAccount.get().getAccountNumber(),
+        existingAccount.get().getUserId());
     return accountRepository.save(existingAccount.get());
   }
 
   public boolean deleteAccount(Long id) {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
-      return false;
+      log.info("Account not found: {}", id);
+      throw new AccountNotFoundException("Account not found");
     }
     accountRepository.delete(existingAccount.get());
+    log.info("Deleted account: {} for user: {}", existingAccount.get().getAccountNumber(),
+        existingAccount.get().getUserId());
     return true;
   }
 
@@ -82,10 +89,42 @@ public class AccountService {
   public Account getAccountByNumber(String accountNumber) {
     return accountRepository
         .findByAccountNumber(accountNumber)
-        .orElseThrow(() -> new RuntimeException("Account not found"));
+        .orElseThrow(() -> new AccountNotFoundException("Account not found"));
   }
 
   private String generateAccountNumber() {
     return UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+  }
+
+  public boolean deposit(Long id, BigDecimal amount) {
+    Optional<Account> existingAccount = accountRepository.findById(id);
+    if (existingAccount.isEmpty()) {
+      log.info("Account not found: {}", id);
+      throw new AccountNotFoundException("Account not found");
+    }
+    existingAccount.get().setBalance(existingAccount.get().getBalance().add(amount));
+    accountRepository.save(existingAccount.get());
+    // todo: send event to kafka (transaction service)
+    log.info("Deposited {} to account: {} for user: {}", amount, existingAccount.get().getAccountNumber(),
+        existingAccount.get().getUserId());
+    return true;
+  }
+
+  public boolean withdraw(Long id, BigDecimal amount) {
+    Optional<Account> existingAccount = accountRepository.findById(id);
+    if (existingAccount.isEmpty()) {
+      log.info("Account not found: {}", id);
+      throw new AccountNotFoundException("Account not found");
+    }
+    if (existingAccount.get().getBalance().subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
+      log.info("Insufficient balance: {}", existingAccount.get().getBalance());
+      throw new AccountNotFoundException("Insufficient balance");
+    }
+    existingAccount.get().setBalance(existingAccount.get().getBalance().subtract(amount));
+    // todo: send event to kafka (transaction service)
+    accountRepository.save(existingAccount.get());
+    log.info("Withdrawn {} from account: {} for user: {}", amount, existingAccount.get().getAccountNumber(),
+        existingAccount.get().getUserId());
+    return true;
   }
 }

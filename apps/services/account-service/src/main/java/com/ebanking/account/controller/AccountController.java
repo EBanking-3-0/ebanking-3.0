@@ -3,6 +3,8 @@ package com.ebanking.account.controller;
 import com.ebanking.account.dto.AccountDTO;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -81,5 +83,17 @@ public class AccountController {
         .status(account.getStatus())
         .createdAt(account.getCreatedAt())
         .build();
+  }
+
+  @PostMapping("/{id}/deposit")
+  public ResponseEntity<?> deposit(@PathVariable Long id, @RequestBody BigDecimal amount) {
+    accountService.deposit(id, amount);
+    return ResponseEntity.ok("Deposit successful");
+  }
+
+  @PostMapping("/{id}/withdraw")
+  public ResponseEntity<?> withdraw(@PathVariable Long id, @RequestBody BigDecimal amount) {
+    accountService.withdraw(id, amount);
+    return ResponseEntity.ok("Withdrawal successful");
   }
 }
