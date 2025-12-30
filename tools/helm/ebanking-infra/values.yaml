@@ -1,0 +1,84 @@
+# Global settings
+global:
+  imageRegistry: docker.io
+  imagePullSecrets: []
+
+# Third-party dependencies configuration
+postgresql:
+  enabled: true
+  image:
+    tag: latest
+
+  auth:
+    database: ebanking_db
+    username: ebanking_user
+    existingSecret: postgres-secret
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+
+  primary:
+    persistence:
+      enabled: false
+
+    initdb:
+      scripts:
+        init.sql: |
+          -- Create Keycloak database
+          CREATE DATABASE keycloak_db;
+
+          -- Grant privileges
+          GRANT ALL PRIVILEGES ON DATABASE keycloak_db TO ebanking_user;
+
+          -- Connected to ebanking_db by default
+
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE SCHEMA IF NOT EXISTS users;
+          CREATE SCHEMA IF NOT EXISTS accounts;
+          CREATE SCHEMA IF NOT EXISTS payments;
+          CREATE SCHEMA IF NOT EXISTS crypto;
+          CREATE SCHEMA IF NOT EXISTS notifications;
+          CREATE SCHEMA IF NOT EXISTS analytics;
+
+          GRANT ALL ON SCHEMA auth TO ebanking_user;
+          GRANT ALL ON SCHEMA users TO ebanking_user;
+          GRANT ALL ON SCHEMA accounts TO ebanking_user;
+          GRANT ALL ON SCHEMA payments TO ebanking_user;
+          GRANT ALL ON SCHEMA crypto TO ebanking_user;
+          GRANT ALL ON SCHEMA notifications TO ebanking_user;
+          GRANT ALL ON SCHEMA analytics TO ebanking_user;
+
+
+kafka:
+  enabled: true
+  # replicaCount: 1
+  # listeners:
+  #   client:
+  #     protocol: PLAINTEXT
+
+keycloak:
+  enabled: true
+  adminUser: admin
+  existingSecret: keycloak-admin-secret
+  secretKeys:
+    adminPasswordKey: admin-password
+
+  database:
+    type: postgres
+    host: ebanking-infra-postgresql
+    port: '5432'
+    name: keycloak_db
+    username: ebanking_user
+
+    existingSecret: postgres-secret
+    secretKeys:
+      usernameKey: username
+      passwordKey: password
+
+  postgres:
+    enabled: false
+
+  extraInitContainers:
+    - name: wait-for-postgres
+      image: busybox
+      command: ['sh', '-c', 'until nc -z ebanking-infra-postgresql 5432; do echo waiting for postgres; sleep 2; done;']

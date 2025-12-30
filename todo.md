@@ -1,1 +1,1 @@
-- [ ] add migrations after the first deployment
+- [x] add migrations after the first deployment

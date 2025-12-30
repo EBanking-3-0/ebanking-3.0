@@ -1,0 +1,32 @@
+# values.yaml for account-service
+replicaCount: 1
+
+image:
+  repository: ebanking/account-service
+  tag: local
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8084
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_DATASOURCE_URL: jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db
+  SPRING_DATASOURCE_USERNAME: ebanking_user
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  SPRING_KAFKA_PRODUCER_COMPRESSION_TYPE: none
+  EUREKA_CLIENT_ENABLED: "false"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://ebanking-infra-keycloak:8080/realms/master
+
+extraEnv:
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secret
+        key: password
+
+serviceAccount:
+  create: true
+  name: account-service-microservice

@@ -1,0 +1,26 @@
+apiVersion: v2
+name: ebanking-infra
+description: Infrastructure Umbrella Chart (Postgres, Kafka, Keycloak, MongoDB, Redis)
+type: application
+version: 0.1.0
+appVersion: "3.0.0"
+
+dependencies:
+  # Third-party dependencies
+  - name: postgresql
+    version: 18.2.0
+    repository: https://charts.bitnami.com/bitnami
+  - name: kafka
+    version: 18.0.1
+    repository: https://helm-charts.itboon.top/kafka
+  - name: keycloak
+    version: 0.11.2
+    repository: oci://registry-1.docker.io/cloudpirates
+  # - name: mongodb
+  #   version: 18.1.20
+  #   repository: https://charts.bitnami.com/bitnami
+  #   condition: mongodb.enabled
+  # - name: redis
+  #   version: 24.1.0
+  #   repository: https://charts.bitnami.com/bitnami
+  #   condition: redis.enabled
