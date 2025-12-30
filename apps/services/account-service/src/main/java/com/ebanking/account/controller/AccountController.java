@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -23,15 +26,17 @@ public class AccountController {
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
     // todo:k In a real app, extract userId from token or look it up.
-    // For simplicity, we trust the request or use a hardcoded/looked-up ID if available in token.
-    // Ideally: Long userId = Long.parseLong(authentication.getName()); // if subject is ID
+    // For simplicity, we trust the request or use a hardcoded/looked-up ID if
+    // available in token.
+    // Ideally: Long userId = Long.parseLong(authentication.getName()); // if
+    // subject is ID
     // Or using JwtAuthConverter to put ID in principal.
 
-    // For this demo, we'll assume userId is passed in request, but verify it matches token if
+    // For this demo, we'll assume userId is passed in request, but verify it
+    // matches token if
     // needed.
 
-    Account account =
-        accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
+    Account account = accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
     return ResponseEntity.ok(mapToDTO(account));
   }
 
@@ -43,6 +48,26 @@ public class AccountController {
         accountService.getAccountsByUserId(userId).stream()
             .map(this::mapToDTO)
             .collect(Collectors.toList()));
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
+    Account account = accountService.updateAccount(id, accountDTO);
+
+    if (account == null) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(mapToDTO(account));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+    boolean deleted = accountService.deleteAccount(id);
+    if (!deleted) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok("Account deleted successfully");
   }
 
   private AccountDTO mapToDTO(Account account) {

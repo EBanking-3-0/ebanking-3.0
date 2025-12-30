@@ -1,0 +1,106 @@
+scalar JSON
+
+type Query {
+  users: [User]
+  user(id: ID!): User
+  userByEmail(email: String!): User
+  myAccounts(userId: ID!): [Account]
+
+  # AI Assistant queries
+  conversation(id: ID!): Conversation
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User
+  updateUser(id: ID!, input: UpdateUserInput!): User
+  deleteUser(id: ID!): Boolean
+  createAccount(input: CreateAccountInput!): Account
+
+  # AI Assistant mutations
+  sendChatMessage(input: ChatMessageInput!): ChatResponse
+  executeAction(input: ActionExecutionInput!): ActionExecutionResponse
+}
+
+type User {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  status: String!
+}
+
+type Account {
+  id: ID!
+  accountNumber: String!
+  userId: ID!
+  balance: Float!
+  currency: String!
+  type: String!
+  status: String!
+  createdAt: String
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+}
+
+input UpdateUserInput {
+  firstName: String!
+  lastName: String!
+  phone: String!
+}
+
+input CreateAccountInput {
+  userId: ID!
+  type: String!
+  currency: String!
+}
+
+# AI Assistant Types
+type Conversation {
+  id: ID!
+  userId: String
+  sessionId: String
+  messages: [Message]
+  createdAt: String
+  updatedAt: String
+}
+
+type Message {
+  role: String!
+  content: String!
+  timestamp: String!
+  intent: String
+  actionExecuted: String
+  actionResult: JSON
+}
+
+type ChatResponse {
+  conversationId: ID
+  sessionId: String
+  response: String!
+  intent: String
+  actionExecuted: String
+  actionResult: JSON
+}
+
+type ActionExecutionResponse {
+  success: Boolean!
+  result: JSON
+  error: String
+}
+
+input ChatMessageInput {
+  message: String!
+  conversationId: ID
+  sessionId: String
+}
+
+input ActionExecutionInput {
+  actionName: String!
+  parameters: String!
+}
