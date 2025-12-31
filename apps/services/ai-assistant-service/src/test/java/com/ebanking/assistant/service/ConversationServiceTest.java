@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.ebanking.assistant.config.ConversationProperties;
 import com.ebanking.assistant.model.Conversation;
 import com.ebanking.assistant.model.Message;
 import com.ebanking.assistant.repository.ConversationRepository;
@@ -14,7 +15,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -22,12 +22,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ConversationServiceTest {
 
   @Mock private ConversationRepository conversationRepository;
-
-  @InjectMocks private ConversationService conversationService;
+  private ConversationService conversationService;
+  private ConversationProperties conversationProperties;
 
   @BeforeEach
   void setUp() {
-    // Setup mock behavior
+    conversationProperties = new ConversationProperties();
+    conversationProperties.setTtlDays(30);
+    conversationProperties.setMaxMessages(100);
+    conversationService = new ConversationService(conversationRepository, conversationProperties);
   }
 
   @Test
@@ -83,5 +86,61 @@ class ConversationServiceTest {
     List<Conversation> userConversations = conversationService.getUserConversations(1L);
 
     assertEquals(2, userConversations.size());
+  }
+
+  @Test
+  void testPrunesMessagesWhenOverLimit() {
+    conversationProperties.setMaxMessages(2);
+
+    List<Message> messages = new ArrayList<>();
+    messages.add(Message.builder().content("m1").build());
+    messages.add(Message.builder().content("m2").build());
+    messages.add(Message.builder().content("m3").build());
+
+    Conversation existing =
+        Conversation.builder()
+            .id("test-id")
+            .userId(1L)
+            .sessionId("session-123")
+            .messages(messages)
+            .updatedAt(LocalDateTime.now())
+            .build();
+
+    when(conversationRepository.findById("test-id")).thenReturn(Optional.of(existing));
+    when(conversationRepository.save(any(Conversation.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
+
+    Message message = Message.builder().role(Message.Role.USER).content("Hello").build();
+
+    Conversation updated = conversationService.addMessage("test-id", message);
+
+    assertEquals(2, updated.getMessages().size());
+    assertEquals("m3", updated.getMessages().get(0).getContent());
+    assertEquals("Hello", updated.getMessages().get(1).getContent());
+  }
+
+  @Test
+  void testExpiresConversationByTtl() {
+    conversationProperties.setTtlDays(1);
+
+    Conversation expired =
+        Conversation.builder()
+            .id("old")
+            .userId(1L)
+            .sessionId("session-1")
+            .updatedAt(LocalDateTime.now().minusDays(5))
+            .build();
+
+    when(conversationRepository.findById("old")).thenReturn(Optional.of(expired));
+
+    RuntimeException ex =
+        assertThrows(
+            RuntimeException.class,
+            () ->
+                conversationService.addMessage(
+                    "old", Message.builder().content("hi").role(Message.Role.USER).build()));
+
+    assertTrue(ex.getMessage().contains("expired"));
+    verify(conversationRepository).deleteById("old");
   }
 }
