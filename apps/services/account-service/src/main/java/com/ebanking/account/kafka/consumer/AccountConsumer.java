@@ -1,4 +1,4 @@
-package com.ebanking.account.consumer;
+package com.ebanking.account.kafka.consumer;
 
 import com.ebanking.shared.kafka.KafkaTopics;
 import com.ebanking.shared.kafka.events.TransactionCompletedEvent;
@@ -9,7 +9,10 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-/** Consumer for transaction events. Updates account balances when transactions complete. */
+/**
+ * Consumer for transaction events. Updates account balances when transactions
+ * complete.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

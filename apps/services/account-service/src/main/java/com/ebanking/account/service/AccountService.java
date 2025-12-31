@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ebanking.account.kafka.producer.AccountProducer;
 
 @Slf4j
 @Service
@@ -23,6 +24,7 @@ public class AccountService {
 
   private final AccountRepository accountRepository;
   private final TypedEventProducer eventProducer;
+  private final AccountProducer accountProducer;
 
   @Transactional
   public Account createAccount(Long userId, String accountType, String currency) {
@@ -39,6 +41,17 @@ public class AccountService {
 
     Account savedAccount = accountRepository.save(account);
     log.info("Created account: {} for user: {}", accountNumber, userId);
+    AccountCreatedEvent createdAccountEvent = AccountCreatedEvent.builder()
+        .accountId(savedAccount.getId())
+        .userId(userId)
+        .accountNumber(accountNumber)
+        .accountType(accountType)
+        .currency(currency)
+        .initialBalance(BigDecimal.ZERO)
+        .source("account-service")
+        .build();
+
+    accountProducer.sendAccountCreatedEvent(createdAccountEvent);
 
     AccountCreatedEvent event = AccountCreatedEvent.builder()
         .accountId(savedAccount.getId())
