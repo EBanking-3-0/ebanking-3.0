@@ -9,21 +9,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KeycloakAdminConfig {
 
-    @Value("${keycloak.auth-server-url}")
-    private String serverUrl;
+  @Value("${keycloak.auth-server-url}")
+  private String serverUrl;
 
-    @Value("${keycloak.realm}")
-    private String realm;
+  @Value("${keycloak.realm}")
+  private String realm;
 
-    @Bean
-    public Keycloak keycloak() {
-        return KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm("master") // admin realm
-                .username("admin")
-                .password("admin") // change in prod to client credentials grant
-                .clientId("admin-cli")
-                .grantType("password")
-                .build();
-    }
+  @Bean
+  public Keycloak keycloak() {
+    return KeycloakBuilder.builder()
+        .serverUrl(serverUrl)
+        .realm("master") // admin realm
+        .username("admin")
+        .password("admin") // change in prod to client credentials grant
+        .clientId("admin-cli")
+        .grantType("password")
+        .build();
+  }
 }
