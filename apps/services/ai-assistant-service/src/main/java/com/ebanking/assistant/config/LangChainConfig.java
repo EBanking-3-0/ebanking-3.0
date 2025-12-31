@@ -1,65 +1,50 @@
 package com.ebanking.assistant.config;
 
+import com.ebanking.assistant.config.provider.ChatModelProvider;
+import com.ebanking.assistant.config.provider.ChatModelProviderFactory;
 import com.ebanking.assistant.tool.BankingTools;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class LangChainConfig {
 
-  @Value("${ai.assistant.provider:openai}")
-  private String provider;
-
-  @Value("${ai.assistant.model:gpt-4o-mini}")
-  private String model;
-
-  @Value("${ai.assistant.api-key:}")
-  private String apiKey;
-
-  @Value("${ai.assistant.temperature:0.7}")
-  private Double temperature;
-
-  @Value("${ai.assistant.max-tokens:1000}")
-  private Integer maxTokens;
+  private final AiModelProperties aiModelProperties;
+  private final ChatModelProviderFactory chatModelProviderFactory;
 
   @Bean
   public ChatLanguageModel chatLanguageModel() {
-    if (apiKey == null || apiKey.isEmpty()) {
-      log.warn("OpenAI API key not configured. Using mock/fallback model for testing.");
-      // Return a simple mock model for testing without API key
-      return new ChatLanguageModel() {
-        @Override
-        public String generate(String userMessage) {
-          return "I'm a test AI assistant. To use full AI capabilities, please configure OPENAI_API_KEY environment variable.";
-        }
-
-        @Override
-        public dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage>
-            generate(java.util.List<dev.langchain4j.data.message.ChatMessage> messages) {
-          dev.langchain4j.data.message.AiMessage aiMessage =
-              dev.langchain4j.data.message.AiMessage.from(
-                  "I'm a test AI assistant. To use full AI capabilities, please configure OPENAI_API_KEY environment variable.");
-          return new dev.langchain4j.model.output.Response<>(aiMessage);
-        }
-      };
+    if (aiModelProperties.getApiKey() == null || aiModelProperties.getApiKey().isBlank()) {
+      log.warn("AI API key not configured. Using mock/fallback model for testing.");
+      return fallbackModel();
     }
 
-    // Use the model name directly as a string - supports any OpenAI model
-    log.info("Creating OpenAI ChatLanguageModel with model: {}", model);
-    return OpenAiChatModel.builder()
-        .apiKey(apiKey)
-        .modelName(model)
-        .temperature(temperature)
-        .maxTokens(maxTokens)
-        .build();
+    ChatModelProvider provider =
+        chatModelProviderFactory.getProvider(aiModelProperties.getProvider());
+
+    log.info(
+        "Creating ChatLanguageModel provider={} model={}",
+        aiModelProperties.getProvider(),
+        aiModelProperties.getModel());
+
+    try {
+      return provider.createModel(
+          aiModelProperties.getApiKey(),
+          aiModelProperties.getModel(),
+          aiModelProperties.getTemperature(),
+          aiModelProperties.getMaxTokens());
+    } catch (RuntimeException ex) {
+      log.error("Failed to create chat model for provider {}", provider.getProviderName(), ex);
+      throw ex;
+    }
   }
 
   @Bean
@@ -90,5 +75,26 @@ public class LangChainConfig {
    */
   public interface BankingAssistantAiService {
     String chat(String userMessage);
+  }
+
+  private ChatLanguageModel fallbackModel() {
+    return new ChatLanguageModel() {
+      @Override
+      public String generate(String userMessage) {
+        return fallbackMessage();
+      }
+
+      @Override
+      public dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage> generate(
+          java.util.List<dev.langchain4j.data.message.ChatMessage> messages) {
+        dev.langchain4j.data.message.AiMessage aiMessage =
+            dev.langchain4j.data.message.AiMessage.from(fallbackMessage());
+        return new dev.langchain4j.model.output.Response<>(aiMessage);
+      }
+    };
+  }
+
+  private String fallbackMessage() {
+    return "I'm a test AI assistant. Configure AI_ASSISTANT provider/model and OPENAI_API_KEY (or other provider key) for full capabilities.";
   }
 }
