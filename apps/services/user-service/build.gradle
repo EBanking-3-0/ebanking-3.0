@@ -39,12 +39,18 @@ dependencies {
     // Database
     runtimeOnly 'org.postgresql:postgresql'
 
+    //keycloak
+    // https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client
+    implementation("org.keycloak:keycloak-admin-client:26.0.7")
+
     // Observability
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    // Bind Lombok and MapStruct so MapStruct sees Lombok-generated methods during annotation processing
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 

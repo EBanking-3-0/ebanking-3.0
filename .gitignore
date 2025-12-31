@@ -99,3 +99,4 @@ test-results/ # Gradle test results
 # Project pdf reqs
 *.pdf
 get_token.sh
+apps/services/user-service/uploads

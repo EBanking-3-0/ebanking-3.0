@@ -21,9 +21,8 @@ public class UserEventProducer {
 
     public void publishUserCreatedEvent(User user) {
         UserCreatedEvent event = UserCreatedEvent.builder()
-                .userId(user.getId())
+                .userId(0L)
                 .email(user.getEmail())
-                .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .status("ACTIVE") // or whatever initial status
@@ -31,18 +30,6 @@ public class UserEventProducer {
 
         kafkaTemplate.send(USER_TOPIC, user.getId().toString(), event);
         log.info("Published UserCreatedEvent for user ID: {}", user.getId());
-    }
-
-    public void publishKycUpdatedEvent(User user, String previousStatus) {
-        KycUpdatedEvent event = KycUpdatedEvent.builder()
-                .userId(user.getId())
-                .previousKycStatus(previousStatus)
-                .newKycStatus(user.getKycStatus().name())
-                .build();
-
-        kafkaTemplate.send(USER_TOPIC, user.getId().toString(), event);
-        log.info("Published KycUpdatedEvent for user ID: {}, new status: {}", 
-                 user.getId(), user.getKycStatus());
     }
 
     public void publishUserDeletedEvent(Long userId, String reason) {

@@ -11,19 +11,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserResponse implements Serializable {
+public class KycResponse implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String phone;
+    private String cinNumber;
+    private String idDocumentUrl;
+    private String selfieUrl;
     private String status;
-    private String kycStatus;
+    private LocalDateTime verifiedAt;
+    private String verifiedBy;
     private LocalDateTime createdAt;
-
+    private LocalDateTime updatedAt;
 }
 
