@@ -11,40 +11,38 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthConverter jwtAuthConverter;
+  private final JwtAuthConverter jwtAuthConverter;
 
-    public SecurityConfig(JwtAuthConverter jwtAuthConverter) {
-        this.jwtAuthConverter = jwtAuthConverter;
-    }
+  public SecurityConfig(JwtAuthConverter jwtAuthConverter) {
+    this.jwtAuthConverter = jwtAuthConverter;
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults()) // Enable CORS
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow OPTIONS requests
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll() // Allow auth endpoints (login, register)
-                        .requestMatchers("/graphiql/**").permitAll() // Allow access to GraphiQL UI
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtAuthConverter)
-                        )
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults()) // Enable CORS
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(HttpMethod.OPTIONS, "/**")
+                    .permitAll() // Allow OPTIONS requests
+                    .requestMatchers("/actuator/**")
+                    .permitAll()
+                    .requestMatchers("/auth/**")
+                    .permitAll() // Allow auth endpoints (login, register)
+                    .requestMatchers("/graphiql/**")
+                    .permitAll() // Allow access to GraphiQL UI
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

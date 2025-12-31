@@ -1,18 +1,11 @@
-# syntax=docker/dockerfile:1
+FROM eclipse-temurin:21-jdk-alpine
 
-FROM eclipse-temurin:21-jre-alpine AS builder
-WORKDIR /builder
-ARG JAR_FILE=apps/infrastructure/service-discovery/build/libs/*.jar
-COPY ${JAR_FILE} app.jar
-RUN java -Djarmode=layertools -jar app.jar extract
-
-FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-COPY --from=builder /builder/dependencies/ ./
-COPY --from=builder /builder/spring-boot-loader/ ./
-COPY --from=builder /builder/snapshot-dependencies/ ./
-COPY --from=builder /builder/application/ ./
+
+# Copy JAR from Gradle build output (relative to workspace root)
+COPY apps/infrastructure/service-discovery/build/libs/service-discovery-*.jar app.jar
+
 EXPOSE 8761
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+

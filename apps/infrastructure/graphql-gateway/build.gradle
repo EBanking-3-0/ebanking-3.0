@@ -39,3 +39,16 @@ dependencies {
 bootJar {
     archiveFileName = 'graphql-gateway.jar'
 }
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-graphql-gateway"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+tasks.named("sonar") {
+    dependsOn test
+}

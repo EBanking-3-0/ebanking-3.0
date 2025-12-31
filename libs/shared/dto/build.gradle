@@ -5,11 +5,33 @@ plugins {
 
 description = 'DTOs - Data Transfer Objects'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
 dependencies {
     api project(':libs:shared:common')
 
     api 'org.springframework.boot:spring-boot-starter-validation'
     api 'com.fasterxml.jackson.core:jackson-annotations'
 
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-dto"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+tasks.named("sonar") {
+    dependsOn test
 }

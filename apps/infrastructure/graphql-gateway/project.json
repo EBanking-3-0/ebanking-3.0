@@ -96,15 +96,39 @@
         "{projectRoot}/build/libs"
       ]
     },
-    "docker:build": {
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:graphql-gateway:sonar"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
+    },
+    "docker-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -t graphql-gateway:local -f apps/infrastructure/graphql-gateway/Dockerfile .",
+        "command": "docker build -t $DOCKER_USER/ebanking-graphql-gateway:${TAG:-latest} -f apps/infrastructure/graphql-gateway/Dockerfile .",
         "cwd": "."
       },
       "dependsOn": [
         "build"
-      ]
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-graphql-gateway:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
     }
   }
 }

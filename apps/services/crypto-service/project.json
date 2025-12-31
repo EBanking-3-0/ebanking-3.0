@@ -99,15 +99,39 @@
         "{projectRoot}/build/libs"
       ]
     },
-    "docker:build": {
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:crypto-service:sonar"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
+    },
+    "docker-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -t crypto-service:local -f apps/services/crypto-service/Dockerfile .",
+        "command": "docker build -t $DOCKER_USER/ebanking-crypto-service:${TAG:-latest} -f apps/services/crypto-service/Dockerfile .",
         "cwd": "."
       },
       "dependsOn": [
         "build"
-      ]
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-crypto-service:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
     }
   }
 }

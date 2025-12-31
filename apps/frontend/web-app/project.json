@@ -71,24 +71,49 @@
       }
     },
     "test": {
-      "executor": "@angular/build:unit-test",
+      "executor": "@nx/vitest:test",
+      "cache": true,
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
-        "polyfills": [
-          "zone.js"
-        ],
-        "tsConfig": "apps/frontend/web-app/tsconfig.spec.json",
-        "inlineStyleLanguage": "scss",
-        "assets": [
-          {
-            "glob": "**/*",
-            "input": "apps/frontend/web-app/public"
-          }
-        ],
-        "styles": [
-          "apps/frontend/web-app/src/styles.scss"
-        ],
-        "scripts": []
+        "reportsDirectory": "../../coverage/apps/angular-demo"
       }
+    },
+    "sonar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx sonarqube-scanner",
+        "cwd": "apps/frontend/web-app"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/sonar-project.properties"
+      ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-frontend:${TAG:-latest} -f apps/frontend/web-app/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-frontend:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
     }
   }
 }

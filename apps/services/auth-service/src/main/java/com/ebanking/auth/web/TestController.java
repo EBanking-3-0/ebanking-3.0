@@ -9,21 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/test")
 public class TestController {
 
-    @GetMapping("/hello")
-    @PreAuthorize("isAuthenticated()")
-    public String hello() {
-        return "Hello from Auth Service!";
-    }
+  @GetMapping("/hello")
+  @PreAuthorize("isAuthenticated()")
+  public String hello() {
+    return "Hello from Auth Service!";
+  }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('admin')")
-    public String adminHello() {
-        return "Hello Admin from Auth Service!";
-    }
+  @GetMapping("/admin")
+  @PreAuthorize("hasRole('admin')")
+  public String adminHello() {
+    return "Hello Admin from Auth Service!";
+  }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('user')")
-    public String userHello() {
-        return "Hello User from Auth Service!";
-    }
+  @GetMapping("/user")
+  @PreAuthorize("hasRole('user')")
+  public String userHello() {
+    return "Hello User from Auth Service!";
+  }
 }

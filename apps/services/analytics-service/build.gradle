@@ -6,7 +6,17 @@ plugins {
 
 description = 'Analytics Service - Dashboards and Alerts'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
     // Shared libraries
     implementation project(':libs:shared:common')
     implementation project(':libs:shared:kafka-events')
@@ -45,4 +55,17 @@ dependencies {
 
 bootJar {
     archiveFileName = 'analytics-service.jar'
+}
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-analytics-service"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+tasks.named("sonar") {
+    dependsOn test
 }
