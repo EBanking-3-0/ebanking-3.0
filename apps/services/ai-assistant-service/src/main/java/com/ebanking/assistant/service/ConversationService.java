@@ -120,7 +120,8 @@ public class ConversationService {
   }
 
   public List<Conversation> getUserConversations(Long userId) {
-    List<Conversation> conversations = conversationRepository.findByUserIdOrderByUpdatedAtDesc(userId);
+    List<Conversation> conversations =
+        conversationRepository.findByUserIdOrderByUpdatedAtDesc(userId);
 
     conversations.removeIf(
         c -> {
@@ -152,7 +153,9 @@ public class ConversationService {
 
     LocalDateTime cutoff = LocalDateTime.now().minusDays(ttlDays);
     LocalDateTime referenceTime =
-        conversation.getUpdatedAt() != null ? conversation.getUpdatedAt() : conversation.getCreatedAt();
+        conversation.getUpdatedAt() != null
+            ? conversation.getUpdatedAt()
+            : conversation.getCreatedAt();
 
     return referenceTime != null && referenceTime.isBefore(cutoff);
   }
@@ -169,7 +172,8 @@ public class ConversationService {
     }
 
     int fromIndex = size - maxMessages;
-    conversation.setMessages(new java.util.ArrayList<>(conversation.getMessages().subList(fromIndex, size)));
+    conversation.setMessages(
+        new java.util.ArrayList<>(conversation.getMessages().subList(fromIndex, size)));
     conversation.setUpdatedAt(LocalDateTime.now());
     return true;
   }
