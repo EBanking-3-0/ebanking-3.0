@@ -58,6 +58,7 @@ yarn-error.log
 .pnp/
 .pnp.js
 .pnpm-store/
+package-lock.json
 
 # OS
 .DS_Store
@@ -98,4 +99,5 @@ test-results/ # Gradle test results
 
 # Project pdf reqs
 *.pdf
-apps/frontend/web-app/.scannerwork
+get_token.sh
+apps/services/user-service/uploads

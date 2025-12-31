@@ -9,11 +9,11 @@
       "executor": "nx:run-commands",
       "configurations": {
         "production": {
-          "command": "../../../gradlew build -x test",
+          "command": "..\\..\\..\\gradlew.bat build -x test",
           "cwd": "libs/shared/kafka-events"
         },
         "development": {
-          "command": "../../../gradlew build -x test",
+          "command": "..\\..\\..\\gradlew.bat build -x test",
           "cwd": "libs/shared/kafka-events"
         }
       },

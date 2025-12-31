@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+            jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
   datasource:
     url: jdbc:postgresql://localhost:5432/ebanking
     username: ebanking
@@ -11,7 +16,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -38,12 +43,24 @@ eureka:
   instance:
     prefer-ip-address: true
 
+keycloak:
+  realm: ebanking-realm-realm
+  auth-server-url: http://localhost:8092
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics,prometheus
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
+
+app:
+  file-storage:
+    path: ./uploads
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
