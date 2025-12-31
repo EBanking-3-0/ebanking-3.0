@@ -19,13 +19,8 @@
       },
       "defaultConfiguration": "development",
       "cache": true,
-      "inputs": [
-        "default",
-        "{projectRoot}/**/*"
-      ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "inputs": ["default", "{projectRoot}/**/*"],
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "test": {
       "executor": "nx:run-commands",
@@ -76,9 +71,7 @@
         "{projectRoot}/build.gradle",
         "{projectRoot}/src/**/*.java"
       ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "sonar": {
       "executor": "nx:run-commands",
