@@ -2,6 +2,7 @@ package com.ebanking.account.service;
 
 import com.ebanking.account.dto.AccountDTO;
 import com.ebanking.account.exception.AccountNotFoundException;
+import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.repository.AccountRepository;
 import com.ebanking.shared.kafka.events.AccountCreatedEvent;
@@ -68,11 +69,11 @@ public class AccountService {
     return savedAccount;
   }
 
-  public Account updateAccount(Long id, AccountDTO account) {
+  public Account updateAccount(Long id, AccountDTO account) throws AccountNotFoundException {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
-      log.info("Account not found: {}", id);
-      return null;
+      log.error("Account not found: {}", id);
+      throw new AccountNotFoundException("Account not found");
     }
     existingAccount.get().setBalance(account.getBalance());
     existingAccount.get().setStatus(account.getStatus());
@@ -83,10 +84,10 @@ public class AccountService {
     return accountRepository.save(existingAccount.get());
   }
 
-  public boolean deleteAccount(Long id) {
+  public boolean deleteAccount(Long id) throws AccountNotFoundException {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
-      log.info("Account not found: {}", id);
+      log.error("Account not found: {}", id);
       throw new AccountNotFoundException("Account not found");
     }
     accountRepository.delete(existingAccount.get());
@@ -99,20 +100,23 @@ public class AccountService {
     return accountRepository.findByUserId(userId);
   }
 
-  public Account getAccountByNumber(String accountNumber) {
+  public Account getAccountByNumber(String accountNumber) throws AccountNotFoundException {
     return accountRepository
         .findByAccountNumber(accountNumber)
-        .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        .orElseThrow(() -> {
+          log.error("Account not found: {}", accountNumber);
+          return new AccountNotFoundException("Account not found");
+        });
   }
 
   private String generateAccountNumber() {
     return UUID.randomUUID().toString().substring(0, 10).toUpperCase();
   }
 
-  public boolean deposit(Long id, BigDecimal amount) {
+  public boolean deposit(Long id, BigDecimal amount) throws AccountNotFoundException {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
-      log.info("Account not found: {}", id);
+      log.error("Account not found: {}", id);
       throw new AccountNotFoundException("Account not found");
     }
     existingAccount.get().setBalance(existingAccount.get().getBalance().add(amount));
@@ -123,15 +127,15 @@ public class AccountService {
     return true;
   }
 
-  public boolean withdraw(Long id, BigDecimal amount) {
+  public boolean withdraw(Long id, BigDecimal amount) throws AccountNotFoundException, InsufficientBalance {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
-      log.info("Account not found: {}", id);
+      log.error("Account not found: {}", id);
       throw new AccountNotFoundException("Account not found");
     }
     if (existingAccount.get().getBalance().subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
-      log.info("Insufficient balance: {}", existingAccount.get().getBalance());
-      throw new AccountNotFoundException("Insufficient balance");
+      log.error("Insufficient balance: {}", existingAccount.get().getBalance());
+      throw new InsufficientBalance("Insufficient balance");
     }
     existingAccount.get().setBalance(existingAccount.get().getBalance().subtract(amount));
     // todo: send event to kafka (transaction service)

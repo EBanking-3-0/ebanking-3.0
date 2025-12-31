@@ -1,6 +1,7 @@
 package com.ebanking.account.controller;
 
 import com.ebanking.account.dto.AccountDTO;
+import com.ebanking.account.exception.AccountNotFoundException;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
 
@@ -54,12 +55,12 @@ public class AccountController {
 
   @PutMapping("/{id}")
   public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
-    Account account = accountService.updateAccount(id, accountDTO);
-
-    if (account == null) {
+    try {
+      Account account = accountService.updateAccount(id, accountDTO);
+      return ResponseEntity.ok(mapToDTO(account));
+    } catch (AccountNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(mapToDTO(account));
   }
 
   @DeleteMapping("/{id}")
