@@ -4,22 +4,25 @@
       <h1>🏦 E-Banking 3.0</h1>
       <p>Nx Monorepo Microservices Architecture</p>
     </div>
+
     <div class="auth-controls">
-      @if (!isLoggedIn) {
-        <button (click)="login()">Login</button>
-      }
-      @if (isLoggedIn) {
-        <span>Welcome, {{ userProfile?.username }}</span>
+      @if (!isLoggedIn()) {
+        <button (click)="login()">Login / Register</button>
+      } @else {
+        @if (userProfile(); as profile) {
+          <div class="user-info">
+            <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
+            <span>({{ profile.email }})</span>
+          </div>
+        }
         <button (click)="logout()">Logout</button>
       }
     </div>
   </header>
 
-  @if (isLoggedIn) {
+  @if (isLoggedIn()) {
     <nav class="app-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        >Users</a
-      >
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Users</a>
       <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
     </nav>
   }
@@ -29,6 +32,6 @@
   </main>
 
   <footer class="app-footer">
-    <p>Built with Angular 19 + GraphQL + Spring Boot + Kafka</p>
+    <p>Built with Angular 19+ + GraphQL + Spring Boot + Kafka</p>
   </footer>
 </div>
