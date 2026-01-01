@@ -11,6 +11,7 @@ import lombok.*;
 public class AccountResponse {
   private Long id;
   private String accountNumber;
+  private String iban; // Added for SEPA/Instant transfers
   private Long userId;
   private BigDecimal balance;
   private String currency;

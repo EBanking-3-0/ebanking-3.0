@@ -10,6 +10,7 @@ public class PaymentResponse {
   private Long paymentId;
   private String transactionId;
   private String status;
+  private String paymentType;
   private BigDecimal amount;
   private String currency;
   private BigDecimal fees;

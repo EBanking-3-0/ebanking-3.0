@@ -11,17 +11,28 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-  Optional<Payment> findByTransactionId(String transactionId);
 
   Optional<Payment> findByIdempotencyKey(String idempotencyKey);
 
-  List<Payment> findByFromAccountId(Long fromAccountId);
+  Optional<Payment> findByTransactionId(String transactionId);
 
-  List<Payment> findByToAccountId(Long toAccountId);
-
-  List<Payment> findByUserId(Long userId);
+  List<Payment> findByUserIdOrderByCreatedAtDesc(Long userId);
 
   @Query(
-      "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.userId = :userId AND p.createdAt >= :startDate AND p.status = 'COMPLETED'")
-  BigDecimal sumAmountByUserIdAndCreatedAtAfter(Long userId, Instant startDate);
+      "SELECT COUNT(p) FROM Payment p WHERE p.fromAccountId = :accountId "
+          + "AND p.createdAt >= :since")
+  int countRecentTransfers(Long accountId, Instant since);
+
+  @Query(
+      "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p "
+          + "WHERE p.userId = :userId "
+          + "AND p.createdAt >= :since")
+  BigDecimal sumAmountByUserIdAndCreatedAtAfter(Long userId, Instant since);
+
+  @Query(
+      "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p "
+          + "WHERE p.fromAccountId = :accountId "
+          + "AND p.status = 'COMPLETED' "
+          + "AND p.createdAt >= :since")
+  BigDecimal sumAmountSince(Long accountId, Instant since);
 }

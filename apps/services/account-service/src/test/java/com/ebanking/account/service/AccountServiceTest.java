@@ -4,38 +4,24 @@ import org.junit.jupiter.api.Test;
 
 public class AccountServiceTest {
 
-    @Test
-    void testCreateAccount() {
+  @Test
+  void testCreateAccount() {}
 
-    }
+  @Test
+  void testDeleteAccount() {}
 
-    @Test
-    void testDeleteAccount() {
+  @Test
+  void testDeposit() {}
 
-    }
+  @Test
+  void testGetAccountByNumber() {}
 
-    @Test
-    void testDeposit() {
+  @Test
+  void testGetAccountsByUserId() {}
 
-    }
+  @Test
+  void testUpdateAccount() {}
 
-    @Test
-    void testGetAccountByNumber() {
-
-    }
-
-    @Test
-    void testGetAccountsByUserId() {
-
-    }
-
-    @Test
-    void testUpdateAccount() {
-
-    }
-
-    @Test
-    void testWithdraw() {
-
-    }
+  @Test
+  void testWithdraw() {}
 }

@@ -8,12 +8,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "legacy-adapter", path = "/api/legacy")
+@FeignClient(name = "legacy-adapter-service", path = "/api/legacy")
 public interface LegacyAdapterClient {
 
-  @PostMapping("/sepa")
-  SepaTransferResponse initiateSepaTransfer(@RequestBody SepaTransferRequest request);
+  @PostMapping("/sepa/transfer")
+  SepaTransferResponse executeSepaTransfer(@RequestBody SepaTransferRequest request);
 
-  @PostMapping("/instant")
-  InstantTransferResponse initiateInstantTransfer(@RequestBody InstantTransferRequest request);
+  @PostMapping("/instant/transfer")
+  InstantTransferResponse executeInstantTransfer(@RequestBody InstantTransferRequest request);
 }

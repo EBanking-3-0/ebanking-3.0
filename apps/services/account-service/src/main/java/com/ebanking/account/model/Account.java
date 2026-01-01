@@ -15,10 +15,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "accounts", indexes = {
-    @Index(name = "idx_account_number", columnList = "accountNumber", unique = true),
-    @Index(name = "idx_user_id", columnList = "userId")
-})
+@Table(
+    name = "accounts",
+    indexes = {
+      @Index(name = "idx_account_number", columnList = "accountNumber", unique = true),
+      @Index(name = "idx_user_id", columnList = "userId")
+    })
 public class Account {
 
   @Id
@@ -27,6 +29,9 @@ public class Account {
 
   @Column(nullable = false, unique = true)
   private String accountNumber;
+
+  @Column
+  private String iban; // IBAN pour SEPA/Instant transfers
 
   @Column(nullable = false)
   private Long userId;
@@ -43,9 +48,7 @@ public class Account {
   @Column(nullable = false)
   private String status; // ACTIVE, FROZEN, CLOSED
 
-  @CreationTimestamp
-  private LocalDateTime createdAt;
+  @CreationTimestamp private LocalDateTime createdAt;
 
-  @UpdateTimestamp
-  private LocalDateTime updatedAt;
+  @UpdateTimestamp private LocalDateTime updatedAt;
 }

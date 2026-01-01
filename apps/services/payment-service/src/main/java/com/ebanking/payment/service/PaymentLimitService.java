@@ -5,9 +5,9 @@ import com.ebanking.payment.exception.MonthlyLimitExceededException;
 import com.ebanking.payment.repository.PaymentRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,32 +17,33 @@ public class PaymentLimitService {
 
   private final PaymentRepository paymentRepository;
 
-  private static final BigDecimal DAILY_LIMIT = new BigDecimal("2000.00");
-  private static final BigDecimal MONTHLY_LIMIT = new BigDecimal("10000.00");
+  @Value("${payment.limits.daily:10000.00}")
+  private BigDecimal dailyLimit;
 
-  public void checkLimits(Long userId, BigDecimal amount) {
-    checkDailyLimit(userId, amount);
-    checkMonthlyLimit(userId, amount);
-  }
+  @Value("${payment.limits.monthly:50000.00}")
+  private BigDecimal monthlyLimit;
 
-  private void checkDailyLimit(Long userId, BigDecimal amount) {
-    BigDecimal dailyTotal =
-        paymentRepository.sumAmountByUserIdAndCreatedAtAfter(
-            userId, Instant.now().minus(1, ChronoUnit.DAYS));
+  public void checkDailyLimit(Long accountId, BigDecimal amount) {
+    Instant startOfDay = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS);
 
-    if (dailyTotal.add(amount).compareTo(DAILY_LIMIT) > 0) {
-      throw new DailyLimitExceededException("Daily payment limit of " + DAILY_LIMIT + " exceeded");
+    BigDecimal dailySpent = paymentRepository.sumAmountSince(accountId, startOfDay);
+    BigDecimal totalAfterPayment = dailySpent.add(amount);
+
+    if (totalAfterPayment.compareTo(dailyLimit) > 0) {
+      throw new DailyLimitExceededException(
+          "Plafond journalier dépassé: " + dailySpent + " + " + amount + " > " + dailyLimit);
     }
   }
 
-  private void checkMonthlyLimit(Long userId, BigDecimal amount) {
-    BigDecimal monthlyTotal =
-        paymentRepository.sumAmountByUserIdAndCreatedAtAfter(
-            userId, Instant.now().minus(30, ChronoUnit.DAYS));
+  public void checkMonthlyLimit(Long accountId, BigDecimal amount) {
+    Instant startOfMonth =
+        Instant.now().atZone(java.time.ZoneId.systemDefault()).withDayOfMonth(1).toInstant();
 
-    if (monthlyTotal.add(amount).compareTo(MONTHLY_LIMIT) > 0) {
-      throw new MonthlyLimitExceededException(
-          "Monthly payment limit of " + MONTHLY_LIMIT + " exceeded");
+    BigDecimal monthlySpent = paymentRepository.sumAmountSince(accountId, startOfMonth);
+    BigDecimal totalAfterPayment = monthlySpent.add(amount);
+
+    if (totalAfterPayment.compareTo(monthlyLimit) > 0) {
+      throw new MonthlyLimitExceededException("Plafond mensuel dépassé");
     }
   }
 }

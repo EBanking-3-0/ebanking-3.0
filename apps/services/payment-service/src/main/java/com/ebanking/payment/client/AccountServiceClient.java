@@ -10,6 +10,9 @@ public interface AccountServiceClient {
   @GetMapping("/{id}")
   AccountResponse getAccount(@PathVariable("id") Long id);
 
+  @GetMapping("/{id}/balance")
+  BalanceResponse getBalance(@PathVariable("id") Long id);
+
   @GetMapping("/lookup")
   AccountResponse getAccountByNumber(@RequestParam("accountNumber") String accountNumber);
 
