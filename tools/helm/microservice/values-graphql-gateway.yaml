@@ -14,13 +14,15 @@ service:
 ingress:
   enabled: true
   className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
   hosts:
     - host: api.ebanking.local
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: ebanking-tls
+    - secretName: ebanking-api-tls
       hosts:
         - api.ebanking.local
 

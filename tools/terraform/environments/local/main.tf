@@ -88,6 +88,45 @@ resource "helm_release" "ebanking_infra" {
   ]
 }
 
+# -------------------------------------------------------------------
+# CERT-MANAGER AUTOMATION
+# -------------------------------------------------------------------
+
+resource "kubernetes_namespace" "cert_manager" {
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "helm_release" "cert_manager" {
+  name       = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
+  version    = "v1.13.3"
+  namespace  = kubernetes_namespace.cert_manager.metadata[0].name
+
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+}
+
+# Local Self-Signed Cluster Issuer
+resource "kubernetes_manifest" "self_signed_cluster_issuer" {
+  manifest = {
+    apiVersion = "cert-manager.io/v1"
+    kind       = "ClusterIssuer"
+    metadata = {
+      name = "selfsigned-cluster-issuer"
+    }
+    spec = {
+      selfSigned = {}
+    }
+  }
+
+  depends_on = [helm_release.cert_manager]
+}
+
 # Configured password (what we INTENDED)
 output "keycloak_admin_password_configured" {
   value     = var.keycloak_admin_password
