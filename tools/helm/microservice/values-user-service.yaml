@@ -18,7 +18,7 @@ env:
   # SPRING_DATASOURCE_PASSWORD moved to extraEnv
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   EUREKA_CLIENT_ENABLED: "false" # Disable Eureka client as K8s service discovery is used
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://ebanking-infra-keycloak:8080/realms/master
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
   # Add other necessary environment variables if any
 
 extraEnv:

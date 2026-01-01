@@ -11,9 +11,22 @@ service:
   port: 80 # External port for the service
   targetPort: 8081 # Internal port of the graphql-gateway application
 
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: api.ebanking.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-tls
+      hosts:
+        - api.ebanking.local
+
 env:
   SPRING_PROFILES_ACTIVE: kubernetes # Activate Kubernetes profile if available
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://ebanking-infra-keycloak:8080/realms/master
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   EUREKA_CLIENT_ENABLED: "false" # Disable Eureka client as K8s service discovery is used
   # Add other necessary environment variables if any

@@ -1,1 +1,1 @@
-- [x] add migrations after the first deployment
+- [ ] keycloak: add init container script to create realms/users.

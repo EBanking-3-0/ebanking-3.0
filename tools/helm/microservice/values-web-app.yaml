@@ -8,12 +8,28 @@ image:
 
 service:
   type: ClusterIP
-  port: 80 # External port for the service
-  targetPort: 80 # Nginx serves on port 80
+  port: 80
+  targetPort: 80
 
-env: # Angular apps usually bake env vars into the build, but this might be for something else.
-  # Keycloak and API URLs need to be set during Angular build.
-  # We will modify src/environments/environment.ts directly before building.
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: ebanking.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-tls
+      hosts:
+        - ebanking.local
+
+env:
+
+  API_URL: "https://api.ebanking.local/graphql"
+  KEYCLOAK_URL: "https://auth.ebanking.local"
+  KEYCLOAK_REALM: "ebanking-realm"
+  KEYCLOAK_CLIENT_ID: "ebanking-client"
 
 serviceAccount:
   create: true

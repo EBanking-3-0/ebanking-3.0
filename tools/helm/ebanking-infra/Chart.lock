@@ -5,8 +5,8 @@ dependencies:
 - name: kafka
   repository: https://helm-charts.itboon.top/kafka
   version: 18.0.1
-- name: keycloak
-  repository: oci://registry-1.docker.io/cloudpirates
-  version: 0.11.2
-digest: sha256:6450e4c968519cab26562965a7d8a904ceb5026c39195e6303f1f04fae38aa6e
-generated: "2025-12-29T22:20:16.550345137+01:00"
+- name: keycloakx
+  repository: oci://ghcr.io/codecentric/helm-charts
+  version: 7.1.5
+digest: sha256:bcde127ea0e818b66a0b8f37b3b443dcc949b8ae7423aedbb531575e5a69bee1
+generated: "2025-12-31T17:55:39.896018551+01:00"

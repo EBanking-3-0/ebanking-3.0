@@ -18,7 +18,7 @@ env:
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   SPRING_KAFKA_PRODUCER_COMPRESSION_TYPE: none
   EUREKA_CLIENT_ENABLED: "false"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://ebanking-infra-keycloak:8080/realms/master
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
 
 extraEnv:
   - name: SPRING_DATASOURCE_PASSWORD

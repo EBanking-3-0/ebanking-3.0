@@ -49,8 +49,8 @@
       "publicClient": true,
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
-      "redirectUris": ["http://localhost:4200/*", "http://localhost:8081/*"],
-      "webOrigins": ["http://localhost:4200", "http://localhost:8081"]
+      "redirectUris": ["https://ebanking.local/*", "https://api.ebanking.local/*", "http://localhost:4200/*", "http://localhost:8081/*"],
+      "webOrigins": ["https://ebanking.local", "https://api.ebanking.local", "http://localhost:4200", "http://localhost:8081"]
     },
     {
       "clientId": "auth-service",

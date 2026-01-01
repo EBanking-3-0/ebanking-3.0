@@ -1,8 +1,8 @@
 export const environment = {
   production: true, // Assuming Kubernetes deployment is for production-like environments
-  apiUrl: 'http://graphql-gateway-microservice:8081/graphql',
+  apiUrl: 'https://api.ebanking.local/graphql',
   keycloak: {
-    url: 'http://ebanking-infra-keycloak:8080',
+    url: 'https://auth.ebanking.local',
     realm: 'ebanking-realm',
     clientId: 'ebanking-client',
   },

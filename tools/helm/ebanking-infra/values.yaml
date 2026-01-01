@@ -12,6 +12,7 @@ postgresql:
   auth:
     database: ebanking_db
     username: ebanking_user
+    password: pass
     existingSecret: postgres-secret
     secretKeys:
       adminPasswordKey: postgres-password
@@ -51,34 +52,50 @@ postgresql:
 
 kafka:
   enabled: true
-  # replicaCount: 1
-  # listeners:
-  #   client:
-  #     protocol: PLAINTEXT
 
-keycloak:
-  enabled: true
-  adminUser: admin
-  existingSecret: keycloak-admin-secret
-  secretKeys:
-    adminPasswordKey: admin-password
+keycloakx:
+  dbchecker:
+    enabled: true
+
+  http:
+    relativePath: "/"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    servicePort: http
+    rules:
+      - host: auth.ebanking.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: ebanking-tls
+        hosts:
+          - auth.ebanking.local
 
   database:
-    type: postgres
-    host: ebanking-infra-postgresql
-    port: '5432'
-    name: keycloak_db
+    vendor: postgres
+    hostname: ebanking-infra-postgresql
+    port: 5432
     username: ebanking_user
+    password: pass
+    database: keycloak_db
 
-    existingSecret: postgres-secret
-    secretKeys:
-      usernameKey: username
-      passwordKey: password
-
-  postgres:
-    enabled: false
-
-  extraInitContainers:
-    - name: wait-for-postgres
-      image: busybox
-      command: ['sh', '-c', 'until nc -z ebanking-infra-postgresql 5432; do echo waiting for postgres; sleep 2; done;']
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+  extraEnv: |
+    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: admin
+    - name: KC_HOSTNAME
+      value: https://auth.ebanking.local
+    - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+      value: "false"
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless

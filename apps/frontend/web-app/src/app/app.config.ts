@@ -13,6 +13,7 @@ import { KeycloakService, KeycloakBearerInterceptor } from 'keycloak-angular';
 
 import { routes } from './app.routes';
 import { initializeKeycloak } from './core/auth/keycloak-init.factory';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,7 +35,7 @@ export const appConfig: ApplicationConfig = {
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {
-        link: httpLink.create({ uri: 'http://localhost:8081/graphql' }),
+        link: httpLink.create({ uri: environment.apiUrl }),
         cache: new InMemoryCache(),
       };
     }),
