@@ -1,6 +1,9 @@
 package com.ebanking.account.controller;
 
 import com.ebanking.account.dto.AccountDTO;
+import com.ebanking.account.exception.AccountNotFoundException;
+import com.ebanking.account.exception.InsufficientBalance;
+import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
 
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class AccountController {
 
   private final AccountService accountService;
+  private final AccountMapper accountMapper;
 
   @PostMapping
   @PreAuthorize("hasRole('user')")
@@ -39,7 +43,7 @@ public class AccountController {
     // needed.
 
     Account account = accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
-    return ResponseEntity.ok(mapToDTO(account));
+    return ResponseEntity.ok(accountMapper.mapToDTO(account));
   }
 
   @GetMapping("/my-accounts")
@@ -48,52 +52,50 @@ public class AccountController {
     // Again, verify userId matches token in production
     return ResponseEntity.ok(
         accountService.getAccountsByUserId(userId).stream()
-            .map(this::mapToDTO)
+            .map(accountMapper::mapToDTO)
             .collect(Collectors.toList()));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
-    Account account = accountService.updateAccount(id, accountDTO);
-
-    if (account == null) {
-      return ResponseEntity.notFound().build();
+  public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
+    try {
+      Account account = accountService.updateAccount(id, accountDTO);
+      return ResponseEntity.ok(accountMapper.mapToDTO(account));
+    } catch (AccountNotFoundException e) {
+      return ResponseEntity.badRequest().body("Account not found");
     }
-    return ResponseEntity.ok(mapToDTO(account));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
-    boolean deleted = accountService.deleteAccount(id);
-    if (!deleted) {
+    try {
+      accountService.deleteAccount(id);
+      return ResponseEntity.ok("Account deleted successfully");
+    } catch (AccountNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
-
-    return ResponseEntity.ok("Account deleted successfully");
-  }
-
-  private AccountDTO mapToDTO(Account account) {
-    return AccountDTO.builder()
-        .id(account.getId())
-        .accountNumber(account.getAccountNumber())
-        .userId(account.getUserId())
-        .balance(account.getBalance())
-        .currency(account.getCurrency())
-        .type(account.getType())
-        .status(account.getStatus())
-        .createdAt(account.getCreatedAt())
-        .build();
   }
 
   @PostMapping("/{id}/deposit")
   public ResponseEntity<?> deposit(@PathVariable Long id, @RequestBody BigDecimal amount) {
-    accountService.deposit(id, amount);
+    try {
+      accountService.deposit(id, amount);
+    } catch (AccountNotFoundException e) {
+      return ResponseEntity.badRequest().body("Account not found");
+    }
     return ResponseEntity.ok("Deposit successful");
   }
 
   @PostMapping("/{id}/withdraw")
   public ResponseEntity<?> withdraw(@PathVariable Long id, @RequestBody BigDecimal amount) {
-    accountService.withdraw(id, amount);
+    try {
+      accountService.withdraw(id, amount);
+    } catch (AccountNotFoundException e) {
+      return ResponseEntity.badRequest().body("Account not found");
+    } catch (InsufficientBalance e) {
+      ResponseEntity.badRequest().body("Insufficient balance");
+
+    }
     return ResponseEntity.ok("Withdrawal successful");
   }
 }
