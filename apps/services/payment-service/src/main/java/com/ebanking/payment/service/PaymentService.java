@@ -1,120 +1,106 @@
 package com.ebanking.payment.service;
 
-import com.ebanking.shared.kafka.events.FraudDetectedEvent;
-import com.ebanking.shared.kafka.events.PaymentFailedEvent;
-import com.ebanking.shared.kafka.events.TransactionCompletedEvent;
-import com.ebanking.shared.kafka.producer.TypedEventProducer;
+import com.ebanking.payment.dto.request.PaymentRequest;
+import com.ebanking.payment.dto.response.PaymentResult;
+import com.ebanking.payment.entity.*;
+import com.ebanking.payment.repository.PaymentRepository;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Payment service with Kafka event publishing. Publishes transaction.completed, payment.failed, and
- * fraud.detected events.
- */
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
 
-  private final TypedEventProducer eventProducer;
+  private final PaymentRepository paymentRepository;
+  private final PaymentSagaOrchestrator sagaOrchestrator;
+  private final PaymentValidationService validationService;
+
+  private static final BigDecimal SCA_THRESHOLD = new BigDecimal("100.00");
 
   @Transactional
-  public void completeTransaction(
-      Long transactionId,
-      Long fromAccountId,
-      Long toAccountId,
-      String fromAccountNumber,
-      String toAccountNumber,
-      BigDecimal amount,
-      String currency,
-      String transactionType) {
-    // Transaction completion logic would go here
-    log.info("Completing transaction: {}", transactionId);
+  public PaymentResult initiatePayment(PaymentRequest request, Long userId) {
+    log.info("Initiating {} via Senior Banking Engine - User: {}", request.getType(), userId);
 
-    // After transaction completes, publish event
-    TransactionCompletedEvent event =
-        TransactionCompletedEvent.builder()
-            .transactionId(transactionId)
-            .fromAccountId(fromAccountId)
-            .toAccountId(toAccountId)
-            .fromAccountNumber(fromAccountNumber)
-            .toAccountNumber(toAccountNumber)
-            .amount(amount)
-            .currency(currency)
-            .transactionType(transactionType)
-            .status("COMPLETED")
-            .description("Transaction completed successfully")
-            .source("payment-service")
+    // 1. Validation Métier et Réglementaire
+    validationService.validatePayment(request, userId);
+
+    // 2. Vérifier idempotence
+    var existing = paymentRepository.findByIdempotencyKey(request.getIdempotencyKey());
+    if (existing.isPresent()) {
+      return PaymentResult.success(existing.get());
+    }
+
+    // 3. Créer le paiement (Status: CREATED)
+    Payment payment =
+        Payment.builder()
+            .transactionId(UUID.randomUUID().toString())
+            .idempotencyKey(request.getIdempotencyKey())
+            .paymentType(PaymentType.valueOf(request.getType()))
+            .status(PaymentStatus.CREATED)
+            .fromAccountId(request.getFromAccountId())
+            .toAccountId(request.getToAccountId())
+            .toIban(request.getToIban())
+            .beneficiaryName(request.getBeneficiaryName())
+            .amount(request.getAmount())
+            .currency(request.getCurrency())
+            .userId(userId)
+            .description(request.getDescription())
+            .reference(request.getEndToEndId())
+            .ipAddress(request.getIpAddress())
+            .userAgent(request.getUserAgent())
+            .phoneNumber(request.getPhoneNumber())
+            .operatorCode(request.getCountryCode())
             .build();
 
-    eventProducer.publishTransactionCompleted(event);
-    log.info("Published transaction.completed event: {}", transactionId);
+    payment = paymentRepository.save(payment);
+
+    // 4. SCA (Strong Customer Authentication) Logic
+    if (isScaRequired(payment)) {
+      log.info("SCA Required (Threshold/Type) for payment {}", payment.getTransactionId());
+      return PaymentResult.builder().payment(payment).success(true).message("SCA_REQUIRED").build();
+    }
+
+    // 5. Auto-validate and Execute
+    payment.setStatus(PaymentStatus.AUTHORIZED);
+    payment.setScaVerified(true);
+    paymentRepository.save(payment);
+
+    return sagaOrchestrator.executePayment(payment);
   }
 
   @Transactional
-  public void handlePaymentFailure(
-      Long transactionId,
-      Long accountId,
-      String accountNumber,
-      BigDecimal amount,
-      String currency,
-      String failureReason,
-      String errorCode) {
-    // Payment failure handling logic would go here
-    log.warn("Payment failed for transaction: {} - Reason: {}", transactionId, failureReason);
+  public PaymentResult authorizePayment(Long paymentId, String otpCode, Long userId) {
+    Payment payment =
+        paymentRepository
+            .findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
-    // Publish payment failed event
-    PaymentFailedEvent event =
-        PaymentFailedEvent.builder()
-            .transactionId(transactionId)
-            .accountId(accountId)
-            .accountNumber(accountNumber)
-            .amount(amount)
-            .currency(currency)
-            .failureReason(failureReason)
-            .errorCode(errorCode)
-            .source("payment-service")
-            .build();
+    if (!payment.getUserId().equals(userId)) {
+      throw new SecurityException("Unauthorized access to payment");
+    }
 
-    eventProducer.publishPaymentFailed(event);
-    log.info("Published payment.failed event: {}", transactionId);
+    // Mock OTP validation
+    if ("123456".equals(otpCode)) {
+      payment.setScaVerified(true);
+      payment.setStatus(PaymentStatus.AUTHORIZED);
+      paymentRepository.save(payment);
+      return sagaOrchestrator.executePayment(payment);
+    } else {
+      payment.setStatus(PaymentStatus.REJECTED);
+      payment.setFailureReason("Invalid SCA OTP");
+      paymentRepository.save(payment);
+      return PaymentResult.failure(payment, new SecurityException("Invalid OTP"));
+    }
   }
 
-  @Transactional
-  public void detectFraud(
-      Long transactionId,
-      Long accountId,
-      String accountNumber,
-      BigDecimal amount,
-      String currency,
-      String fraudType,
-      String severity,
-      String description) {
-    // Fraud detection logic would go here
-    log.warn(
-        "Fraud detected for transaction: {} - Type: {} - Severity: {}",
-        transactionId,
-        fraudType,
-        severity);
-
-    // Publish fraud detected event
-    FraudDetectedEvent event =
-        FraudDetectedEvent.builder()
-            .transactionId(transactionId)
-            .accountId(accountId)
-            .accountNumber(accountNumber)
-            .amount(amount)
-            .currency(currency)
-            .fraudType(fraudType)
-            .severity(severity)
-            .description(description)
-            .source("payment-service")
-            .build();
-
-    eventProducer.publishFraudDetected(event);
-    log.info("Published fraud.detected event: {}", transactionId);
+  private boolean isScaRequired(Payment payment) {
+    return payment.getAmount().compareTo(SCA_THRESHOLD) > 0
+        || payment.getPaymentType() == PaymentType.SWIFT_TRANSFER
+        || payment.getPaymentType() == PaymentType.SEPA_TRANSFER;
   }
 }

@@ -1,28 +1,18 @@
 server:
-  port: 8085
+  port: 8090
 
 spring:
   application:
-    name: payment-service
+    name: ai-assistant-service
+  data:
+    mongodb:
+      # Using URI with authentication credentials
+      uri: ${MONGODB_URI:mongodb://ebanking:ebanking123@localhost:27017/ebanking?authSource=admin}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8092/realms/ebanking-realm
-          jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ebanking
-    username: ebanking
-    password: ebanking123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: payments
-    show-sql: true
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -32,6 +22,8 @@ spring:
       group-id: ${spring.application.name}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
       auto-offset-reset: earliest
       enable-auto-commit: false
 
@@ -54,3 +46,23 @@ management:
       prometheus:
         enabled: true
 
+# AI Assistant Configuration
+ai:
+  assistant:
+    provider: ${AI_PROVIDER:openai}
+    model: ${AI_MODEL:gpt-4o-mini}
+    api-key: ${OPENAI_API_KEY:}
+    temperature: ${AI_TEMPERATURE:0.7}
+    max-tokens: ${AI_MAX_TOKENS:1000}
+    enable-actions: ${AI_ENABLE_ACTIONS:true}
+    conversation:
+      ttl-days: ${CONVERSATION_TTL_DAYS:90}
+      max-messages: ${CONVERSATION_MAX_MESSAGES:100}
+
+# Kafka Topics
+kafka:
+  topics:
+    user-created: user.created
+    account-created: account.created
+    transaction-completed: transaction.completed
+    balance-updated: balance.updated

@@ -1,0 +1,248 @@
+.payment-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #ecf0f1;
+  flex-wrap: wrap;
+
+  .tab-btn {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #7f8c8d;
+    transition: all 0.3s;
+
+    &:hover {
+      color: #3498db;
+      background: #f8f9fa;
+    }
+
+    &.active {
+      color: #3498db;
+      border-bottom-color: #3498db;
+      font-weight: 600;
+    }
+  }
+}
+
+.form-container {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.payment-form {
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .info-box {
+    background: #e8f4f8;
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+
+    p {
+      margin: 0.5rem 0;
+      color: #2c3e50;
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #34495e;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+
+      &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      }
+
+      &.ng-invalid.ng-touched {
+        border-color: #e74c3c;
+      }
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .error {
+      display: block;
+      color: #e74c3c;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover:not(:disabled) {
+      background: #2980b9;
+    }
+
+    &:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.result-container, .error-container {
+  margin-top: 2rem;
+
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+}
+
+.result-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3498db;
+
+  &.status-completed {
+    border-left-color: #27ae60;
+  }
+
+  &.status-processing {
+    border-left-color: #f39c12;
+  }
+
+  &.status-failed {
+    border-left-color: #e74c3c;
+  }
+
+  &.status-compensated {
+    border-left-color: #9b59b6;
+  }
+
+  .result-header {
+    margin-bottom: 1rem;
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+
+      &.status-completed {
+        background: #d5f4e6;
+        color: #27ae60;
+      }
+
+      &.status-processing {
+        background: #fef5e7;
+        color: #f39c12;
+      }
+
+      &.status-failed {
+        background: #fadbd8;
+        color: #e74c3c;
+      }
+
+      &.status-compensated {
+        background: #ebdef0;
+        color: #9b59b6;
+      }
+    }
+  }
+
+  .result-body {
+    p {
+      margin: 0.75rem 0;
+      color: #2c3e50;
+
+      strong {
+        color: #34495e;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.error-card {
+  background: #fadbd8;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  padding: 1.5rem;
+  color: #c0392b;
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 1rem;
+  }
+
+  .tabs {
+    .tab-btn {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-container {
+    padding: 1.5rem;
+  }
+}

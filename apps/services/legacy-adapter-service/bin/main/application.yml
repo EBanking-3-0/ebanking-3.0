@@ -1,28 +1,9 @@
 server:
-  port: 8085
+  port: 8086
 
 spring:
   application:
-    name: payment-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8092/realms/ebanking-realm
-          jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ebanking
-    username: ebanking
-    password: ebanking123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: payments
-    show-sql: true
+    name: legacy-adapter-service
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -53,4 +34,3 @@ management:
     export:
       prometheus:
         enabled: true
-

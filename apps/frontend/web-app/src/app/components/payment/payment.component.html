@@ -1,0 +1,257 @@
+<div class="payment-container">
+  <h2>💳 Payment Service Testing</h2>
+  <p class="subtitle">Test all payment types and scenarios</p>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button [class.active]="activeTab === 'internal'" (click)="setActiveTab('internal')" class="tab-btn">
+      🏦 Internal Transfer
+    </button>
+    <button [class.active]="activeTab === 'sepa'" (click)="setActiveTab('sepa')" class="tab-btn">
+      🇪🇺 SEPA Transfer
+    </button>
+    <button [class.active]="activeTab === 'instant'" (click)="setActiveTab('instant')" class="tab-btn">
+      ⚡ Instant Transfer
+    </button>
+    <button [class.active]="activeTab === 'mobile'" (click)="setActiveTab('mobile')" class="tab-btn">
+      📱 Mobile Recharge
+    </button>
+  </div>
+
+  <!-- Forms -->
+  <div class="form-container">
+    @if (activeTab === 'internal') {
+    <form [formGroup]="internalForm" (ngSubmit)="onSubmit()" class="payment-form">
+      <h3>Internal Transfer (Same Bank)</h3>
+      <div class="form-group">
+        <label>From Account *</label>
+        <select formControlName="fromAccountId" class="form-control">
+          <option [ngValue]="null" disabled>Select an account</option>
+          @for (account of accounts; track account.id) {
+          <option [ngValue]="account.id">
+            {{ account.accountNumber }} - {{ account.balance | currency:account.currency }}
+          </option>
+          }
+        </select>
+        @if (internalForm.get('fromAccountId')?.invalid && internalForm.get('fromAccountId')?.touched) {
+        <span class="error">Account ID is required</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>To Account Number / IBAN *</label>
+        <input type="text" formControlName="toAccountNumber" class="form-control" placeholder="Target Account Number">
+        @if (internalForm.get('toAccountNumber')?.invalid && internalForm.get('toAccountNumber')?.touched) {
+        <span class="error">Account Number / IBAN is required</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>Amount *</label>
+        <input type="number" step="0.01" formControlName="amount" class="form-control">
+        @if (internalForm.get('amount')?.invalid && internalForm.get('amount')?.touched) {
+        <span class="error">Amount must be greater than 0</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>Currency *</label>
+        <select formControlName="currency" class="form-control">
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description" class="form-control" rows="3"></textarea>
+      </div>
+      <button type="submit" [disabled]="loading || internalForm.invalid" class="submit-btn">
+        @if (loading) {
+        <span>Processing...</span>
+        } @else {
+        <span>Send Internal Transfer</span>
+        }
+      </button>
+    </form>
+    }
+
+    @if (activeTab === 'sepa') {
+    <form [formGroup]="sepaForm" (ngSubmit)="onSubmit()" class="payment-form">
+      <h3>SEPA Transfer (European Transfer - 1-2 days)</h3>
+      <div class="form-group">
+        <label>From Account *</label>
+        <select formControlName="fromAccountId" class="form-control">
+          <option [ngValue]="null" disabled>Select an account</option>
+          @for (account of accounts; track account.id) {
+          <option [ngValue]="account.id">
+            {{ account.accountNumber }} - {{ account.balance | currency:account.currency }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label>To IBAN *</label>
+        <input type="text" formControlName="toIban" class="form-control" placeholder="FR1420041010050500013M02606">
+        @if (sepaForm.get('toIban')?.invalid && sepaForm.get('toIban')?.touched) {
+        <span class="error">Valid IBAN format required (e.g., FR1420041010050500013M02606)</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>Amount *</label>
+        <input type="number" step="0.01" formControlName="amount" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Currency *</label>
+        <select formControlName="currency" class="form-control">
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description" class="form-control" rows="3"></textarea>
+      </div>
+      <button type="submit" [disabled]="loading || sepaForm.invalid" class="submit-btn">
+        @if (loading) {
+        <span>Processing...</span>
+        } @else {
+        <span>Send SEPA Transfer</span>
+        }
+      </button>
+    </form>
+    }
+
+    @if (activeTab === 'instant') {
+    <form [formGroup]="instantForm" (ngSubmit)="onSubmit()" class="payment-form">
+      <h3>Instant Transfer (SCT Inst - < 30 seconds, Max €15,000)</h3>
+          <div class="info-box">
+            <p>⚡ Instant transfers are processed in real-time and are irrevocable once completed.</p>
+            <p>💰 Maximum amount: €15,000</p>
+          </div>
+          <div class="form-group">
+            <label>From Account *</label>
+            <select formControlName="fromAccountId" class="form-control">
+              <option [ngValue]="null" disabled>Select an account</option>
+              @for (account of accounts; track account.id) {
+              <option [ngValue]="account.id">
+                {{ account.accountNumber }} - {{ account.balance | currency:account.currency }}
+              </option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>To IBAN *</label>
+            <input type="text" formControlName="toIban" class="form-control" placeholder="DE89370400440532013000">
+            @if (instantForm.get('toIban')?.invalid && instantForm.get('toIban')?.touched) {
+            <span class="error">Valid IBAN format required</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Amount * (Max: €15,000)</label>
+            <input type="number" step="0.01" formControlName="amount" class="form-control">
+            @if (instantForm.get('amount')?.invalid && instantForm.get('amount')?.touched) {
+            <span class="error">Amount must be between 0.01 and 15,000</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Currency *</label>
+            <select formControlName="currency" class="form-control">
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+          <button type="submit" [disabled]="loading || instantForm.invalid" class="submit-btn">
+            @if (loading) {
+            <span>Processing...</span>
+            } @else {
+            <span>Send Instant Transfer</span>
+            }
+          </button>
+    </form>
+    }
+
+    @if (activeTab === 'mobile') {
+    <form [formGroup]="mobileForm" (ngSubmit)="onSubmit()" class="payment-form">
+      <h3>Mobile Recharge</h3>
+      <div class="form-group">
+        <label>From Account *</label>
+        <select formControlName="fromAccountId" class="form-control">
+          <option [ngValue]="null" disabled>Select an account</option>
+          @for (account of accounts; track account.id) {
+          <option [ngValue]="account.id">
+            {{ account.accountNumber }} - {{ account.balance | currency:account.currency }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="text" formControlName="phoneNumber" class="form-control" placeholder="+33612345678">
+        @if (mobileForm.get('phoneNumber')?.invalid && mobileForm.get('phoneNumber')?.touched) {
+        <span class="error">Valid phone number required (e.g., +33612345678)</span>
+        }
+      </div>
+      <div class="form-group">
+        <label>Country Code *</label>
+        <select formControlName="countryCode" class="form-control">
+          <option value="FR">France (FR)</option>
+          <option value="DE">Germany (DE)</option>
+          <option value="ES">Spain (ES)</option>
+          <option value="IT">Italy (IT)</option>
+          <option value="GB">United Kingdom (GB)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount *</label>
+        <input type="number" step="0.01" formControlName="amount" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Currency *</label>
+        <select formControlName="currency" class="form-control">
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+      <button type="submit" [disabled]="loading || mobileForm.invalid" class="submit-btn">
+        @if (loading) {
+        <span>Processing...</span>
+        } @else {
+        <span>Recharge Mobile</span>
+        }
+      </button>
+    </form>
+    }
+  </div>
+
+  <!-- Results -->
+  @if (result) {
+  <div class="result-container">
+    <h3>✅ Payment Result</h3>
+    <div class="result-card" [ngClass]="getStatusClass(result.status)">
+      <div class="result-header">
+        <span class="status-badge" [ngClass]="getStatusClass(result.status)">
+          {{ result.status }}
+        </span>
+      </div>
+      <div class="result-body">
+        <p><strong>Payment ID:</strong> {{ result.paymentId }}</p>
+        <p><strong>Transaction ID:</strong> {{ result.transactionId }}</p>
+        <p><strong>Amount:</strong> {{ result.amount }} {{ result.currency }}</p>
+        <p><strong>Message:</strong> {{ result.message }}</p>
+        <p><strong>Created At:</strong> {{ result.createdAt | date:'medium' }}</p>
+        @if (result.estimatedCompletionDate) {
+        <p><strong>Estimated Completion:</strong> {{ result.estimatedCompletionDate | date:'medium' }}</p>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (error) {
+  <div class="error-container">
+    <h3>❌ Error</h3>
+    <div class="error-card">
+      <p>{{ error }}</p>
+    </div>
+  </div>
+  }
+</div>
