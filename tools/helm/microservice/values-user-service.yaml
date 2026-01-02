@@ -1,5 +1,6 @@
 # values.yaml for user-service
 replicaCount: 1
+fullnameOverride: user-service
 
 image:
   repository: ebanking/user-service
@@ -19,6 +20,7 @@ env:
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   EUREKA_CLIENT_ENABLED: "false" # Disable Eureka client as K8s service discovery is used
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
   # Add other necessary environment variables if any
 
 extraEnv:

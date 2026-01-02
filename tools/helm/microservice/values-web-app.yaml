@@ -1,5 +1,6 @@
 # values.yaml for web-app
 replicaCount: 1
+fullnameOverride: web-app
 
 image:
   repository: ebanking/frontend

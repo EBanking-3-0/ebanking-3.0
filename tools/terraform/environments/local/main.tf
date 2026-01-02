@@ -111,37 +111,26 @@ resource "helm_release" "cert_manager" {
   }
 }
 
-# Local Self-Signed Cluster Issuer
-resource "kubernetes_manifest" "self_signed_cluster_issuer" {
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "selfsigned-cluster-issuer"
-    }
-    spec = {
-      selfSigned = {}
-    }
+# # Local Self-Signed Cluster Issuer
+# Using null_resource + kubectl to bypass Terraform CRD validation race condition
+resource "null_resource" "self_signed_cluster_issuer" {
+  triggers = {
+    cert_manager_id = helm_release.cert_manager.id
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+kubectl apply -f - <<MANIFEST
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-cluster-issuer
+spec:
+  selfSigned: {}
+MANIFEST
+EOF
   }
 
   depends_on = [helm_release.cert_manager]
 }
-
-# Configured password (what we INTENDED)
-output "keycloak_admin_password_configured" {
-  value     = var.keycloak_admin_password
-  sensitive = true
-}
-
-# ACTUAL running password retrieved from Pod Env
-data "external" "keycloak_env_password" {
-  program = ["bash", "${path.module}/get_keycloak_password.sh"]
-  
-  # Re-run this script on every apply to capture the current state
-  depends_on = [helm_release.ebanking_infra]
-}
-
-output "keycloak_admin_password_actual" {
-  value     = data.external.keycloak_env_password.result.password
-  sensitive = false # Set to false so you can see it easily in CLI
-}
+#

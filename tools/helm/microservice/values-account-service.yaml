@@ -1,5 +1,6 @@
 # values.yaml for account-service
 replicaCount: 1
+fullnameOverride: account-service
 
 image:
   repository: ebanking/account-service
