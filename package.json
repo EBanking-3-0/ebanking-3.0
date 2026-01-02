@@ -45,7 +45,7 @@
     "libs/**"
   ],
   "dependencies": {
-    "keycloak-angular": "^20.0.0",
+    "keycloak-angular": "^21.0.0",
     "keycloak-js": "^26.2.2"
   }
 }
