@@ -12,9 +12,8 @@ import {
   INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,   // ← import this token!
 } from 'keycloak-angular';
 import { provideApollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
+import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache } from '@apollo/client/core';
-import { inject } from '@angular/core';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -68,9 +67,8 @@ export const appConfig: ApplicationConfig = {
     },
 
     provideApollo(() => {
-      const httpLink = inject(HttpLink);
       return {
-        link: httpLink.create({ uri: 'http://localhost:8081/graphql' }),
+        link: createUploadLink({ uri: 'http://localhost:8081/graphql' }),
         cache: new InMemoryCache(),
       };
     }),

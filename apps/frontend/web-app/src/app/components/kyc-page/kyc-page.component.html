@@ -1,0 +1,84 @@
+<div class="container">
+  <h1>KYC Verification</h1>
+
+  <div *ngIf="loading">
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="error">
+    <p class="error">Error loading profile: {{ error.message }}</p>
+  </div>
+
+  <div *ngIf="userProfile">
+    <h2>Welcome, {{ userProfile.firstName }} {{ userProfile.lastName }}</h2>
+    <p>Your KYC status is: <strong>{{ userProfile.kycStatus }}</strong></p>
+  </div>
+
+  <div *ngIf="!userProfile && !loading">
+    <p>Please fill out the form below to submit your KYC information.</p>
+  </div>
+
+  <div *ngIf="submissionError">
+    <p class="error">Error submitting KYC: {{ submissionError.message }}</p>
+  </div>
+
+
+  <form [formGroup]="kycForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" formControlName="phone" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="addressLine1">Address Line 1</label>
+      <input type="text" id="addressLine1" formControlName="addressLine1" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="addressLine2">Address Line 2</label>
+      <input type="text" id="addressLine2" formControlName="addressLine2" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" id="city" formControlName="city" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="postalCode">Postal Code</label>
+      <input type="text" id="postalCode" formControlName="postalCode" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" id="country" formControlName="country" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="cinNumber">CIN Number</label>
+      <input type="text" id="cinNumber" formControlName="cinNumber" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="cinImage">CIN Image</label>
+      <input type="file" id="cinImage" (change)="onFileChange($event, 'cinImage')">
+    </div>
+
+    <div class="form-group">
+      <label for="selfieImage">Selfie Image</label>
+      <input type="file" id="selfieImage" (change)="onFileChange($event, 'selfieImage')">
+    </div>
+
+    <button type="submit" [disabled]="!kycForm.valid">Submit</button>
+  </form>
+</div>

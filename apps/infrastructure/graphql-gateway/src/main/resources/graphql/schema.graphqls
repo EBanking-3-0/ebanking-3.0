@@ -1,10 +1,12 @@
 scalar JSON
+scalar Upload
 
 type Query {
   users: [User]
   user(id: ID!): User
   userByEmail(email: String!): User
   myAccounts(userId: ID!): [Account]
+  me: UserProfile
 
   # AI Assistant queries
   conversation(id: ID!): Conversation
@@ -15,6 +17,7 @@ type Mutation {
   updateUser(id: ID!, input: UpdateUserInput!): User
   deleteUser(id: ID!): Boolean
   createAccount(input: CreateAccountInput!): Account
+  submitKyc(input: KycRequestInput!, cinImage: Upload!, selfieImage: Upload!): KycResponse
 
   # AI Assistant mutations
   sendChatMessage(input: ChatMessageInput!): ChatResponse
@@ -30,6 +33,23 @@ type User {
   status: String!
 }
 
+type UserProfile {
+  id: ID!
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  postalCode: String
+  country: String
+  status: String
+  kycStatus: String
+  createdAt: String
+  updatedAt: String
+}
+
 type Account {
   id: ID!
   accountNumber: String!
@@ -39,6 +59,17 @@ type Account {
   type: String!
   status: String!
   createdAt: String
+}
+
+type KycResponse {
+  cinNumber: String
+  idDocumentUrl: String
+  selfieUrl: String
+  status: String
+  verifiedAt: String
+  verifiedBy: String
+  createdAt: String
+  updatedAt: String
 }
 
 input CreateUserInput {
@@ -59,6 +90,20 @@ input CreateAccountInput {
   type: String!
   currency: String!
 }
+
+input KycRequestInput {
+  firstName: String!
+  lastName: String!
+  phone: String!
+  addressLine1: String
+  addressLine2: String
+  city: String
+  postalCode: String
+  country: String
+  cinNumber: String!
+  gdprConsents: JSON
+}
+
 
 # AI Assistant Types
 type Conversation {
