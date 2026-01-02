@@ -4,7 +4,10 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-/** Configuration for notification templates and retry logic. */
+/**
+ * Configuration for file-based notification templates and retry logic.
+ * Templates are resolved from classpath:/templates/{basePath}
+ */
 @Configuration
 @ConfigurationProperties(prefix = "notification.template")
 @Data

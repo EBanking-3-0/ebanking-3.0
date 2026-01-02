@@ -55,16 +55,14 @@ management:
     metrics:
       export:
         enabled: true
-
-# Notification Service Configuration
 notification:
   email:
     enabled: true
     host: smtp.gmail.com
     port: 587
-    username: ${EMAIL_USERNAME:your-email@gmail.com}
-    password: ${EMAIL_PASSWORD:your-app-password}
-    from-address: ${EMAIL_FROM:noreply@ebanking.com}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    from-address: ${EMAIL_FROM}
     from-name: E-Banking Platform
     smtp-auth: true
     smtp-starttls-enable: true
