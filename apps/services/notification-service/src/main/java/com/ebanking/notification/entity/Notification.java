@@ -66,9 +66,6 @@ public class Notification {
   @Column(name = "event_id")
   private String eventId;
 
-  @Column(name = "template_id")
-  private Long templateId;
-
   @Column(name = "metadata", columnDefinition = "TEXT")
   private String metadata; // JSON string for additional data
 

@@ -9,7 +9,6 @@ import com.ebanking.notification.dto.SendNotificationRequest;
 import com.ebanking.notification.entity.Notification;
 import com.ebanking.notification.repository.NotificationPreferenceRepository;
 import com.ebanking.notification.repository.NotificationRepository;
-import com.ebanking.notification.repository.NotificationTemplateRepository;
 import com.ebanking.shared.kafka.producer.TypedEventProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,61 +20,63 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class NotificationServiceTest {
 
-  @Mock private NotificationRepository notificationRepository;
+  @Mock
+  private NotificationRepository notificationRepository;
 
-  @Mock private NotificationTemplateRepository templateRepository;
+  @Mock
+  private NotificationPreferenceRepository preferenceRepository;
 
-  @Mock private NotificationPreferenceRepository preferenceRepository;
+  @Mock
+  private EmailService emailService;
 
-  @Mock private EmailService emailService;
+  @Mock
+  private SmsService smsService;
 
-  @Mock private SmsService smsService;
+  @Mock
+  private TemplateService templateService;
 
-  @Mock private TemplateService templateService;
+  @Mock
+  private TypedEventProducer eventProducer;
 
-  @Mock private TypedEventProducer eventProducer;
-
-  @Mock private TemplateConfig templateConfig;
+  @Mock
+  private TemplateConfig templateConfig;
 
   private NotificationService notificationService;
 
   @BeforeEach
   void setUp() {
-    notificationService =
-        new NotificationService(
-            notificationRepository,
-            templateRepository,
-            preferenceRepository,
-            emailService,
-            smsService,
-            templateService,
-            eventProducer,
-            templateConfig);
+    notificationService = new NotificationService(
+        notificationRepository,
+        preferenceRepository,
+        emailService,
+        smsService,
+        templateService,
+        eventProducer,
+        templateConfig);
   }
 
   @Test
   void testSendSimpleEmailNotification() {
     // Given
-    SendNotificationRequest request =
-        SendNotificationRequest.builder()
-            .userId(1L)
-            .recipient("test@example.com")
-            .notificationType(Notification.NotificationType.GENERIC)
-            .channel(Notification.NotificationChannel.EMAIL)
-            .subject("Test Subject")
-            .content("Test Content")
-            .build();
+    String recipient = "elhafidyounes4@gmail.com";
+    SendNotificationRequest request = SendNotificationRequest.builder()
+        .userId(1L)
+        .recipient(recipient)
+        .notificationType(Notification.NotificationType.GENERIC)
+        .channel(Notification.NotificationChannel.EMAIL)
+        .subject("Test Subject")
+        .content("Test Content")
+        .build();
 
-    Notification savedNotification =
-        Notification.builder()
-            .id(1L)
-            .userId(1L)
-            .recipient("test@example.com")
-            .status(Notification.NotificationStatus.PENDING)
-            .build();
+    Notification savedNotification = Notification.builder()
+        .id(1L)
+        .userId(1L)
+        .recipient(recipient)
+        .status(Notification.NotificationStatus.PENDING)
+        .build();
 
     when(notificationRepository.save(any(Notification.class))).thenReturn(savedNotification);
-    when(preferenceRepository.findByUserIdAndNotificationType(any(), any()))
+    when(preferenceRepository.findByUserId(any()))
         .thenReturn(java.util.Optional.empty());
 
     // When
@@ -84,32 +85,30 @@ class NotificationServiceTest {
     // Then
     assertNotNull(result);
     assertEquals(1L, result.getUserId());
-    verify(emailService).sendHtmlEmail("test@example.com", "Test Subject", "Test Content");
+    verify(emailService).sendHtmlEmail(recipient, "Test Subject", "Test Content");
     verify(notificationRepository, times(2)).save(any(Notification.class));
   }
 
   @Test
   void testSendSmsNotification() {
     // Given
-    SendNotificationRequest request =
-        SendNotificationRequest.builder()
-            .userId(1L)
-            .recipient("+1234567890")
-            .notificationType(Notification.NotificationType.GENERIC)
-            .channel(Notification.NotificationChannel.SMS)
-            .content("Test SMS Content")
-            .build();
+    SendNotificationRequest request = SendNotificationRequest.builder()
+        .userId(1L)
+        .recipient("+1234567890")
+        .notificationType(Notification.NotificationType.GENERIC)
+        .channel(Notification.NotificationChannel.SMS)
+        .content("Test SMS Content")
+        .build();
 
-    Notification savedNotification =
-        Notification.builder()
-            .id(1L)
-            .userId(1L)
-            .recipient("+1234567890")
-            .status(Notification.NotificationStatus.PENDING)
-            .build();
+    Notification savedNotification = Notification.builder()
+        .id(1L)
+        .userId(1L)
+        .recipient("+1234567890")
+        .status(Notification.NotificationStatus.PENDING)
+        .build();
 
     when(notificationRepository.save(any(Notification.class))).thenReturn(savedNotification);
-    when(preferenceRepository.findByUserIdAndNotificationType(any(), any()))
+    when(preferenceRepository.findByUserId(any()))
         .thenReturn(java.util.Optional.empty());
 
     // When
@@ -129,15 +128,14 @@ class NotificationServiceTest {
     when(templateConfig.getMaxRetries()).thenReturn(3);
     when(templateConfig.getRetryDelayMillis()).thenReturn(5000L);
 
-    Notification failedNotification =
-        Notification.builder()
-            .id(1L)
-            .userId(1L)
-            .recipient("test@example.com")
-            .status(Notification.NotificationStatus.FAILED)
-            .retryCount(1)
-            .updatedAt(java.time.LocalDateTime.now().minusMinutes(10))
-            .build();
+    Notification failedNotification = Notification.builder()
+        .id(1L)
+        .userId(1L)
+        .recipient("test@example.com")
+        .status(Notification.NotificationStatus.FAILED)
+        .retryCount(1)
+        .updatedAt(java.time.LocalDateTime.now().minusMinutes(10))
+        .build();
 
     when(notificationRepository.findFailedNotificationsForRetry(3))
         .thenReturn(java.util.List.of(failedNotification));

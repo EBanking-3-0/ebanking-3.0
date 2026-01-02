@@ -48,17 +48,13 @@ Notification service handling email, SMS, and push notifications with template s
 - Records retry attempts and error messages
 - Indexed for efficient querying
 
-**notification_templates** table:
-
-- Stores reusable templates
-- Supports both DB templates and Thymeleaf files
-- Channel-specific templates (email, SMS, push)
-
 **notification_preferences** table:
 
 - User-specific notification settings
 - Per-notification-type preferences
 - Channel preferences (email, SMS, push, in-app)
+
+> **Note:** Templates are now **file-based only**. The `notification_templates` table and `NotificationTemplate` entity have been removed in favor of simpler file-based Thymeleaf templates stored in `src/main/resources/templates/notifications/`.
 
 ## Kafka Integration
 
@@ -116,14 +112,26 @@ notification:
 
 ### Template Configuration
 
+Templates are **file-based only** and stored in `src/main/resources/templates/notifications/`.
+
 ```yaml
 notification:
   template:
-    base-path: templates/notifications/
+    # Path relative to classpath:/templates/
+    # Final path: classpath:/templates/notifications/{template-name}.html
+    base-path: notifications/
     max-retries: 3
     retry-delay-millis: 5000
     retry-enabled: true
 ```
+
+**Available Templates:**
+- `welcome-email.html` - Welcome email for new users
+- `transaction-email.html` - Transaction confirmation
+- `fraud-alert-email.html` - Fraud detection alert
+- `alert-email.html` - Generic alert notification
+
+To add new templates, create `.html` files in `src/main/resources/templates/notifications/` using Thymeleaf syntax.
 
 ## REST API Endpoints
 

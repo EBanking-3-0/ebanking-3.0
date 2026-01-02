@@ -12,13 +12,12 @@ import org.springframework.stereotype.Repository;
 public interface NotificationPreferenceRepository
     extends JpaRepository<NotificationPreference, Long> {
 
-  /** Find all preferences for a user */
-  List<NotificationPreference> findByUserId(Long userId);
+  /** Find preference for a user (one record per user) */
+  Optional<NotificationPreference> findByUserId(Long userId);
 
-  /** Find specific preference for a user and notification type */
-  Optional<NotificationPreference> findByUserIdAndNotificationType(
-      Long userId, Notification.NotificationType notificationType);
-
-  /** Delete all preferences for a user */
+  /** Delete preference for a user */
   void deleteByUserId(Long userId);
+
+  /** Check if preference exists for user */
+  boolean existsByUserId(Long userId);
 }

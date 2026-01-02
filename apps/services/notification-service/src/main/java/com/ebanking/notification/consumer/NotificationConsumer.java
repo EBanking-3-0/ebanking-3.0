@@ -1,6 +1,8 @@
 package com.ebanking.notification.consumer;
 
 import com.ebanking.notification.entity.Notification;
+import com.ebanking.notification.entity.NotificationPreference;
+import com.ebanking.notification.repository.NotificationPreferenceRepository;
 import com.ebanking.notification.service.NotificationService;
 import com.ebanking.shared.kafka.KafkaTopics;
 import com.ebanking.shared.kafka.events.*;
@@ -15,7 +17,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 /**
- * Consumer for notification-related events. Sends notifications (email/SMS/push) when events occur.
+ * for now only email notifications are implemented
+ * TODO: extend to SMS, push notifications, etc.
+ * Consumer for notification-related events. Sends notifications
+ * (email/SMS/push) when events occur.
  */
 @Slf4j
 @Component
@@ -23,11 +28,31 @@ import org.springframework.stereotype.Component;
 public class NotificationConsumer {
 
   private final NotificationService notificationService;
+  private final NotificationPreferenceRepository preferenceRepository;
 
   @KafkaListener(topics = KafkaTopics.USER_CREATED)
   public void handleUserCreated(@Payload UserCreatedEvent event, Acknowledgment acknowledgment) {
     try {
       log.info("Received user.created event for user: {}", event.getUserId());
+
+      // Create single notification preference record with contact information
+      NotificationPreference preference = preferenceRepository
+          .findByUserId(event.getUserId())
+          .orElse(
+              NotificationPreference.builder()
+                  .userId(event.getUserId())
+                  .build());
+
+      // Store contact information (single source of truth)
+      preference.setEmailAddress(event.getEmail());
+      preference.setEmailEnabled(true); // Default: email enabled
+      preference.setSmsEnabled(false); // User can enable via API
+      preference.setPushEnabled(false);
+      preference.setInAppEnabled(true);
+
+      preferenceRepository.save(preference);
+
+      log.info("Created notification preference with contact info for user: {}", event.getUserId());
 
       // Send welcome email using template
       Map<String, Object> templateData = new HashMap<>();
@@ -63,13 +88,15 @@ public class NotificationConsumer {
       templateData.put("currency", event.getCurrency());
       templateData.put("transactionDate", LocalDateTime.now());
 
-      // Note: In production, fetch user email from account service
-      // For now, using a placeholder
-      notificationService.sendTemplatedEmail(
-          event.getToAccountId(), // Using account ID as userId placeholder
-          "user@example.com", // Would fetch from user/account service
-          "transaction-email",
-          templateData);
+      // Lookup user contact info from NotificationPreference
+      Long userId = event.getToAccountId();
+      String email = getUserEmail(userId);
+
+      if (email != null) {
+        notificationService.sendTemplatedEmail(userId, email, "transaction-email", templateData);
+      } else {
+        log.warn("No email found for user: {}, skipping notification", userId);
+      }
 
       acknowledgment.acknowledge();
 
@@ -86,17 +113,20 @@ public class NotificationConsumer {
       log.info("Received payment.failed event: {}", event.getTransactionId());
 
       // Send payment failure notification
-      String message =
-          String.format(
-              "Your payment transaction %s has failed. Reason: %s. Please try again or contact support.",
-              event.getTransactionId(), event.getFailureReason());
+      String message = String.format(
+          "Your payment transaction %s has failed. Reason: %s. Please try again or contact support.",
+          event.getTransactionId(), event.getFailureReason());
 
-      notificationService.sendSimpleEmail(
-          event.getAccountId(),
-          "user@example.com", // Would fetch from account service
-          "Payment Failed",
-          message,
-          Notification.NotificationType.PAYMENT_FAILED);
+      // Lookup user contact info from NotificationPreference
+      Long userId = event.getUserId();
+      String email = getUserEmail(userId);
+
+      if (email != null) {
+        notificationService.sendSimpleEmail(
+            userId, email, "Payment Failed", message, Notification.NotificationType.PAYMENT_FAILED);
+      } else {
+        log.warn("No email found for user: {}, skipping notification", userId);
+      }
 
       acknowledgment.acknowledge();
 
@@ -123,11 +153,15 @@ public class NotificationConsumer {
       templateData.put("detectedAt", LocalDateTime.now());
       templateData.put("description", event.getDescription());
 
-      notificationService.sendTemplatedEmail(
-          event.getAccountId(),
-          "user@example.com", // Would fetch from account service
-          "fraud-alert-email",
-          templateData);
+      // Lookup user contact info from NotificationPreference
+      Long userId = event.getUserId();
+      String email = getUserEmail(userId);
+
+      if (email != null) {
+        notificationService.sendTemplatedEmail(userId, email, "fraud-alert-email", templateData);
+      } else {
+        log.warn("No email found for user: {}, skipping fraud alert for user: {}", userId);
+      }
 
       acknowledgment.acknowledge();
 
@@ -144,26 +178,37 @@ public class NotificationConsumer {
       log.info("Received crypto.trade.executed event: {}", event.getTradeId());
 
       // Send trade confirmation
-      String message =
-          String.format(
-              "Your crypto trade has been executed successfully.\n"
-                  + "Trade ID: %s\n"
-                  + "Type: %s\n"
-                  + "Cryptocurrency: %s\n"
-                  + "Amount: %s\n"
-                  + "Price: %s %s",
-              event.getTradeId(),
-              event.getTradeType(),
-              event.getCryptoCurrency(),
-              event.getCryptoAmount(),
-              event.getFiatAmount(),
-              event.getFiatCurrency());
-      notificationService.sendSimpleEmail(
-          event.getUserId(),
-          "user@example.com", // Would fetch from user service
-          "Crypto Trade Executed",
-          message,
-          Notification.NotificationType.CRYPTO_TRADE);
+      String message = String.format(
+          """
+              Your crypto trade has been executed successfully.
+              Trade ID: %s
+              Type: %s
+              Cryptocurrency: %s
+              Amount: %s
+              Price: %s %s
+              """,
+          event.getTradeId(),
+          event.getTradeType(),
+          event.getCryptoCurrency(),
+          event.getCryptoAmount(),
+          event.getFiatAmount(),
+          event.getFiatCurrency());
+
+      // Lookup user contact info from NotificationPreference
+      Long userId = event.getUserId();
+      String email = getUserEmail(userId);
+
+      if (email != null) {
+        notificationService.sendSimpleEmail(
+            userId,
+            email,
+            "Crypto Trade Executed",
+            message,
+            Notification.NotificationType.CRYPTO_TRADE);
+      } else {
+        log.warn(
+            "No email found for user: {}, skipping crypto trade notification", userId);
+      }
 
       acknowledgment.acknowledge();
 
@@ -188,11 +233,15 @@ public class NotificationConsumer {
       templateData.put("alertType", event.getAlertType());
       templateData.put("message", event.getMessage());
 
-      notificationService.sendTemplatedEmail(
-          event.getUserId(),
-          "user@example.com", // Would fetch from user service
-          "alert-email",
-          templateData);
+      // Lookup user contact info from NotificationPreference
+      Long userId = event.getUserId();
+      String email = getUserEmail(userId);
+
+      if (email != null) {
+        notificationService.sendTemplatedEmail(userId, email, "alert-email", templateData);
+      } else {
+        log.warn("No email found for user: {}, skipping alert notification", userId);
+      }
 
       acknowledgment.acknowledge();
 
@@ -212,5 +261,31 @@ public class NotificationConsumer {
       return "****" + id.substring(id.length() - 4);
     }
     return "****" + id;
+  }
+
+  /**
+   * Helper method to get user's email address from NotificationPreference.
+   *
+   * @param userId The user ID
+   * @return Email address or null if not found
+   */
+  private String getUserEmail(Long userId) {
+    return preferenceRepository
+        .findByUserId(userId)
+        .map(NotificationPreference::getEmailAddress)
+        .orElse(null);
+  }
+
+  /**
+   * Helper method to get user's phone number from NotificationPreference.
+   *
+   * @param userId The user ID
+   * @return Phone number or null if not found
+   */
+  private String getUserPhone(Long userId) {
+    return preferenceRepository
+        .findByUserId(userId)
+        .map(NotificationPreference::getPhoneNumber)
+        .orElse(null);
   }
 }

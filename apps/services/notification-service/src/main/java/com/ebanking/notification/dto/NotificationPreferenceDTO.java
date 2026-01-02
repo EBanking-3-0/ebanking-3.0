@@ -16,7 +16,13 @@ public class NotificationPreferenceDTO {
 
   private Long id;
   private Long userId;
-  private Notification.NotificationType notificationType;
+
+  // Contact Information
+  private String emailAddress;
+  private String phoneNumber;
+  private String pushToken;
+
+  // Channel Preferences (global, not per-type)
   private Boolean emailEnabled;
   private Boolean smsEnabled;
   private Boolean pushEnabled;
@@ -27,7 +33,9 @@ public class NotificationPreferenceDTO {
     return NotificationPreferenceDTO.builder()
         .id(preference.getId())
         .userId(preference.getUserId())
-        .notificationType(preference.getNotificationType())
+        .emailAddress(preference.getEmailAddress())
+        .phoneNumber(preference.getPhoneNumber())
+        .pushToken(preference.getPushToken())
         .emailEnabled(preference.getEmailEnabled())
         .smsEnabled(preference.getSmsEnabled())
         .pushEnabled(preference.getPushEnabled())
@@ -40,7 +48,9 @@ public class NotificationPreferenceDTO {
     return NotificationPreference.builder()
         .id(this.id)
         .userId(this.userId)
-        .notificationType(this.notificationType)
+        .emailAddress(this.emailAddress)
+        .phoneNumber(this.phoneNumber)
+        .pushToken(this.pushToken)
         .emailEnabled(this.emailEnabled)
         .smsEnabled(this.smsEnabled)
         .pushEnabled(this.pushEnabled)

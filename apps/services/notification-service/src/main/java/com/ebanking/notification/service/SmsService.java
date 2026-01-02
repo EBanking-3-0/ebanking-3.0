@@ -16,10 +16,10 @@ public class SmsService {
   private final TwilioConfig twilioConfig;
 
   /** Send an SMS message */
-  public void sendSms(String to, String messageBody) {
+  public void sendSms(String to, String messageBody) throws RuntimeException {
     if (!twilioConfig.isEnabled()) {
       log.warn("SMS service is disabled. Skipping SMS to: {}", to);
-      return;
+      throw new RuntimeException("SMS service is disabled");
     }
 
     if (twilioConfig.getPhoneNumber() == null) {
