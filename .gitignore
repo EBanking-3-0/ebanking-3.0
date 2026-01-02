@@ -58,7 +58,6 @@ yarn-error.log
 .pnp/
 .pnp.js
 .pnpm-store/
-package-lock.json
 
 # OS
 .DS_Store
