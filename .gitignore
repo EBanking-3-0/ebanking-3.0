@@ -100,3 +100,25 @@ test-results/ # Gradle test results
 *.pdf
 get_token.sh
 apps/services/user-service/uploads
+apps/frontend/web-app/.scannerwork
+
+# terraform
+*/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+_override.tf
+**/*/.terraform/**/*
+
+# helm
+**/charts/*.tgz
+**/charts/
+*.tgz
+*-local.yaml
+*secret*.yaml
+.env
+.helm/
