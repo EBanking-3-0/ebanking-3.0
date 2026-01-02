@@ -55,7 +55,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit --no-fund
 
       - name: Derive appropriate SHAs for base and head
         uses: nrwl/nx-set-shas@v4
