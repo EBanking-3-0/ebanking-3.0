@@ -1,21 +1,22 @@
-# values.yaml for account-service
+# values.yaml for analytics-service
 replicaCount: 1
-fullnameOverride: account-service
+fullnameOverride: analytics-service
 
 image:
-  repository: ebanking/account-service
+  repository: ebanking/analytics-service
   tag: local
   pullPolicy: Never
 
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8084
+  targetPort: 8089
 
 env:
   SPRING_PROFILES_ACTIVE: kubernetes
   SPRING_DATASOURCE_URL: jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db
   SPRING_DATASOURCE_USERNAME: ebanking_user
+  SPRING_DATA_MONGODB_URI: mongodb://ebanking:ebanking123@ebanking-infra-mongodb:27017/ebanking?authSource=admin
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   EUREKA_CLIENT_ENABLED: "false"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
@@ -30,4 +31,4 @@ extraEnv:
 
 serviceAccount:
   create: true
-  name: account-service-microservice
+  name: analytics-service-microservice

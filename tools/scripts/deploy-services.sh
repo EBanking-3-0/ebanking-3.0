@@ -36,13 +36,28 @@ for SERVICE in "${SERVICES[@]}"; do
 
     # Deploy with Helm
     echo "helm Upgrade/Install $SERVICE..."
-    helm upgrade --install $SERVICE tools/helm/microservice \
-        -n $NAMESPACE \
-        --set image.repository=ebanking-$SERVICE \
-        --set image.tag=$TAG \
-        --set image.pullPolicy=Never \
-        --set fullnameOverride=$SERVICE \
-        --wait
+    
+    VALUES_FILE="tools/helm/microservice/values-$SERVICE.yaml"
+    
+    if [ -f "$VALUES_FILE" ]; then
+        echo "Using values file: $VALUES_FILE"
+        helm upgrade --install $SERVICE tools/helm/microservice \
+            -n $NAMESPACE \
+            -f $VALUES_FILE \
+            --set image.repository=ebanking-$SERVICE \
+            --set image.tag=$TAG \
+            --set image.pullPolicy=Never \
+            --wait
+    else
+        echo "⚠️  Warning: No values file found for $SERVICE at $VALUES_FILE. Using defaults."
+        helm upgrade --install $SERVICE tools/helm/microservice \
+            -n $NAMESPACE \
+            --set image.repository=ebanking-$SERVICE \
+            --set image.tag=$TAG \
+            --set image.pullPolicy=Never \
+            --set fullnameOverride=$SERVICE \
+            --wait
+    fi
 
     echo "✅ $SERVICE deployed successfully!"
 done

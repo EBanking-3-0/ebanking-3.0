@@ -1,16 +1,16 @@
-# values.yaml for account-service
+# values.yaml for auth-service
 replicaCount: 1
-fullnameOverride: account-service
+fullnameOverride: auth-service
 
 image:
-  repository: ebanking/account-service
+  repository: ebanking/auth-service
   tag: local
   pullPolicy: Never
 
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8084
+  targetPort: 8082
 
 env:
   SPRING_PROFILES_ACTIVE: kubernetes
@@ -30,4 +30,4 @@ extraEnv:
 
 serviceAccount:
   create: true
-  name: account-service-microservice
+  name: auth-service-microservice
