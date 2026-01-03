@@ -141,8 +141,7 @@ public class ConversationService {
     return true;
   }
 
-  private Optional<Conversation> processFoundForUser(
-      Optional<Conversation> existing, Long userId) {
+  private Optional<Conversation> processFoundForUser(Optional<Conversation> existing, Long userId) {
     if (existing.isEmpty()) {
       return Optional.empty();
     }

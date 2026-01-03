@@ -174,8 +174,7 @@ class ConversationServiceTest {
             .updatedAt(LocalDateTime.now())
             .build();
 
-    when(conversationRepository.findBySessionId("session-abc"))
-        .thenReturn(Optional.of(existing));
+    when(conversationRepository.findBySessionId("session-abc")).thenReturn(Optional.of(existing));
 
     Conversation result = conversationService.getOrCreateConversation(1L, null, "session-abc");
 
@@ -241,8 +240,7 @@ class ConversationServiceTest {
     conversations.add(expired);
     conversations.add(toPrune);
 
-    when(conversationRepository.findByUserIdOrderByUpdatedAtDesc(1L))
-        .thenReturn(conversations);
+    when(conversationRepository.findByUserIdOrderByUpdatedAtDesc(1L)).thenReturn(conversations);
     when(conversationRepository.save(any(Conversation.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
 
