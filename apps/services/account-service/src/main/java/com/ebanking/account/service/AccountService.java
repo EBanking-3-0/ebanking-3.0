@@ -1,6 +1,6 @@
 package com.ebanking.account.service;
 
-import com.ebanking.account.dto.AccountDTO;
+import com.ebanking.account.dto.*;
 import com.ebanking.account.enums.AccountType;
 import com.ebanking.account.exception.AccountNotFoundException;
 import com.ebanking.account.exception.InsufficientBalance;
@@ -32,15 +32,19 @@ public class AccountService {
   public Account createAccount(Long userId, String accountType, String currency) {
     String accountNumber = generateAccountNumber();
 
+    String iban = generateIban(accountNumber);
+
     Account account =
+       
         Account.builder()
-            .userId(userId)
-            .accountNumber(accountNumber)
-            .type(AccountType.valueOf(accountType))
-            .currency(currency)
-            .balance(BigDecimal.ZERO)
-            .status("ACTIVE")
-            .build();
+                .userId(userId)
+                .accountNumber(accountNumber)
+            .iban(iban)
+                .type(AccountType.valueOf(accountType))
+                .currency(currency)
+                .balance(BigDecimal.ZERO)
+                .status("ACTIVE")
+                .build();
 
     Account savedAccount = accountRepository.save(account);
     log.info("Created account: {} for user: {}", accountNumber, userId);
@@ -120,6 +124,115 @@ public class AccountService {
 
   private String generateAccountNumber() {
     return UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+  }
+
+  private String generateIban(String accountNumber) {
+    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23 caractères)
+    // Format: FR76 XXXX XXXX XXXX XXXX XXXX XXX
+    // En production, utiliser une bibliothèque spécialisée pour générer des IBAN valides
+    String countryCode = "FR";
+    String checkDigits = "76"; // Valeur par défaut pour la démo
+    String bankCode = "20041"; // Code banque fictif
+    String branchCode = "01005"; // Code agence fictif
+    String accountCode =
+        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
+    // Compléter avec des zéros si nécessaire
+    while (accountCode.length() < 11) {
+      accountCode += "0";
+    }
+    String nationalCheck = "26"; // Clé RIB fictive
+    return countryCode + checkDigits + bankCode + branchCode + accountCode + nationalCheck;
+  }
+
+  public Account getAccountById(Long id) throws AccountNotFoundException {
+    return accountRepository
+        .findById(id)
+        .orElseThrow(
+            () -> {
+              log.error("Account not found: {}", id);
+              return new AccountNotFoundException("Account not found");
+            });
+  }
+
+  @Transactional
+  public DebitResponse debit(Long accountId, DebitRequest request)
+      throws AccountNotFoundException, InsufficientBalance {
+    Optional<Account> accountOpt = accountRepository.findById(accountId);
+    if (accountOpt.isEmpty()) {
+      log.error("Account not found: {}", accountId);
+      throw new AccountNotFoundException("Account not found");
+    }
+
+    Account account = accountOpt.get();
+    BigDecimal newBalance = account.getBalance().subtract(request.getAmount());
+
+    if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+      log.error(
+          "Insufficient balance for account {}: current={}, requested={}",
+          accountId,
+          account.getBalance(),
+          request.getAmount());
+      throw new InsufficientBalance("Insufficient balance");
+    }
+
+    account.setBalance(newBalance);
+    accountRepository.save(account);
+
+    log.info(
+        "Debited {} from account {} (transactionId: {}, idempotencyKey: {})",
+        request.getAmount(),
+        accountId,
+        request.getTransactionId(),
+        request.getIdempotencyKey());
+
+    return DebitResponse.builder()
+        .transactionId(request.getTransactionId())
+        .status("SUCCESS")
+        .message("Debit successful")
+        .build();
+  }
+
+  @Transactional
+  public CreditResponse credit(Long accountId, CreditRequest request)
+      throws AccountNotFoundException {
+    Optional<Account> accountOpt = accountRepository.findById(accountId);
+    if (accountOpt.isEmpty()) {
+      log.error("Account not found: {}", accountId);
+      throw new AccountNotFoundException("Account not found");
+    }
+
+    Account account = accountOpt.get();
+    account.setBalance(account.getBalance().add(request.getAmount()));
+    accountRepository.save(account);
+
+    log.info(
+        "Credited {} to account {} (transactionId: {}, idempotencyKey: {})",
+        request.getAmount(),
+        accountId,
+        request.getTransactionId(),
+        request.getIdempotencyKey());
+
+    return CreditResponse.builder()
+        .transactionId(request.getTransactionId())
+        .status("SUCCESS")
+        .message("Credit successful")
+        .build();
+  }
+
+  public BalanceResponse getBalance(Long accountId) throws AccountNotFoundException {
+    Optional<Account> accountOpt = accountRepository.findById(accountId);
+    if (accountOpt.isEmpty()) {
+      log.error("Account not found: {}", accountId);
+      throw new AccountNotFoundException("Account not found");
+    }
+
+    Account account = accountOpt.get();
+    return BalanceResponse.builder()
+        .availableBalance(account.getBalance())
+        .currentBalance(account.getBalance())
+        .currency(account.getCurrency())
+        .status(account.getStatus())
+        .build();
   }
 
   public boolean deposit(Long id, BigDecimal amount) throws AccountNotFoundException {

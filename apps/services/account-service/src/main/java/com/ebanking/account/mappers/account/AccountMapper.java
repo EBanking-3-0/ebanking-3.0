@@ -11,6 +11,7 @@ public class AccountMapper {
     return AccountDTO.builder()
         .id(account.getId())
         .accountNumber(account.getAccountNumber())
+        .iban(account.getIban())
         .userId(account.getUserId())
         .balance(account.getBalance())
         .currency(account.getCurrency())

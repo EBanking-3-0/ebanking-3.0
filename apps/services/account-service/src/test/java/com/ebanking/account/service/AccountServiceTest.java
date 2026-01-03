@@ -47,7 +47,7 @@ public class AccountServiceTest {
         .id(1L)
         .userId(userId)
         .accountNumber("1234567890")
-        .type(accountType.toString())
+        .type(accountType)
         .currency(currency)
         .balance(BigDecimal.ZERO)
         .status("ACTIVE")
