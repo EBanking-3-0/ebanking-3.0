@@ -38,35 +38,17 @@ public class ConversationService {
       Long userId, String conversationId, String sessionId) {
     if (conversationId != null && !conversationId.isEmpty()) {
       Optional<Conversation> existing = conversationRepository.findById(conversationId);
-      if (existing.isPresent() && existing.get().getUserId().equals(userId)) {
-        Conversation conversation = existing.get();
-        if (isExpired(conversation)) {
-          conversationRepository.deleteById(conversation.getId());
-          log.info("Conversation {} expired and was deleted", conversation.getId());
-        } else {
-          boolean pruned = applyMessageLimit(conversation);
-          if (pruned) {
-            conversation = conversationRepository.save(conversation);
-          }
-          return conversation;
-        }
+      Optional<Conversation> processed = processFoundForUser(existing, userId);
+      if (processed.isPresent()) {
+        return processed.get();
       }
     }
 
     if (sessionId != null && !sessionId.isEmpty()) {
       Optional<Conversation> existing = conversationRepository.findBySessionId(sessionId);
-      if (existing.isPresent() && existing.get().getUserId().equals(userId)) {
-        Conversation conversation = existing.get();
-        if (isExpired(conversation)) {
-          conversationRepository.deleteById(conversation.getId());
-          log.info("Conversation {} expired and was deleted", conversation.getId());
-        } else {
-          boolean pruned = applyMessageLimit(conversation);
-          if (pruned) {
-            conversation = conversationRepository.save(conversation);
-          }
-          return conversation;
-        }
+      Optional<Conversation> processed = processFoundForUser(existing, userId);
+      if (processed.isPresent()) {
+        return processed.get();
       }
     }
 
@@ -79,10 +61,12 @@ public class ConversationService {
             .findById(conversationId)
             .orElseThrow(() -> new RuntimeException("Conversation not found: " + conversationId));
 
-    if (isExpired(conversation)) {
-      conversationRepository.deleteById(conversationId);
+    Optional<Conversation> refreshed = refreshConversation(conversation);
+    if (refreshed.isEmpty()) {
       throw new RuntimeException("Conversation expired and was removed. Please start a new chat.");
     }
+
+    conversation = refreshed.get();
 
     if (message.getTimestamp() == null) {
       message.setTimestamp(LocalDateTime.now());
@@ -102,42 +86,21 @@ public class ConversationService {
   public Optional<Conversation> getConversation(String conversationId) {
     Optional<Conversation> conversationOpt = conversationRepository.findById(conversationId);
     if (conversationOpt.isEmpty()) {
-      return conversationOpt;
-    }
-
-    Conversation conversation = conversationOpt.get();
-    if (isExpired(conversation)) {
-      conversationRepository.deleteById(conversationId);
-      log.info("Conversation {} expired and was deleted", conversationId);
       return Optional.empty();
     }
 
-    boolean pruned = applyMessageLimit(conversation);
-    if (pruned) {
-      conversation = conversationRepository.save(conversation);
-    }
-    return Optional.of(conversation);
+    return refreshConversation(conversationOpt.get());
   }
 
   public List<Conversation> getUserConversations(Long userId) {
     List<Conversation> conversations =
         conversationRepository.findByUserIdOrderByUpdatedAtDesc(userId);
-
-    conversations.removeIf(
-        c -> {
-          if (isExpired(c)) {
-            conversationRepository.deleteById(c.getId());
-            log.info("Conversation {} expired and was deleted", c.getId());
-            return true;
-          }
-          boolean pruned = applyMessageLimit(c);
-          if (pruned) {
-            conversationRepository.save(c);
-          }
-          return false;
-        });
-
-    return conversations;
+    List<Conversation> result = new java.util.ArrayList<>();
+    for (Conversation c : conversations) {
+      Optional<Conversation> refreshed = refreshConversation(c);
+      refreshed.ifPresent(result::add);
+    }
+    return result;
   }
 
   public void deleteConversation(String conversationId) {
@@ -176,5 +139,31 @@ public class ConversationService {
         new java.util.ArrayList<>(conversation.getMessages().subList(fromIndex, size)));
     conversation.setUpdatedAt(LocalDateTime.now());
     return true;
+  }
+
+  private Optional<Conversation> processFoundForUser(
+      Optional<Conversation> existing, Long userId) {
+    if (existing.isEmpty()) {
+      return Optional.empty();
+    }
+    Conversation conversation = existing.get();
+    if (!conversation.getUserId().equals(userId)) {
+      return Optional.empty();
+    }
+    return refreshConversation(conversation);
+  }
+
+  private Optional<Conversation> refreshConversation(Conversation conversation) {
+    if (isExpired(conversation)) {
+      conversationRepository.deleteById(conversation.getId());
+      log.info("Conversation {} expired and was deleted", conversation.getId());
+      return Optional.empty();
+    }
+
+    boolean pruned = applyMessageLimit(conversation);
+    if (pruned) {
+      conversation = conversationRepository.save(conversation);
+    }
+    return Optional.of(conversation);
   }
 }
