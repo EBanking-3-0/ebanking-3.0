@@ -9,10 +9,7 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-/**
- * Consumer for transaction events. Updates account balances when transactions
- * complete.
- */
+/** Consumer for transaction events. Updates account balances when transactions complete. */
 @Slf4j
 @Component
 @RequiredArgsConstructor

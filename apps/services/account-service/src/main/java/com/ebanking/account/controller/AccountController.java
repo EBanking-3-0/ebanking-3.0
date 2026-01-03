@@ -6,7 +6,6 @@ import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -31,7 +30,7 @@ public class AccountController {
   @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
-    // todo:k In a real app, extract userId from token or look it up.
+    // todo: In a real app, extract userId from token or look it up.
     // For simplicity, we trust the request or use a hardcoded/looked-up ID if
     // available in token.
     // Ideally: Long userId = Long.parseLong(authentication.getName()); // if
@@ -42,7 +41,8 @@ public class AccountController {
     // matches token if
     // needed.
 
-    Account account = accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
+    Account account =
+        accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
     return ResponseEntity.ok(accountMapper.mapToDTO(account));
   }
 
@@ -57,7 +57,8 @@ public class AccountController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
+  public ResponseEntity<?> updateAccount(
+      @PathVariable Long id, @RequestBody AccountDTO accountDTO) {
     try {
       Account account = accountService.updateAccount(id, accountDTO);
       return ResponseEntity.ok(accountMapper.mapToDTO(account));
@@ -94,7 +95,6 @@ public class AccountController {
       return ResponseEntity.badRequest().body("Account not found");
     } catch (InsufficientBalance e) {
       ResponseEntity.badRequest().body("Insufficient balance");
-
     }
     return ResponseEntity.ok("Withdrawal successful");
   }

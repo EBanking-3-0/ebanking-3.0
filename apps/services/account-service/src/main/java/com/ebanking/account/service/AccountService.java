@@ -1,8 +1,10 @@
 package com.ebanking.account.service;
 
 import com.ebanking.account.dto.AccountDTO;
+import com.ebanking.account.enums.AccountType;
 import com.ebanking.account.exception.AccountNotFoundException;
 import com.ebanking.account.exception.InsufficientBalance;
+import com.ebanking.account.kafka.producer.AccountProducer;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.repository.AccountRepository;
 import com.ebanking.shared.kafka.events.AccountCreatedEvent;
@@ -16,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.ebanking.account.kafka.producer.AccountProducer;
 
 @Slf4j
 @Service
@@ -31,38 +32,41 @@ public class AccountService {
   public Account createAccount(Long userId, String accountType, String currency) {
     String accountNumber = generateAccountNumber();
 
-    Account account = Account.builder()
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .type(accountType)
-        .currency(currency)
-        .balance(BigDecimal.ZERO)
-        .status("ACTIVE")
-        .build();
+    Account account =
+        Account.builder()
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .type(AccountType.valueOf(accountType))
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .build();
 
     Account savedAccount = accountRepository.save(account);
     log.info("Created account: {} for user: {}", accountNumber, userId);
-    AccountCreatedEvent createdAccountEvent = AccountCreatedEvent.builder()
-        .accountId(savedAccount.getId())
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .accountType(accountType)
-        .currency(currency)
-        .initialBalance(BigDecimal.ZERO)
-        .source("account-service")
-        .build();
+    AccountCreatedEvent createdAccountEvent =
+        AccountCreatedEvent.builder()
+            .accountId(savedAccount.getId())
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .accountType(accountType)
+            .currency(currency)
+            .initialBalance(BigDecimal.ZERO)
+            .source("account-service")
+            .build();
 
     accountProducer.sendAccountCreatedEvent(createdAccountEvent);
 
-    AccountCreatedEvent event = AccountCreatedEvent.builder()
-        .accountId(savedAccount.getId())
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .accountType(accountType)
-        .currency(currency)
-        .initialBalance(BigDecimal.ZERO)
-        .source("account-service")
-        .build();
+    AccountCreatedEvent event =
+        AccountCreatedEvent.builder()
+            .accountId(savedAccount.getId())
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .accountType(accountType)
+            .currency(currency)
+            .initialBalance(BigDecimal.ZERO)
+            .source("account-service")
+            .build();
 
     eventProducer.publishAccountCreated(event);
 
@@ -79,7 +83,9 @@ public class AccountService {
     existingAccount.get().setStatus(account.getStatus());
     existingAccount.get().setUpdatedAt(LocalDateTime.now());
 
-    log.info("Updated account: {} for user: {}", existingAccount.get().getAccountNumber(),
+    log.info(
+        "Updated account: {} for user: {}",
+        existingAccount.get().getAccountNumber(),
         existingAccount.get().getUserId());
     return accountRepository.save(existingAccount.get());
   }
@@ -91,7 +97,9 @@ public class AccountService {
       throw new AccountNotFoundException("Account not found");
     }
     accountRepository.delete(existingAccount.get());
-    log.info("Deleted account: {} for user: {}", existingAccount.get().getAccountNumber(),
+    log.info(
+        "Deleted account: {} for user: {}",
+        existingAccount.get().getAccountNumber(),
         existingAccount.get().getUserId());
     return true;
   }
@@ -103,10 +111,11 @@ public class AccountService {
   public Account getAccountByNumber(String accountNumber) throws AccountNotFoundException {
     return accountRepository
         .findByAccountNumber(accountNumber)
-        .orElseThrow(() -> {
-          log.error("Account not found: {}", accountNumber);
-          return new AccountNotFoundException("Account not found");
-        });
+        .orElseThrow(
+            () -> {
+              log.error("Account not found: {}", accountNumber);
+              return new AccountNotFoundException("Account not found");
+            });
   }
 
   private String generateAccountNumber() {
@@ -122,12 +131,16 @@ public class AccountService {
     existingAccount.get().setBalance(existingAccount.get().getBalance().add(amount));
     accountRepository.save(existingAccount.get());
     // todo: send event to kafka (transaction service)
-    log.info("Deposited {} to account: {} for user: {}", amount, existingAccount.get().getAccountNumber(),
+    log.info(
+        "Deposited {} to account: {} for user: {}",
+        amount,
+        existingAccount.get().getAccountNumber(),
         existingAccount.get().getUserId());
     return true;
   }
 
-  public boolean withdraw(Long id, BigDecimal amount) throws AccountNotFoundException, InsufficientBalance {
+  public boolean withdraw(Long id, BigDecimal amount)
+      throws AccountNotFoundException, InsufficientBalance {
     Optional<Account> existingAccount = accountRepository.findById(id);
     if (existingAccount.isEmpty()) {
       log.error("Account not found: {}", id);
@@ -140,7 +153,10 @@ public class AccountService {
     existingAccount.get().setBalance(existingAccount.get().getBalance().subtract(amount));
     // todo: send event to kafka (transaction service)
     accountRepository.save(existingAccount.get());
-    log.info("Withdrawn {} from account: {} for user: {}", amount, existingAccount.get().getAccountNumber(),
+    log.info(
+        "Withdrawn {} from account: {} for user: {}",
+        amount,
+        existingAccount.get().getAccountNumber(),
         existingAccount.get().getUserId());
     return true;
   }
