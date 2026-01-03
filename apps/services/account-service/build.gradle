@@ -72,7 +72,13 @@ tasks.named("sonar") {
 test {
     useJUnitPlatform()
     testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        // events "passed", "skipped", "failed"
+        events = ["passed", "skipped", "failed"]
+        // exceptionFormat "full"
+        exceptionFormat = "full"
+        showExceptions = true
+        showStackTraces = true
+        showCauses = true
+        showStandardStreams = true
     }
 }

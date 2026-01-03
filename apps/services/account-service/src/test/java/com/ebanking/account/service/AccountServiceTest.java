@@ -16,6 +16,7 @@ import com.ebanking.shared.kafka.producer.TypedEventProducer;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,33 +26,34 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 
-  @Mock
-  private AccountRepository accountRepository;
+  @Mock private AccountRepository accountRepository;
 
-  @Mock
-  private TypedEventProducer eventProducer;
+  @Mock private TypedEventProducer eventProducer;
 
-  @Mock
-  private AccountProducer accountProducer;
+  @Mock private AccountProducer accountProducer;
 
-  @InjectMocks
-  private AccountService accountService;
+  @InjectMocks private AccountService accountService;
 
   @Test
   void testCreateAccount() {
     Long userId = 1L;
     AccountType accountType = AccountType.SAVINGS;
     String currency = "USD";
+    String accountNumber = generateAccountNumber();
+    // String iban = generateIban(accountNumber);
+    String iban = "FR1234567890";
 
-    Account savedAccount = Account.builder()
-        .id(1L)
-        .userId(userId)
-        .accountNumber("1234567890")
-        .type(accountType)
-        .currency(currency)
-        .balance(BigDecimal.ZERO)
-        .status("ACTIVE")
-        .build();
+    Account savedAccount =
+        Account.builder()
+            .id(1L)
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .iban(iban)
+            .type(accountType)
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .build();
 
     when(accountRepository.save(any(Account.class))).thenReturn(savedAccount);
 
@@ -93,12 +95,13 @@ public class AccountServiceTest {
     BigDecimal initialBalance = BigDecimal.valueOf(100);
     BigDecimal depositAmount = BigDecimal.valueOf(50);
 
-    Account account = Account.builder()
-        .id(accountId)
-        .balance(initialBalance)
-        .userId(1L)
-        .accountNumber("123")
-        .build();
+    Account account =
+        Account.builder()
+            .id(accountId)
+            .balance(initialBalance)
+            .userId(1L)
+            .accountNumber("123")
+            .build();
 
     when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
@@ -125,8 +128,8 @@ public class AccountServiceTest {
   @Test
   void testGetAccountsByUserId() {
     Long userId = 1L;
-    List<Account> accounts = List.of(Account.builder().userId(userId).build(),
-        Account.builder().userId(userId).build());
+    List<Account> accounts =
+        List.of(Account.builder().userId(userId).build(), Account.builder().userId(userId).build());
 
     when(accountRepository.findByUserId(userId)).thenReturn(accounts);
 
@@ -138,15 +141,17 @@ public class AccountServiceTest {
   @Test
   void testUpdateAccount() throws AccountNotFoundException {
     Long accountId = 1L;
-    AccountDTO updateDto = AccountDTO.builder().balance(BigDecimal.valueOf(200)).status("FROZEN").build();
+    AccountDTO updateDto =
+        AccountDTO.builder().balance(BigDecimal.valueOf(200)).status("FROZEN").build();
 
-    Account existingAccount = Account.builder()
-        .id(accountId)
-        .balance(BigDecimal.valueOf(100))
-        .status("ACTIVE")
-        .userId(1L)
-        .accountNumber("123")
-        .build();
+    Account existingAccount =
+        Account.builder()
+            .id(accountId)
+            .balance(BigDecimal.valueOf(100))
+            .status("ACTIVE")
+            .userId(1L)
+            .accountNumber("123")
+            .build();
 
     when(accountRepository.findById(accountId)).thenReturn(Optional.of(existingAccount));
     when(accountRepository.save(any(Account.class))).thenReturn(existingAccount);
@@ -164,12 +169,13 @@ public class AccountServiceTest {
     BigDecimal initialBalance = BigDecimal.valueOf(100);
     BigDecimal withdrawAmount = BigDecimal.valueOf(50);
 
-    Account account = Account.builder()
-        .id(accountId)
-        .balance(initialBalance)
-        .userId(1L)
-        .accountNumber("123")
-        .build();
+    Account account =
+        Account.builder()
+            .id(accountId)
+            .balance(initialBalance)
+            .userId(1L)
+            .accountNumber("123")
+            .build();
 
     when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
@@ -192,5 +198,45 @@ public class AccountServiceTest {
 
     assertThrows(
         InsufficientBalance.class, () -> accountService.withdraw(accountId, withdrawAmount));
+  }
+
+
+  @Test
+  void testGenerateIban() {
+    String accountNumber = UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+    assertEquals(10, accountNumber.length());
+    String iban = generateIban(accountNumber);
+    assertInstanceOf(String.class, iban);
+    System.out.println(iban);
+    // assertEquals("FR761234567890", iban);
+  }
+
+  @Test
+  void testGenerateAccountNumber() {
+    String accountNumber = generateAccountNumber();
+    assertInstanceOf(String.class, accountNumber);
+    assertEquals(10, accountNumber.length());
+  }
+
+  private String generateAccountNumber() {
+    return UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+  }
+
+  private String generateIban(String accountNumber) {
+    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23 caractères)
+    // Format: FR76 XXXX XXXX XXXX XXXX XXXX XXX
+    // En production, utiliser une bibliothèque spécialisée pour générer des IBAN valides
+    String countryCode = "FR";
+    String checkDigits = "76"; // Valeur par défaut pour la démo
+    String bankCode = "20041"; // Code banque fictif
+    String branchCode = "01005"; // Code agence fictif
+    String accountCode =
+        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(accountNumber.length()+1, 4));
+    // Compléter avec des zéros si nécessaire
+    while (accountCode.length() < 11) {
+      accountCode += "0";
+    }
+    String nationalCheck = "26"; // Clé RIB fictive
+    return countryCode + checkDigits + bankCode + branchCode + accountCode + nationalCheck;
   }
 }

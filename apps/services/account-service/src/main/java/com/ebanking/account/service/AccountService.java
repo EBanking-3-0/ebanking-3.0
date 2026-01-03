@@ -35,16 +35,15 @@ public class AccountService {
     String iban = generateIban(accountNumber);
 
     Account account =
-       
         Account.builder()
-                .userId(userId)
-                .accountNumber(accountNumber)
+            .userId(userId)
+            .accountNumber(accountNumber)
             .iban(iban)
-                .type(AccountType.valueOf(accountType))
-                .currency(currency)
-                .balance(BigDecimal.ZERO)
-                .status("ACTIVE")
-                .build();
+            .type(AccountType.valueOf(accountType))
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .build();
 
     Account savedAccount = accountRepository.save(account);
     log.info("Created account: {} for user: {}", accountNumber, userId);
