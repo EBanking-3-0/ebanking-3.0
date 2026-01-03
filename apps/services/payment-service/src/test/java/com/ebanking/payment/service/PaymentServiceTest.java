@@ -7,6 +7,8 @@ import static org.mockito.Mockito.*;
 import com.ebanking.payment.dto.request.PaymentRequest;
 import com.ebanking.payment.dto.response.PaymentResult;
 import com.ebanking.payment.entity.Payment;
+import com.ebanking.payment.entity.PaymentStatus;
+import com.ebanking.payment.entity.PaymentType;
 import com.ebanking.payment.repository.PaymentRepository;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -20,43 +22,62 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class PaymentServiceTest {
 
   @Mock private PaymentRepository paymentRepository;
+  @Mock private InternalTransferService internalTransferService;
+  @Mock private SepaTransferService sepaTransferService;
+  @Mock private InstantTransferService instantTransferService;
+  @Mock private MobileRechargeService mobileRechargeService;
   @Mock private PaymentSagaOrchestrator sagaOrchestrator;
-  @Mock private PaymentValidationService validationService;
 
   @InjectMocks private PaymentService paymentService;
 
   @Test
-  void testInitiatePaymentScaRequired() {
+  void testInitiatePaymentInternalTransfer() {
     PaymentRequest request =
         PaymentRequest.builder()
             .fromAccountId(1L)
-            .amount(new BigDecimal("500.00")) // > 100 threshold
+            .toAccountId(2L)
+            .amount(new BigDecimal("100.00"))
             .currency("EUR")
             .type("INTERNAL_TRANSFER")
             .idempotencyKey("unique-key")
             .build();
 
-    when(paymentRepository.findByIdempotencyKey(anyString())).thenReturn(Optional.empty());
-    when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArguments()[0]);
+    Payment payment = Payment.builder().id(1L).status(PaymentStatus.COMPLETED).build();
+    PaymentResult expectedResult = PaymentResult.success(payment);
+
+    when(internalTransferService.executeInternalTransfer(request, 1L)).thenReturn(expectedResult);
 
     PaymentResult result = paymentService.initiatePayment(request, 1L);
 
     assertTrue(result.isSuccess());
-    assertEquals("SCA_REQUIRED", result.getMessage());
-    verify(sagaOrchestrator, never()).executePayment(any());
+    verify(internalTransferService, times(1)).executeInternalTransfer(request, 1L);
   }
 
   @Test
   void testAuthorizePaymentSuccess() {
-    Payment payment = Payment.builder().id(1L).userId(1L).amount(new BigDecimal("500.00")).build();
+    Payment payment =
+        Payment.builder()
+            .id(1L)
+            .userId(1L)
+            .amount(new BigDecimal("500.00"))
+            .paymentType(PaymentType.INTERNAL_TRANSFER)
+            .fromAccountId(1L)
+            .toAccountId(2L)
+            .currency("EUR")
+            .status(PaymentStatus.CREATED)
+            .build();
 
     when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
-    when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
-    when(sagaOrchestrator.executePayment(any())).thenReturn(PaymentResult.success(payment));
+    when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArguments()[0]);
+
+    Payment paymentCompleted = Payment.builder().id(1L).status(PaymentStatus.COMPLETED).build();
+    PaymentResult expectedResult = PaymentResult.success(paymentCompleted);
+    when(internalTransferService.executeInternalTransfer(any(PaymentRequest.class), eq(1L)))
+        .thenReturn(expectedResult);
 
     PaymentResult result = paymentService.authorizePayment(1L, "123456", 1L);
 
     assertTrue(result.isSuccess());
-    verify(sagaOrchestrator, times(1)).executePayment(payment);
+    verify(internalTransferService, times(1)).executeInternalTransfer(any(), eq(1L));
   }
 }

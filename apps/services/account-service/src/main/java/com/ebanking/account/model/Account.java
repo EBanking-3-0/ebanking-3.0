@@ -30,8 +30,7 @@ public class Account {
   @Column(nullable = false, unique = true)
   private String accountNumber;
 
-  @Column
-  private String iban; // IBAN pour SEPA/Instant transfers
+  @Column private String iban; // IBAN pour SEPA/Instant transfers
 
   @Column(nullable = false)
   private Long userId;

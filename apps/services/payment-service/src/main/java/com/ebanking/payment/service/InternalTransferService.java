@@ -59,8 +59,32 @@ public class InternalTransferService {
     // Récupérer le compte destinataire si on a seulement le numéro
     Long toAccountId = request.getToAccountId();
     if (toAccountId == null && request.getToAccountNumber() != null) {
-      AccountResponse toAccount = accountClient.getAccountByNumber(request.getToAccountNumber());
-      toAccountId = toAccount.getId();
+      try {
+        AccountResponse toAccount = accountClient.getAccountByNumber(request.getToAccountNumber());
+        if (toAccount == null || toAccount.getId() == null) {
+          throw new IllegalArgumentException(
+              "Compte destinataire introuvable: " + request.getToAccountNumber());
+        }
+        toAccountId = toAccount.getId();
+        log.info(
+            "Compte destinataire trouvé: {} (ID: {})", request.getToAccountNumber(), toAccountId);
+      } catch (Exception e) {
+        log.error(
+            "Erreur lors de la récupération du compte destinataire {}: {}",
+            request.getToAccountNumber(),
+            e.getMessage());
+        throw new IllegalArgumentException(
+            "Impossible de trouver le compte destinataire: "
+                + request.getToAccountNumber()
+                + ". Erreur: "
+                + e.getMessage());
+      }
+    }
+
+    // Vérifier que toAccountId n'est pas null après récupération
+    if (toAccountId == null) {
+      throw new IllegalArgumentException(
+          "Impossible de déterminer le compte destinataire. Vérifiez toAccountId ou toAccountNumber.");
     }
 
     // 4. Créer le paiement

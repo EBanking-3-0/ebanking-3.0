@@ -30,22 +30,30 @@ public class PaymentEventProducer {
 
     log.info("Publishing TransactionCompletedEvent for flow: {} -> {}", fromIban, toIban);
 
-    TransactionCompletedEvent event =
-        TransactionCompletedEvent.builder()
-            .transactionId(paymentId)
-            .fromAccountId(fromAccountId)
-            .toAccountId(toAccountId)
-            .fromAccountNumber(fromIban)
-            .toAccountNumber(toIban)
-            .amount(amount)
-            .currency(currency)
-            .transactionType(transactionType)
-            .status("COMPLETED")
-            .description("Banking Transaction Finalized")
-            .source("payment-service")
-            .build();
+    try {
+      TransactionCompletedEvent event =
+          TransactionCompletedEvent.builder()
+              .transactionId(paymentId)
+              .fromAccountId(fromAccountId)
+              .toAccountId(toAccountId)
+              .fromAccountNumber(fromIban)
+              .toAccountNumber(toIban)
+              .amount(amount)
+              .currency(currency)
+              .transactionType(transactionType)
+              .status("COMPLETED")
+              .description("Banking Transaction Finalized")
+              .source("payment-service")
+              .build();
 
-    eventProducer.publishTransactionCompleted(event);
+      eventProducer.publishTransactionCompleted(event);
+    } catch (Exception e) {
+      log.error(
+          "Failed to publish TransactionCompletedEvent for payment {}: {}",
+          paymentId,
+          e.getMessage());
+      // Ne pas faire échouer le paiement si Kafka est indisponible
+    }
   }
 
   @Transactional
@@ -60,19 +68,25 @@ public class PaymentEventProducer {
 
     log.warn("Publishing PaymentFailedEvent for payment ID: {} - Error: {}", paymentId, errorCode);
 
-    PaymentFailedEvent event =
-        PaymentFailedEvent.builder()
-            .transactionId(paymentId)
-            .accountId(accountId)
-            .accountNumber(iban)
-            .amount(amount)
-            .currency(currency)
-            .failureReason(failureReason)
-            .errorCode(errorCode)
-            .source("payment-service")
-            .build();
+    try {
+      PaymentFailedEvent event =
+          PaymentFailedEvent.builder()
+              .transactionId(paymentId)
+              .accountId(accountId)
+              .accountNumber(iban)
+              .amount(amount)
+              .currency(currency)
+              .failureReason(failureReason)
+              .errorCode(errorCode)
+              .source("payment-service")
+              .build();
 
-    eventProducer.publishPaymentFailed(event);
+      eventProducer.publishPaymentFailed(event);
+    } catch (Exception e) {
+      log.error(
+          "Failed to publish PaymentFailedEvent for payment {}: {}", paymentId, e.getMessage());
+      // Ne pas faire échouer le traitement si Kafka est indisponible
+    }
   }
 
   @Transactional
@@ -88,19 +102,25 @@ public class PaymentEventProducer {
 
     log.error("Publishing FraudDetectedEvent (CRITICAL) for payment ID: {}", paymentId);
 
-    FraudDetectedEvent event =
-        FraudDetectedEvent.builder()
-            .transactionId(paymentId)
-            .accountId(accountId)
-            .accountNumber(iban)
-            .amount(amount)
-            .currency(currency)
-            .fraudType(fraudType)
-            .severity(severity)
-            .description(description)
-            .source("payment-service")
-            .build();
+    try {
+      FraudDetectedEvent event =
+          FraudDetectedEvent.builder()
+              .transactionId(paymentId)
+              .accountId(accountId)
+              .accountNumber(iban)
+              .amount(amount)
+              .currency(currency)
+              .fraudType(fraudType)
+              .severity(severity)
+              .description(description)
+              .source("payment-service")
+              .build();
 
-    eventProducer.publishFraudDetected(event);
+      eventProducer.publishFraudDetected(event);
+    } catch (Exception e) {
+      log.error(
+          "Failed to publish FraudDetectedEvent for payment {}: {}", paymentId, e.getMessage());
+      // Ne pas faire échouer le traitement si Kafka est indisponible
+    }
   }
 }
