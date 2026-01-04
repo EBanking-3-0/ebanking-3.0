@@ -140,24 +140,23 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-ebanking} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --wait"
+          "helm upgrade --install web-app tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --set ingress.hosts[0].host=$DEPLOY_DOMAIN --set ingress.tls[0].hosts[0]=$DEPLOY_DOMAIN --set env.API_URL=$API_URL --wait"
         ],
         "cwd": "."
       },
       "configurations": {
         "production": {
           "env": {
-            "DEPLOY_NAMESPACE": "ebanking"
+            "DEPLOY_NAMESPACE": "ebanking",
+            "DEPLOY_DOMAIN": "bank.h4k5.net",
+            "API_URL": "https://bank-api.h4k5.net/graphql"
           }
         },
         "staging": {
           "env": {
-            "DEPLOY_NAMESPACE": "staging"
-          },
-          "options": {
-            "commands": [
-              "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-staging} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --set ingress.hosts[0].host=bank-staging.h4k5.net --set ingress.tls[0].hosts[0]=bank-staging.h4k5.net --set env.API_URL=https://bank-api-staging.h4k5.net/graphql --wait"
-            ]
+            "DEPLOY_NAMESPACE": "staging",
+            "DEPLOY_DOMAIN": "bank-staging.h4k5.net",
+            "API_URL": "https://bank-api-staging.h4k5.net/graphql"
           }
         }
       },

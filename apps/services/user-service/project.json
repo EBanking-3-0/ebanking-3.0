@@ -137,7 +137,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "helm upgrade --install user-service tools/helm/microservice -n ${DEPLOY_NAMESPACE:-ebanking} -f tools/helm/microservice/values-prod-user-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-user-service --wait"
+          "helm upgrade --install user-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-prod-user-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-user-service --wait"
         ],
         "cwd": "."
       },
