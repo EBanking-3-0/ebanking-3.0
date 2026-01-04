@@ -49,8 +49,8 @@
       "publicClient": true,
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": true,
-      "redirectUris": ["https://bank.h4k5.net/*", "https://bank-api.h4k5.net/*", "http://localhost:4200/*", "http://localhost:8081/*"],
-      "webOrigins": ["https://bank.h4k5.net", "https://bank-api.h4k5.net", "http://localhost:4200", "http://localhost:8081"]
+      "redirectUris": ["https://bank.h4k5.net/*", "https://bank-staging.h4k5.net/*",  "https://bank-api.h4k5.net/*", "https://bank-api-staging.h4k5.net/*", "http://localhost:4200/*", "http://localhost:8081/*"],
+      "webOrigins": ["https://bank.h4k5.net", "https://bank-api.h4k5.net", "https://bank-staging.h4k5.net", "https://bank-api-staging.h4k5.net", "http://localhost:4200", "http://localhost:8081"]
     },
     {
       "clientId": "auth-service",

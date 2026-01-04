@@ -1,4 +1,6 @@
 # values-staging.yaml for web-app
+fullnameOverride: "web-app"
+
 image:
   repository: khabirhakim/ebanking-frontend
   tag: latest # Overridden by command
@@ -28,3 +30,14 @@ env:
 serviceAccount:
   create: true
   name: web-app-staging
+
+service:
+  targetPort: 80
+
+resources:
+  requests:
+    memory: "32Mi"
+    cpu: "10m"
+  limits:
+    memory: "64Mi"
+    cpu: "100m"

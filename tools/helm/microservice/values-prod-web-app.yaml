@@ -35,4 +35,7 @@ env:
 
 serviceAccount:
   create: true
-  name: frontend-web-app-microservice
+  name: web-app-microservice
+
+service:
+  targetPort: 80

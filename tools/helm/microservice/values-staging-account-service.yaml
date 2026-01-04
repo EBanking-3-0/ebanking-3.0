@@ -1,6 +1,8 @@
 # values-staging.yaml for account-service
 fullnameOverride: account-service
 
+fullnameOverride: "account-service"
+
 image:
   repository: khabirhakim/ebanking-account-service
   tag: latest # Overridden by command
@@ -13,7 +15,8 @@ service:
 
 env:
   SPRING_PROFILES_ACTIVE: kubernetes
-  SPRING_DATASOURCE_URL: "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/ebanking_db"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/staging_db"
+  SPRING_DATASOURCE_USERNAME: "ebanking_user"
   SPRING_KAFKA_BOOTSTRAP_SERVERS: "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092"
   EUREKA_CLIENT_ENABLED: "false"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
@@ -29,3 +32,14 @@ extraEnv:
 serviceAccount:
   create: true
   name: account-service-staging
+
+service:
+  targetPort: 8084
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "384Mi"
+    cpu: "250m"

@@ -36,6 +36,8 @@ keycloakx:
       value: admin
     - name: KC_HOSTNAME
       value: https://bank-auth.h4k5.net
+    - name: KC_PROXY
+      value: "passthrough"
     - name: KC_HOSTNAME_STRICT_BACKCHANNEL
       value: "false"
     - name: JAVA_OPTS_APPEND

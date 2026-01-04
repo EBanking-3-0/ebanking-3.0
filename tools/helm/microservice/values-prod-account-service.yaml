@@ -1,16 +1,16 @@
-# values-prod.yaml for user-service
+# values.yaml for account-service
 replicaCount: 1
-fullnameOverride: user-service
+fullnameOverride: account-service
 
 image:
-  repository: khabirhakim/ebanking-user-service
-  tag: prod
-  pullPolicy: Always
+  repository: ebanking/account-service
+  tag: local
+  pullPolicy: Never
 
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8083
+  targetPort: 8084
 
 env:
   SPRING_PROFILES_ACTIVE: kubernetes
@@ -18,7 +18,7 @@ env:
   SPRING_DATASOURCE_USERNAME: ebanking_user
   SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
   EUREKA_CLIENT_ENABLED: "false"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
 
 extraEnv:
@@ -29,8 +29,13 @@ extraEnv:
         key: password
 
 serviceAccount:
+
   create: true
-  name: user-service-microservice
+
+  name: account-service-microservice
+
+
 
 service:
-  targetPort: 8083
+
+  targetPort: 8084

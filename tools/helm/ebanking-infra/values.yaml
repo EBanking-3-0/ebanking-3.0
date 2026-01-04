@@ -27,12 +27,32 @@ postgresql:
         init.sql: |
           -- Create Keycloak database
           CREATE DATABASE keycloak_db;
+          -- Create Staging database
+          CREATE DATABASE staging_db;
 
           -- Grant privileges
           GRANT ALL PRIVILEGES ON DATABASE keycloak_db TO ebanking_user;
+          GRANT ALL PRIVILEGES ON DATABASE staging_db TO ebanking_user;
 
-          -- Connected to ebanking_db by default
+          -- Connected to ebanking_db by default (Production)
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE SCHEMA IF NOT EXISTS users;
+          CREATE SCHEMA IF NOT EXISTS accounts;
+          CREATE SCHEMA IF NOT EXISTS payments;
+          CREATE SCHEMA IF NOT EXISTS crypto;
+          CREATE SCHEMA IF NOT EXISTS notifications;
+          CREATE SCHEMA IF NOT EXISTS analytics;
 
+          GRANT ALL ON SCHEMA auth TO ebanking_user;
+          GRANT ALL ON SCHEMA users TO ebanking_user;
+          GRANT ALL ON SCHEMA accounts TO ebanking_user;
+          GRANT ALL ON SCHEMA payments TO ebanking_user;
+          GRANT ALL ON SCHEMA crypto TO ebanking_user;
+          GRANT ALL ON SCHEMA notifications TO ebanking_user;
+          GRANT ALL ON SCHEMA analytics TO ebanking_user;
+
+          -- Setup schemas in staging_db
+          \c staging_db
           CREATE SCHEMA IF NOT EXISTS auth;
           CREATE SCHEMA IF NOT EXISTS users;
           CREATE SCHEMA IF NOT EXISTS accounts;

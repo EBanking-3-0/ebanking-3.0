@@ -17,6 +17,11 @@ ingress:
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://bank.h4k5.net, https://bank-staging.h4k5.net"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE, PATCH"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, X-Requested-With, Accept, Origin"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
   hosts:
     - host: bank-api.h4k5.net
       paths:
@@ -42,3 +47,6 @@ env:
 serviceAccount:
   create: true
   name: graphql-gateway-microservice
+
+service:
+  targetPort: 8081

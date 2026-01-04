@@ -36,10 +36,18 @@ build_and_push() {
 }
 
 # --- Services to Process ---
+
+# 1. User Service
 build_and_push "user-service" "apps/services/user-service"
+
+# 2. Account Service
 build_and_push "account-service" "apps/services/account-service"
+
+# 3. GraphQL Gateway
 build_and_push "graphql-gateway" "apps/infrastructure/graphql-gateway"
-build_and_push "frontend" "apps/frontend/web-app"
+
+# 4. Frontend (Web App)
+# build_and_push "frontend" "apps/frontend/web-app"
 
 # Uncomment these as you need them
 # build_and_push "auth-service" "apps/services/auth-service"
