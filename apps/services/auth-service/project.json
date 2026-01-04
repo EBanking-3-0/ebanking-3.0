@@ -132,6 +132,30 @@
         "docker-build"
       ],
       "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install auth-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-auth-service --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking",
+            "VALUES_FILE": "tools/helm/microservice/values-prod-auth-service.yaml"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging",
+            "VALUES_FILE": "tools/helm/microservice/values-staging-auth-service.yaml"
+          }
+        }
+      },
+      "cache": false
     }
   }
 }

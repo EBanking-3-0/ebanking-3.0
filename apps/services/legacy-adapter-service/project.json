@@ -132,6 +132,30 @@
         "docker-build"
       ],
       "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install legacy-adapter-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-legacy-adapter-service --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking",
+            "VALUES_FILE": "tools/helm/microservice/values-prod-legacy-adapter-service.yaml"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging",
+            "VALUES_FILE": "tools/helm/microservice/values-staging-legacy-adapter-service.yaml"
+          }
+        }
+      },
+      "cache": false
     }
   }
 }

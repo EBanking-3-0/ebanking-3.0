@@ -1,0 +1,41 @@
+# values-prod.yaml for auth-service
+replicaCount: 1
+fullnameOverride: auth-service
+
+image:
+  repository: khabirhakim/ebanking-auth-service
+  tag: prod
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8082
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_DATASOURCE_URL: jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db
+  SPRING_DATASOURCE_USERNAME: ebanking_user
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  EUREKA_CLIENT_ENABLED: "false"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
+
+extraEnv:
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secret
+        key: password
+
+serviceAccount:
+  create: true
+  name: auth-service-microservice
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
