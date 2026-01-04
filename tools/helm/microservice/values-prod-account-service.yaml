@@ -3,9 +3,9 @@ replicaCount: 1
 fullnameOverride: account-service
 
 image:
-  repository: ebanking/account-service
-  tag: local
-  pullPolicy: Never
+  repository: khabirhakim/ebanking-account-service
+  tag: prod
+  pullPolicy: Always
 
 service:
   type: ClusterIP
