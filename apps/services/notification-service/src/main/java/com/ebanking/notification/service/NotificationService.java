@@ -361,7 +361,8 @@ public class NotificationService {
     }
 
     // Create notification record
-    notification.setStatus(Notification.NotificationStatus.PENDING);
+    notification.setStatus(Notification.NotificationStatus.RETRYING);
+    notification.setRetryCount(notification.getRetryCount() + 1);
     notification = notificationRepository.save(notification);
 
     try {
@@ -388,7 +389,6 @@ public class NotificationService {
       // Update notification status
       notification.setStatus(Notification.NotificationStatus.SENT);
       notification.setSentAt(LocalDateTime.now());
-      notification.setRetryCount(notification.getRetryCount() + 1);
       notification = notificationRepository.save(notification);
 
       // Publish success event
