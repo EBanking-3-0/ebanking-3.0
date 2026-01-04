@@ -2,24 +2,29 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
-import { KeycloakService } from 'keycloak-angular';
+import Keycloak from 'keycloak-js';
+import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';
 import { vi } from 'vitest';
+import { signal } from '@angular/core';
 
 describe('App', () => {
   beforeEach(async () => {
     const keycloakMock = {
-      isLoggedIn: vi.fn().mockResolvedValue(false),
-      getKeycloakInstance: vi.fn().mockReturnValue({ idTokenParsed: {} }),
+      authenticated: false,
       login: vi.fn(),
       logout: vi.fn(),
+      idTokenParsed: {},
     };
+
+    const eventSignalMock = signal({ type: KeycloakEventType.Ready });
 
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: KeycloakService, useValue: keycloakMock },
+        { provide: Keycloak, useValue: keycloakMock },
+        { provide: KEYCLOAK_EVENT_SIGNAL, useValue: eventSignalMock },
       ],
     }).compileComponents();
   });
