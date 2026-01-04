@@ -137,24 +137,25 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "helm upgrade --install account-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-account-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-account-service --set image.pullPolicy=Always --wait"
+          "helm upgrade --install account-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-account-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-account-service --set image.pullPolicy=Always --set env.SPRING_DATASOURCE_URL=$DB_URL --set env.SPRING_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URL --set env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=$JWK_URL --wait"
         ],
         "cwd": "."
       },
       "configurations": {
         "production": {
           "env": {
-            "DEPLOY_NAMESPACE": "ebanking"
+            "DEPLOY_NAMESPACE": "ebanking",
+            "DB_URL": "jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db",
+            "KAFKA_URL": "ebanking-infra-kafka-broker:9092",
+            "JWK_URL": "http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs"
           }
         },
         "staging": {
           "env": {
-            "DEPLOY_NAMESPACE": "staging"
-          },
-          "options": {
-            "commands": [
-              "helm upgrade --install account-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-account-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-account-service --set image.pullPolicy=Always --set env.SPRING_DATASOURCE_URL=jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/ebanking_db --set env.SPRING_KAFKA_BOOTSTRAP_SERVERS=ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092 --set env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs --wait"
-            ]
+            "DEPLOY_NAMESPACE": "staging",
+            "DB_URL": "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/ebanking_db",
+            "KAFKA_URL": "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092",
+            "JWK_URL": "http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs"
           }
         }
       },
