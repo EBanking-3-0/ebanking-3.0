@@ -41,6 +41,9 @@ serviceAccount:
   create: true
   name: graphql-gateway-staging
 
+metrics:
+  enabled: true
+
 service:
   targetPort: 8081
 

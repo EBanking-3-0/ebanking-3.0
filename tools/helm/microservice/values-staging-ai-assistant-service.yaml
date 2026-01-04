@@ -30,3 +30,6 @@ resources:
 serviceAccount:
   create: true
   name: ai-assistant-service-staging
+
+metrics:
+  enabled: true

@@ -30,3 +30,6 @@ resources:
 serviceAccount:
   create: true
   name: audit-service-staging
+
+metrics:
+  enabled: true

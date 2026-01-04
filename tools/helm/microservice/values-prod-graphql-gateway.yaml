@@ -48,5 +48,8 @@ serviceAccount:
   create: true
   name: graphql-gateway-microservice
 
+metrics:
+  enabled: true
+
 service:
   targetPort: 8081

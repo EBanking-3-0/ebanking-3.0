@@ -63,6 +63,10 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+metrics:
+  enabled: false
+  path: /actuator/prometheus
+
 nodeSelector: {}
 
 tolerations: []

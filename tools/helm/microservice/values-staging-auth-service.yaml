@@ -38,3 +38,6 @@ resources:
 serviceAccount:
   create: true
   name: auth-service-staging
+
+metrics:
+  enabled: true

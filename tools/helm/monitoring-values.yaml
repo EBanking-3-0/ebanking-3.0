@@ -1,0 +1,24 @@
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    hosts:
+      - monitoring.h4k5.net
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - monitoring.h4k5.net
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # Optional: Enable persistence if you have the third node
+    # storageSpec:
+    #   volumeClaimTemplate:
+    #     spec:
+    #       storageClassName: do-block-storage
+    #       resources:
+    #         requests:
+    #           storage: 10Gi

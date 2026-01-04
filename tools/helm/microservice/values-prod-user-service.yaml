@@ -32,5 +32,8 @@ serviceAccount:
   create: true
   name: user-service-microservice
 
+metrics:
+  enabled: true
+
 service:
   targetPort: 8083

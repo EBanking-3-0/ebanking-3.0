@@ -1,0 +1,16 @@
+{{- if .Values.metrics.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "ebanking-common.fullname" . }}
+  labels:
+    {{- include "ebanking-common.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "ebanking-common.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      path: {{ .Values.metrics.path }}
+      interval: 15s
+{{- end -}}

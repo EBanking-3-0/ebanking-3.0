@@ -36,6 +36,14 @@ serviceAccount:
 
 
 
+metrics:
+
+  enabled: true
+
+
+
+
+
 service:
 
   targetPort: 8084

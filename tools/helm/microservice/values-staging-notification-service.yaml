@@ -38,3 +38,6 @@ resources:
 serviceAccount:
   create: true
   name: notification-service-staging
+
+metrics:
+  enabled: true

@@ -29,3 +29,6 @@ resources:
 serviceAccount:
   create: true
   name: legacy-adapter-service-staging
+
+metrics:
+  enabled: true

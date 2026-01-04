@@ -38,3 +38,6 @@ resources:
 serviceAccount:
   create: true
   name: analytics-service-staging
+
+metrics:
+  enabled: true

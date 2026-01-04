@@ -43,3 +43,6 @@ resources:
   limits:
     memory: "384Mi"
     cpu: "250m"
+
+metrics:
+  enabled: true
