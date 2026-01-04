@@ -137,7 +137,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "helm upgrade --install graphql-gateway tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-prod-graphql-gateway.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-graphql-gateway --set ingress.hosts[0].host=$DEPLOY_DOMAIN --set ingress.tls[0].hosts[0]=$DEPLOY_DOMAIN --set env.SPRING_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URL --set env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=$JWK_URL --wait"
+          "helm upgrade --install graphql-gateway tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-graphql-gateway --wait"
         ],
         "cwd": "."
       },
@@ -145,17 +145,13 @@
         "production": {
           "env": {
             "DEPLOY_NAMESPACE": "ebanking",
-            "DEPLOY_DOMAIN": "bank-api.h4k5.net",
-            "KAFKA_URL": "ebanking-infra-kafka-broker:9092",
-            "JWK_URL": "http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs"
+            "VALUES_FILE": "tools/helm/microservice/values-prod-graphql-gateway.yaml"
           }
         },
         "staging": {
           "env": {
             "DEPLOY_NAMESPACE": "staging",
-            "DEPLOY_DOMAIN": "bank-api-staging.h4k5.net",
-            "KAFKA_URL": "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092",
-            "JWK_URL": "http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs"
+            "VALUES_FILE": "tools/helm/microservice/values-staging-graphql-gateway.yaml"
           }
         }
       },

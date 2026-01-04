@@ -137,7 +137,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "helm upgrade --install user-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-prod-user-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-user-service --set env.SPRING_DATASOURCE_URL=$DB_URL --set env.SPRING_KAFKA_BOOTSTRAP_SERVERS=$KAFKA_URL --set env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=$JWK_URL --wait"
+          "helm upgrade --install user-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-user-service --wait"
         ],
         "cwd": "."
       },
@@ -145,17 +145,13 @@
         "production": {
           "env": {
             "DEPLOY_NAMESPACE": "ebanking",
-            "DB_URL": "jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db",
-            "KAFKA_URL": "ebanking-infra-kafka-broker:9092",
-            "JWK_URL": "http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs"
+            "VALUES_FILE": "tools/helm/microservice/values-prod-user-service.yaml"
           }
         },
         "staging": {
           "env": {
             "DEPLOY_NAMESPACE": "staging",
-            "DB_URL": "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/ebanking_db",
-            "KAFKA_URL": "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092",
-            "JWK_URL": "http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs"
+            "VALUES_FILE": "tools/helm/microservice/values-staging-user-service.yaml"
           }
         }
       },
