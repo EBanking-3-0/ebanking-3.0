@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ "$1" == "version" && "$2" == "--client" ]]; then
+    /usr/local/bin/helm version
+else
+    /usr/local/bin/helm "$@"
+fi

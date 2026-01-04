@@ -2,7 +2,7 @@
 
 FROM eclipse-temurin:21-jre-alpine AS builder
 WORKDIR /builder
-ARG JAR_FILE=apps/services/analytics-service/build/libs/*.jar
+ARG JAR_FILE=apps/services/analytics-service/build/libs/analytics-service.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 

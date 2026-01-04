@@ -45,6 +45,8 @@ public class Account {
   @Column(nullable = false)
   private String status; // ACTIVE, FROZEN, CLOSED
 
+  @Column private String nickname;
+
   @CreationTimestamp private LocalDateTime createdAt;
 
   @UpdateTimestamp private LocalDateTime updatedAt;
