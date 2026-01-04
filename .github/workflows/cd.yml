@@ -141,7 +141,7 @@ jobs:
   # ------------------------------------------------------------------
   deploy-production:
     name: Deploy to Production
-    needs: integration-test
+    needs: [build-and-push, integration-test]
     runs-on: ubuntu-latest
     environment: 
       name: production
