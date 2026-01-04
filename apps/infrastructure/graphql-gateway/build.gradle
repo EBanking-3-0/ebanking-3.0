@@ -20,10 +20,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // Removed for K8s Native
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+    
+    // Shared Security
+    implementation project(':libs:shared:security')
 
     // GraphQL
     implementation 'com.graphql-java:graphql-java-extended-scalars:21.0'
@@ -35,4 +38,17 @@ dependencies {
 
 bootJar {
     archiveFileName = 'graphql-gateway.jar'
+}
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-graphql-gateway"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+tasks.named("sonar") {
+    dependsOn test
 }

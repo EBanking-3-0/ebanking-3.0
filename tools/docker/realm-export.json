@@ -1,0 +1,67 @@
+{
+  "realm": "ebanking-realm",
+  "enabled": true,
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["user"],
+      "clientRoles": {
+        "ebanking-client": ["user"]
+      }
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "User role"
+      },
+      {
+        "name": "admin",
+        "description": "Admin role"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "ebanking-client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["https://bank.h4k5.net/*", "https://bank-api.h4k5.net/*", "http://localhost:4200/*", "http://localhost:8081/*"],
+      "webOrigins": ["https://bank.h4k5.net", "https://bank-api.h4k5.net", "http://localhost:4200", "http://localhost:8081"]
+    },
+    {
+      "clientId": "auth-service",
+      "enabled": true,
+      "publicClient": false,
+      "bearerOnly": false,
+      "serviceAccountsEnabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "auth-service-secret",
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false
+    }
+  ]
+}

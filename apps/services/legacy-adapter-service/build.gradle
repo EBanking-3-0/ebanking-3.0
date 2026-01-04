@@ -6,6 +6,12 @@ plugins {
 
 description = 'Legacy Adapter Service - SOAP to REST Bridge'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
     // Shared libraries
     implementation project(':libs:shared:common')
@@ -41,4 +47,18 @@ dependencies {
 
 bootJar {
     archiveFileName = 'legacy-adapter-service.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+apply plugin: "org.sonarqube"
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-legacy-adapter-service"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+tasks.named("sonar") {
+    dependsOn test
 }

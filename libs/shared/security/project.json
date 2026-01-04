@@ -1,0 +1,97 @@
+{
+  "name": "security",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/security/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "configurations": {
+        "production": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "libs/shared/security"
+        },
+        "development": {
+          "command": "../../../gradlew build -x test",
+          "cwd": "libs/shared/security"
+        }
+      },
+      "defaultConfiguration": "development",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew test",
+        "cwd": "libs/shared/security"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests",
+        "{projectRoot}/build/test-results"
+      ]
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew clean",
+        "cwd": "libs/shared/security"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessCheck",
+        "cwd": "libs/shared/security"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew spotlessApply",
+        "cwd": "libs/shared/security"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "sonar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "../../../gradlew sonar",
+        "cwd": "libs/shared/security"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
+    }
+  }
+}

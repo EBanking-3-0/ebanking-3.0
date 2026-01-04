@@ -1,9 +1,89 @@
+# E-Banking 3.0 Project Setup and Running Guide
+
+This guide provides the necessary steps to set up and run the e-Banking 3.0 microservices project. Ensure you have the following prerequisites installed:
+
+- Java Development Kit (JDK) 17+
+- Docker and Docker Compose
+- Node.js (LTS recommended)
+- npm or pnpm (pnpm is used in package.json)
+- Nx CLI (optional, but recommended for running tasks)
+
+## Getting Started
+
+To get the full application stack running, please follow these steps sequentially:
+
+### 1. Start the Frontend Application
+
+The frontend serves as the user interface for the e-Banking system.
+
+```bash
+nx serve frontend
+```
+
+### 2. Start Service Discovery
+
+Service Discovery (Eureka) is crucial for microservices to register and find each other. This must be started before any other backend service.
+
+```bash
+nx serve service-discovery
+```
+
+### 3. Start the GraphQL API Gateway
+
+The GraphQL Gateway acts as the entry point for frontend requests, routing them to the appropriate microservices and enforcing authentication.
+
+```bash
+nx serve graphql-gateway
+```
+
+### 4. Start Core Infrastructure Services (Docker)
+
+These essential services (Postgres, Kafka, Keycloak) are containerized and managed by Docker Compose.
+
+```bash
+docker compose up -d postgres kafka keycloak --build
+```
+
+### 5. Start Backend Microservices
+
+Once the core infrastructure is up, you can start the individual backend services. It's recommended to start them in the following order due to their interdependencies (e.g., Auth service might need User service).
+
+**5.1. User Service**
+Manages user profiles and information.
+
+```bash
+nx serve user-service
+```
+
+**5.2. Auth Service**
+Handles authentication and authorization logic, interacting with Keycloak.
+
+```bash
+nx serve auth-service
+```
+
+**5.3. Account Service**
+Manages user bank accounts and balances.
+
+```bash
+nx serve account-service
+```
+
+### Troubleshooting
+
+- Verify all required Docker containers are running (`docker ps`).
+- Check service logs for specific error messages.
+- Ensure all necessary ports are available.
+- If you encounter build issues, ensure all `node_modules` and Gradle dependencies are up to date.
+
+---
+
 # E-Banking 3.0 - Nx Monorepo Microservices Architecture
 
 ![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
 ![Java](https://img.shields.io/badge/Java-21-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-green.svg)
-![Gradle](https://img.shields.io/badge/Gradle-9.2.1-blue.svg)
+![Gradle](https://imgшилd.io/badge/Gradle-9.2.1-blue.svg)
 ![Nx](https://img.shields.io/badge/Nx-22.1.3-purple.svg)
 
 ## Executive Summary
@@ -13,12 +93,14 @@ E-Banking 3.0 is a modern, cloud-native banking platform built with microservice
 ## Key Features
 
 ### Modernization
+
 - **SPA Architecture**: Angular + Apollo GraphQL for optimized data fetching
 - **Microservices**: Independent, scalable services with clear boundaries
 - **Event-Driven**: Apache Kafka for asynchronous communication
 - **Cloud-Native**: Docker + Kubernetes deployment
 
 ### New Capabilities
+
 - **Crypto Portfolio**: Buy/sell cryptocurrency with real-time market data
 - **AI Banking Assistant**: ChatGPT/Dialogflow integration for customer support
 - **Biometric Payments**: Enhanced security with biometric authentication + QR codes
@@ -28,7 +110,6 @@ E-Banking 3.0 is a modern, cloud-native banking platform built with microservice
 ## Architecture Overview
 
 ### Simple Overview
-
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -71,7 +152,6 @@ graph TB
 
     subgraph "Infrastructure Services"
         EUREKA[Service Discovery<br/>Eureka :8761]
-        CONFIG[Config Server<br/>:8888]
         KC[Keycloak<br/>IAM :8092]
     end
 
@@ -327,6 +407,7 @@ sequenceDiagram
 ## Technology Stack
 
 ### Core Technologies
+
 - **Monorepo**: Nx 22.1.3 (unified build system, dependency graph, caching)
 - **Build Tool**: Gradle 9.2.1 (multi-project builds for Java services)
 - **Backend**: Spring Boot 3.3.5, Spring Cloud 2023.0.0
@@ -334,21 +415,23 @@ sequenceDiagram
 - **API**: GraphQL Gateway + REST APIs
 - **Event Bus**: Apache Kafka 3.6.1
 - **Service Discovery**: Netflix Eureka
-- **Configuration**: Spring Cloud Config Server
 - **Security**: Keycloak (OAuth2/OIDC), JWT, MFA
 
 ### Databases
+
 - **PostgreSQL**: Transactional data (accounts, transactions, users)
 - **MongoDB**: Logs, crypto history, AI conversations, audit trails
 - **Redis**: Caching, sessions, rate limiting
 
 ### Observability
+
 - **Metrics**: Prometheus + Grafana
 - **Logs**: ELK Stack (Elasticsearch, Logstash, Kibana)
 - **Tracing**: Jaeger (distributed tracing)
 - **Monitoring**: Spring Boot Actuator
 
 ### DevOps
+
 - **Containers**: Docker
 - **Orchestration**: Kubernetes + Helm
 - **CI/CD**: GitHub Actions
@@ -361,9 +444,8 @@ E-Banking-3.0/
 ├── apps/
 │   ├── infrastructure/              # Infrastructure microservices
 │   │   ├── service-discovery/       # Eureka Server (8761)
-│   │   ├── config-server/           # Spring Cloud Config (8888)
-│   │   ├── api-gateway/             # REST API Gateway (8080)
-│   │   └── graphql-gateway/         # GraphQL Gateway (8081)
+│   ├── api-gateway/             # REST API Gateway (8080)
+│   └── graphql-gateway/         # GraphQL Gateway (8081)
 │   │
 │   ├── services/                    # Business microservices
 │   │   ├── auth-service/            # Authentication & MFA (8082)
@@ -410,142 +492,81 @@ E-Banking-3.0/
 
 ### Infrastructure Services
 
-| Service | Port | Purpose | Tech Stack |
-|---------|------|---------|------------|
-| **Service Discovery** | 8761 | Service registration & discovery | Eureka Server |
-| **Config Server** | 8888 | Centralized configuration | Spring Cloud Config |
-| **API Gateway** | 8080 | Request routing, load balancing | Spring Cloud Gateway |
-| **GraphQL Gateway** | 8081 | Unified GraphQL API | Spring GraphQL |
+| Service               | Port | Purpose                          | Tech Stack           |
+| --------------------- | ---- | -------------------------------- | -------------------- |
+| **Service Discovery** | 8761 | Service registration & discovery | Eureka Server        |
+| **API Gateway**       | 8080 | Request routing, load balancing  | Spring Cloud Gateway |
+| **GraphQL Gateway**   | 8081 | Unified GraphQL API              | Spring GraphQL       |
 
 ### Business Services
 
-| Service | Port | Database | Purpose |
-|---------|------|----------|---------|
-| **Auth Service** | 8082 | PostgreSQL, Redis | Authentication, MFA, sessions |
-| **User Service** | 8083 | PostgreSQL | User profiles, KYC, GDPR |
-| **Account Service** | 8084 | PostgreSQL, Redis | Account management, balances |
-| **Payment Service** | 8085 | PostgreSQL, Redis | Transfers, anti-fraud |
-| **Legacy Adapter** | 8086 | None (proxy) | SOAP to REST bridge |
-| **Crypto Service** | 8087 | PostgreSQL, MongoDB, Redis | Cryptocurrency operations |
-| **Notification Service** | 8088 | PostgreSQL | Email, SMS, push notifications |
-| **Analytics Service** | 8089 | PostgreSQL, MongoDB, Redis | Dashboards, alerts |
-| **AI Assistant** | 8090 | MongoDB | ChatGPT/Dialogflow chatbot |
-| **Audit Service** | 8091 | MongoDB | Compliance, audit logs |
+| Service                  | Port | Database                   | Purpose                        |
+| ------------------------ | ---- | -------------------------- | ------------------------------ |
+| **Auth Service**         | 8082 | PostgreSQL, Redis          | Authentication, MFA, sessions  |
+| **User Service**         | 8083 | PostgreSQL                 | User profiles, KYC, GDPR       |
+| **Account Service**      | 8084 | PostgreSQL, Redis          | Account management, balances   |
+| **Payment Service**      | 8085 | PostgreSQL, Redis          | Transfers, anti-fraud          |
+| **Legacy Adapter**       | 8086 | None (proxy)               | SOAP to REST bridge            |
+| **Crypto Service**       | 8087 | PostgreSQL, MongoDB, Redis | Cryptocurrency operations      |
+| **Notification Service** | 8088 | PostgreSQL                 | Email, SMS, push notifications |
+| **Analytics Service**    | 8089 | PostgreSQL, MongoDB, Redis | Dashboards, alerts             |
+| **AI Assistant**         | 8090 | MongoDB                    | ChatGPT/Dialogflow chatbot     |
+| **Audit Service**        | 8091 | MongoDB                    | Compliance, audit logs         |
 
 ## Communication Patterns
 
 ### 1. Synchronous (REST)
+
 - Service-to-service calls via OpenFeign
 - Example: Payment Service → Account Service (balance check)
 
 ### 2. Asynchronous (Kafka)
+
 - Event-driven architecture
 - Example: `transaction.completed` → Notification, Analytics, Audit
 
 ### 3. GraphQL Aggregation
+
 - Multi-service data fetching in single query
 - Example: User + Accounts + Transactions in one request
 
 ### 4. Legacy Integration (SOAP)
+
 - SOAP adapter for legacy banking core
 - Example: Payment validation, balance sync
 
-## Getting Started
-
-### Prerequisites
-
-- **Java 21**
-- **Gradle 9.2.1** (or use wrapper: `./gradlew`)
-- **Node.js 18+** and npm
-- **Docker & Docker Compose**
-- **Nx CLI**: `npm install -g nx` (optional)
-
-### Quick Start
-
-1. **Clone and install**
-   ```bash
-   git clone https://github.com/EBanking-3-0/ebanking-3.0.git
-   cd ebanking-3.0
-   npm install
-   ```
-
-2. **Build all services**
-   ```bash
-   ./gradlew build
-   # or
-   npm run gradle:build
-   ```
-
-3. **Start infrastructure**
-   ```bash
-   docker compose up -d postgres mongodb redis kafka zookeeper keycloak
-   ```
-
-4. **Run services**
-   ```bash
-   # Option 1: Run specific service with Gradle
-   ./gradlew :apps:services:user-service:bootRun
-
-   # Option 2: Start all services with Docker
-   npm run docker:up
-   ```
-
-### Development Commands
-
-#### Nx Commands
-```bash
-npm run build              # Build all projects
-npm run build:affected     # Build only affected projects
-npm run test               # Run all tests
-nx graph                   # View dependency graph
-```
-
-#### Gradle Commands
-```bash
-./gradlew build                                    # Build all services
-./gradlew :apps:services:user-service:build       # Build specific service
-./gradlew :apps:services:user-service:bootRun     # Run specific service
-./gradlew test                                     # Run all tests
-./gradlew clean                                    # Clean build artifacts
-```
-
-#### Docker Commands
-```bash
-npm run docker:up          # Start all services
-npm run docker:down        # Stop all services
-npm run docker:logs        # View logs
-npm run docker:build       # Rebuild images
-```
-
 ## Kafka Event Topics
 
-| Topic | Producer | Consumers | Purpose |
-|-------|----------|-----------|---------|
-| `user.created` | User Service | Notification, Analytics, Audit | New user registration |
-| `account.created` | Account Service | Crypto, Analytics, Audit | New account |
-| `transaction.completed` | Payment Service | Notification, Analytics, Account, Audit | Transaction success |
-| `payment.failed` | Payment Service | Notification, Audit | Payment failure |
-| `fraud.detected` | Payment Service | Notification, Audit | Fraud alert |
-| `crypto.trade.executed` | Crypto Service | Notification, Analytics, Audit | Crypto transaction |
-| `auth.login` | Auth Service | Audit | User login |
-| `notification.sent` | Notification Service | Audit | Notification delivery |
-| `alert.triggered` | Analytics Service | Notification | Budget/threshold alert |
+| Topic                   | Producer             | Consumers                               | Purpose                |
+| ----------------------- | -------------------- | --------------------------------------- | ---------------------- |
+| `user.created`          | User Service         | Notification, Analytics, Audit          | New user registration  |
+| `account.created`       | Account Service      | Crypto, Analytics, Audit                | New account            |
+| `transaction.completed` | Payment Service      | Notification, Analytics, Account, Audit | Transaction success    |
+| `payment.failed`        | Payment Service      | Notification, Audit                     | Payment failure        |
+| `fraud.detected`        | Payment Service      | Notification, Audit                     | Fraud alert            |
+| `crypto.trade.executed` | Crypto Service       | Notification, Analytics, Audit          | Crypto transaction     |
+| `auth.login`            | Auth Service         | Audit                                   | User login             |
+| `notification.sent`     | Notification Service | Audit                                   | Notification delivery  |
+| `alert.triggered`       | Analytics Service    | Notification                            | Budget/threshold alert |
 
 ## Security & Compliance
 
 ### Authentication
+
 - OAuth2/OIDC via Keycloak
 - JWT tokens for stateless auth
 - MFA (SMS + Biometric)
 - RBAC: CLIENT, AGENT, ADMIN roles
 
 ### GDPR Compliance
+
 - Consent management (User Service)
 - Right to erasure workflows
 - Comprehensive audit trails
 - Automated data anonymization
 
 ### Security Features
+
 - TLS/SSL for all communications
 - JWT validation at API Gateway
 - Service-to-service authentication
@@ -554,18 +575,19 @@ npm run docker:build       # Rebuild images
 
 ## Observability Dashboards
 
-| Tool | URL | Credentials |
-|------|-----|-------------|
-| **Eureka Dashboard** | http://localhost:8761 | - |
-| **Grafana** | http://localhost:3000 | admin/admin |
-| **Prometheus** | http://localhost:9090 | - |
-| **Kibana** | http://localhost:5601 | - |
-| **Jaeger** | http://localhost:16686 | - |
-| **Keycloak** | http://localhost:8092 | admin/admin |
+| Tool                 | URL                    | Credentials |
+| -------------------- | ---------------------- | ----------- |
+| **Eureka Dashboard** | http://localhost:8761  | -           |
+| **Grafana**          | http://localhost:3000  | admin/admin |
+| **Prometheus**       | http://localhost:9090  | -           |
+| **Kibana**           | http://localhost:5601  | -           |
+| **Jaeger**           | http://localhost:16686 | -           |
+| **Keycloak**         | http://localhost:8092  | admin/admin |
 
 ## Database Configuration
 
 ### PostgreSQL Schemas
+
 - `auth` - Auth Service
 - `users` - User Service
 - `accounts` - Account Service
@@ -575,6 +597,7 @@ npm run docker:build       # Rebuild images
 - `analytics` - Analytics Service
 
 ### MongoDB Collections
+
 - `crypto_history` - Crypto Service
 - `ai_conversations` - AI Assistant
 - `audit_logs` - Audit Service
@@ -583,11 +606,13 @@ npm run docker:build       # Rebuild images
 ## Deployment
 
 ### Docker Compose (Local)
+
 ```bash
 docker compose up -d
 ```
 
 ### Kubernetes (Production)
+
 ```bash
 # Using Helm
 helm install ebanking ./tools/kubernetes/helm-charts/ebanking
@@ -665,6 +690,7 @@ npm run test:e2e
 ## Support
 
 For issues and questions:
+
 - Create GitHub Issue
 - Check Documentation Wiki
 

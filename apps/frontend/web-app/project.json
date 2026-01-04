@@ -1,0 +1,167 @@
+{
+  "name": "frontend",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/frontend/web-app/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "options": {
+        "outputPath": "dist/apps/frontend/web-app",
+        "index": "apps/frontend/web-app/src/index.html",
+        "browser": "apps/frontend/web-app/src/main.ts",
+        "polyfills": [
+          "zone.js"
+        ],
+        "tsConfig": "apps/frontend/web-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/frontend/web-app/public"
+          }
+        ],
+        "styles": [
+          "apps/frontend/web-app/src/styles.scss"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        },
+        "kubernetes": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
+          "outputHashing": "all"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "frontend:build:production"
+        },
+        "development": {
+          "buildTarget": "frontend:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "frontend:build"
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "cache": true,
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/angular-demo"
+      }
+    },
+    "sonar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx sonarqube-scanner",
+        "cwd": "apps/frontend/web-app"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/sonar-project.properties"
+      ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-frontend:${TAG:-latest} -f apps/frontend/web-app/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-frontend:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-ebanking} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging"
+          },
+          "options": {
+            "commands": [
+              "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-staging} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --set ingress.hosts[0].host=bank-staging.h4k5.net --set ingress.tls[0].hosts[0]=bank-staging.h4k5.net --set env.API_URL=https://bank-api-staging.h4k5.net/graphql --wait"
+            ]
+          }
+        }
+      },
+      "cache": false
+    }
+  }
+}

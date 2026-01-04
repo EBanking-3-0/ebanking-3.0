@@ -1,34 +1,46 @@
 package com.ebanking.account.service;
 
+import com.ebanking.account.model.Account;
+import com.ebanking.account.repository.AccountRepository;
 import com.ebanking.shared.kafka.events.AccountCreatedEvent;
-import com.ebanking.shared.kafka.events.BalanceUpdatedEvent;
 import com.ebanking.shared.kafka.producer.TypedEventProducer;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-
-/**
- * Account service with Kafka event publishing.
- * Publishes account.created and balance.updated events.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final TypedEventProducer eventProducer;
+  private final AccountRepository accountRepository;
+  private final TypedEventProducer eventProducer;
 
-    @Transactional
-    public void createAccount(Long userId, String accountNumber, String accountType, String currency) {
-        // Account creation logic would go here
-        log.info("Creating account: {} for user: {}", accountNumber, userId);
-        
-        // After account is created, publish event
-        AccountCreatedEvent event = AccountCreatedEvent.builder()
-            .accountId(1L) // Would be actual account ID
+  @Transactional
+  public Account createAccount(Long userId, String accountType, String currency, String nickname) {
+    String accountNumber = generateAccountNumber();
+
+    Account account =
+        Account.builder()
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .type(accountType)
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .nickname(nickname)
+            .build();
+
+    Account savedAccount = accountRepository.save(account);
+    log.info("Created account: {} for user: {}", accountNumber, userId);
+
+    AccountCreatedEvent event =
+        AccountCreatedEvent.builder()
+            .accountId(savedAccount.getId())
             .userId(userId)
             .accountNumber(accountNumber)
             .accountType(accountType)
@@ -36,31 +48,23 @@ public class AccountService {
             .initialBalance(BigDecimal.ZERO)
             .source("account-service")
             .build();
-        
-        eventProducer.publishAccountCreated(event);
-        log.info("Published account.created event for account: {}", accountNumber);
-    }
 
-    @Transactional
-    public void updateBalance(Long accountId, String accountNumber, BigDecimal previousBalance, 
-                             BigDecimal newBalance, BigDecimal amount, String operation, String reason) {
-        // Balance update logic would go here
-        log.info("Updating balance for account: {} - Operation: {} - Amount: {}", accountNumber, operation, amount);
-        
-        // After balance is updated, publish event
-        BalanceUpdatedEvent event = BalanceUpdatedEvent.builder()
-            .accountId(accountId)
-            .accountNumber(accountNumber)
-            .previousBalance(previousBalance)
-            .newBalance(newBalance)
-            .amount(amount)
-            .operation(operation)
-            .reason(reason)
-            .source("account-service")
-            .build();
-        
-        eventProducer.publishBalanceUpdated(event);
-        log.info("Published balance.updated event for account: {}", accountNumber);
-    }
+    eventProducer.publishAccountCreated(event);
+
+    return savedAccount;
+  }
+
+  public List<Account> getAccountsByUserId(Long userId) {
+    return accountRepository.findByUserId(userId);
+  }
+
+  public Account getAccountByNumber(String accountNumber) {
+    return accountRepository
+        .findByAccountNumber(accountNumber)
+        .orElseThrow(() -> new RuntimeException("Account not found"));
+  }
+
+  private String generateAccountNumber() {
+    return UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+  }
 }
-

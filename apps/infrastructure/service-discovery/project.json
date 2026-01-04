@@ -1,0 +1,134 @@
+{
+  "name": "service-discovery",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/infrastructure/service-discovery/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:build",
+        "args": [
+          "-x",
+          "test"
+        ]
+      },
+      "configurations": {
+        "production": {},
+        "development": {}
+      },
+      "defaultConfiguration": "development",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "test": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:test"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests",
+        "{projectRoot}/build/test-results"
+      ]
+    },
+    "serve": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:bootRun"
+      },
+      "continuous": true,
+      "configurations": {
+        "production": {
+          "args": [
+            "--args=--spring.profiles.active=prod"
+          ]
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "clean": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:clean"
+      }
+    },
+    "lint": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:spotlessCheck"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ]
+    },
+    "format": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:spotlessApply"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:infrastructure:service-discovery:sonar"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-service-discovery:${TAG:-latest} -f apps/infrastructure/service-discovery/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-service-discovery:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
+    }
+  }
+}

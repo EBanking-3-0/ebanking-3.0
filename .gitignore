@@ -3,70 +3,120 @@
 
 # Log files
 *.log
+logs/
 
 # Package files
 *.jar
 *.war
-*.nar
 *.ear
 *.zip
 *.tar.gz
 *.rar
-*.pdf
 
 # Gradle
-.gradle
+.gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+**/build/ # Catch all build directories in subprojects
+!gradle/wrapper/gradle-wrapper.jar # Keep gradle wrapper
 
-# IDE
+# Maven (if any project ever uses it)
+target/
+pom.xml.tag
+pom.xml.bak
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+release-pom.xml
+
+# IDE - IntelliJ
 .idea/
 *.iws
 *.iml
 *.ipr
+.project/
+.settings/
+.classpath/
+.metadata/
+*.jks # Java Keystore files
+
+# IDE - VSCode
 .vscode/
-*.swp
-*.swo
-*~
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/ # VSCode Local History
 
 # Node
 node_modules/
 dist/
 tmp/
-.nx/cache/
-.angular/
+out-tsc/
+.angular/ # Angular cache/build outputs
+npm-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+.pnpm-store/
 
 # OS
 .DS_Store
 Thumbs.db
+.toolstarget
 
-# Spring Boot
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-# Environment
+# Environment variables
 .env
 .env.local
 .env.*.local
+.env.development
+.env.test
+.env.production
 
 # Database
 *.db
 *.sqlite
+*.mv.db # H2 database files
 
 # Docker
+# Don't ignore Dockerfiles if they are in projects.
+# Ignore generated Docker-related files
+docker-compose.override.yml
+docker-compose.local.yml
 *.pid
-
-# Logs
-logs/
-*.log.*
 
 # Testing
 coverage/
 .nyc_output/
+test-results/ # Gradle test results
 
 # Nx
-.nx/cache
+.nx/cache/
+.nx/workspace-data/
+.angular/cache/21.0.2/frontend
+.nx/workspace-data
+
+
+# Project pdf reqs
+*.pdf
+apps/frontend/web-app/.scannerwork
+
+# terraform
+*/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+_override.tf
+**/*/.terraform/**/*
+
+# helm
+**/charts/*.tgz
+**/charts/
+*.tgz
+*-local.yaml
+*secret*.yaml
+.env
+.helm/

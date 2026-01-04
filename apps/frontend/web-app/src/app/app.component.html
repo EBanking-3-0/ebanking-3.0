@@ -4,7 +4,25 @@
       <h1>🏦 E-Banking 3.0</h1>
       <p>Nx Monorepo Microservices Architecture</p>
     </div>
+    <div class="auth-controls">
+      @if (!isLoggedIn) {
+        <button (click)="login()">Login</button>
+      }
+      @if (isLoggedIn) {
+        <span>Welcome, {{ userProfile?.username }}</span>
+        <button (click)="logout()">Logout</button>
+      }
+    </div>
   </header>
+
+  @if (isLoggedIn) {
+    <nav class="app-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Users</a
+      >
+      <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
+    </nav>
+  }
 
   <main class="app-main">
     <router-outlet></router-outlet>

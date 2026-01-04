@@ -1,0 +1,44 @@
+# values-prod.yaml for graphql-gateway
+replicaCount: 1
+fullnameOverride: graphql-gateway
+
+image:
+  repository: khabirhakim/ebanking-graphql-gateway
+  tag: prod
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8081
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+  hosts:
+    - host: bank-api.h4k5.net
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-api-tls
+      hosts:
+        - bank-api.h4k5.net
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  EUREKA_CLIENT_ENABLED: "false"
+  SPRING_CLOUD_DISCOVERY_ENABLED: "true"
+  SPRING_CLOUD_KUBERNETES_DISCOVERY_ENABLED: "true"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
+  # Internal URL for JWK to avoid hairpinning issues
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
+  LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_KUBERNETES: DEBUG
+  LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_CLIENT_LOADBALANCER: DEBUG
+
+serviceAccount:
+  create: true
+  name: graphql-gateway-microservice

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: microservice
+description: A generic Helm chart for E-Banking microservices
+type: application
+version: 0.1.0
+appVersion: "3.0.0"
+
+dependencies:
+  - name: ebanking-common
+    version: 0.1.0
+    repository: file://../ebanking-common

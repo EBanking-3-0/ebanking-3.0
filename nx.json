@@ -5,6 +5,11 @@
       "cache": true,
       "dependsOn": ["^build"]
     },
+    "@angular/build:application": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
     "test": {
       "cache": true
     },
@@ -14,17 +19,14 @@
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*"],
-    "production": ["!{projectRoot}/**/*.spec.ts", "!{projectRoot}/test/**/*"]
+    "production": [
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/test/**/*",
+      "default",
+      "!{projectRoot}/src/test/**/*"
+    ]
   },
-  "plugins": [
-    {
-      "plugin": "@nx/gradle",
-      "options": {
-        "buildTargetName": "build",
-        "testTargetName": "test"
-      }
-    }
-  ],
+  "plugins": [],
   "affected": {
     "defaultBase": "main"
   }

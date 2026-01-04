@@ -1,0 +1,137 @@
+{
+  "name": "payment-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/services/payment-service/src",
+  "tags": [],
+  "implicitDependencies": [
+    "service-discovery"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:build",
+        "args": [
+          "-x",
+          "test"
+        ]
+      },
+      "configurations": {
+        "production": {},
+        "development": {}
+      },
+      "defaultConfiguration": "development",
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "test": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:test"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests",
+        "{projectRoot}/build/test-results"
+      ]
+    },
+    "serve": {
+      "executor": "@nx/gradle:gradle",
+      "continuous": true,
+      "options": {
+        "taskName": ":apps:services:payment-service:bootRun"
+      },
+      "configurations": {
+        "production": {
+          "args": [
+            "--args=--spring.profiles.active=prod"
+          ]
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "clean": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:clean"
+      }
+    },
+    "lint": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:spotlessCheck"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ]
+    },
+    "format": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:spotlessApply"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/build.gradle",
+        "{projectRoot}/src/**/*.java"
+      ],
+      "outputs": [
+        "{projectRoot}/build/libs"
+      ]
+    },
+    "sonar": {
+      "executor": "@nx/gradle:gradle",
+      "options": {
+        "taskName": ":apps:services:payment-service:sonar"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/build.gradle"
+      ]
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t $DOCKER_USER/ebanking-payment-service:${TAG:-latest} -f apps/services/payment-service/Dockerfile .",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    },
+    "docker-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker push $DOCKER_USER/ebanking-payment-service:${TAG:-latest}",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "docker-build"
+      ],
+      "cache": false
+    }
+  }
+}
