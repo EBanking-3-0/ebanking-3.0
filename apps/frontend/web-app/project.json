@@ -42,6 +42,12 @@
               "maximumError": "8kB"
             }
           ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {
@@ -121,7 +127,10 @@
         "cwd": "."
       },
       "dependsOn": [
-        "build"
+        {
+          "target": "build",
+          "params": "forward"
+        }
       ],
       "cache": false
     },
@@ -144,6 +153,12 @@
         ],
         "cwd": "."
       },
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
       "configurations": {
         "production": {
           "env": {
