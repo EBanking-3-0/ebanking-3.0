@@ -135,6 +135,33 @@
         "docker-build"
       ],
       "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-ebanking} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging"
+          },
+          "options": {
+            "commands": [
+              "helm upgrade --install web-app tools/helm/microservice -n ${DEPLOY_NAMESPACE:-staging} -f tools/helm/microservice/values-prod-web-app.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --set ingress.hosts[0].host=bank-staging.h4k5.net --set ingress.tls[0].hosts[0]=bank-staging.h4k5.net --set env.API_URL=https://bank-api-staging.h4k5.net/graphql --wait"
+            ]
+          }
+        }
+      },
+      "cache": false
     }
   }
 }

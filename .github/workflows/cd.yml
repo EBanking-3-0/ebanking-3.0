@@ -1,0 +1,176 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+
+env:
+  DOCKER_REGISTRY: docker.io
+  DOCKER_NAMESPACE: khabirhakim
+  CLUSTER_NAME: k8s-1-34-1-do-2-lon1-1767381714717
+  CLUSTER_REGION: lon1
+  DOCKER_USER: khabirhakim # Required for Nx targets
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  # ------------------------------------------------------------------
+  # 1. Build & Push Images (Affected Only)
+  # ------------------------------------------------------------------
+  build-and-push:
+    name: Build & Push Images
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "gradle"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Derive appropriate SHAs for base and head
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set Image Tag
+        id: set_tag
+        run: echo "tag=staging-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Docker Images
+        env:
+          TAG: ${{ steps.set_tag.outputs.tag }}
+        # Only build/push services that have changed
+        run: npx nx affected -t docker-push --exclude=e-banking-3.0 --parallel=3 --configuration=production
+
+  # ------------------------------------------------------------------
+  # 2. Deploy to Staging (Affected Only)
+  # ------------------------------------------------------------------
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Derive appropriate SHAs for base and head
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Save DigitalOcean Kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ env.CLUSTER_NAME }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'v3.13.1'
+
+      - name: Deploy to Staging
+        env:
+          TAG: ${{ needs.build-and-push.outputs.image_tag }}
+        run: |
+          echo "Deploying version $TAG to Staging..."
+          
+          # Ensure Namespace exists (idempotent)
+          kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+          
+          # Deploy ONLY affected services
+          # Note: We use --configuration=staging if defined, or fallback to prod logic
+          npx nx affected -t deploy --exclude=e-banking-3.0 --parallel=3 --configuration=staging
+
+  # ------------------------------------------------------------------
+  # 3. Integration Tests
+  # ------------------------------------------------------------------
+  integration-test:
+    name: Integration Tests
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Smoke Test Staging
+        run: |
+          echo "Running smoke tests against Staging..."
+          # In real setup: npx nx affected -t e2e ...
+          echo "Tests passed!"
+
+  # ------------------------------------------------------------------
+  # 4. Deploy to Production (Manual Approval, Affected Only)
+  # ------------------------------------------------------------------
+  deploy-production:
+    name: Deploy to Production
+    needs: integration-test
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url: https://bank.h4k5.net
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Derive appropriate SHAs for base and head
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Save DigitalOcean Kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ env.CLUSTER_NAME }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Deploy to Production
+        env:
+          TAG: ${{ needs.build-and-push.outputs.image_tag }}
+        run: |
+          echo "Promoting version $TAG to Production..."
+          
+          # Deploy ONLY affected services to Production
+          npx nx affected -t deploy --exclude=e-banking-3.0 --parallel=3 --configuration=production

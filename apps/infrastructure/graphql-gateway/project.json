@@ -129,6 +129,33 @@
         "docker-build"
       ],
       "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install graphql-gateway tools/helm/microservice -n ${DEPLOY_NAMESPACE:-ebanking} -f tools/helm/microservice/values-prod-graphql-gateway.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-graphql-gateway --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging"
+          },
+          "options": {
+            "commands": [
+              "helm upgrade --install graphql-gateway tools/helm/microservice -n ${DEPLOY_NAMESPACE:-staging} -f tools/helm/microservice/values-prod-graphql-gateway.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-graphql-gateway --set ingress.hosts[0].host=bank-api-staging.h4k5.net --set ingress.tls[0].hosts[0]=bank-api-staging.h4k5.net --wait"
+            ]
+          }
+        }
+      },
+      "cache": false
     }
   }
 }
