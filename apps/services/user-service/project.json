@@ -150,6 +150,11 @@
         "staging": {
           "env": {
             "DEPLOY_NAMESPACE": "staging"
+          },
+          "options": {
+            "commands": [
+              "helm upgrade --install user-service tools/helm/microservice -n $DEPLOY_NAMESPACE -f tools/helm/microservice/values-prod-user-service.yaml --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-user-service --set env.SPRING_DATASOURCE_URL=jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/ebanking_db --set env.SPRING_KAFKA_BOOTSTRAP_SERVERS=ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092 --set env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs --wait"
+            ]
           }
         }
       },
