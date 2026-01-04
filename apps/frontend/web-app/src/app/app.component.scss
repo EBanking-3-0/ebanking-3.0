@@ -89,14 +89,69 @@
 }
 
 .app-footer {
-  background: white;
-  text-align: center;
-  padding: 1rem;
-  color: #666;
-  font-size: 0.85rem;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  background: #1a1a1a;
+  color: #e0e0e0;
+  padding: 2rem 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
 
-  p {
-    margin: 0;
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .footer-info {
+    h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 1.2rem;
+    }
+    p {
+      margin: 0.2rem 0 0;
+      color: #aaa;
+      font-size: 0.8rem;
+    }
+  }
+
+  .footer-stack {
+    display: flex;
+    gap: 0.5rem;
+
+    .badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+
+      &.angular { background: #dd0031; color: white; }
+      &.graphql { background: #e10098; color: white; }
+      &.spring { background: #6db33f; color: white; }
+      &.kafka { background: #000; color: white; border: 1px solid #444; }
+    }
+  }
+
+  .footer-version {
+    text-align: right;
+    p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .staging-tag {
+      display: inline-block;
+      margin-top: 0.4rem;
+      padding: 0.1rem 0.5rem;
+      background: #f4b400;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.7rem;
+      border-radius: 4px;
+    }
   }
 }
