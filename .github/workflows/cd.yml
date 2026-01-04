@@ -103,6 +103,9 @@ jobs:
         with:
           version: 'v3.13.1'
 
+      - name: Build Helm Dependencies
+        run: helm dependency build tools/helm/microservice
+
       - name: Deploy to Staging
         env:
           TAG: ${{ needs.build-and-push.outputs.image_tag }}
@@ -165,6 +168,9 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4
+
+      - name: Build Helm Dependencies
+        run: helm dependency build tools/helm/microservice
 
       - name: Deploy to Production
         env:
