@@ -39,7 +39,28 @@ The system uses Kubernetes namespaces to isolate environments.
 - **Isolation**: Uses FQDNs to connect to the shared Postgres instance in the `ebanking` namespace.
 - **Resource Limits**: 128Mi Request / 384Mi Limit to ensure co-existence on smaller nodes.
 
-## 4. Database Strategy
+## 4. Monitoring & Alerting
+
+The cluster is monitored using the **Kube-Prometheus-Stack**, providing real-time visibility and proactive incident notification.
+
+### Observability Components
+- **Prometheus**: Aggregates metrics from all microservices via `/actuator/prometheus`.
+- **Grafana**: Dashboarding engine available at `https://monitoring.h4k5.net`.
+- **Alertmanager**: Handles alert deduplication, grouping, and routing to Slack.
+- **Node Exporter**: Collects hardware and OS metrics from DigitalOcean nodes.
+
+### Monitoring Infrastructure
+- **Namespace**: `monitoring`
+- **Auto-Discovery**: Uses Kubernetes `ServiceMonitor` resources to automatically find and scrape new microservices.
+- **Data Source**: Integrated Prometheus instance with pre-configured JVM and Spring Boot dashboards.
+
+### Incident Alerting (Slack)
+Alerts are routed to the `#alerts` channel via a secure Webhook.
+- **Deduplication**: Wait period of 30s to group related failures.
+- **Resolution**: Automatic "Resolved" notifications when services recover.
+- **Verification**: Alerts can be manually tested using the Alertmanager v2 API.
+
+## 5. Database Strategy
 
 ### PostgreSQL
 - **Instance**: Single instance running in the `ebanking` namespace.
