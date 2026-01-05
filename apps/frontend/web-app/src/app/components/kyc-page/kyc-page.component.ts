@@ -51,6 +51,7 @@ export class KycPageComponent implements OnInit {
     private apollo: Apollo,
     private fb: FormBuilder
   ) {
+    console.log('KycPageComponent constructor');
     this.kycForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -67,12 +68,14 @@ export class KycPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('KycPageComponent ngOnInit');
     this.apollo
       .watchQuery<{ me: any }>({
         query: GET_USER_PROFILE,
       })
       .valueChanges
       .subscribe(({ data, loading, error }) => {
+        console.log('watchQuery subscription', { data, loading, error });
         this.loading = loading;
         this.error = error;
 
@@ -84,6 +87,7 @@ export class KycPageComponent implements OnInit {
   }
 
   onFileChange(event: Event, field: 'cinImage' | 'selfieImage'): void {
+    console.log('onFileChange', { event, field });
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
@@ -93,6 +97,7 @@ export class KycPageComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log('onSubmit');
     if (this.kycForm.invalid) {
       this.kycForm.markAllAsTouched();
       return;
@@ -143,6 +148,7 @@ export class KycPageComponent implements OnInit {
         })
       )
       .subscribe((result) => {
+        console.log('mutate subscription', { result });
         if (result?.data?.submitKyc) {
           console.log('KYC submitted successfully:', result.data.submitKyc);
           this.apollo.client.refetchQueries({ include: [GET_USER_PROFILE] });
