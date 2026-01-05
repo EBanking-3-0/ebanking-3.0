@@ -1,21 +1,15 @@
 <div class="app-container">
-  <header class="app-header">
-    <div class="header-content">
-      <h1>🏦 E-Banking 3.0</h1>
-      <p>Nx Monorepo Microservices Architecture</p>
-    </div>
-    <div class="auth-controls">
-      @if (!isLoggedIn) {
-        <button (click)="login()">Login</button>
-      }
-      @if (isLoggedIn) {
-        <span>Welcome, {{ userProfile?.username }}</span>
-        <button (click)="logout()">Logout</button>
-      }
-    </div>
-  </header>
-
   @if (isLoggedIn) {
+    <header class="app-header">
+      <div class="header-content">
+        <h1>🏦 E-Banking <span>3.0</span></h1>
+        <div class="auth-controls">
+          <span>Welcome, {{ userProfile?.username }}</span>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </header>
+
     <nav class="app-nav">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
         >Users</a
