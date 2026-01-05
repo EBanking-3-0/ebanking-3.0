@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +27,15 @@ public class ActionController {
   private final ActionExecutorService actionExecutorService;
 
   @PostMapping("/execute")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Map<String, Object>> executeAction(
       @Valid @RequestBody ActionRequest request, Authentication authentication) {
 
     Long userId = extractUserId(authentication);
-    if (userId == null) {
-      userId = request.getUserId(); // Fallback to request userId
-    }
 
     if (userId == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("error", "User ID is required"));
+          .body(Map.of("error", "Authenticated user required"));
     }
 
     try {

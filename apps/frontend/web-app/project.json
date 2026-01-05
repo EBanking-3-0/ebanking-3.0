@@ -12,9 +12,7 @@
         "outputPath": "dist/apps/frontend/web-app",
         "index": "apps/frontend/web-app/src/index.html",
         "browser": "apps/frontend/web-app/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/frontend/web-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -23,9 +21,7 @@
             "input": "apps/frontend/web-app/public"
           }
         ],
-        "styles": [
-          "apps/frontend/web-app/src/styles.scss"
-        ],
+        "styles": ["apps/frontend/web-app/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -100,9 +96,7 @@
     "test": {
       "executor": "@nx/vitest:test",
       "cache": true,
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/apps/angular-demo"
       }
@@ -114,11 +108,7 @@
         "cwd": "apps/frontend/web-app"
       },
       "cache": true,
-      "inputs": [
-        "default",
-        "{projectRoot}/src/**/*",
-        "{projectRoot}/sonar-project.properties"
-      ]
+      "inputs": ["default", "{projectRoot}/src/**/*", "{projectRoot}/sonar-project.properties"]
     },
     "docker-build": {
       "executor": "nx:run-commands",
@@ -140,9 +130,7 @@
         "command": "docker push $DOCKER_USER/ebanking-frontend:${TAG:-latest}",
         "cwd": "."
       },
-      "dependsOn": [
-        "docker-build"
-      ],
+      "dependsOn": ["docker-build"],
       "cache": false
     },
     "deploy": {
