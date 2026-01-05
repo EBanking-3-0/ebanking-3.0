@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class DebitRequest {
   private BigDecimal amount;
+  private String currency;
   private String transactionId;
   private String idempotencyKey;
   private String description;
