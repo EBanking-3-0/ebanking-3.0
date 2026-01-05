@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'org.sonarqube'
 }
 
 description = 'User Service - User Profiles and KYC'
@@ -60,4 +61,16 @@ dependencies {
 
 bootJar {
     archiveFileName = 'user-service.jar'
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "ebanking-user-service"
+    property "sonar.organization", "ebanking-3-0"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
+tasks.named("sonar") {
+    dependsOn test
 }
