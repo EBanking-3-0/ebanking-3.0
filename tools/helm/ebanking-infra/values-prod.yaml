@@ -12,6 +12,9 @@ kafka:
     storageClass: do-block-storage
 
 keycloakx:
+  image:
+    repository: khabirhakim/ebanking-keycloak
+    tag: prod
   resources:
     requests:
       cpu: 100m
