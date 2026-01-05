@@ -1,76 +1,41 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
-  provideKeycloak,
-  includeBearerTokenInterceptor,
-  createInterceptorCondition,
-  IncludeBearerTokenCondition,
-  withAutoRefreshToken,
-  AutoRefreshTokenService,
-  UserActivityService,
-  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,   // ← import this token!
-} from 'keycloak-angular';
+  APP_INITIALIZER,
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/core';
 import { inject } from '@angular/core';
+import { KeycloakService, KeycloakBearerInterceptor } from 'keycloak-angular';
 
 import { routes } from './app.routes';
+import { initializeKeycloak } from './core/auth/keycloak-init.factory';
 import { environment } from '../environments/environment';
-
-// 1. Create your condition(s) — here: add token only to requests going to your backend
-const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^http:\/\/localhost:8081(\/.*)?$/i,   // adjust if needed (your GraphQL endpoint)
-  // Optional: you can also filter by http methods, e.g.:
-  // methods: ['POST', 'GET', 'PUT'],
-});
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-
-    // Add the interceptor globally
-    provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
-
-    // Keycloak setup (no bearer config here!)
-    provideKeycloak({
-      config: {
-        url: environment.keycloak.url,
-        realm: environment.keycloak.realm,
-        clientId: environment.keycloak.clientId,
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-        checkLoginIframe: false,               // ← Already good, keep it
-        silentCheckSsoFallback: true,          // ← CRITICAL: allow fallback to visible check-sso (redirect) on silent failure
-        pkceMethod: 'S256',                    // ← Good security practice
-        enableLogging: true,                   // ← ADD THIS → shows detailed Keycloak logs in console
-      },
-      features: [
-        withAutoRefreshToken({
-          onInactivityTimeout: 'logout',
-          sessionTimeout: 60000,
-        }),
-      ],
-    }),
-
-    // Required for auto-refresh
-    AutoRefreshTokenService,
-    UserActivityService,
-
-    // 2. This is where you define WHEN to add the Bearer token!
+    provideHttpClient(withInterceptorsFromDi()),
     {
-      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [backendCondition],   // can be multiple conditions
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
     },
-
+    KeycloakService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: KeycloakBearerInterceptor,
+      multi: true,
+    },
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {
-        link: httpLink.create({ uri: 'http://localhost:8081/graphql' }),
+        link: httpLink.create({ uri: environment.apiUrl }),
         cache: new InMemoryCache(),
       };
     }),

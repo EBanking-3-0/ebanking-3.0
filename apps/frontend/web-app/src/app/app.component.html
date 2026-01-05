@@ -1,28 +1,19 @@
 <div class="app-container">
-  <header class="app-header">
-    <div class="header-content">
-      <h1>🏦 E-Banking 3.0</h1>
-      <p>Nx Monorepo Microservices Architecture</p>
-    </div>
+  @if (isLoggedIn) {
+    <header class="app-header">
+      <div class="header-content">
+        <h1>🏦 E-Banking <span>3.0</span></h1>
+        <div class="auth-controls">
+          <span>Welcome, {{ userProfile?.username }}</span>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </header>
 
-    <div class="auth-controls">
-      @if (!isLoggedIn()) {
-        <button (click)="login()">Login / Register</button>
-      } @else {
-        @if (userProfile(); as profile) {
-          <div class="user-info">
-            <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
-            <span>({{ profile.email }})</span>
-          </div>
-        }
-        <button (click)="logout()">Logout</button>
-      }
-    </div>
-  </header>
-
-  @if (isLoggedIn()) {
     <nav class="app-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Users</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Users</a
+      >
       <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
     </nav>
   }
@@ -32,6 +23,51 @@
   </main>
 
   <footer class="app-footer">
-    <p>Built with Angular 19+ + GraphQL + Spring Boot + Kafka</p>
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo-wrapper">
+            <span class="logo-icon">🏦</span>
+            <h3>E-Banking <span>3.0</span></h3>
+          </div>
+          <p>The next generation of microservices-based digital banking. Secure, scalable, and resilient.</p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="link-group">
+            <h4>Platform</h4>
+            <a href="#">Dashboard</a>
+            <a href="#">Analytics</a>
+            <a href="#">Security</a>
+          </div>
+          <div class="link-group">
+            <h4>Resources</h4>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+            <a href="#">Status</a>
+          </div>
+        </div>
+
+        <div class="footer-stack-section">
+          <h4>Powered By</h4>
+          <div class="footer-stack">
+            <span class="badge angular" title="Angular 19">Angular</span>
+            <span class="badge graphql" title="GraphQL">GraphQL</span>
+            <span class="badge spring" title="Spring Boot">Spring</span>
+            <span class="badge kafka" title="Apache Kafka">Kafka</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          <p>&copy; 2026 E-Banking v3.0.8. Built with ⚡ in Nx.</p>
+        </div>
+        <div class="footer-status">
+          <span class="status-indicator"></span>
+          <span class="staging-tag">STAGING CLUSTER ACTIVE</span>
+        </div>
+      </div>
+    </div>
   </footer>
 </div>

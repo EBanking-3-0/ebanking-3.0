@@ -1,67 +1,36 @@
-import { Component, inject, signal, effect } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import Keycloak from 'keycloak-js';
-import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';  // ← Add this import!
+import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
-  selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive],
+  imports: [RouterModule],
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  private keycloak = inject(Keycloak);
-  private eventSignal = inject(KEYCLOAK_EVENT_SIGNAL);  // ← This is crucial!
+export class AppComponent implements OnInit {
+  isLoggedIn = false;
+  userProfile: KeycloakProfile | null = null;
 
-  title = 'E-Banking 3.0';
-  isLoggedIn = signal(false);
-  userProfile = signal<{
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    username?: string;
-  } | null>(null);
+  constructor(
+    private readonly keycloak: KeycloakService,
+    private readonly router: Router
+  ) {}
 
-  constructor() {
-    // React to Keycloak events (especially 'Ready' after redirect/login)
-    effect(() => {
-      const event = this.eventSignal();
-      console.log('Keycloak event received:', event?.type);  // Debug – should show 'Ready' after login
+  async ngOnInit() {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
 
-      if (event?.type === KeycloakEventType.Ready) {
-        console.log('Keycloak READY! Checking auth status...');
-        this.updateAuthState();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+      if (this.router.url === '/welcome') {
+        this.router.navigate(['/']);
       }
-
-      // Optional: handle logout event if needed
-      if (event?.type === KeycloakEventType.AuthLogout) {
-        this.isLoggedIn.set(false);
-        this.userProfile.set(null);
-      }
-    });
-
-    // Very important: also run the check immediately (covers initial load cases)
-    setTimeout(() => this.updateAuthState(), 300);  // small delay to let init finish
-  }
-
-  private updateAuthState() {
-    const authenticated = this.keycloak.authenticated;
-    console.log('Auth status check → authenticated:', authenticated);  // Debug
-
-    this.isLoggedIn.set(authenticated);
-
-    if (authenticated) {
-      const parsed = this.keycloak.idTokenParsed;
-      this.userProfile.set({
-        username: parsed?.["preferred_username"],
-        email: parsed?.["email"],
-        firstName: parsed?.["given_name"],
-        lastName: parsed?.["family_name"],
-      });
     } else {
-      this.userProfile.set(null);
+      if (this.router.url === '/') {
+        this.router.navigate(['/welcome']);
+      }
     }
   }
 
@@ -70,6 +39,6 @@ export class AppComponent {
   }
 
   logout() {
-    this.keycloak.logout();
+    this.keycloak.logout(window.location.origin);
   }
 }
