@@ -24,8 +24,18 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = await this.keycloak.isLoggedIn();
 
       if (this.isLoggedIn) {
-        this.userProfile = await this.keycloak.loadUserProfile();
-        if (this.router.url === '/welcome') {
+        // Use local token data to avoid extra network calls to Keycloak APIs
+        const tokenParsed = this.keycloak.getKeycloakInstance().idTokenParsed as any;
+        if (tokenParsed) {
+          this.userProfile = {
+            username: tokenParsed.preferred_username,
+            email: tokenParsed.email,
+            firstName: tokenParsed.given_name,
+            lastName: tokenParsed.family_name,
+          };
+        }
+
+        if (this.router.url === '/welcome' || this.router.url === '/welcome/') {
           this.router.navigate(['/']);
         }
       } else {
@@ -34,11 +44,9 @@ export class AppComponent implements OnInit {
         }
       }
     } catch (error) {
-      console.warn('Silent SSO check failed or user not logged in:', error);
+      console.warn('Authentication check failed:', error);
       this.isLoggedIn = false;
-      if (this.router.url === '/') {
-        this.router.navigate(['/welcome']);
-      }
+      this.router.navigate(['/welcome']);
     }
   }
 
