@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to E-Banking</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .content h2 {
+        color: #667eea;
+        font-size: 22px;
+        margin-top: 0;
+      }
+      .content p {
+        font-size: 16px;
+        color: #555555;
+        margin: 15px 0;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 30px;
+        margin: 20px 0;
+        background-color: #667eea;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #5568d3;
+      }
+      .features {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+      .features ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .features li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+      }
+      .features li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+      }
+      .footer {
+        background-color: #f4f4f4;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 14px;
+        color: #888888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to E-Banking!</h1>
+      </div>
+
+      <div class="content">
+        <h2>Hello <span th:text="${firstName}">User</span>!</h2>
+
+        <p>
+          Welcome to E-Banking Platform. We're thrilled to have you on board!
+          Your account has been successfully created.
+        </p>
+
+        <p>
+          With E-Banking, you can manage your finances with ease, make
+          transactions securely, and stay on top of your financial goals.
+        </p>
+
+        <div class="features">
+          <strong>Here's what you can do:</strong>
+          <ul>
+            <li>View your account balance and transaction history</li>
+            <li>Transfer money securely</li>
+            <li>Pay bills and manage payments</li>
+            <li>Set up alerts and notifications</li>
+            <li>Access your account 24/7 from anywhere</li>
+            <li>Chat with our AI assistant for help</li>
+          </ul>
+        </div>
+
+        <p style="text-align: center;">
+          <a href="https://ebanking.com/login" class="button">Get Started</a>
+        </p>
+
+        <p>
+          If you have any questions, our support team is always here to help.
+        </p>
+
+        <p>
+          Best regards,<br />
+          <strong>The E-Banking Team</strong>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          This email was sent to <span th:text="${email}">user@example.com</span>
+        </p>
+        <p>
+          &copy; 2026 E-Banking Platform. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

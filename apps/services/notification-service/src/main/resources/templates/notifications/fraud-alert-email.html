@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚠️ URGENT: Security Alert</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        color: #ffffff;
+        padding: 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      .alert-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+      .content {
+        padding: 30px;
+      }
+      .alert-box {
+        background-color: #fff3cd;
+        border-left: 4px solid #ff6a00;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+      .alert-box strong {
+        color: #ee0979;
+        font-size: 18px;
+      }
+      .fraud-details {
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+      .fraud-details table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .fraud-details td {
+        padding: 8px 0;
+        font-size: 15px;
+      }
+      .fraud-details td:first-child {
+        color: #666666;
+        font-weight: 500;
+      }
+      .fraud-details td:last-child {
+        text-align: right;
+        font-weight: 600;
+      }
+      .severity {
+        display: inline-block;
+        padding: 5px 15px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 30px;
+        margin: 20px 0;
+        background-color: #ee0979;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #d6006d;
+      }
+      .footer {
+        background-color: #f4f4f4;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 14px;
+        color: #888888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="alert-icon">⚠️</div>
+        <h1>URGENT: Suspicious Activity Detected</h1>
+      </div>
+
+      <div class="content">
+        <p>Hello <span th:text="${firstName}">User</span>,</p>
+
+        <div class="alert-box">
+          <strong>Potential fraud has been detected on your account!</strong>
+          <p th:text="${description}">
+            We've detected suspicious activity that requires your immediate
+            attention.
+          </p>
+        </div>
+
+        <div class="fraud-details">
+          <table>
+            <tr>
+              <td>Transaction ID:</td>
+              <td th:text="${transactionId}">TXN-99999</td>
+            </tr>
+            <tr>
+              <td>Amount:</td>
+              <td th:text="${amount}">$5,000.00</td>
+            </tr>
+            <tr>
+              <td>Fraud Type:</td>
+              <td th:text="${fraudType}">SUSPICIOUS_AMOUNT</td>
+            </tr>
+            <tr>
+              <td>Severity:</td>
+              <td>
+                <span class="severity" th:text="${severity}">HIGH</span>
+              </td>
+            </tr>
+            <tr>
+              <td>Account ID:</td>
+              <td th:text="${accountId}">ACC-1234</td>
+            </tr>
+          </table>
+        </div>
+
+        <p><strong>What should you do?</strong></p>
+        <ul>
+          <li>Review the transaction details above</li>
+          <li>If you recognize this activity, no action is needed</li>
+          <li>If you don't recognize this, secure your account immediately</li>
+          <li>Contact our security team if you need assistance</li>
+        </ul>
+
+        <p style="text-align: center;">
+          <a href="https://ebanking.com/security" class="button"
+            >Secure My Account</a
+          >
+        </p>
+
+        <p>
+          <strong>Important:</strong> Never share your password, PIN, or OTP
+          with anyone, including bank staff.
+        </p>
+
+        <p>
+          Stay safe,<br />
+          <strong>E-Banking Security Team</strong>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          This is an automated security alert. Please do not reply to this
+          email.
+        </p>
+        <p>&copy; 2026 E-Banking Platform. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

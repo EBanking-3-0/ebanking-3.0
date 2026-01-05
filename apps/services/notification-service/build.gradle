@@ -17,6 +17,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     
+    // MapStruct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    
     // Shared libraries
     implementation project(':libs:shared:common')
     implementation project(':libs:shared:kafka-events')
@@ -29,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // Spring Cloud
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -58,6 +63,10 @@ dependencies {
 
 bootJar {
     archiveFileName = 'notification-service.jar'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 apply plugin: "org.sonarqube"

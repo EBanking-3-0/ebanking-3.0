@@ -1,5 +1,126 @@
 # Notification Service
 
+A comprehensive, production-ready microservice for managing multi-channel notifications in the E-Banking platform. Implements the Strategy pattern for extensible notification delivery through Email, In-App, SMS, and Push channels.
+
+## 📚 Documentation
+
+- **[SERVICE_COMMUNICATION.md](SERVICE_COMMUNICATION.md)** - In-depth guide on RestTemplate service-to-service communication, resilience patterns, and configuration
+- **[FIXES_SUMMARY.md](FIXES_SUMMARY.md)** - Detailed summary of all issues fixed and architectural improvements
+
+## 🎯 Features
+
+### Core Capabilities
+
+- **Multi-Channel Notifications**: Email, In-App, SMS, and Push (extensible)
+- **Event-Driven Architecture**: Kafka consumers for real-time event processing
+- **User Preferences**: Granular control over notification channels per notification type
+- **Template Engine**: Thymeleaf-based HTML email templates with variable substitution
+- **Automatic Retry**: Intelligent retry mechanism for failed notifications
+- **Notification History**: Complete audit trail of all notifications sent
+- **RESTful API**: Comprehensive endpoints for notification management
+- **Strategy Pattern**: Clean, maintainable code with pluggable notification strategies
+
+### Technical Features
+
+- Spring Boot 3.x with Java 17+
+- PostgreSQL for data persistence
+- Apache Kafka for event streaming
+- Thymeleaf for template rendering
+- JavaMailSender for email delivery
+- Twilio integration for SMS (optional)
+- Service Discovery with Eureka
+- Metrics with Prometheus
+- OAuth2 Resource Server
+
+## 📐 Architecture
+
+### Strategy Pattern Implementation
+
+```
+NotificationStrategy (interface)
+├── EmailNotificationStrategy
+├── InAppNotificationStrategy
+├── SmsNotificationStrategy
+└── PushNotificationStrategy (placeholder)
+```
+
+Each strategy implements channel-specific logic for sending notifications, making it easy to add new channels without modifying existing code.
+
+### Event Processing Flow
+
+```
+Kafka Events → NotificationConsumer → NotificationService →
+StrategyFactory → Specific Strategy → Notification Sent
+```
+
+### Database Schema
+
+- **notifications**: Stores all notifications with full audit trail
+- **notification_preferences**: User preferences per notification type and channel
+- **notification_templates**: Custom templates (optional, falls back to file templates)
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Java 17 or higher
+- PostgreSQL 16+
+- Apache Kafka 4.x
+- (Optional) Twilio account for SMS
+- (Optional) Gmail account for email testing
+
+### Configuration
+
+#### 1. Database Setup
+
+The service will automatically create the `notifications` schema. Ensure your PostgreSQL instance is running.
+
+#### 2. Environment Variables
+
+Create a `.env` file:
+
+```env
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_DB=ebanking
+POSTGRES_USER=ebanking
+POSTGRES_PASSWORD=ebanking123
+
+# Email
+EMAIL_USERNAME=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM=noreply@ebanking.com
+
+# SMS (Optional)
+TWILIO_ENABLED=false
+TWILIO_ACCOUNT_SID=your-sid
+TWILIO_AUTH_TOKEN=your-token
+TWILIO_PHONE_NUMBER=+1234567890
+```
+
+### Running the Service
+
+```bash
+# From project root
+./gradlew :apps:services:notification-service:bootRun
+```
+
+## 📡 API Documentation
+
+Complete API documentation available in the README file.
+
+## 🔔 Supported Notification Types
+
+- WELCOME, TRANSACTION, FRAUD_ALERT, ALERT, ACCOUNT_CREATED, PAYMENT_FAILED, LOGIN, MFA, CRYPTO_TRADE, SYSTEM, CUSTOM
+
+## 🧪 Testing
+
+Test endpoints available at `/api/notifications/test/*`
+
+---
+
+**Built with ❤️ by the E-Banking Team**
+
 ## Overview
 
 Notification service handling email, SMS, and push notifications with template support, user preferences, and comprehensive event-driven architecture.
@@ -126,6 +247,7 @@ notification:
 ```
 
 **Available Templates:**
+
 - `welcome-email.html` - Welcome email for new users
 - `transaction-email.html` - Transaction confirmation
 - `fraud-alert-email.html` - Fraud detection alert

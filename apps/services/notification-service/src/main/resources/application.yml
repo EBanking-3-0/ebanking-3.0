@@ -1,0 +1,139 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ebanking}
+    username: ${POSTGRES_USER:ebanking}
+    password: ${POSTGRES_PASSWORD:ebanking123}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: notifications
+        format_sql: true
+    show-sql: false
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: ${spring.application.name}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: false
+    listener:
+      ack-mode: manual
+  mail:
+    host: ${EMAIL_HOST:smtp.gmail.com}
+    port: ${EMAIL_PORT:587}
+    username: ${EMAIL_USERNAME:your-email@gmail.com}
+    password: ${EMAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
+
+# Service discovery URLs (use Eureka service names for production)
+user-service:
+  base-url: ${USER_SERVICE_URL:http://user-service:8085}
+
+account-service:
+  base-url: ${ACCOUNT_SERVICE_URL:http://account-service:8081}
+
+payment-service:
+  base-url: ${PAYMENT_SERVICE_URL:http://payment-service:8082}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Notification Service Configuration
+notification:
+  email:
+    enabled: ${EMAIL_ENABLED:true}
+    from-address: ${EMAIL_FROM:noreply@ebanking.com}
+    from-name: ${EMAIL_FROM_NAME:E-Banking Platform}
+
+  twilio:
+    enabled: ${TWILIO_ENABLED:false}
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    phone-number: ${TWILIO_PHONE_NUMBER:}
+
+  push:
+    enabled: ${PUSH_ENABLED:false}
+
+  template:
+    base-path: notifications/
+    default-locale: en
+    cache-enabled: true
+    max-retries: 3
+    retry-delay-millis: 5000
+    retry-enabled: true
+    retry-hours-back: 24
+
+  retry:
+    interval: 900000 # 15 minutes in milliseconds
+
+  cleanup:
+    cron: "0 0 0 * * ?" # Daily at midnight
+    days-old: 90
+
+# Service URLs
+services:
+  user-service:
+    url: ${USER_SERVICE_URL:http://user-service}
+
+# Logging
+logging:
+  level:
+    com.ebanking.notification: INFO
+    org.springframework.kafka: WARN
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
