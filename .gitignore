@@ -43,6 +43,8 @@ release-pom.xml
 bin/
 **/bin/
 
+rapport/
+
 # IDE - VSCode
 .vscode/
 !.vscode/settings.json
