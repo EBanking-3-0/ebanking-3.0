@@ -19,5 +19,6 @@ public class AccountDTO {
   private String currency;
   private String type;
   private String status;
+  private String nickname;
   private LocalDateTime createdAt;
 }

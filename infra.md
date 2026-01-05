@@ -13,7 +13,6 @@ minikube status
 ```
 
 ## if you have a fresh minikube
-
 If you have a fresh minikube, you can just start it.
 
 ```bash

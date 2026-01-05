@@ -1,0 +1,39 @@
+# values.yaml for web-app
+replicaCount: 1
+fullnameOverride: web-app
+
+image:
+  repository: ebanking/frontend
+  tag: local
+  pullPolicy: Never # Use local image from Minikube
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+  hosts:
+    - host: ebanking.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-frontend-tls
+      hosts:
+        - ebanking.local
+
+env:
+
+  API_URL: "https://api.ebanking.local/graphql"
+  KEYCLOAK_URL: "https://auth.ebanking.local"
+  KEYCLOAK_REALM: "ebanking-realm"
+  KEYCLOAK_CLIENT_ID: "ebanking-client"
+
+serviceAccount:
+  create: true
+  name: frontend-web-app-microservice

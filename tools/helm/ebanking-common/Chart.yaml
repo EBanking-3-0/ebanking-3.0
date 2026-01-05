@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ebanking-common
+description: A Library Chart for E-Banking reusable templates
+type: library
+version: 0.1.0
+appVersion: "3.0.0"

@@ -1,0 +1,37 @@
+# values.yaml for graphql-gateway
+replicaCount: 1
+fullnameOverride: graphql-gateway
+
+image:
+  repository: ebanking/graphql-gateway
+  tag: local
+  pullPolicy: Never # Use local image from Minikube
+
+service:
+  type: ClusterIP
+  port: 80 # External port for the service
+  targetPort: 8081 # Internal port of the graphql-gateway application
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+  hosts:
+    - host: api.ebanking.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-api-tls
+      hosts:
+        - api.ebanking.local
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes # Activate Kubernetes profile if available
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+
+serviceAccount:
+  create: true

@@ -1,0 +1,115 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: ebanking-3.0
+
+build:
+  local:
+    push: false
+    concurrency: 1 # Build sequentially to save memory
+  artifacts:
+    # --- Infrastructure ---
+    - image: ebanking/graphql-gateway
+      context: .
+      docker:
+        dockerfile: apps/infrastructure/graphql-gateway/Dockerfile
+      hooks:
+        before:
+          - command: ["./gradlew", ":apps:infrastructure:graphql-gateway:bootJar"]
+      sync:
+        manual:
+          - src: 'apps/infrastructure/graphql-gateway/src/main/resources/**/*'
+            dest: '/app/resources'
+
+    # --- Core Services ---
+    - image: ebanking/user-service
+      context: .
+      docker:
+        dockerfile: apps/services/user-service/Dockerfile
+      hooks:
+        before:
+          - command: ["./gradlew", ":apps:services:user-service:bootJar"]
+
+    - image: ebanking/account-service
+      context: .
+      docker:
+        dockerfile: apps/services/account-service/Dockerfile
+      hooks:
+        before:
+          - command: ["./gradlew", ":apps:services:account-service:bootJar"]
+
+    - image: ebanking/auth-service
+      context: .
+      docker:
+        dockerfile: apps/services/auth-service/Dockerfile
+      hooks:
+        before:
+          - command: ["./gradlew", ":apps:services:auth-service:bootJar"]
+
+    # --- Frontend ---
+    - image: ebanking/frontend
+      context: .
+      docker:
+        dockerfile: apps/frontend/web-app/Dockerfile
+      hooks:
+        before:
+          - command: ["npx", "nx", "build", "frontend", "--configuration=kubernetes"]
+      sync:
+        manual:
+          - src: 'apps/frontend/web-app/src/**/*'
+            dest: '/app/src'
+
+deploy:
+  helm:
+    releases:
+      - name: graphql-gateway
+        namespace: ebanking
+        chartPath: tools/helm/microservice
+        valuesFiles:
+          - tools/helm/microservice/values-graphql-gateway.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_NO_TAG}}"
+          image.tag: "{{.IMAGE_TAG}}"
+          image.pullPolicy: IfNotPresent
+
+      - name: user-service
+        namespace: ebanking
+        chartPath: tools/helm/microservice
+        valuesFiles:
+          - tools/helm/microservice/values-user-service.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_NO_TAG}}"
+          image.tag: "{{.IMAGE_TAG}}"
+          image.pullPolicy: IfNotPresent
+
+      - name: account-service
+        namespace: ebanking
+        chartPath: tools/helm/microservice
+        valuesFiles:
+          - tools/helm/microservice/values-account-service.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_NO_TAG}}"
+          image.tag: "{{.IMAGE_TAG}}"
+          image.pullPolicy: IfNotPresent
+
+      - name: auth-service
+        namespace: ebanking
+        chartPath: tools/helm/microservice
+        valuesFiles:
+          - tools/helm/microservice/values-auth-service.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_NO_TAG}}"
+          image.tag: "{{.IMAGE_TAG}}"
+          image.pullPolicy: IfNotPresent
+
+      - name: web-app
+        namespace: ebanking
+        chartPath: tools/helm/microservice
+        valuesFiles:
+          - tools/helm/microservice/values-web-app.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_NO_TAG}}"
+          image.tag: "{{.IMAGE_TAG}}"
+          image.pullPolicy: IfNotPresent
+  logs:
+    prefix: container

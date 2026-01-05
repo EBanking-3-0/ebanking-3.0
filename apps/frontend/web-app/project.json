@@ -38,12 +38,39 @@
               "maximumError": "8kB"
             }
           ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+        "kubernetes": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
+          "outputHashing": "all"
         }
       },
       "defaultConfiguration": "production"
@@ -89,7 +116,12 @@
         "command": "docker build -t $DOCKER_USER/ebanking-frontend:${TAG:-latest} -f apps/frontend/web-app/Dockerfile .",
         "cwd": "."
       },
-      "dependsOn": ["build"],
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
       "cache": false
     },
     "docker-push": {
@@ -99,6 +131,36 @@
         "cwd": "."
       },
       "dependsOn": ["docker-build"],
+      "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install web-app tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --wait"
+        ],
+        "cwd": "."
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward"
+        }
+      ],
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking",
+            "VALUES_FILE": "tools/helm/microservice/values-prod-web-app.yaml"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging",
+            "VALUES_FILE": "tools/helm/microservice/values-staging-web-app.yaml"
+          }
+        }
+      },
       "cache": false
     }
   }
