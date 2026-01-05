@@ -20,6 +20,9 @@ public class KafkaProducerConfig {
   @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
   private String bootstrapServers;
 
+  @Value("${spring.kafka.producer.compression-type:none}")
+  private String compressionType;
+
   @Bean
   public ProducerFactory<String, BaseEvent> producerFactory() {
     Map<String, Object> configProps = new HashMap<>();
@@ -36,7 +39,7 @@ public class KafkaProducerConfig {
     // Performance settings
     configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
     configProps.put(ProducerConfig.LINGER_MS_CONFIG, 5);
-    configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+    configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, compressionType);
 
     // JSON Serializer configuration
     configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);

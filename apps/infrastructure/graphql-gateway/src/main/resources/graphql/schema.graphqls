@@ -38,6 +38,7 @@ type Account {
   currency: String!
   type: String!
   status: String!
+  nickname: String
   createdAt: String
 }
 
@@ -58,6 +59,7 @@ input CreateAccountInput {
   userId: ID!
   type: String!
   currency: String!
+  nickname: String
 }
 
 # AI Assistant Types

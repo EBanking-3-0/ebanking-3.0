@@ -2,7 +2,7 @@
 
 FROM eclipse-temurin:21-jre-alpine AS builder
 WORKDIR /builder
-ARG JAR_FILE=apps/services/ai-assistant-service/build/libs/*.jar
+ARG JAR_FILE=apps/services/ai-assistant-service/build/libs/ai-assistant-service.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 

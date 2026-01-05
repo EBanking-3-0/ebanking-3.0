@@ -31,7 +31,8 @@ public class AccountController {
     // needed.
 
     Account account =
-        accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
+        accountService.createAccount(
+            request.getUserId(), request.getType(), request.getCurrency(), request.getNickname());
     return ResponseEntity.ok(mapToDTO(account));
   }
 
@@ -54,6 +55,7 @@ public class AccountController {
         .currency(account.getCurrency())
         .type(account.getType())
         .status(account.getStatus())
+        .nickname(account.getNickname())
         .createdAt(account.getCreatedAt())
         .build();
   }
