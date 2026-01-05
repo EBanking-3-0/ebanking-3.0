@@ -1,33 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
-import { CommonModule } from '@angular/common';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
+  standalone: true,
+  imports: [RouterModule],
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  standalone: true,
 })
 export class AppComponent implements OnInit {
-  title = 'E-Banking 3.0';
   isLoggedIn = false;
-  userProfile: any | null = null;
+  userProfile: KeycloakProfile | null = null;
 
-  constructor(private keycloak: KeycloakService) {}
+  constructor(
+    private readonly keycloak: KeycloakService,
+    private readonly router: Router
+  ) {}
 
   async ngOnInit() {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
+
     if (this.isLoggedIn) {
-      // Use idTokenParsed to get user details without an extra network call
-      const tokenParsed = this.keycloak.getKeycloakInstance().idTokenParsed;
-      this.userProfile = {
-        username: tokenParsed?.['preferred_username'],
-        email: tokenParsed?.['email'],
-        firstName: tokenParsed?.['given_name'],
-        lastName: tokenParsed?.['family_name'],
-      };
+      this.userProfile = await this.keycloak.loadUserProfile();
+      if (this.router.url === '/welcome') {
+        this.router.navigate(['/']);
+      }
+    } else {
+      if (this.router.url === '/') {
+        this.router.navigate(['/welcome']);
+      }
     }
   }
 
@@ -36,6 +39,6 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.keycloak.logout();
+    this.keycloak.logout(window.location.origin);
   }
 }
