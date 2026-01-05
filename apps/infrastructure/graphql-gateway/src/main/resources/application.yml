@@ -16,9 +16,11 @@ spring:
       path: /graphiql
     path: /graphql
     cors:
-      allowed-origins: "*"
+      allowed-origins: "http://localhost:4200"
       allowed-methods: "*"
       allowed-headers: "*"
+      allow-credentials: true
+
 
 eureka:
   client:

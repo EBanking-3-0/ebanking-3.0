@@ -16,9 +16,7 @@ public interface UserClient {
   @GetMapping("api/v1/users/me")
   UserProfileResponse getCurrentUserProfile();
 
-  @PostMapping(
-      value = "api/v1/kyc",
-      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "api/v1/kyc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   KycResponse submitKyc(
       @RequestPart("data") KycRequest kycRequest,
       @RequestPart("cinImage") MultipartFile cinImage,

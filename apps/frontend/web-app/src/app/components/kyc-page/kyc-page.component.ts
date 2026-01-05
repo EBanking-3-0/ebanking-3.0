@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Apollo } from 'apollo-angular';
-import { gql } from 'graphql-tag';
+import { Apollo, gql } from 'apollo-angular';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -39,16 +38,19 @@ const SUBMIT_KYC = gql`
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './kyc-page.component.html',
-  styleUrls: ['./kyc-page.component.scss'],
+  styleUrl: './kyc-page.component.scss',
 })
 export class KycPageComponent implements OnInit {
-  userProfile: any;
+  userProfile: any = null;
   kycForm: FormGroup;
   loading = true;
-  error: any;
-  submissionError: any;
+  error: any = null;
+  submissionError: string | null = null;
 
-  constructor(private apollo: Apollo, private fb: FormBuilder) {
+  constructor(
+    private apollo: Apollo,
+    private fb: FormBuilder
+  ) {
     this.kycForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -66,62 +68,84 @@ export class KycPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.apollo
-      .watchQuery<any>({
+      .watchQuery<{ me: any }>({
         query: GET_USER_PROFILE,
       })
-      .valueChanges.subscribe(({ data, loading, error }) => {
+      .valueChanges
+      .subscribe(({ data, loading, error }) => {
         this.loading = loading;
         this.error = error;
-        if (data && data.me) {
+
+        if (data?.me) {
           this.userProfile = data.me;
           this.kycForm.patchValue(this.userProfile);
         }
       });
   }
 
-  onFileChange(event: any, field: string) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.kycForm.patchValue({
-        [field]: file,
-      });
+  onFileChange(event: Event, field: 'cinImage' | 'selfieImage'): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const file = input.files[0];
+      this.kycForm.patchValue({ [field]: file });
+      this.kycForm.get(field)?.markAsTouched();
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.kycForm.invalid) {
+      this.kycForm.markAllAsTouched();
       return;
     }
 
     this.submissionError = null;
-    const { cinImage, selfieImage, ...formData } = this.kycForm.value;
+
+    const formValue = this.kycForm.value;
+    const { cinImage, selfieImage, ...inputData } = formValue;
+
+    // Debug: check if we really have File objects
+    console.log('=== BEFORE MUTATION DEBUG ===');
+    console.log('cinImage:', cinImage instanceof File ? `File (${cinImage.name}, ${cinImage.size} bytes)` : typeof cinImage, cinImage);
+    console.log('selfieImage:', selfieImage instanceof File ? `File (${selfieImage.name}, ${selfieImage.size} bytes)` : typeof selfieImage, selfieImage);
+    console.log('===========================');
+
+    // Safety: if not File, abort early
+    if (!(cinImage instanceof File) || !(selfieImage instanceof File)) {
+      this.submissionError = 'One or both files are not valid. Please select them again.';
+      return;
+    }
 
     this.apollo
-      .mutate({
+      .mutate<{ submitKyc: { status: string; verifiedAt: string } }>({
         mutation: SUBMIT_KYC,
         variables: {
-          input: formData,
-          cinImage: cinImage,
-          selfieImage: selfieImage,
-        },
-        context: {
-          useMultipart: true,
+          input: inputData,
+          cinImage,      // ← must be raw File
+          selfieImage,   // ← must be raw File
         },
       })
       .pipe(
-        catchError((error) => {
-          this.submissionError = error;
+        catchError((err: unknown) => {
+          console.error('KYC submission error:', err);
+          let errorMessage = 'An unknown error occurred during submission.';
+
+          if (err && typeof err === 'object') {
+            const errorObj = err as any;
+            if (Array.isArray(errorObj.graphQLErrors) && errorObj.graphQLErrors.length > 0) {
+              errorMessage = errorObj.graphQLErrors[0].message;
+            } else if (errorObj.networkError) {
+              errorMessage = `Network error: ${errorObj.networkError.message || 'Connection failed'}`;
+            }
+          }
+
+          this.submissionError = errorMessage;
           return of(null);
         })
       )
       .subscribe((result) => {
-        if (result && !result.error) {
-          // Handle successful submission
-          console.log('KYC Submitted:', result);
-          // Refresh user profile
-          this.apollo.client.refetchQueries({
-            include: [GET_USER_PROFILE],
-          });
+        if (result?.data?.submitKyc) {
+          console.log('KYC submitted successfully:', result.data.submitKyc);
+          this.apollo.client.refetchQueries({ include: [GET_USER_PROFILE] });
         }
       });
   }
