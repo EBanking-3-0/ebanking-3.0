@@ -20,14 +20,22 @@ export class AppComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    try {
+      this.isLoggedIn = await this.keycloak.isLoggedIn();
 
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      if (this.router.url === '/welcome') {
-        this.router.navigate(['/']);
+      if (this.isLoggedIn) {
+        this.userProfile = await this.keycloak.loadUserProfile();
+        if (this.router.url === '/welcome') {
+          this.router.navigate(['/']);
+        }
+      } else {
+        if (this.router.url === '/') {
+          this.router.navigate(['/welcome']);
+        }
       }
-    } else {
+    } catch (error) {
+      console.warn('Silent SSO check failed or user not logged in:', error);
+      this.isLoggedIn = false;
       if (this.router.url === '/') {
         this.router.navigate(['/welcome']);
       }

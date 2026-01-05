@@ -20,6 +20,14 @@ keycloakx:
       cpu: 1000m
       memory: 768Mi
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-origin: "https://bank.h4k5.net, https://bank-staging.h4k5.net"
+      nginx.ingress.kubernetes.io/cors-always-set-header: "true"
+      nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE"
+      nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, X-Requested-With, Accept, Origin"
+      nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     rules:
       - host: bank-auth.h4k5.net
         paths:
