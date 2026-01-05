@@ -12,9 +12,7 @@
         "outputPath": "dist/apps/frontend/web-app",
         "index": "apps/frontend/web-app/src/index.html",
         "browser": "apps/frontend/web-app/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/frontend/web-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -30,6 +28,8 @@
         "allowedCommonJsDependencies": [
           "apollo-upload-client"
         ]
+        "styles": ["apps/frontend/web-app/src/styles.scss"],
+        "scripts": []
       },
       "configurations": {
         "production": {
@@ -45,12 +45,39 @@
               "maximumError": "8kB"
             }
           ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+        "kubernetes": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/frontend/web-app/src/environments/environment.ts",
+              "with": "apps/frontend/web-app/src/environments/environment.kubernetes.ts"
+            }
+          ],
+          "outputHashing": "all"
         }
       },
       "defaultConfiguration": "production"
@@ -76,9 +103,7 @@
     "test": {
       "executor": "@nx/vitest:test",
       "cache": true,
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/apps/angular-demo"
       }
@@ -90,11 +115,7 @@
         "cwd": "apps/frontend/web-app"
       },
       "cache": true,
-      "inputs": [
-        "default",
-        "{projectRoot}/src/**/*",
-        "{projectRoot}/sonar-project.properties"
-      ]
+      "inputs": ["default", "{projectRoot}/src/**/*", "{projectRoot}/sonar-project.properties"]
     },
     "docker-build": {
       "executor": "nx:run-commands",
@@ -103,7 +124,10 @@
         "cwd": "."
       },
       "dependsOn": [
-        "build"
+        {
+          "target": "build",
+          "params": "forward"
+        }
       ],
       "cache": false
     },
@@ -113,9 +137,37 @@
         "command": "docker push $DOCKER_USER/ebanking-frontend:${TAG:-latest}",
         "cwd": "."
       },
+      "dependsOn": ["docker-build"],
+      "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install web-app tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-frontend --wait"
+        ],
+        "cwd": "."
+      },
       "dependsOn": [
-        "docker-build"
+        {
+          "target": "build",
+          "params": "forward"
+        }
       ],
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking",
+            "VALUES_FILE": "tools/helm/microservice/values-prod-web-app.yaml"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging",
+            "VALUES_FILE": "tools/helm/microservice/values-staging-web-app.yaml"
+          }
+        }
+      },
       "cache": false
     }
   }

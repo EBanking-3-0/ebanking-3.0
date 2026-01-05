@@ -4,18 +4,13 @@
   "projectType": "application",
   "sourceRoot": "apps/infrastructure/graphql-gateway/src",
   "tags": [],
-  "implicitDependencies": [
-    "service-discovery"
-  ],
+  "implicitDependencies": ["service-discovery"],
   "targets": {
     "build": {
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:infrastructure:graphql-gateway:build",
-        "args": [
-          "-x",
-          "test"
-        ]
+        "args": ["-x", "test"]
       },
       "configurations": {
         "production": {},
@@ -23,13 +18,8 @@
       },
       "defaultConfiguration": "development",
       "cache": true,
-      "inputs": [
-        "default",
-        "{projectRoot}/**/*"
-      ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "inputs": ["default", "{projectRoot}/**/*"],
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "test": {
       "executor": "@nx/gradle:gradle",
@@ -55,13 +45,14 @@
       },
       "configurations": {
         "production": {
-          "args": [
-            "--args=--spring.profiles.active=prod"
-          ]
+          "args": ["--args=--spring.profiles.active=prod"]
         },
         "development": {}
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        "build"
+      ]
     },
     "clean": {
       "executor": "@nx/gradle:gradle",
@@ -92,9 +83,7 @@
         "{projectRoot}/build.gradle",
         "{projectRoot}/src/**/*.java"
       ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "sonar": {
       "executor": "@nx/gradle:gradle",
@@ -114,9 +103,7 @@
         "command": "docker build -t $DOCKER_USER/ebanking-graphql-gateway:${TAG:-latest} -f apps/infrastructure/graphql-gateway/Dockerfile .",
         "cwd": "."
       },
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false
     },
     "docker-push": {
@@ -125,9 +112,31 @@
         "command": "docker push $DOCKER_USER/ebanking-graphql-gateway:${TAG:-latest}",
         "cwd": "."
       },
-      "dependsOn": [
-        "docker-build"
-      ],
+      "dependsOn": ["docker-build"],
+      "cache": false
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "helm upgrade --install graphql-gateway tools/helm/microservice -n $DEPLOY_NAMESPACE -f $VALUES_FILE --set image.tag=${TAG:-latest} --set image.repository=$DOCKER_USER/ebanking-graphql-gateway --wait"
+        ],
+        "cwd": "."
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "DEPLOY_NAMESPACE": "ebanking",
+            "VALUES_FILE": "tools/helm/microservice/values-prod-graphql-gateway.yaml"
+          }
+        },
+        "staging": {
+          "env": {
+            "DEPLOY_NAMESPACE": "staging",
+            "VALUES_FILE": "tools/helm/microservice/values-staging-graphql-gateway.yaml"
+          }
+        }
+      },
       "cache": false
     }
   }

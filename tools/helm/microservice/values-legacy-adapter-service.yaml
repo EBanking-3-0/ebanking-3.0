@@ -1,0 +1,24 @@
+# values.yaml for legacy-adapter-service
+replicaCount: 1
+fullnameOverride: legacy-adapter-service
+
+image:
+  repository: ebanking/legacy-adapter-service
+  tag: local
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8086
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  EUREKA_CLIENT_ENABLED: "false"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
+
+serviceAccount:
+  create: true
+  name: legacy-adapter-service-microservice

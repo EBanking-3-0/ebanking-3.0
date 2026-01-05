@@ -12,5 +12,6 @@ public class AccountDTO {
   private String currency;
   private String type;
   private String status;
+  private String nickname;
   private String createdAt; // Keep as string for simplicity with GraphQL default scalars
 }

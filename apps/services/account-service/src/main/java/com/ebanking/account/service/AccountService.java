@@ -21,7 +21,7 @@ public class AccountService {
   private final TypedEventProducer eventProducer;
 
   @Transactional
-  public Account createAccount(Long userId, String accountType, String currency) {
+  public Account createAccount(Long userId, String accountType, String currency, String nickname) {
     String accountNumber = generateAccountNumber();
 
     Account account =
@@ -32,6 +32,7 @@ public class AccountService {
             .currency(currency)
             .balance(BigDecimal.ZERO)
             .status("ACTIVE")
+            .nickname(nickname)
             .build();
 
     Account savedAccount = accountRepository.save(account);
