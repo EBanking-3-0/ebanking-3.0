@@ -7,8 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Event published when a new account is created. Published by: Account Service
- * Consumed by: Crypto
+ * Event published when a new account is created. Published by: Account Service Consumed by: Crypto
  * Service, Analytics Service, Audit Service
  */
 @Data
