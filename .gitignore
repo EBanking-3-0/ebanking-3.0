@@ -39,6 +39,10 @@ release-pom.xml
 .metadata/
 *.jks # Java Keystore files
 
+# IDE - Eclipse
+bin/
+**/bin/
+
 # IDE - VSCode
 .vscode/
 !.vscode/settings.json
