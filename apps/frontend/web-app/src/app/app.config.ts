@@ -25,7 +25,7 @@ import {
  * Only attach Bearer token to backend / GraphQL requests
  */
 const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^http:\/\/localhost:8081(\/.*)?$/i,
+  urlPattern: /^http:\/\/localhost:80(81|83)(\/.*)?$/i,  // Matches both 8081 and 8083
 });
 
 export const appConfig: ApplicationConfig = {
@@ -115,7 +115,7 @@ export const appConfig: ApplicationConfig = {
           link: from([authLink, uploadLink]),
           cache: new InMemoryCache(),
         };
-        
+
         console.log('Apollo Client options created:', options);
         return options;
       } catch (error) {
