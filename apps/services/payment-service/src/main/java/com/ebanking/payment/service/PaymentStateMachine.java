@@ -45,14 +45,17 @@ public class PaymentStateMachine {
               || to == PaymentStatus.FAILED;
       case AUTHORIZED ->
           to == PaymentStatus.RESERVED
+              || to == PaymentStatus.SENT
               || to == PaymentStatus.REJECTED
-              || to == PaymentStatus.FAILED;
+              || to == PaymentStatus.FAILED
+              || to == PaymentStatus.COMPLETED; // For simple/simulated flows
       case RESERVED ->
           to == PaymentStatus.SENT || to == PaymentStatus.FAILED || to == PaymentStatus.COMPENSATED;
       case SENT ->
           to == PaymentStatus.SETTLED
               || to == PaymentStatus.FAILED
-              || to == PaymentStatus.COMPENSATED;
+              || to == PaymentStatus.COMPENSATED
+              || to == PaymentStatus.COMPLETED; // For synchronous/internal flows
       case SETTLED -> to == PaymentStatus.COMPLETED;
       default -> false;
     };

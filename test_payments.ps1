@@ -8,8 +8,9 @@ $Timestamp = Get-Date -UFormat "%s"
 Write-Host "`n--- Testing Internal Transfer ---" -ForegroundColor Cyan
 try {
     $InternalBody = @{
-        fromAccountId   = 1
-        toAccountNumber = "FR7630006000011234567890101" # Target account for User 2
+        type            = "INTERNAL_TRANSFER"
+        fromAccountId   = 9 # Account ACC001 (avec IBAN)
+        toAccountNumber = "ACC003" # Target account for User 2 (Jane Smith)
         amount          = 50.00
         currency        = "EUR"
         description     = "Virement interne test"
@@ -31,10 +32,12 @@ try {
 # 2. SEPA Transfer Test
 Write-Host "`n--- Testing SEPA Transfer ---" -ForegroundColor Cyan
 try {
+    # Using User 1 (John Doe) from account ACC001 (ID 9)
     $SepaBody = @{
-        fromAccountId   = 1
-        toIban          = "FR7630006000019876543210101"
-        beneficiaryName = "John Doe SEPA"
+        type            = "SEPA_TRANSFER"
+        fromAccountId   = 9
+        toIban          = "FR7630006000019876543210101" # External IBAN
+        beneficiaryName = "External Beneficiary"
         amount          = 150.00
         currency        = "EUR"
         description     = "Virement SEPA test"
@@ -56,9 +59,11 @@ try {
 # 3. Mobile Recharge Test (MA)
 Write-Host "`n--- Testing Mobile Recharge (Morocco) ---" -ForegroundColor Cyan
 try {
+    # Using User 1 (John Doe) from account ACC001 (ID 9)
     $MobileBody = @{
-        fromAccountId   = 1
-        phoneNumber     = "0612345678"
+        type            = "MOBILE_RECHARGE"
+        fromAccountId   = 9
+        phoneNumber     = "0661122334" # Correct format
         countryCode     = "IAM" # Maroc Telecom
         amount          = 20.00
         currency        = "MAD"
@@ -78,6 +83,33 @@ try {
     }
 }
 
-# 4. List User Payments
+# 4. Instant Transfer Test (SCT Inst)
+Write-Host "`n--- Testing Instant Transfer (SCT Inst) ---" -ForegroundColor Cyan
+try {
+    # Using User 1 (John Doe) from account ACC001 (ID 9)
+    $InstantBody = @{
+        type            = "SCT_INSTANT"
+        fromAccountId   = 9
+        toIban          = "FR7630006000018888888888888" # Another external IBAN
+        beneficiaryName = "Instant Beneficiary"
+        amount          = 10.00
+        currency        = "EUR"
+        description     = "Virement instantané test"
+        idempotencyKey  = [PSCustomObject]@{guid=[guid]::NewGuid()}.guid.ToString()
+    } | ConvertTo-Json
+
+    $response = Invoke-RestMethod -Uri "$BaseUrl/instant?userId=1" -Method Post -ContentType "application/json" -Body $InstantBody
+    $response | ConvertTo-Json
+} catch {
+    Write-Host "Error during Instant Transfer:" -ForegroundColor Red
+    if ($_.Exception.Response) {
+        $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+        $reader.ReadToEnd()
+    } else {
+        $_.Exception.Message
+    }
+}
+
+# 5. List User Payments
 Write-Host "`n--- Listing Payments for User 1 ---" -ForegroundColor Cyan
 Invoke-RestMethod -Uri "$BaseUrl/user?userId=1" -Method Get

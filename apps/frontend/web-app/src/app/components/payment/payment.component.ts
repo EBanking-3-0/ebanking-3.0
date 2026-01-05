@@ -39,6 +39,15 @@ export class PaymentComponent implements OnInit {
 
   currentUserId: number | null = null;
 
+  // Moroccan Mobile Operators
+  moroccanOperators = [
+    { id: 'IAM', name: 'Maroc Telecom', color: '#0054a6' },
+    { id: 'ORANGE', name: 'Orange', color: '#ff7900' },
+    { id: 'INWI', name: 'Inwi', color: '#911d7e' }
+  ];
+
+  selectedOperator: any = null;
+
   constructor(
     private fb: FormBuilder,
     private paymentService: PaymentService,
@@ -59,7 +68,7 @@ export class PaymentComponent implements OnInit {
   async loadCurrentUser() {
     // TEMPORAIRE : Utiliser userId = 1 pour les tests (sans authentification)
     this.currentUserId = 1;
-    
+
     // Code original commenté pour les tests
     /*
     try {
@@ -167,10 +176,11 @@ export class PaymentComponent implements OnInit {
     // Mobile Recharge Form
     this.mobileForm = this.fb.group({
       fromAccountId: [null, [Validators.required]],
-      phoneNumber: ['+33612345678', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
-      countryCode: ['FR', [Validators.required]],
-      amount: [20.00, [Validators.required, Validators.min(0.01)]],
-      currency: ['EUR', [Validators.required]]
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+      operatorId: ['IAM', Validators.required],
+      countryCode: ['MA', [Validators.required]],
+      amount: [20.00, [Validators.required, Validators.min(5)]],
+      currency: ['MAD', [Validators.required]]
     });
   }
 
@@ -183,6 +193,15 @@ export class PaymentComponent implements OnInit {
     this.result = null;
     this.error = null;
     this.generateIdempotencyKey();
+    if (tab === 'mobile' && this.accounts.length > 0) {
+      // Default to first account and MAD for mobile if in MA
+      this.mobileForm.patchValue({ currency: 'MAD' });
+    }
+  }
+
+  selectOperator(op: any): void {
+    this.selectedOperator = op;
+    this.mobileForm.patchValue({ operatorId: op.id });
   }
 
   getCurrentForm(): FormGroup {
@@ -206,7 +225,7 @@ export class PaymentComponent implements OnInit {
     this.result = null;
 
     const formValue = form.value;
-    
+
     // Build PaymentRequest according to backend structure
     const request: PaymentRequest = {
       fromAccountId: formValue.fromAccountId,
@@ -264,9 +283,9 @@ export class PaymentComponent implements OnInit {
         this.result = response;
         this.loading = false;
         // Check if SCA is required
-        if (response.status === 'AUTHORIZED' && response.message?.includes('SCA') || 
-            response.message === 'SCA_REQUIRED' || 
-            response.status === 'VALIDATED') {
+        if (response.status === 'AUTHORIZED' && response.message?.includes('SCA') ||
+          response.message === 'SCA_REQUIRED' ||
+          response.status === 'VALIDATED') {
           // Handle SCA flow
           this.scaRequired = true;
           this.scaPaymentId = response.paymentId;

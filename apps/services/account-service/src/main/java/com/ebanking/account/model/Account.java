@@ -43,6 +43,7 @@ public class Account {
   private String currency;
 
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private AccountType type; // SAVINGS, CHECKING
 
   @Column(nullable = false)
