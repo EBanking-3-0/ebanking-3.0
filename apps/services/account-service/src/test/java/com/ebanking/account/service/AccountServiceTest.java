@@ -200,7 +200,6 @@ public class AccountServiceTest {
         InsufficientBalance.class, () -> accountService.withdraw(accountId, withdrawAmount));
   }
 
-
   @Test
   void testGenerateIban() {
     String accountNumber = UUID.randomUUID().toString().substring(0, 10).toUpperCase();
@@ -231,7 +230,9 @@ public class AccountServiceTest {
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
     String accountCode =
-        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(accountNumber.length()+1, 4));
+        accountNumber
+            .replaceAll("[^0-9]", "")
+            .substring(0, Math.min(accountNumber.length() + 1, 4));
     // Compléter avec des zéros si nécessaire
     while (accountCode.length() < 11) {
       accountCode += "0";

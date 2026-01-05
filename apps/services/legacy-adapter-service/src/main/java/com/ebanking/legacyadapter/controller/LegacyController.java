@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LegacyController {
 
-    private final LegacyMockService mockService;
+  private final LegacyMockService mockService;
 
-    @PostMapping("/sepa/transfer")
-    public ResponseEntity<SepaTransferResponse> executeSepaTransfer(
-            @RequestBody SepaTransferRequest request) {
-        log.info("Received SEPA transfer request: {}", request.getTransactionId());
-        return ResponseEntity.ok(mockService.processSepaTransfer(request));
-    }
+  @PostMapping("/sepa/transfer")
+  public ResponseEntity<SepaTransferResponse> executeSepaTransfer(
+      @RequestBody SepaTransferRequest request) {
+    log.info("Received SEPA transfer request: {}", request.getTransactionId());
+    return ResponseEntity.ok(mockService.processSepaTransfer(request));
+  }
 
-    @PostMapping("/instant/transfer")
-    public ResponseEntity<InstantTransferResponse> executeInstantTransfer(
-            @RequestBody InstantTransferRequest request) {
-        log.info("Received Instant transfer request: {}", request.getTransactionId());
-        return ResponseEntity.ok(mockService.processInstantTransfer(request));
-    }
+  @PostMapping("/instant/transfer")
+  public ResponseEntity<InstantTransferResponse> executeInstantTransfer(
+      @RequestBody InstantTransferRequest request) {
+    log.info("Received Instant transfer request: {}", request.getTransactionId());
+    return ResponseEntity.ok(mockService.processInstantTransfer(request));
+  }
 }

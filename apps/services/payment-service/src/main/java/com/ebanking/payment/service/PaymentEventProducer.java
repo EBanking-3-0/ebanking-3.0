@@ -20,6 +20,7 @@ public class PaymentEventProducer {
   @Transactional
   public void completeTransaction(
       Long paymentId,
+      Long userId,
       Long fromAccountId,
       Long toAccountId,
       String fromIban,
@@ -34,6 +35,7 @@ public class PaymentEventProducer {
       TransactionCompletedEvent event =
           TransactionCompletedEvent.builder()
               .transactionId(paymentId)
+              .userId(userId)
               .fromAccountId(fromAccountId)
               .toAccountId(toAccountId)
               .fromAccountNumber(fromIban)
@@ -59,6 +61,7 @@ public class PaymentEventProducer {
   @Transactional
   public void handlePaymentFailure(
       Long paymentId,
+      Long userId,
       Long accountId,
       String iban,
       BigDecimal amount,
@@ -72,6 +75,7 @@ public class PaymentEventProducer {
       PaymentFailedEvent event =
           PaymentFailedEvent.builder()
               .transactionId(paymentId)
+              .userId(userId)
               .accountId(accountId)
               .accountNumber(iban)
               .amount(amount)
@@ -92,6 +96,7 @@ public class PaymentEventProducer {
   @Transactional
   public void detectFraud(
       Long paymentId,
+      Long userId,
       Long accountId,
       String iban,
       BigDecimal amount,
@@ -106,6 +111,7 @@ public class PaymentEventProducer {
       FraudDetectedEvent event =
           FraudDetectedEvent.builder()
               .transactionId(paymentId)
+              .userId(userId)
               .accountId(accountId)
               .accountNumber(iban)
               .amount(amount)

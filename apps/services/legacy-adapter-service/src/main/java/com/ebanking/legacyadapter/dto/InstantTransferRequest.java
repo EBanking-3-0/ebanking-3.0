@@ -8,12 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstantTransferRequest {
-    private String fromIban;
-    private String toIban;
-    private BigDecimal amount;
-    private String currency;
-    private String beneficiaryName;
-    private String description;
-    private String transactionId;
-    private String idempotencyKey;
+  private String fromIban;
+  private String toIban;
+  private BigDecimal amount;
+  private String currency;
+  private String beneficiaryName;
+  private String description;
+  private String transactionId;
+  private String idempotencyKey;
 }

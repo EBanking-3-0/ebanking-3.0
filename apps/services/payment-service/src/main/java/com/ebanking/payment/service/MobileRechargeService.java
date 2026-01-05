@@ -36,11 +36,12 @@ public class MobileRechargeService {
   private final PaymentEventProducer eventProducer;
   private final PaymentSagaOrchestrator sagaOrchestrator;
 
-  // Patterns pour détecter l'opérateur (exemple pour la France)
-  private static final Pattern ORANGE_PATTERN = Pattern.compile("^(\\+33|0)[67]");
-  private static final Pattern SFR_PATTERN = Pattern.compile("^(\\+33|0)[67]");
-  private static final Pattern BOUYGUES_PATTERN = Pattern.compile("^(\\+33|0)[67]");
-  private static final Pattern FREE_PATTERN = Pattern.compile("^(\\+33|0)[67]");
+  // Patterns pour les opérateurs du Maroc
+  private static final Pattern MOROCCO_PHONE_PATTERN =
+      Pattern.compile("^(?:\\+212|0)([67]\\d{8})$");
+  private static final String OP_IAM = "IAM";
+  private static final String OP_ORANGE = "ORANGE";
+  private static final String OP_INWI = "INWI";
 
   @Transactional
   public PaymentResult executeMobileRecharge(PaymentRequest request, Long userId) {
@@ -61,16 +62,18 @@ public class MobileRechargeService {
       return PaymentResult.success(existing.get());
     }
 
-    // 3. Valider le numéro de téléphone
-    if (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty()) {
-      throw new IllegalArgumentException("Phone number is required for mobile recharge");
+    // 3. Valider le numéro de téléphone (Format Maroc uniquement)
+    if (request.getPhoneNumber() == null
+        || !MOROCCO_PHONE_PATTERN.matcher(request.getPhoneNumber()).matches()) {
+      throw new IllegalArgumentException(
+          "Invalid Moroccan phone number format. Expected 06/07XXXXXXXX or +2126/7XXXXXXXX");
     }
 
-    // 4. Détecter l'opérateur
-    String operator = detectOperator(request.getPhoneNumber(), request.getCountryCode());
+    // 4. Détecter l'opérateur Marocain
+    String operator = detectMoroccanOperator(request.getPhoneNumber());
     if (operator == null) {
       throw new OperatorRechargeException(
-          "Unable to detect operator for phone number: " + request.getPhoneNumber());
+          "Unable to detect Moroccan operator for phone number: " + request.getPhoneNumber());
     }
 
     // 5. Créer le paiement
@@ -132,6 +135,7 @@ public class MobileRechargeService {
 
       eventProducer.completeTransaction(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           null,
           null,
@@ -156,6 +160,7 @@ public class MobileRechargeService {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           null,
           payment.getAmount(),
@@ -176,6 +181,7 @@ public class MobileRechargeService {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           null,
           payment.getAmount(),
@@ -186,25 +192,51 @@ public class MobileRechargeService {
     }
   }
 
-  /** Détecte l'opérateur à partir du numéro de téléphone. */
-  private String detectOperator(String phoneNumber, String countryCode) {
+  /** Détecte l'opérateur Marocain à partir du numéro de téléphone. */
+  private String detectMoroccanOperator(String phoneNumber) {
     if (phoneNumber == null) return null;
 
-    // Simplification : utiliser le countryCode si fourni
-    if (countryCode != null) {
-      // Pour la France, on pourrait avoir des règles spécifiques
-      if ("FR".equals(countryCode)) {
-        // Logique simplifiée : utiliser le préfixe
-        if (phoneNumber.startsWith("+336") || phoneNumber.startsWith("06")) {
-          return "ORANGE";
-        } else if (phoneNumber.startsWith("+337") || phoneNumber.startsWith("07")) {
-          return "SFR";
-        }
-      }
+    // Normalisation au format 0XXXXXXXXX
+    String normalized =
+        phoneNumber.startsWith("+212") ? "0" + phoneNumber.substring(4) : phoneNumber;
+
+    if (normalized.startsWith("06")) {
+      String prefix3 = normalized.substring(0, 3);
+      String prefix4 = normalized.substring(0, 4);
+
+      // Orange
+      if (prefix4.equals("0663")
+          || prefix4.equals("0664")
+          || prefix4.equals("0665")
+          || prefix4.equals("0669")
+          || prefix4.equals("0674")
+          || prefix4.equals("0675")) return OP_ORANGE;
+
+      // Inwi
+      if (prefix4.equals("0660") || prefix3.equals("068")) return OP_INWI;
+
+      // IAM (Défaut pour 06 si pas Orange/Inwi)
+      return OP_IAM;
+    } else if (normalized.startsWith("07")) {
+      String prefix3 = normalized.substring(0, 3);
+      String prefix4 = normalized.substring(0, 4);
+
+      // Inwi
+      if (prefix4.equals("0700")
+          || prefix4.equals("0701")
+          || prefix4.equals("0702")
+          || prefix4.equals("0706")
+          || prefix3.equals("077")
+          || prefix3.equals("078")) return OP_INWI;
+
+      // Orange
+      if (prefix4.equals("0707") || prefix4.equals("0708")) return OP_ORANGE;
+
+      // IAM
+      if (prefix3.equals("076")) return OP_IAM;
     }
 
-    // Par défaut, utiliser le countryCode comme opérateur
-    return countryCode != null ? countryCode : "UNKNOWN";
+    return null;
   }
 
   /**

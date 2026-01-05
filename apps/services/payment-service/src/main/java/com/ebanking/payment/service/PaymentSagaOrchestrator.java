@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Orchestrateur de Saga pour les paiements internes. Gère le cycle de vie
- * complet d'un paiement
+ * Orchestrateur de Saga pour les paiements internes. Gère le cycle de vie complet d'un paiement
  * avec compensation en cas d'échec.
  */
 @Service
@@ -56,6 +55,7 @@ public class PaymentSagaOrchestrator {
         log.warn("Payment {} blocked by fraud detection", payment.getId());
         eventProducer.detectFraud(
             payment.getId(),
+            payment.getUserId(),
             payment.getFromAccountId(),
             payment.getFromIban(),
             payment.getAmount(),
@@ -97,6 +97,7 @@ public class PaymentSagaOrchestrator {
       // Publier événement de transaction complétée
       eventProducer.completeTransaction(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getToAccountId(),
           payment.getFromIban(),
@@ -121,6 +122,7 @@ public class PaymentSagaOrchestrator {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),
@@ -174,10 +176,11 @@ public class PaymentSagaOrchestrator {
 
   private void verifyMFA(Payment payment) {
     try {
-      MfaVerificationRequest mfaRequest = MfaVerificationRequest.builder()
-          .userId(payment.getUserId())
-          .paymentId(payment.getId())
-          .build();
+      MfaVerificationRequest mfaRequest =
+          MfaVerificationRequest.builder()
+              .userId(payment.getUserId())
+              .paymentId(payment.getId())
+              .build();
 
       MfaVerificationResponse mfaResponse = authClient.verifyMFA(mfaRequest);
 
@@ -206,14 +209,15 @@ public class PaymentSagaOrchestrator {
   private void processPayment(Payment payment) {
     try {
       // 1. Débiter le compte source
-      DebitRequest debitRequest = DebitRequest.builder()
-          .amount(payment.getAmount())
-          .currency(payment.getCurrency())
-          .transactionId(payment.getTransactionId())
-          .idempotencyKey(payment.getIdempotencyKey())
-          .description(
-              payment.getDescription() != null ? payment.getDescription() : "Internal transfer")
-          .build();
+      DebitRequest debitRequest =
+          DebitRequest.builder()
+              .amount(payment.getAmount())
+              .currency(payment.getCurrency())
+              .transactionId(payment.getTransactionId())
+              .idempotencyKey(payment.getIdempotencyKey())
+              .description(
+                  payment.getDescription() != null ? payment.getDescription() : "Internal transfer")
+              .build();
 
       DebitResponse debitResponse = accountClient.debit(payment.getFromAccountId(), debitRequest);
 
@@ -233,18 +237,20 @@ public class PaymentSagaOrchestrator {
     if (payment.getPaymentType() == PaymentType.INTERNAL_TRANSFER
         && payment.getToAccountId() != null) {
       try {
-        CreditRequest creditRequest = CreditRequest.builder()
-            .amount(payment.getAmount())
-            .currency(payment.getCurrency())
-            .transactionId(payment.getTransactionId())
-            .idempotencyKey(payment.getIdempotencyKey())
-            .description(
-                payment.getDescription() != null
-                    ? payment.getDescription()
-                    : "Internal transfer")
-            .build();
+        CreditRequest creditRequest =
+            CreditRequest.builder()
+                .amount(payment.getAmount())
+                .currency(payment.getCurrency())
+                .transactionId(payment.getTransactionId())
+                .idempotencyKey(payment.getIdempotencyKey())
+                .description(
+                    payment.getDescription() != null
+                        ? payment.getDescription()
+                        : "Internal transfer")
+                .build();
 
-        CreditResponse creditResponse = accountClient.credit(payment.getToAccountId(), creditRequest);
+        CreditResponse creditResponse =
+            accountClient.credit(payment.getToAccountId(), creditRequest);
 
         if (creditResponse == null || creditResponse.getTransactionId() == null) {
           throw new PaymentProcessingException(
@@ -272,12 +278,13 @@ public class PaymentSagaOrchestrator {
     // Si un débit a été effectué, on doit rembourser
     if (payment.getDebitTransactionId() != null) {
       try {
-        CreditRequest compensationRequest = CreditRequest.builder()
-            .amount(payment.getAmount())
-            .transactionId("COMP-" + payment.getTransactionId())
-            .idempotencyKey("COMP-" + payment.getIdempotencyKey())
-            .description("Compensation for failed payment: " + payment.getTransactionId())
-            .build();
+        CreditRequest compensationRequest =
+            CreditRequest.builder()
+                .amount(payment.getAmount())
+                .transactionId("COMP-" + payment.getTransactionId())
+                .idempotencyKey("COMP-" + payment.getIdempotencyKey())
+                .description("Compensation for failed payment: " + payment.getTransactionId())
+                .build();
 
         accountClient.credit(payment.getFromAccountId(), compensationRequest);
         log.info("Compensation successful for payment {}", payment.getId());
@@ -292,12 +299,13 @@ public class PaymentSagaOrchestrator {
     if (payment.getCreditTransactionId() != null
         && payment.getPaymentType() == PaymentType.INTERNAL_TRANSFER) {
       try {
-        DebitRequest reverseRequest = DebitRequest.builder()
-            .amount(payment.getAmount())
-            .transactionId("REV-" + payment.getTransactionId())
-            .idempotencyKey("REV-" + payment.getIdempotencyKey())
-            .description("Reverse credit for failed payment")
-            .build();
+        DebitRequest reverseRequest =
+            DebitRequest.builder()
+                .amount(payment.getAmount())
+                .transactionId("REV-" + payment.getTransactionId())
+                .idempotencyKey("REV-" + payment.getIdempotencyKey())
+                .description("Reverse credit for failed payment")
+                .build();
 
         accountClient.debit(payment.getToAccountId(), reverseRequest);
         log.info("Credit reversed for payment {}", payment.getId());
@@ -312,6 +320,7 @@ public class PaymentSagaOrchestrator {
   public void publishTransactionCompleted(Payment payment) {
     eventProducer.completeTransaction(
         payment.getId(),
+        payment.getUserId(),
         payment.getFromAccountId(),
         payment.getToAccountId(),
         payment.getFromIban(),
@@ -325,6 +334,7 @@ public class PaymentSagaOrchestrator {
       Payment payment, String fraudType, String severity, String description) {
     eventProducer.detectFraud(
         payment.getId(),
+        payment.getUserId(),
         payment.getFromAccountId(),
         payment.getFromIban(),
         payment.getAmount(),

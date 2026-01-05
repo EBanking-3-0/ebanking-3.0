@@ -112,7 +112,7 @@ public class AccountController {
     } catch (AccountNotFoundException e) {
       return ResponseEntity.badRequest().body("Account not found");
     } catch (InsufficientBalance e) {
-      ResponseEntity.badRequest().body("Insufficient balance");
+      return ResponseEntity.badRequest().body("Insufficient balance");
     }
     return ResponseEntity.ok("Withdrawal successful");
   }

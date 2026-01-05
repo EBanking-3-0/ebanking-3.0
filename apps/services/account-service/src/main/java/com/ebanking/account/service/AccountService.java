@@ -35,39 +35,42 @@ public class AccountService {
 
     String iban = generateIban(accountNumber);
 
-    Account account = Account.builder()
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .iban(iban)
-        .type(AccountType.valueOf(accountType))
-        .currency(currency)
-        .balance(BigDecimal.ZERO)
-        .status("ACTIVE")
-        .build();
+    Account account =
+        Account.builder()
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .iban(iban)
+            .type(AccountType.valueOf(accountType))
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .build();
 
     Account savedAccount = accountRepository.save(account);
     log.info("Created account: {} for user: {}", accountNumber, userId);
-    AccountCreatedEvent createdAccountEvent = AccountCreatedEvent.builder()
-        .accountId(savedAccount.getId())
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .accountType(accountType)
-        .currency(currency)
-        .initialBalance(BigDecimal.ZERO)
-        .source("account-service")
-        .build();
+    AccountCreatedEvent createdAccountEvent =
+        AccountCreatedEvent.builder()
+            .accountId(savedAccount.getId())
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .accountType(accountType)
+            .currency(currency)
+            .initialBalance(BigDecimal.ZERO)
+            .source("account-service")
+            .build();
 
     accountProducer.sendAccountCreatedEvent(createdAccountEvent);
 
-    AccountCreatedEvent event = AccountCreatedEvent.builder()
-        .accountId(savedAccount.getId())
-        .userId(userId)
-        .accountNumber(accountNumber)
-        .accountType(accountType)
-        .currency(currency)
-        .initialBalance(BigDecimal.ZERO)
-        .source("account-service")
-        .build();
+    AccountCreatedEvent event =
+        AccountCreatedEvent.builder()
+            .accountId(savedAccount.getId())
+            .userId(userId)
+            .accountNumber(accountNumber)
+            .accountType(accountType)
+            .currency(currency)
+            .initialBalance(BigDecimal.ZERO)
+            .source("account-service")
+            .build();
 
     eventProducer.publishAccountCreated(event);
 
@@ -133,7 +136,8 @@ public class AccountService {
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
-    String accountCode = accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
+    String accountCode =
+        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
     // Compléter avec des zéros si nécessaire
     while (accountCode.length() < 11) {
       accountCode += "0";
@@ -166,9 +170,14 @@ public class AccountService {
     // Convert logic
     BigDecimal debitAmount = request.getAmount();
     if (request.getCurrency() != null && !request.getCurrency().equals(account.getCurrency())) {
-      log.info("Converting debit amount {} from {} to {}", request.getAmount(), request.getCurrency(),
+      log.info(
+          "Converting debit amount {} from {} to {}",
+          request.getAmount(),
+          request.getCurrency(),
           account.getCurrency());
-      debitAmount = currencyService.convert(request.getAmount(), request.getCurrency(), account.getCurrency());
+      debitAmount =
+          currencyService.convert(
+              request.getAmount(), request.getCurrency(), account.getCurrency());
     }
 
     BigDecimal newBalance = account.getBalance().subtract(debitAmount);
@@ -217,9 +226,14 @@ public class AccountService {
     // Convert logic
     BigDecimal creditAmount = request.getAmount();
     if (request.getCurrency() != null && !request.getCurrency().equals(account.getCurrency())) {
-      log.info("Converting credit amount {} from {} to {}", request.getAmount(), request.getCurrency(),
+      log.info(
+          "Converting credit amount {} from {} to {}",
+          request.getAmount(),
+          request.getCurrency(),
           account.getCurrency());
-      creditAmount = currencyService.convert(request.getAmount(), request.getCurrency(), account.getCurrency());
+      creditAmount =
+          currencyService.convert(
+              request.getAmount(), request.getCurrency(), account.getCurrency());
     }
 
     account.setBalance(account.getBalance().add(creditAmount));

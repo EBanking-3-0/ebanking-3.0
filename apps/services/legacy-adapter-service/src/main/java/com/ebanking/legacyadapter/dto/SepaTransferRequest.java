@@ -8,13 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SepaTransferRequest {
-    private String fromIban;
-    private String toIban;
-    private BigDecimal amount;
-    private String currency;
-    private String beneficiaryName;
-    private String description;
-    private String transactionId;
-    private String idempotencyKey;
-    private String executionDate;
+  private String fromIban;
+  private String toIban;
+  private BigDecimal amount;
+  private String currency;
+  private String beneficiaryName;
+  private String description;
+  private String transactionId;
+  private String idempotencyKey;
+  private String executionDate;
 }

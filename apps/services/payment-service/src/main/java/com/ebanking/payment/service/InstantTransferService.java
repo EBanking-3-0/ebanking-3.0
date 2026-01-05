@@ -121,6 +121,7 @@ public class InstantTransferService {
 
         eventProducer.detectFraud(
             payment.getId(),
+            payment.getUserId(),
             payment.getFromAccountId(),
             payment.getFromIban(),
             payment.getAmount(),
@@ -190,6 +191,7 @@ public class InstantTransferService {
 
         eventProducer.completeTransaction(
             payment.getId(),
+            payment.getUserId(),
             payment.getFromAccountId(),
             null,
             payment.getFromIban(),
@@ -221,6 +223,7 @@ public class InstantTransferService {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),
@@ -241,6 +244,7 @@ public class InstantTransferService {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),
