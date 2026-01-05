@@ -26,7 +26,10 @@
         "styles": [
           "apps/frontend/web-app/src/styles.scss"
         ],
-        "scripts": []
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "apollo-upload-client"
+        ]
       },
       "configurations": {
         "production": {

@@ -3,6 +3,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { AiChatComponent } from './components/ai-chat/ai-chat.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { KycPageComponent } from './components/kyc-page/kyc-page.component';
 
 export const routes: Routes = [
   { path: '', component: UserListComponent },
@@ -10,5 +11,6 @@ export const routes: Routes = [
   { path: 'users/edit/:id', component: UserFormComponent },
   { path: 'ai-chat', component: AiChatComponent },
   { path: 'payments', component: PaymentComponent },
+  { path: 'kyc', component: KycPageComponent },
   { path: '**', redirectTo: '' },
 ];

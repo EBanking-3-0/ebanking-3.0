@@ -6,7 +6,7 @@
 logs/
 
 # Package files
-*.jar
+#*.jar
 *.war
 *.ear
 *.zip

@@ -1,29 +1,31 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  provideKeycloak,
-  includeBearerTokenInterceptor,
-  createInterceptorCondition,
-  IncludeBearerTokenCondition,
-  withAutoRefreshToken,
-  AutoRefreshTokenService,
-  UserActivityService,
-  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,   // ← import this token!
-} from 'keycloak-angular';
 import { provideApollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache } from '@apollo/client/core';
-import { inject } from '@angular/core';
+import { from, InMemoryCache, ApolloLink } from '@apollo/client/core';
+import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
+import { setContext } from '@apollo/client/link/context';
+import Keycloak from 'keycloak-js';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 
-// 1. Create your condition(s) — here: add token only to requests going to your backend
+import {
+  AutoRefreshTokenService,
+  createInterceptorCondition,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  IncludeBearerTokenCondition,
+  includeBearerTokenInterceptor,
+  provideKeycloak,
+  UserActivityService,
+  withAutoRefreshToken,
+} from 'keycloak-angular';
+
+/**
+ * Only attach Bearer token to backend / GraphQL requests
+ */
 const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^http:\/\/localhost:8081(\/.*)?$/i,   // adjust if needed (your GraphQL endpoint)
-  // Optional: you can also filter by http methods, e.g.:
-  // methods: ['POST', 'GET', 'PUT'],
+  urlPattern: /^http:\/\/localhost:80(81|83)(\/.*)?$/i,  // Matches both 8081 and 8083
 });
 
 export const appConfig: ApplicationConfig = {
@@ -31,10 +33,14 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
 
-    // Add the interceptor globally
+    /**
+     * Global HTTP interceptor (REST calls)
+     */
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
 
-    // Keycloak setup (no bearer config here!)
+    /**
+     * Keycloak initialization
+     */
     provideKeycloak({
       config: {
         url: environment.keycloak.url,
@@ -43,11 +49,12 @@ export const appConfig: ApplicationConfig = {
       },
       initOptions: {
         onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-        checkLoginIframe: false,               // ← Already good, keep it
-        silentCheckSsoFallback: true,          // ← CRITICAL: allow fallback to visible check-sso (redirect) on silent failure
-        pkceMethod: 'S256',                    // ← Good security practice
-        enableLogging: true,                   // ← ADD THIS → shows detailed Keycloak logs in console
+        silentCheckSsoRedirectUri:
+          window.location.origin + '/assets/silent-check-sso.html',
+        checkLoginIframe: false,
+        silentCheckSsoFallback: true,
+        pkceMethod: 'S256',
+        enableLogging: true,
       },
       features: [
         withAutoRefreshToken({
@@ -57,22 +64,64 @@ export const appConfig: ApplicationConfig = {
       ],
     }),
 
-    // Required for auto-refresh
+    /**
+     * Required services for auto-refresh
+     */
     AutoRefreshTokenService,
     UserActivityService,
 
-    // 2. This is where you define WHEN to add the Bearer token!
+    /**
+     * Define when the Bearer token interceptor runs
+     */
     {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [backendCondition],   // can be multiple conditions
+      useValue: [backendCondition],
     },
 
+    /**
+     * Apollo GraphQL configuration (SAFE with Keycloak + silent SSO)
+     */
     provideApollo(() => {
-      const httpLink = inject(HttpLink);
-      return {
-        link: httpLink.create({ uri: 'http://localhost:8081/graphql' }),
-        cache: new InMemoryCache(),
-      };
+      console.log('Initializing Apollo Client...');
+      try {
+        const keycloak = inject(Keycloak);
+
+        const uploadLink = new (UploadHttpLink as any)({
+          uri: 'http://localhost:8081/graphql',
+          credentials: 'include',
+        }) as unknown as ApolloLink;
+
+        const authLink = setContext(async (_, { headers }) => {
+          let token: string | undefined;
+
+          try {
+            // Ensure token is valid (refresh if needed, minValidity = 30s)
+            await keycloak.updateToken(30);
+            token = keycloak.token;
+          } catch (error) {
+            // Token update failed or not logged in
+            token = undefined;
+          }
+
+          return {
+            headers: {
+              ...headers,
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+          };
+        });
+
+        const options = {
+          link: from([authLink, uploadLink]),
+          cache: new InMemoryCache(),
+        };
+
+        console.log('Apollo Client options created:', options);
+        return options;
+      } catch (error) {
+        console.error('Error initializing Apollo Client:', error);
+        throw error;
+      }
     }),
   ],
 };
