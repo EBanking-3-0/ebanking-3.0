@@ -6,7 +6,7 @@
 logs/
 
 # Package files
-*.jar
+#*.jar
 *.war
 *.ear
 *.zip
@@ -98,6 +98,8 @@ test-results/ # Gradle test results
 
 # Project pdf reqs
 *.pdf
+get_token.sh
+apps/services/user-service/uploads
 apps/frontend/web-app/.scannerwork
 
 # terraform
@@ -120,3 +122,4 @@ _override.tf
 *secret*.yaml
 .env
 .helm/
+.env

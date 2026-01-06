@@ -9,7 +9,7 @@ export const environment = {
 
   apiUrl: 'http://api.ebanking.local/graphql',
   keycloak: {
-    url: 'http://auth.ebanking.local',
+    url: 'http://localhost:8092',
     realm: 'ebanking-realm',
     clientId: 'ebanking-client',
   },

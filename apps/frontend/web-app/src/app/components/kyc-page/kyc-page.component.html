@@ -1,0 +1,144 @@
+<div class="container">
+  <h1>KYC Verification</h1>
+
+  <!-- Error Message -->
+  <div *ngIf="submissionError" class="error">
+    <p><strong>Error submitting KYC:</strong></p>
+    <p>{{ submissionError }}</p>
+  </div>
+
+  <!-- Success Message (optional - you can add submissionSuccess in TS if you want) -->
+  <div *ngIf="submissionSuccess" class="success">
+    <p><strong>KYC submitted successfully!</strong></p>
+    <p>Your information is now under review.</p>
+  </div>
+
+  <form [formGroup]="kycForm" (ngSubmit)="onSubmit()">
+    <!-- Personal Information -->
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" class="form-control" />
+      <div
+        *ngIf="kycForm.get('firstName')?.invalid && kycForm.get('firstName')?.touched"
+        class="error"
+      >
+        First name is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" class="form-control" />
+      <div
+        *ngIf="kycForm.get('lastName')?.invalid && kycForm.get('lastName')?.touched"
+        class="error"
+      >
+        Last name is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" formControlName="phone" class="form-control" />
+      <div
+        *ngIf="kycForm.get('phone')?.invalid && kycForm.get('phone')?.touched"
+        class="error"
+      >
+        Phone number is required.
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group">
+      <label for="addressLine1">Address Line 1</label>
+      <input type="text" id="addressLine1" formControlName="addressLine1" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label for="addressLine2">Address Line 2 (optional)</label>
+      <input type="text" id="addressLine2" formControlName="addressLine2" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" id="city" formControlName="city" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label for="postalCode">Postal Code</label>
+      <input type="text" id="postalCode" formControlName="postalCode" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" id="country" formControlName="country" class="form-control" />
+    </div>
+
+    <!-- Identity -->
+    <div class="form-group">
+      <label for="cinNumber">CIN Number</label>
+      <input type="text" id="cinNumber" formControlName="cinNumber" class="form-control" />
+      <div
+        *ngIf="kycForm.get('cinNumber')?.invalid && kycForm.get('cinNumber')?.touched"
+        class="error"
+      >
+        CIN number is required.
+      </div>
+    </div>
+
+    <!-- File Uploads -->
+    <div class="form-group">
+      <label for="cinImage">CIN Document Image</label>
+      <input type="file" id="cinImage" (change)="onFileChange($event, 'cinImage')" accept="image/*" />
+      <div
+        *ngIf="kycForm.get('cinImage')?.invalid && kycForm.get('cinImage')?.touched"
+        class="error"
+      >
+        CIN image is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="selfieImage">Selfie Image (with your face clearly visible)</label>
+      <input type="file" id="selfieImage" (change)="onFileChange($event, 'selfieImage')" accept="image/*" />
+      <div
+        *ngIf="kycForm.get('selfieImage')?.invalid && kycForm.get('selfieImage')?.touched"
+        class="error"
+      >
+        Selfie image is required.
+      </div>
+    </div>
+
+    <!-- GDPR Consents Section -->
+    <div class="form-section">
+      <h3>GDPR Consent Preferences</h3>
+      <p>Please indicate whether you agree to the following:</p>
+
+      <div class="consent-group" formGroupName="gdprConsents">
+        <div class="consent-item" *ngFor="let consent of consentTypes">
+          <input
+            type="checkbox"
+            [id]="consent.key"
+            [formControlName]="consent.key"
+          />
+          <label [for]="consent.key">{{ consent.label }}</label>
+        </div>
+      </div>
+
+      <div class="info">
+        <small>
+          You can update these preferences at any time in your account settings after verification.
+        </small>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="!kycForm.valid || submitting"
+      class="submit-btn"
+    >
+      {{ submitting ? 'Submitting...' : 'Submit KYC' }}
+    </button>
+  </form>
+</div>

@@ -15,10 +15,14 @@ spring:
       enabled: true
       path: /graphiql
     path: /graphql
+    multipart:
+      enabled: true
     cors:
-      allowed-origins: "*"
+      allowed-origins: "http://localhost:4200"
       allowed-methods: "*"
       allowed-headers: "*"
+      allow-credentials: true
+
 
 eureka:
   client:
