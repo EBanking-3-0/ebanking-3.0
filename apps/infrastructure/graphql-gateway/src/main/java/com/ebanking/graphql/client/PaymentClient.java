@@ -29,5 +29,6 @@ public interface PaymentClient {
   List<PaymentResponse> getUserPayments();
 
   @PostMapping("/api/payments/{id}/authorize")
-  PaymentResponse authorizePayment(@PathVariable("id") Long id, @RequestBody ScaVerificationRequest request);
+  PaymentResponse authorizePayment(
+      @PathVariable("id") Long id, @RequestBody ScaVerificationRequest request);
 }

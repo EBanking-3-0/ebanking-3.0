@@ -1,0 +1,123 @@
+# Global settings
+global:
+  imageRegistry: docker.io
+  imagePullSecrets: []
+
+# Third-party dependencies configuration
+postgresql:
+  enabled: true
+  image:
+    tag: latest
+
+  auth:
+    database: ebanking_db
+    username: ebanking_user
+    password: pass
+    existingSecret: postgres-secret
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+
+  primary:
+    persistence:
+      enabled: false
+
+    initdb:
+      scripts:
+        init.sql: |
+          -- Create Keycloak database
+          CREATE DATABASE keycloak_db;
+          -- Create Staging database
+          CREATE DATABASE staging_db;
+
+          -- Grant privileges
+          GRANT ALL PRIVILEGES ON DATABASE keycloak_db TO ebanking_user;
+          GRANT ALL PRIVILEGES ON DATABASE staging_db TO ebanking_user;
+
+          -- Connected to ebanking_db by default (Production)
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE SCHEMA IF NOT EXISTS users;
+          CREATE SCHEMA IF NOT EXISTS accounts;
+          CREATE SCHEMA IF NOT EXISTS payments;
+          CREATE SCHEMA IF NOT EXISTS crypto;
+          CREATE SCHEMA IF NOT EXISTS notifications;
+          CREATE SCHEMA IF NOT EXISTS analytics;
+
+          GRANT ALL ON SCHEMA auth TO ebanking_user;
+          GRANT ALL ON SCHEMA users TO ebanking_user;
+          GRANT ALL ON SCHEMA accounts TO ebanking_user;
+          GRANT ALL ON SCHEMA payments TO ebanking_user;
+          GRANT ALL ON SCHEMA crypto TO ebanking_user;
+          GRANT ALL ON SCHEMA notifications TO ebanking_user;
+          GRANT ALL ON SCHEMA analytics TO ebanking_user;
+
+          -- Setup schemas in staging_db
+          \c staging_db
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE SCHEMA IF NOT EXISTS users;
+          CREATE SCHEMA IF NOT EXISTS accounts;
+          CREATE SCHEMA IF NOT EXISTS payments;
+          CREATE SCHEMA IF NOT EXISTS crypto;
+          CREATE SCHEMA IF NOT EXISTS notifications;
+          CREATE SCHEMA IF NOT EXISTS analytics;
+
+          GRANT ALL ON SCHEMA auth TO ebanking_user;
+          GRANT ALL ON SCHEMA users TO ebanking_user;
+          GRANT ALL ON SCHEMA accounts TO ebanking_user;
+          GRANT ALL ON SCHEMA payments TO ebanking_user;
+          GRANT ALL ON SCHEMA crypto TO ebanking_user;
+          GRANT ALL ON SCHEMA notifications TO ebanking_user;
+          GRANT ALL ON SCHEMA analytics TO ebanking_user;
+
+
+kafka:
+  enabled: true
+
+keycloakx:
+  dbchecker:
+    enabled: true
+
+  http:
+    relativePath: "/"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    servicePort: http
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    rules:
+      - host: auth.ebanking.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: ebanking-auth-tls
+        hosts:
+          - auth.ebanking.local
+
+  database:
+    vendor: postgres
+    hostname: ebanking-infra-postgresql
+    port: 5432
+    username: ebanking_user
+    password: pass
+    database: keycloak_db
+
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+  extraEnv: |
+    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: admin
+    - name: KC_HOSTNAME
+      value: https://auth.ebanking.local
+    - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+      value: "false"
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless

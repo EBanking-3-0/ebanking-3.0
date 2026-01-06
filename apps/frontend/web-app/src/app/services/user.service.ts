@@ -12,6 +12,17 @@ export interface User {
   status: string;
 }
 
+export interface Account {
+  id: string;
+  accountNumber: string;
+  userId: string;
+  balance: number;
+  currency: string;
+  type: string;
+  status: string;
+  nickname?: string;
+}
+
 const GET_USERS = gql`
   query GetUsers {
     users {
@@ -34,6 +45,20 @@ const GET_ME = gql`
       lastName
       phone
       status
+    }
+  }
+`;
+
+const GET_ACCOUNTS = gql`
+  query GetAccounts($userId: ID!) {
+    myAccounts(userId: $userId) {
+      id
+      accountNumber
+      balance
+      currency
+      type
+      status
+      nickname
     }
   }
 `;
@@ -150,6 +175,18 @@ export class UserService {
       })
       .pipe(
         map(result => result.data?.me as User)
+      );
+  }
+
+  getAccounts(userId: string): Observable<Account[]> {
+    return this.apollo
+      .query<{ myAccounts: Account[] }>({
+        query: GET_ACCOUNTS,
+        variables: { userId },
+        fetchPolicy: 'network-only'
+      })
+      .pipe(
+        map(result => (result.data?.myAccounts || []) as Account[])
       );
   }
 }

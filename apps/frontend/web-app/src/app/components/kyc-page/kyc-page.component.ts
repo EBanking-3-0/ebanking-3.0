@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 interface ConsentItem {
   key: string;      // e.g. "MARKETING_EMAIL"
@@ -105,7 +106,7 @@ export class KycPageComponent implements OnInit {
     formData.append('selfieImage', selfieImage, selfieImage.name);
 
     this.http
-      .post('http://localhost:8083/api/v1/kyc', formData, {
+      .post(`${environment.apiRestUrl}/api/v1/kyc`, formData, {
         withCredentials: true,
       })
       .pipe(

@@ -39,7 +39,8 @@ public class GraphQLSecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/graphiql", "/actuator/**", "/graphql")
-                    .permitAll() // Allow GraphQL endpoint, we will handle auth in resolvers or context
+                    .permitAll() // Allow GraphQL endpoint, we will handle auth in resolvers or
+                    // context
                     .anyRequest()
                     .authenticated())
         .oauth2ResourceServer(

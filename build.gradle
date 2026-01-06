@@ -21,6 +21,10 @@ allprojects {
     version = '3.0.0'
 
     repositories {
+        // Prefer mirrors first to dodge intermittent 403s from Maven Central in CI
+        maven { url = 'https://repo1.maven.org/maven2' }
+        maven { url = 'https://maven-central.storage-download.googleapis.com/maven2' }
+        // Keep the canonical endpoint last as a fallback
         mavenCentral()
         maven { url = 'https://repo.spring.io/milestone' }
     }
@@ -38,6 +42,20 @@ allprojects {
                 removeUnusedImports()
                 trimTrailingWhitespace()
                 endWithNewline()
+            }
+        }
+    }
+
+    pluginManager.withPlugin('org.springframework.boot') {
+        dependencies {
+            implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-all'
+        }
+    }
+
+    pluginManager.withPlugin('io.spring.dependency-management') {
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
             }
         }
     }

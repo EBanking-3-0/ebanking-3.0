@@ -9,10 +9,7 @@
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":apps:infrastructure:service-discovery:build",
-        "args": [
-          "-x",
-          "test"
-        ]
+        "args": ["-x", "test"]
       },
       "configurations": {
         "production": {},
@@ -20,13 +17,8 @@
       },
       "defaultConfiguration": "development",
       "cache": true,
-      "inputs": [
-        "default",
-        "{projectRoot}/**/*"
-      ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "inputs": ["default", "{projectRoot}/**/*"],
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "test": {
       "executor": "@nx/gradle:gradle",
@@ -52,16 +44,12 @@
       "continuous": true,
       "configurations": {
         "production": {
-          "args": [
-            "--args=--spring.profiles.active=prod"
-          ]
+          "args": ["--args=--spring.profiles.active=prod"]
         },
         "development": {}
       },
       "defaultConfiguration": "development",
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "clean": {
       "executor": "@nx/gradle:gradle",
@@ -92,9 +80,7 @@
         "{projectRoot}/build.gradle",
         "{projectRoot}/src/**/*.java"
       ],
-      "outputs": [
-        "{projectRoot}/build/libs"
-      ]
+      "outputs": ["{projectRoot}/build/libs"]
     },
     "sonar": {
       "executor": "@nx/gradle:gradle",
@@ -111,23 +97,17 @@
     "docker-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -t $DOCKER_USER/ebanking-service-discovery:${TAG:-latest} -f apps/infrastructure/service-discovery/Dockerfile .",
+        "command": "echo 'Skipping docker-build for service-discovery (unused)'",
         "cwd": "."
       },
-      "dependsOn": [
-        "build"
-      ],
       "cache": false
     },
     "docker-push": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker push $DOCKER_USER/ebanking-service-discovery:${TAG:-latest}",
+        "command": "echo 'Skipping docker-push for service-discovery (unused)'",
         "cwd": "."
       },
-      "dependsOn": [
-        "docker-build"
-      ],
       "cache": false
     }
   }

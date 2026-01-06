@@ -39,6 +39,12 @@ release-pom.xml
 .metadata/
 *.jks # Java Keystore files
 
+# IDE - Eclipse
+bin/
+**/bin/
+
+rapport/
+
 # IDE - VSCode
 .vscode/
 !.vscode/settings.json
@@ -122,3 +128,4 @@ _override.tf
 *secret*.yaml
 .env
 .helm/
+.env
