@@ -62,7 +62,7 @@ public class NotificationConsumer {
 
       NotificationSentEvent notificationEvent =
           NotificationSentEvent.builder()
-              .userId(event.getToAccountId()) // Using account ID as placeholder
+              .userId(String.valueOf(event.getToAccountId())) // Using account ID as placeholder
               .recipient("user@example.com") // Would get from account
               .notificationType("EMAIL")
               .subject("Transaction Completed")
@@ -92,7 +92,7 @@ public class NotificationConsumer {
 
       NotificationSentEvent notificationEvent =
           NotificationSentEvent.builder()
-              .userId(event.getAccountId())
+              .userId(String.valueOf(event.getAccountId()))
               .recipient("user@example.com")
               .notificationType("EMAIL")
               .subject("Payment Failed")
@@ -125,7 +125,7 @@ public class NotificationConsumer {
 
       NotificationSentEvent notificationEvent =
           NotificationSentEvent.builder()
-              .userId(event.getAccountId())
+              .userId(String.valueOf(event.getAccountId()))
               .recipient("user@example.com")
               .notificationType("EMAIL")
               .subject("Fraud Alert")
@@ -237,7 +237,7 @@ public class NotificationConsumer {
     // Implementation would use notification service
   }
 
-  private void sendTradeConfirmation(Long userId, String cryptoCurrency, String tradeType) {
+  private void sendTradeConfirmation(String userId, String cryptoCurrency, String tradeType) {
     log.info(
         "Sending trade confirmation for user: {} - Crypto: {} - Type: {}",
         userId,
@@ -246,7 +246,7 @@ public class NotificationConsumer {
     // Implementation would use notification service
   }
 
-  private void sendAlertNotification(Long userId, String alertType, String message) {
+  private void sendAlertNotification(String userId, String alertType, String message) {
     log.info(
         "Sending alert notification for user: {} - Type: {} - Message: {}",
         userId,

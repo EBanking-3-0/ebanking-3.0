@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 export interface PaymentRequest {
   fromAccountId: number;
@@ -49,32 +50,54 @@ export interface ScaVerificationRequest {
 export class PaymentService {
   private apiUrl = environment.paymentApiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
-  createInternalTransfer(request: PaymentRequest, userId: number = 1): Observable<PaymentResponse> {
+  private getUserId(userId?: string): string {
+    // If userId is provided, use it. Otherwise, try to get from AuthService.
+    // If AuthService doesn't have it (not logged in?), fallback to empty string or handle error.
+    // Ideally, we should throw if no user ID is available.
+    const id = userId || this.authService.getCurrentUserId();
+    if (!id) {
+      console.warn('No user ID available for payment request');
+      // Fallback or throw? For now, let's return a placeholder or throw.
+      // Given the previous code used '1' as default, maybe we should be careful.
+      // But the goal is to use the real ID.
+      throw new Error('User not authenticated');
+    }
+    return id;
+  }
+
+  createInternalTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
+    const id = this.getUserId(userId);
     return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/internal?userId=${userId}`,
+      `${this.apiUrl}/internal?userId=${id}`,
       request
     );
   }
 
-  createSepaTransfer(request: PaymentRequest, userId: number = 1): Observable<PaymentResponse> {
+  createSepaTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
+    const id = this.getUserId(userId);
     return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/sepa?userId=${userId}`,
+      `${this.apiUrl}/sepa?userId=${id}`,
       request
     );
   }
 
-  createInstantTransfer(request: PaymentRequest, userId: number = 1): Observable<PaymentResponse> {
+  createInstantTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
+    const id = this.getUserId(userId);
     return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/instant?userId=${userId}`,
+      `${this.apiUrl}/instant?userId=${id}`,
       request
     );
   }
 
-  createMobileRecharge(request: PaymentRequest, userId: number = 1): Observable<PaymentResponse> {
+  createMobileRecharge(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
+    const id = this.getUserId(userId);
     return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/mobile-recharge?userId=${userId}`,
+      `${this.apiUrl}/mobile-recharge?userId=${id}`,
       request
     );
   }
@@ -85,9 +108,10 @@ export class PaymentService {
     );
   }
 
-  getUserPayments(userId: number = 1): Observable<PaymentResponse[]> {
+  getUserPayments(userId?: string): Observable<PaymentResponse[]> {
+    const id = this.getUserId(userId);
     return this.http.get<PaymentResponse[]>(
-      `${this.apiUrl}/user?userId=${userId}`
+      `${this.apiUrl}/user?userId=${id}`
     );
   }
 

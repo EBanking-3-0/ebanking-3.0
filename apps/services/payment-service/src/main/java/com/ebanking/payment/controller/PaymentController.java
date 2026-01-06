@@ -32,95 +32,85 @@ public class PaymentController {
   }
 
   @PostMapping("/internal")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createInternalTransfer(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
-    // Ajout userId en paramètre pour les tests
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("INTERNAL_TRANSFER");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/sepa")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createSepaTransfer(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("SEPA_TRANSFER");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/instant")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createInstantTransfer(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("SCT_INSTANT");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/swift")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createSwiftTransfer(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("SWIFT_TRANSFER");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/merchant")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createMerchantPayment(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("MERCHANT_PAYMENT");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/mobile-recharge")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createMobileRecharge(
-      @Valid @RequestBody PaymentRequest request,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+      @Valid @RequestBody PaymentRequest request, JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     request.setType("MOBILE_RECHARGE");
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @PostMapping("/{id}/authorize")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> authorizePayment(
       @PathVariable Long id,
       @Valid @RequestBody ScaVerificationRequest scaRequest,
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
-    // Long userId = extractUserId(auth); // Commenté pour les tests
+      JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     PaymentResult result = paymentService.authorizePayment(id, scaRequest.getOtpCode(), userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   private ResponseEntity<PaymentResponse> processPayment(
       PaymentRequest request, JwtAuthenticationToken auth) {
-    Long userId = extractUserId(auth);
+    String userId = extractUserId(auth);
     PaymentResult result = paymentService.initiatePayment(request, userId);
     return ResponseEntity.ok(mapToResponse(result));
   }
 
   @GetMapping("/{id}")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> getPayment(@PathVariable Long id) {
     Payment payment = paymentQueryService.getPaymentById(id);
     return ResponseEntity.ok(mapToResponse(PaymentResult.success(payment)));
   }
 
   @GetMapping("/user")
-  // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
-  public ResponseEntity<List<PaymentResponse>> getUserPayments(
-      @RequestParam(required = false, defaultValue = "1") Long userId) {
+  public ResponseEntity<List<PaymentResponse>> getUserPayments(JwtAuthenticationToken auth) {
+    String userId = extractUserId(auth);
     List<Payment> payments = paymentQueryService.getPaymentsByUserId(userId);
     return ResponseEntity.ok(
         payments.stream()
@@ -152,14 +142,17 @@ public class PaymentController {
         .build();
   }
 
-  private Long extractUserId(JwtAuthenticationToken auth) {
-    if (auth == null || auth.getToken() == null) return 1L;
-    Object userIdClaim = auth.getTokenAttributes().get("userId");
-    if (userIdClaim != null) return Long.valueOf(userIdClaim.toString());
-    try {
-      return Long.parseLong(auth.getName());
-    } catch (NumberFormatException e) {
-      return 1L;
+  private String extractUserId(JwtAuthenticationToken auth) {
+    if (auth == null || auth.getToken() == null) {
+      // Fallback for testing/dev if needed, or throw exception
+      // For now, let's return a placeholder or throw
+      // throw new SecurityException("User not authenticated");
+      return "test-user-id"; // Temporary fallback
     }
+    // Prefer 'sub' claim which is the UUID
+    String sub = auth.getToken().getClaimAsString("sub");
+    if (sub != null) return sub;
+
+    return auth.getName();
   }
 }

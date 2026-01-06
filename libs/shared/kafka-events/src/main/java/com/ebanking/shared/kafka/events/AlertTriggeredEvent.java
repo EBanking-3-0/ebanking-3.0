@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class AlertTriggeredEvent extends BaseEvent {
 
   private Long alertId;
-  private Long userId;
+  private String userId;
   private String alertType; // BUDGET_EXCEEDED, LOW_BALANCE, HIGH_SPENDING, etc.
   private String severity; // INFO, WARNING, CRITICAL
   private String message;
@@ -30,7 +30,7 @@ public class AlertTriggeredEvent extends BaseEvent {
 
   public AlertTriggeredEvent(
       Long alertId,
-      Long userId,
+      String userId,
       String alertType,
       String severity,
       String message,

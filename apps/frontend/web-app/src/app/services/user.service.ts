@@ -25,6 +25,19 @@ const GET_USERS = gql`
   }
 `;
 
+const GET_ME = gql`
+  query GetMe {
+    me {
+      id
+      email
+      firstName
+      lastName
+      phone
+      status
+    }
+  }
+`;
+
 const GET_USER = gql`
   query GetUser($id: ID!) {
     user(id: $id) {
@@ -127,5 +140,16 @@ export class UserService {
         refetchQueries: [{ query: GET_USERS }],
       })
       .pipe(map(result => result.data?.deleteUser as boolean));
+  }
+
+  getMe(): Observable<User> {
+    return this.apollo
+      .query<{ me: User }>({
+        query: GET_ME,
+        fetchPolicy: 'network-only'
+      })
+      .pipe(
+        map(result => result.data?.me as User)
+      );
   }
 }

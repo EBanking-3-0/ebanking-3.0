@@ -31,7 +31,7 @@ public class InternalTransferService {
   private final AccountServiceClient accountClient;
 
   @Transactional
-  public PaymentResult executeInternalTransfer(PaymentRequest request, Long userId) {
+  public PaymentResult executeInternalTransfer(PaymentRequest request, String userId) {
     log.info(
         "Processing internal transfer from account {} to account {} - Amount: {} {}",
         request.getFromAccountId(),

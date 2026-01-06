@@ -51,7 +51,7 @@ public class InstantTransferService {
   private int timeoutSeconds;
 
   @Transactional
-  public PaymentResult executeInstantTransfer(PaymentRequest request, Long userId) {
+  public PaymentResult executeInstantTransfer(PaymentRequest request, String userId) {
     log.info(
         "Processing instant transfer from account {} to IBAN {} - Amount: {} {}",
         request.getFromAccountId(),

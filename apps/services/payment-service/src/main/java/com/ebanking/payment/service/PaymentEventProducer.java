@@ -20,7 +20,7 @@ public class PaymentEventProducer {
   @Transactional
   public void completeTransaction(
       Long paymentId,
-      Long userId,
+      String userId,
       Long fromAccountId,
       Long toAccountId,
       String fromIban,
@@ -61,7 +61,7 @@ public class PaymentEventProducer {
   @Transactional
   public void handlePaymentFailure(
       Long paymentId,
-      Long userId,
+      String userId,
       Long accountId,
       String iban,
       BigDecimal amount,
@@ -96,7 +96,7 @@ public class PaymentEventProducer {
   @Transactional
   public void detectFraud(
       Long paymentId,
-      Long userId,
+      String userId,
       Long accountId,
       String iban,
       BigDecimal amount,

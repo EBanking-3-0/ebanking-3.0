@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class FraudDetectedEvent extends BaseEvent {
 
   private Long transactionId;
-  private Long userId;
+  private String userId;
   private Long accountId;
   private String accountNumber;
   private BigDecimal amount;
@@ -31,7 +31,7 @@ public class FraudDetectedEvent extends BaseEvent {
 
   public FraudDetectedEvent(
       Long transactionId,
-      Long userId,
+      String userId,
       Long accountId,
       String accountNumber,
       BigDecimal amount,

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MfaVerificationRequest {
-  private Long userId;
+  private String userId;
   private Long paymentId;
   private String mfaCode;
   private String mfaType; // SMS, EMAIL, TOTP

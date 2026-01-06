@@ -49,7 +49,7 @@ public class PaymentSagaOrchestratorTest {
             .toAccountId(2L)
             .amount(new BigDecimal("100.00"))
             .currency("EUR")
-            .userId(1L)
+            .userId("user-123")
             .build();
   }
 

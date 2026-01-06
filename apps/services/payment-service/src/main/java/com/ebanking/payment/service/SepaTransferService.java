@@ -46,7 +46,7 @@ public class SepaTransferService {
   private static final LocalTime CUT_OFF_TIME = LocalTime.of(16, 0); // 16h00
 
   @Transactional
-  public PaymentResult executeSepaTransfer(PaymentRequest request, Long userId) {
+  public PaymentResult executeSepaTransfer(PaymentRequest request, String userId) {
     log.info(
         "Processing SEPA transfer from account {} to IBAN {} - Amount: {} {}",
         request.getFromAccountId(),

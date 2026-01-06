@@ -59,14 +59,52 @@ public class AccountControllerTest {
   }
 
   @Test
-  @WithMockUser(roles = "user")
   void testGetMyAccounts() throws Exception {
     when(accountService.getAccountsByUserId(any())).thenReturn(List.of(new Account()));
     when(accountMapper.mapToDTO(any())).thenReturn(new AccountDTO());
 
     mockMvc
-        .perform(get("/api/accounts/my-accounts").param("userId", "user-uuid-123"))
+        .perform(
+            get("/api/accounts/my-accounts")
+                .with(
+                    org.springframework.security.test.web.servlet.request
+                        .SecurityMockMvcRequestPostProcessors.jwt()
+                        .jwt(jwt -> jwt.claim("sub", "user-uuid-123"))))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void testGetAccount_Success() throws Exception {
+    Account account = Account.builder().id(1L).userId("user-uuid-123").build();
+    AccountDTO accountDTO = AccountDTO.builder().id(1L).userId("user-uuid-123").build();
+
+    when(accountService.getAccountById(1L)).thenReturn(account);
+    when(accountMapper.mapToDTO(account)).thenReturn(accountDTO);
+
+    mockMvc
+        .perform(
+            get("/api/accounts/1")
+                .with(
+                    org.springframework.security.test.web.servlet.request
+                        .SecurityMockMvcRequestPostProcessors.jwt()
+                        .jwt(jwt -> jwt.claim("sub", "user-uuid-123"))))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void testGetAccount_Forbidden() throws Exception {
+    Account account = Account.builder().id(1L).userId("other-user").build();
+
+    when(accountService.getAccountById(1L)).thenReturn(account);
+
+    mockMvc
+        .perform(
+            get("/api/accounts/1")
+                .with(
+                    org.springframework.security.test.web.servlet.request
+                        .SecurityMockMvcRequestPostProcessors.jwt()
+                        .jwt(jwt -> jwt.claim("sub", "user-uuid-123"))))
+        .andExpect(status().isForbidden());
   }
 
   @Test

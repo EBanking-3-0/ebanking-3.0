@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 public class NotificationSentEvent extends BaseEvent {
 
   private Long notificationId;
-  private Long userId;
+  private String userId;
   private String recipient;
   private String notificationType; // EMAIL, SMS, PUSH
   private String subject;
@@ -28,7 +28,7 @@ public class NotificationSentEvent extends BaseEvent {
 
   public NotificationSentEvent(
       Long notificationId,
-      Long userId,
+      String userId,
       String recipient,
       String notificationType,
       String subject,

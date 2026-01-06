@@ -25,7 +25,7 @@ import {
  * Only attach Bearer token to backend / GraphQL requests
  */
 const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^http:\/\/localhost:80(81|83)(\/.*)?$/i,  // Matches both 8081 and 8083
+  urlPattern: /^http:\/\/localhost:80(81|83|84)(\/.*)?$/i,  // Matches 8081, 8083, 8084
 });
 
 export const appConfig: ApplicationConfig = {

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentService, PaymentRequest, PaymentResponse } from '../../services/payment.service';
 import { AccountService, AccountDTO } from '../../services/account.service';
-import Keycloak from 'keycloak-js';
 import { Observable } from 'rxjs';
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-payment',
@@ -37,7 +38,7 @@ export class PaymentComponent implements OnInit {
   otpForm!: FormGroup;
   otpError: string | null = null;
 
-  currentUserId: number | null = null;
+  currentUserId: string | null = null;
 
   // Moroccan Mobile Operators
   moroccanOperators = [
@@ -52,52 +53,30 @@ export class PaymentComponent implements OnInit {
     private fb: FormBuilder,
     private paymentService: PaymentService,
     private accountService: AccountService,
-    private keycloak: Keycloak
+    @Inject(AuthService) private authService: AuthService,
   ) {
     this.initializeForms();
     this.initializeOtpForm();
-  }
-
-  async ngOnInit() {
-    await this.loadCurrentUser();
-    this.generateIdempotencyKey();
-    this.loadAccounts();
-    this.loadUserPayments();
-  }
-
-  async loadCurrentUser() {
-    // TEMPORAIRE : Utiliser userId = 1 pour les tests (sans authentification)
-    this.currentUserId = 1;
-
-    // Code original commenté pour les tests
-    /*
-    try {
-      if (this.keycloak.authenticated) {
-        const tokenParsed = this.keycloak.idTokenParsed;
-        // Try to get userId from token claims
-        const userIdClaim = tokenParsed?.['userId'] || tokenParsed?.['sub'];
-        if (userIdClaim) {
-          this.currentUserId = typeof userIdClaim === 'string' 
-            ? parseInt(userIdClaim, 10) 
-            : userIdClaim;
-        } else {
-          // Fallback: try to parse from username or use default
-          this.currentUserId = 1; // Default for demo
-        }
-      } else {
-        this.currentUserId = 1; // Default for demo
+    
+    // React to user changes
+    effect(() => {
+      const user = this.authService.currentUser();
+      if (user) {
+        this.currentUserId = user.id;
+        this.loadAccounts();
+        this.loadUserPayments();
       }
-    } catch (error) {
-      console.error('Error loading current user:', error);
-      this.currentUserId = 1; // Default for demo
-    }
-    */
+    });
+  }
+
+  ngOnInit() {
+    this.generateIdempotencyKey();
+    // Data loading is handled by the effect when user becomes available
   }
 
   loadAccounts() {
-    if (!this.currentUserId) {
-      this.currentUserId = 1; // Fallback
-    }
+    if (!this.currentUserId) return;
+    
     this.accountsLoading = true;
     this.accountService.getMyAccounts(this.currentUserId).subscribe({
       next: (accounts) => {
@@ -122,9 +101,10 @@ export class PaymentComponent implements OnInit {
   }
 
   loadUserPayments() {
+    if (!this.currentUserId) return;
+
     this.paymentsLoading = true;
-    const userId = this.currentUserId || 1; // Utiliser currentUserId ou défaut à 1
-    this.paymentService.getUserPayments(userId).subscribe({
+    this.paymentService.getUserPayments(this.currentUserId).subscribe({
       next: (payments) => {
         this.userPayments = payments;
         this.paymentsLoading = false;
@@ -260,7 +240,13 @@ export class PaymentComponent implements OnInit {
     }
 
     let paymentObservable: Observable<PaymentResponse>;
-    const userId = this.currentUserId || 1; // Utiliser currentUserId ou défaut à 1
+    const userId = this.currentUserId;
+    
+    if (!userId) {
+      this.error = 'User not authenticated';
+      this.loading = false;
+      return;
+    }
 
     switch (this.activeTab) {
       case 'internal':

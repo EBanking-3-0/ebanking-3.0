@@ -65,7 +65,7 @@ public class Payment {
 
   // Metadata & Tracking
   @Column(nullable = false)
-  private Long userId;
+  private String userId;
 
   private String description;
   private String reference; // Customer reference (EndToEndId in ISO)

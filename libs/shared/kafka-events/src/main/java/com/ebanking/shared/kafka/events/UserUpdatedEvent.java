@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class UserUpdatedEvent extends BaseEvent {
 
-  private Long userId;
+  private String userId;
   private String email;
   private String firstName;
   private String lastName;
@@ -26,7 +26,7 @@ public class UserUpdatedEvent extends BaseEvent {
   }
 
   public UserUpdatedEvent(
-      Long userId,
+      String userId,
       String email,
       String firstName,
       String lastName,

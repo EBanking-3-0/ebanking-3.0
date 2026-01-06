@@ -48,13 +48,13 @@ public class PaymentTypeCoverageTest {
   @Test
   void testInternalTransferDelegation() {
     PaymentRequest request = createRequest("INTERNAL_TRANSFER");
-    when(internalTransferService.executeInternalTransfer(any(), eq(1L)))
+    when(internalTransferService.executeInternalTransfer(any(), eq("user-123")))
         .thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
-    verify(internalTransferService).executeInternalTransfer(request, 1L);
+    verify(internalTransferService).executeInternalTransfer(request, "user-123");
     verifyNoInteractions(
         sepaTransferService, instantTransferService, mobileRechargeService, sagaOrchestrator);
   }
@@ -62,12 +62,13 @@ public class PaymentTypeCoverageTest {
   @Test
   void testSepaTransferDelegation() {
     PaymentRequest request = createRequest("SEPA_TRANSFER");
-    when(sepaTransferService.executeSepaTransfer(any(), eq(1L))).thenReturn(successResult());
+    when(sepaTransferService.executeSepaTransfer(any(), eq("user-123")))
+        .thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
-    verify(sepaTransferService).executeSepaTransfer(request, 1L);
+    verify(sepaTransferService).executeSepaTransfer(request, "user-123");
     verifyNoInteractions(
         internalTransferService, instantTransferService, mobileRechargeService, sagaOrchestrator);
   }
@@ -75,12 +76,13 @@ public class PaymentTypeCoverageTest {
   @Test
   void testInstantTransferDelegation() {
     PaymentRequest request = createRequest("SCT_INSTANT");
-    when(instantTransferService.executeInstantTransfer(any(), eq(1L))).thenReturn(successResult());
+    when(instantTransferService.executeInstantTransfer(any(), eq("user-123")))
+        .thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
-    verify(instantTransferService).executeInstantTransfer(request, 1L);
+    verify(instantTransferService).executeInstantTransfer(request, "user-123");
     verifyNoInteractions(
         internalTransferService, sepaTransferService, mobileRechargeService, sagaOrchestrator);
   }
@@ -88,12 +90,13 @@ public class PaymentTypeCoverageTest {
   @Test
   void testMobileRechargeDelegation() {
     PaymentRequest request = createRequest("MOBILE_RECHARGE");
-    when(mobileRechargeService.executeMobileRecharge(any(), eq(1L))).thenReturn(successResult());
+    when(mobileRechargeService.executeMobileRecharge(any(), eq("user-123")))
+        .thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
-    verify(mobileRechargeService).executeMobileRecharge(request, 1L);
+    verify(mobileRechargeService).executeMobileRecharge(request, "user-123");
     verifyNoInteractions(
         internalTransferService, sepaTransferService, instantTransferService, sagaOrchestrator);
   }
@@ -103,7 +106,7 @@ public class PaymentTypeCoverageTest {
     PaymentRequest request = createRequest("SWIFT_TRANSFER");
     when(sagaOrchestrator.executePayment(any(Payment.class))).thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
     verify(sagaOrchestrator).executePayment(any(Payment.class));
@@ -119,7 +122,7 @@ public class PaymentTypeCoverageTest {
     PaymentRequest request = createRequest("MERCHANT_PAYMENT");
     when(sagaOrchestrator.executePayment(any(Payment.class))).thenReturn(successResult());
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
     verify(sagaOrchestrator).executePayment(any(Payment.class));

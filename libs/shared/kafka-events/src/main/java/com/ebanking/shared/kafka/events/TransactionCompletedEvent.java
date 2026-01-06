@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class TransactionCompletedEvent extends BaseEvent {
 
   private Long transactionId;
-  private Long userId;
+  private String userId;
   private Long fromAccountId;
   private Long toAccountId;
   private String fromAccountNumber;
@@ -33,7 +33,7 @@ public class TransactionCompletedEvent extends BaseEvent {
 
   public TransactionCompletedEvent(
       Long transactionId,
-      Long userId,
+      String userId,
       Long fromAccountId,
       Long toAccountId,
       String fromAccountNumber,

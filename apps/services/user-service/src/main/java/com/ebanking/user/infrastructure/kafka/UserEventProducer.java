@@ -22,7 +22,7 @@ public class UserEventProducer {
   public void publishUserCreatedEvent(User user) {
     UserCreatedEvent event =
         UserCreatedEvent.builder()
-            .userId(0L)
+            .userId(user.getId().toString())
             .email(user.getEmail())
             .firstName(user.getFirstName())
             .lastName(user.getLastName())
@@ -33,15 +33,15 @@ public class UserEventProducer {
     log.info("Published UserCreatedEvent for user ID: {}", user.getId());
   }
 
-  public void publishUserDeletedEvent(Long userId, String reason) {
+  public void publishUserDeletedEvent(String userId, String reason) {
     UserDeletedEvent event = new UserDeletedEvent(userId, reason);
 
-    kafkaTemplate.send(USER_TOPIC, userId.toString(), event);
+    kafkaTemplate.send(USER_TOPIC, userId, event);
     log.warn("Published UserDeletedEvent for user ID: {}, reason: {}", userId, reason);
   }
 
   // Overload without reason
-  public void publishUserDeletedEvent(Long userId) {
+  public void publishUserDeletedEvent(String userId) {
     publishUserDeletedEvent(userId, null);
   }
 }

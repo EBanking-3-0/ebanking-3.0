@@ -44,7 +44,7 @@ public class MobileRechargeService {
   private static final String OP_INWI = "INWI";
 
   @Transactional
-  public PaymentResult executeMobileRecharge(PaymentRequest request, Long userId) {
+  public PaymentResult executeMobileRecharge(PaymentRequest request, String userId) {
     log.info(
         "Processing mobile recharge for phone {} - Amount: {} {}",
         request.getPhoneNumber(),

@@ -14,21 +14,21 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class UserDeletedEvent extends BaseEvent {
 
-  private Long userId;
+  private String userId;
   private String reason; // optional: e.g., "user_request", "fraud", "inactive"
 
   public UserDeletedEvent() {
     super(KafkaTopics.USER_DELETED);
   }
 
-  public UserDeletedEvent(Long userId, String reason) {
+  public UserDeletedEvent(String userId, String reason) {
     super(KafkaTopics.USER_DELETED);
     this.userId = userId;
     this.reason = reason;
   }
 
   // Convenience constructor if reason is not needed
-  public UserDeletedEvent(Long userId) {
+  public UserDeletedEvent(String userId) {
     this(userId, null);
   }
 }

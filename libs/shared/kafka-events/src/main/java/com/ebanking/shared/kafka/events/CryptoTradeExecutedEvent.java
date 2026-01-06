@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class CryptoTradeExecutedEvent extends BaseEvent {
 
   private Long tradeId;
-  private Long userId;
+  private String userId;
   private Long accountId;
   private String cryptoCurrency; // BTC, ETH, etc.
   private String tradeType; // BUY, SELL
@@ -32,7 +32,7 @@ public class CryptoTradeExecutedEvent extends BaseEvent {
 
   public CryptoTradeExecutedEvent(
       Long tradeId,
-      Long userId,
+      String userId,
       Long accountId,
       String cryptoCurrency,
       String tradeType,

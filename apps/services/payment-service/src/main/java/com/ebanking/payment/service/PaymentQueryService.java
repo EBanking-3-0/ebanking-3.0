@@ -30,7 +30,7 @@ public class PaymentQueryService {
                     "Payment not found for Transaction ID: " + transactionId));
   }
 
-  public List<Payment> getPaymentsByUserId(Long userId) {
+  public List<Payment> getPaymentsByUserId(String userId) {
     return paymentRepository.findByUserIdOrderByCreatedAtDesc(userId);
   }
 }

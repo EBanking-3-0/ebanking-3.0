@@ -45,12 +45,13 @@ public class PaymentServiceTest {
     Payment payment = Payment.builder().id(1L).status(PaymentStatus.COMPLETED).build();
     PaymentResult expectedResult = PaymentResult.success(payment);
 
-    when(internalTransferService.executeInternalTransfer(request, 1L)).thenReturn(expectedResult);
+    when(internalTransferService.executeInternalTransfer(request, "user-123"))
+        .thenReturn(expectedResult);
 
-    PaymentResult result = paymentService.initiatePayment(request, 1L);
+    PaymentResult result = paymentService.initiatePayment(request, "user-123");
 
     assertTrue(result.isSuccess());
-    verify(internalTransferService, times(1)).executeInternalTransfer(request, 1L);
+    verify(internalTransferService, times(1)).executeInternalTransfer(request, "user-123");
   }
 
   @Test
@@ -58,7 +59,7 @@ public class PaymentServiceTest {
     Payment payment =
         Payment.builder()
             .id(1L)
-            .userId(1L)
+            .userId("user-123")
             .amount(new BigDecimal("500.00"))
             .paymentType(PaymentType.INTERNAL_TRANSFER)
             .fromAccountId(1L)
@@ -72,12 +73,12 @@ public class PaymentServiceTest {
 
     Payment paymentCompleted = Payment.builder().id(1L).status(PaymentStatus.COMPLETED).build();
     PaymentResult expectedResult = PaymentResult.success(paymentCompleted);
-    when(internalTransferService.executeInternalTransfer(any(PaymentRequest.class), eq(1L)))
+    when(internalTransferService.executeInternalTransfer(any(PaymentRequest.class), eq("user-123")))
         .thenReturn(expectedResult);
 
-    PaymentResult result = paymentService.authorizePayment(1L, "123456", 1L);
+    PaymentResult result = paymentService.authorizePayment(1L, "123456", "user-123");
 
     assertTrue(result.isSuccess());
-    verify(internalTransferService, times(1)).executeInternalTransfer(any(), eq(1L));
+    verify(internalTransferService, times(1)).executeInternalTransfer(any(), eq("user-123"));
   }
 }

@@ -26,7 +26,7 @@ public class PaymentService {
   private static final BigDecimal SCA_THRESHOLD = new BigDecimal("100.00");
 
   @Transactional
-  public PaymentResult initiatePayment(PaymentRequest request, Long userId) {
+  public PaymentResult initiatePayment(PaymentRequest request, String userId) {
     log.info("Initiating {} payment - User: {}", request.getType(), userId);
 
     // Déléguer au service spécialisé selon le type
@@ -46,7 +46,7 @@ public class PaymentService {
   }
 
   @Transactional
-  public PaymentResult authorizePayment(Long paymentId, String otpCode, Long userId) {
+  public PaymentResult authorizePayment(Long paymentId, String otpCode, String userId) {
     Payment payment =
         paymentRepository
             .findById(paymentId)
@@ -74,7 +74,7 @@ public class PaymentService {
   }
 
   /** Crée un Payment à partir d'un PaymentRequest (pour les types non encore spécialisés). */
-  private Payment createPaymentFromRequest(PaymentRequest request, Long userId) {
+  private Payment createPaymentFromRequest(PaymentRequest request, String userId) {
     return Payment.builder()
         .transactionId(java.util.UUID.randomUUID().toString())
         .idempotencyKey(request.getIdempotencyKey())

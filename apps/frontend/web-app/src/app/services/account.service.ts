@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 export interface AccountDTO {
     id: number;
     accountNumber: string;
-    userId: number;
+    userId: string;
     balance: number;
     currency: string;
     type: string;
@@ -22,9 +22,7 @@ export class AccountService {
 
     constructor(private http: HttpClient) { }
 
-    getMyAccounts(userId: number): Observable<AccountDTO[]> {
-        return this.http.get<AccountDTO[]>(`${this.apiUrl}/my-accounts`, {
-            params: { userId: userId.toString() }
-        });
+    getMyAccounts(userId: string): Observable<AccountDTO[]> {
+        return this.http.get<AccountDTO[]>(`${this.apiUrl}/my-accounts`);
     }
 }

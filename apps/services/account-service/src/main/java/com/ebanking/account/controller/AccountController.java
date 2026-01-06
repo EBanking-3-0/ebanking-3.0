@@ -42,9 +42,17 @@ public class AccountController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<AccountDTO> getAccount(@PathVariable Long id) {
+  public ResponseEntity<AccountDTO> getAccount(
+      @PathVariable Long id, Authentication authentication) {
+    org.springframework.security.oauth2.jwt.Jwt jwt =
+        (org.springframework.security.oauth2.jwt.Jwt) authentication.getPrincipal();
+    String userId = jwt.getClaimAsString("sub");
+
     try {
       Account account = accountService.getAccountById(id);
+      if (!account.getUserId().equals(userId)) {
+        return ResponseEntity.status(403).build();
+      }
       return ResponseEntity.ok(accountMapper.mapToDTO(account));
     } catch (AccountNotFoundException e) {
       return ResponseEntity.notFound().build();
@@ -64,8 +72,11 @@ public class AccountController {
 
   @GetMapping("/my-accounts")
   // @PreAuthorize("hasRole('user')")
-  public ResponseEntity<List<AccountDTO>> getMyAccounts(@RequestParam String userId) {
-    // Again, verify userId matches token in production
+  public ResponseEntity<List<AccountDTO>> getMyAccounts(Authentication authentication) {
+    org.springframework.security.oauth2.jwt.Jwt jwt =
+        (org.springframework.security.oauth2.jwt.Jwt) authentication.getPrincipal();
+    String userId = jwt.getClaimAsString("sub");
+
     return ResponseEntity.ok(
         accountService.getAccountsByUserId(userId).stream()
             .map(accountMapper::mapToDTO)

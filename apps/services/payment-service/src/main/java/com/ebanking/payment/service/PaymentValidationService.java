@@ -20,7 +20,7 @@ public class PaymentValidationService {
   private static final BigDecimal DAILY_LIMIT = new BigDecimal("5000.00");
   private static final BigDecimal MONTHLY_LIMIT = new BigDecimal("25000.00");
 
-  public void validatePayment(PaymentRequest request, Long userId) {
+  public void validatePayment(PaymentRequest request, String userId) {
     validateSyntax(request);
     checkLimits(userId, request.getAmount());
     performComplianceScreening(request);
@@ -40,7 +40,7 @@ public class PaymentValidationService {
     }
   }
 
-  public void checkLimits(Long userId, BigDecimal amount) {
+  public void checkLimits(String userId, BigDecimal amount) {
     BigDecimal dailyTotal =
         paymentRepository.sumAmountByUserIdAndCreatedAtAfter(
             userId, Instant.now().minus(1, ChronoUnit.DAYS));

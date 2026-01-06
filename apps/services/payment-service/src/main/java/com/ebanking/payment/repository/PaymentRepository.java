@@ -16,7 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
   Optional<Payment> findByTransactionId(String transactionId);
 
-  List<Payment> findByUserIdOrderByCreatedAtDesc(Long userId);
+  List<Payment> findByUserIdOrderByCreatedAtDesc(String userId);
 
   @Query(
       "SELECT COUNT(p) FROM Payment p WHERE p.fromAccountId = :accountId "
@@ -27,7 +27,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
       "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p "
           + "WHERE p.userId = :userId "
           + "AND p.createdAt >= :since")
-  BigDecimal sumAmountByUserIdAndCreatedAtAfter(Long userId, Instant since);
+  BigDecimal sumAmountByUserIdAndCreatedAtAfter(String userId, Instant since);
 
   @Query(
       "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p "

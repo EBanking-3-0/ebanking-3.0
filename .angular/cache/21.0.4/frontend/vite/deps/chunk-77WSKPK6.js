@@ -12,7 +12,7 @@ import {
   registerLinkError,
   toErrorLike,
   wrap
-} from "./chunk-ISCHYNEM.js";
+} from "./chunk-WIMS3ZYR.js";
 import {
   AutoCleanedWeakCache,
   BREAK,
@@ -73,7 +73,7 @@ import {
   variablesUnknownSymbol,
   version,
   visit
-} from "./chunk-NC2TGXKB.js";
+} from "./chunk-6KBCFBRM.js";
 import {
   lastValueFrom
 } from "./chunk-4NVJHVNJ.js";
@@ -5680,4 +5680,4 @@ export {
   enableExperimentalFragmentVariables,
   disableExperimentalFragmentVariables
 };
-//# sourceMappingURL=chunk-R56H4YBH.js.map
+//# sourceMappingURL=chunk-77WSKPK6.js.map
