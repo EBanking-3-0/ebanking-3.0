@@ -12,7 +12,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://bank-staging.h4k5.net"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE, PATCH"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, X-Requested-With, Accept, Origin"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
@@ -36,6 +36,8 @@ env:
   SPRING_CLOUD_KUBERNETES_DISCOVERY_ENABLED: "true"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs
+  LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+  LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: DEBUG
 
 serviceAccount:
   create: true
