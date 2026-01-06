@@ -57,6 +57,10 @@ public class UserService {
     return userRepository.findByKeycloakId(keycloakId).orElse(null);
   }
 
+  public User getUserById(String id) {
+    return userRepository.findUserById(id).orElse(null);
+  }
+
   // ==================== KYC SUBMISSION (version multipart) ====================
 
   @Transactional

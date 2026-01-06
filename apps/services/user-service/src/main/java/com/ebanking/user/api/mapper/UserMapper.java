@@ -23,6 +23,7 @@ public interface UserMapper {
   @Mapping(target = "city", ignore = true)
   @Mapping(target = "postalCode", ignore = true)
   @Mapping(target = "country", ignore = true)
+  @Mapping(target = "preferredLanguage", constant = "en")
   User toEntity(UserRequest request);
 
   /**

@@ -74,6 +74,11 @@ public class User {
   /** Pays de résidence Défini lors de la soumission du KYC */
   private String country;
 
+  /** Langue préférée de l'utilisateur pour les notifications et l'interface Par défaut: "en" */
+  @Column(nullable = false)
+  @Builder.Default
+  private String preferredLanguage = "en";
+
   /**
    * Statut de l'utilisateur PENDING_REVIEW: En attente d'approbation KYC ACTIVE: Utilisateur actif
    * et autorisé REJECTED: Compte rejeté
