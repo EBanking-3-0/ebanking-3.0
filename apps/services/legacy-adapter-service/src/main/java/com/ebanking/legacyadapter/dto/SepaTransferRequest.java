@@ -1,4 +1,4 @@
-package com.ebanking.payment.client.dto;
+package com.ebanking.legacyadapter.dto;
 
 import java.math.BigDecimal;
 import lombok.*;
@@ -7,10 +7,14 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DebitRequest {
+public class SepaTransferRequest {
+  private String fromIban;
+  private String toIban;
   private BigDecimal amount;
   private String currency;
+  private String beneficiaryName;
+  private String description;
   private String transactionId;
   private String idempotencyKey;
-  private String description;
+  private String executionDate;
 }

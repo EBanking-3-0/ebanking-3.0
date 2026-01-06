@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreditRequest {
   private BigDecimal amount;
+  private String currency;
   private String transactionId;
   private String idempotencyKey;
   private String description;

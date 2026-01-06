@@ -151,6 +151,7 @@ public class SepaTransferService {
 
         eventProducer.completeTransaction(
             payment.getId(),
+            payment.getUserId(),
             payment.getFromAccountId(),
             null,
             payment.getFromIban(),
@@ -177,6 +178,7 @@ public class SepaTransferService {
       sagaOrchestrator.compensatePayment(payment);
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),
@@ -194,6 +196,7 @@ public class SepaTransferService {
       sagaOrchestrator.compensatePayment(payment);
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),

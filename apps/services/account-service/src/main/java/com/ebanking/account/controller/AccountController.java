@@ -32,7 +32,7 @@ public class AccountController {
   // @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
-    // todo:k In a real app, extract userId from token or look it up.
+    // todo: In a real app, extract userId from token or look it up.
     // For simplicity, we trust the request or use a hardcoded/looked-up ID if
     // available in token.
     // Ideally: Long userId = Long.parseLong(authentication.getName()); // if
@@ -117,7 +117,7 @@ public class AccountController {
     } catch (AccountNotFoundException e) {
       return ResponseEntity.badRequest().body("Account not found");
     } catch (InsufficientBalance e) {
-      ResponseEntity.badRequest().body("Insufficient balance");
+      return ResponseEntity.badRequest().body("Insufficient balance");
     }
     return ResponseEntity.ok("Withdrawal successful");
   }

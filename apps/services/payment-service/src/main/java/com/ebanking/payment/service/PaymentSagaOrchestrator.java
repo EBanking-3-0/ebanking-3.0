@@ -55,6 +55,7 @@ public class PaymentSagaOrchestrator {
         log.warn("Payment {} blocked by fraud detection", payment.getId());
         eventProducer.detectFraud(
             payment.getId(),
+            payment.getUserId(),
             payment.getFromAccountId(),
             payment.getFromIban(),
             payment.getAmount(),
@@ -96,6 +97,7 @@ public class PaymentSagaOrchestrator {
       // Publier événement de transaction complétée
       eventProducer.completeTransaction(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getToAccountId(),
           payment.getFromIban(),
@@ -120,6 +122,7 @@ public class PaymentSagaOrchestrator {
 
       eventProducer.handlePaymentFailure(
           payment.getId(),
+          payment.getUserId(),
           payment.getFromAccountId(),
           payment.getFromIban(),
           payment.getAmount(),
@@ -209,6 +212,7 @@ public class PaymentSagaOrchestrator {
       DebitRequest debitRequest =
           DebitRequest.builder()
               .amount(payment.getAmount())
+              .currency(payment.getCurrency())
               .transactionId(payment.getTransactionId())
               .idempotencyKey(payment.getIdempotencyKey())
               .description(
@@ -236,6 +240,7 @@ public class PaymentSagaOrchestrator {
         CreditRequest creditRequest =
             CreditRequest.builder()
                 .amount(payment.getAmount())
+                .currency(payment.getCurrency())
                 .transactionId(payment.getTransactionId())
                 .idempotencyKey(payment.getIdempotencyKey())
                 .description(
@@ -315,6 +320,7 @@ public class PaymentSagaOrchestrator {
   public void publishTransactionCompleted(Payment payment) {
     eventProducer.completeTransaction(
         payment.getId(),
+        payment.getUserId(),
         payment.getFromAccountId(),
         payment.getToAccountId(),
         payment.getFromIban(),
@@ -328,6 +334,7 @@ public class PaymentSagaOrchestrator {
       Payment payment, String fraudType, String severity, String description) {
     eventProducer.detectFraud(
         payment.getId(),
+        payment.getUserId(),
         payment.getFromAccountId(),
         payment.getFromIban(),
         payment.getAmount(),

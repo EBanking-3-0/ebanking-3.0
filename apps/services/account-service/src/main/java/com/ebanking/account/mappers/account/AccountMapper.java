@@ -15,7 +15,7 @@ public class AccountMapper {
         .userId(account.getUserId())
         .balance(account.getBalance())
         .currency(account.getCurrency())
-        .type(account.getType())
+        .type(account.getType().toString())
         .status(account.getStatus())
         .createdAt(account.getCreatedAt())
         .build();

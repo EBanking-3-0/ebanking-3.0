@@ -1,5 +1,6 @@
 package com.ebanking.account.model;
 
+import com.ebanking.account.enums.AccountType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,7 +43,8 @@ public class Account {
   private String currency;
 
   @Column(nullable = false)
-  private String type; // SAVINGS, CHECKING
+  @Enumerated(EnumType.STRING)
+  private AccountType type; // SAVINGS, CHECKING
 
   @Column(nullable = false)
   private String status; // ACTIVE, FROZEN, CLOSED

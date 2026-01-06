@@ -1,6 +1,7 @@
 package com.ebanking.account.service;
 
 import com.ebanking.account.dto.*;
+import com.ebanking.account.enums.AccountType;
 import com.ebanking.account.exception.AccountNotFoundException;
 import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.kafka.producer.AccountProducer;
@@ -26,10 +27,12 @@ public class AccountService {
   private final AccountRepository accountRepository;
   private final TypedEventProducer eventProducer;
   private final AccountProducer accountProducer;
+  private final CurrencyService currencyService;
 
   @Transactional
   public Account createAccount(Long userId, String accountType, String currency) {
     String accountNumber = generateAccountNumber();
+
     String iban = generateIban(accountNumber);
 
     Account account =
@@ -37,7 +40,7 @@ public class AccountService {
             .userId(userId)
             .accountNumber(accountNumber)
             .iban(iban)
-            .type(accountType)
+            .type(AccountType.valueOf(accountType))
             .currency(currency)
             .balance(BigDecimal.ZERO)
             .status("ACTIVE")
@@ -124,9 +127,11 @@ public class AccountService {
   }
 
   private String generateIban(String accountNumber) {
-    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23 caractères)
+    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23
+    // caractères)
     // Format: FR76 XXXX XXXX XXXX XXXX XXXX XXX
-    // En production, utiliser une bibliothèque spécialisée pour générer des IBAN valides
+    // En production, utiliser une bibliothèque spécialisée pour générer des IBAN
+    // valides
     String countryCode = "FR";
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
@@ -161,14 +166,29 @@ public class AccountService {
     }
 
     Account account = accountOpt.get();
-    BigDecimal newBalance = account.getBalance().subtract(request.getAmount());
+
+    // Convert logic
+    BigDecimal debitAmount = request.getAmount();
+    if (request.getCurrency() != null && !request.getCurrency().equals(account.getCurrency())) {
+      log.info(
+          "Converting debit amount {} from {} to {}",
+          request.getAmount(),
+          request.getCurrency(),
+          account.getCurrency());
+      debitAmount =
+          currencyService.convert(
+              request.getAmount(), request.getCurrency(), account.getCurrency());
+    }
+
+    BigDecimal newBalance = account.getBalance().subtract(debitAmount);
 
     if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
       log.error(
-          "Insufficient balance for account {}: current={}, requested={}",
+          "Insufficient balance for account {}: current={}, requested={} (converted={})",
           accountId,
           account.getBalance(),
-          request.getAmount());
+          request.getAmount(),
+          debitAmount);
       throw new InsufficientBalance("Insufficient balance");
     }
 
@@ -176,8 +196,11 @@ public class AccountService {
     accountRepository.save(account);
 
     log.info(
-        "Debited {} from account {} (transactionId: {}, idempotencyKey: {})",
+        "Debited {} {} ({} {}) from account {} (transactionId: {}, idempotencyKey: {})",
+        debitAmount,
+        account.getCurrency(),
         request.getAmount(),
+        request.getCurrency() != null ? request.getCurrency() : account.getCurrency(),
         accountId,
         request.getTransactionId(),
         request.getIdempotencyKey());
@@ -199,12 +222,29 @@ public class AccountService {
     }
 
     Account account = accountOpt.get();
-    account.setBalance(account.getBalance().add(request.getAmount()));
+
+    // Convert logic
+    BigDecimal creditAmount = request.getAmount();
+    if (request.getCurrency() != null && !request.getCurrency().equals(account.getCurrency())) {
+      log.info(
+          "Converting credit amount {} from {} to {}",
+          request.getAmount(),
+          request.getCurrency(),
+          account.getCurrency());
+      creditAmount =
+          currencyService.convert(
+              request.getAmount(), request.getCurrency(), account.getCurrency());
+    }
+
+    account.setBalance(account.getBalance().add(creditAmount));
     accountRepository.save(account);
 
     log.info(
-        "Credited {} to account {} (transactionId: {}, idempotencyKey: {})",
+        "Credited {} {} ({} {}) to account {} (transactionId: {}, idempotencyKey: {})",
+        creditAmount,
+        account.getCurrency(),
         request.getAmount(),
+        request.getCurrency() != null ? request.getCurrency() : account.getCurrency(),
         accountId,
         request.getTransactionId(),
         request.getIdempotencyKey());
