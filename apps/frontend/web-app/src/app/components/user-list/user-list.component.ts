@@ -52,4 +52,23 @@ export class UserListComponent implements OnInit {
       });
     }
   }
+
+  viewAccounts(userId: string): void {
+    this.userService.getAccounts(userId).subscribe({
+      next: (accounts) => {
+        if (accounts.length === 0) {
+          alert('No accounts found for this user.');
+          return;
+        }
+        const accountDetails = accounts.map(a => 
+          `#${a.accountNumber} (${a.type}) - ${a.currency} ${a.balance}\nNickname: ${a.nickname || 'None'}`
+        ).join('\n\n');
+        alert(`Accounts for user ${userId}:\n\n${accountDetails}`);
+      },
+      error: (err) => {
+        console.error('Error fetching accounts:', err);
+        alert('Failed to fetch accounts.');
+      }
+    });
+  }
 }

@@ -1,0 +1,35 @@
+# values-staging.yaml for audit-service
+fullnameOverride: "audit-service"
+
+image:
+  repository: khabirhakim/ebanking-audit-service
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8091
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/staging_db"
+  SPRING_DATASOURCE_USERNAME: "ebanking_user"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092"
+  EUREKA_CLIENT_ENABLED: "false"
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "384Mi"
+    cpu: "250m"
+
+serviceAccount:
+  create: true
+  name: audit-service-staging
+
+metrics:
+  enabled: true

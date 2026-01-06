@@ -42,6 +42,7 @@
             <button class="btn btn-secondary" [routerLink]="['/users/edit', user.id]">
               ✏️ Edit
             </button>
+            <button class="btn btn-info" (click)="viewAccounts(user.id)">💰 Accounts</button>
             <button class="btn btn-danger" (click)="deleteUser(user.id)">🗑️ Delete</button>
           </div>
         </div>

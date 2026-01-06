@@ -39,9 +39,9 @@ public class AccountServiceTest {
     String userId = "user-uuid-123";
     AccountType accountType = AccountType.SAVINGS;
     String currency = "USD";
-    String accountNumber = generateAccountNumber();
-    // String iban = generateIban(accountNumber);
-    String iban = "FR1234567890";
+    String nickname = "Main";
+    String accountNumber = "1234567890";
+    String iban = generateIban(accountNumber);
 
     Account savedAccount =
         Account.builder()
@@ -57,7 +57,8 @@ public class AccountServiceTest {
 
     when(accountRepository.save(any(Account.class))).thenReturn(savedAccount);
 
-    Account result = accountService.createAccount(userId, accountType.toString(), currency);
+    Account result =
+        accountService.createAccount(userId, accountType.toString(), currency, nickname);
 
     assertNotNull(result);
     assertEquals(userId, result.getUserId());

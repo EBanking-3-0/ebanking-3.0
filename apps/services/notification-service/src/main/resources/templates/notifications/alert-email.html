@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Alert</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: #ffffff;
+        padding: 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      .content {
+        padding: 30px;
+      }
+      .alert-message {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .alert-details {
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+      .alert-details table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .alert-details td {
+        padding: 8px 0;
+        font-size: 15px;
+      }
+      .alert-details td:first-child {
+        color: #666666;
+        font-weight: 500;
+      }
+      .alert-details td:last-child {
+        text-align: right;
+        font-weight: 600;
+      }
+      .severity {
+        display: inline-block;
+        padding: 5px 15px;
+        background-color: #fff3cd;
+        color: #856404;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 30px;
+        margin: 20px 0;
+        background-color: #f5576c;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #e04057;
+      }
+      .footer {
+        background-color: #f4f4f4;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 14px;
+        color: #888888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Account Alert</h1>
+      </div>
+
+      <div class="content">
+        <p>Hello <span th:text="${firstName}">User</span>,</p>
+
+        <p>We're sending you an alert regarding your account activity:</p>
+
+        <div class="alert-message" th:text="${message}">
+          Your account balance is below the threshold you set.
+        </div>
+
+        <div class="alert-details">
+          <table>
+            <tr>
+              <td>Alert Type:</td>
+              <td th:text="${alertType}">LOW_BALANCE</td>
+            </tr>
+            <tr>
+              <td>Severity:</td>
+              <td>
+                <span class="severity" th:text="${severity}">WARNING</span>
+              </td>
+            </tr>
+            <tr>
+              <td>Account:</td>
+              <td th:text="${accountNumber}">****1234</td>
+            </tr>
+            <tr>
+              <td>Threshold:</td>
+              <td th:text="${threshold}">$500.00</td>
+            </tr>
+            <tr>
+              <td>Current Value:</td>
+              <td th:text="${currentValue}">$245.50</td>
+            </tr>
+          </table>
+        </div>
+
+        <p><strong>What you can do:</strong></p>
+        <ul>
+          <li>Review your recent transactions</li>
+          <li>Transfer funds if needed</li>
+          <li>Update your alert settings</li>
+          <li>Contact us if you have questions</li>
+        </ul>
+
+        <p style="text-align: center;">
+          <a href="https://ebanking.com/accounts" class="button"
+            >View My Account</a
+          >
+        </p>
+
+        <p>
+          Best regards,<br />
+          <strong>The E-Banking Team</strong>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>&copy; 2026 E-Banking Platform. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

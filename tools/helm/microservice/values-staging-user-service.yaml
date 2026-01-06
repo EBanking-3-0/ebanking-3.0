@@ -1,0 +1,64 @@
+# values-staging.yaml for user-service
+fullnameOverride: "user-service"
+
+image:
+  repository: khabirhakim/ebanking-user-service
+  tag: latest # Overridden by command
+  pullPolicy: Always
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/staging_db"
+  SPRING_DATASOURCE_USERNAME: "ebanking_user"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092"
+  EUREKA_CLIENT_ENABLED: "false"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs
+  APP_FILE_STORAGE_PATH: "/tmp/uploads"
+
+extraEnv:
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secret
+        key: password
+
+serviceAccount:
+  create: true
+  name: user-service-staging
+
+service:
+  targetPort: 8083
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "384Mi"
+    cpu: "250m"
+
+metrics:
+  enabled: true
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://bank-staging.h4k5.net"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE, PATCH"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, X-Requested-With, Accept, Origin"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-always-set-header: "true"
+  hosts:
+    - host: bank-api-staging.h4k5.net
+      paths:
+        - path: /api/v1/kyc
+          pathType: Prefix
+  tls:
+    - secretName: ebanking-api-staging-tls
+      hosts:
+        - bank-api-staging.h4k5.net

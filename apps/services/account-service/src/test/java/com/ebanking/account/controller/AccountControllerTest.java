@@ -1,6 +1,7 @@
 package com.ebanking.account.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,9 +41,18 @@ public class AccountControllerTest {
         AccountDTO.builder().userId("user-uuid-123").type("SAVINGS").currency("USD").build();
 
     Account account =
-        Account.builder().id(1L).userId("user-uuid-123").accountNumber("1234567890").build();
+        Account.builder()
+            .id(1L)
+            .userId("user-uuid-123")
+            .accountNumber("1234567890")
+            .type(com.ebanking.account.enums.AccountType.SAVINGS)
+            .currency("USD")
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .nickname("Main")
+            .build();
 
-    when(accountService.createAccount(any(), any(), any())).thenReturn(account);
+    when(accountService.createAccount(any(), any(), any(), any())).thenReturn(account);
     when(accountMapper.mapToDTO(any(Account.class))).thenReturn(request);
 
     mockMvc
@@ -112,6 +122,8 @@ public class AccountControllerTest {
   void testDeposit() throws Exception {
     BigDecimal amount = BigDecimal.valueOf(100);
 
+    when(accountService.deposit(anyLong(), any(BigDecimal.class))).thenReturn(true);
+
     mockMvc
         .perform(
             post("/api/accounts/1/deposit")
@@ -125,6 +137,8 @@ public class AccountControllerTest {
   @WithMockUser(roles = "user")
   void testWithdraw() throws Exception {
     BigDecimal amount = BigDecimal.valueOf(50);
+
+    when(accountService.withdraw(anyLong(), any(BigDecimal.class))).thenReturn(true);
 
     mockMvc
         .perform(

@@ -6,6 +6,8 @@ import com.ebanking.user.application.service.UserService;
 import com.ebanking.user.domain.model.User;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -76,6 +78,51 @@ public class UserController {
   @GetMapping("/test")
   public String testEndpoint() {
     return "User service is working correctly!";
+  }
+
+  /**
+   * Get user contact information by userId (for notification service)
+   *
+   * @param userId User UUID as string
+   * @return 200 OK with user contact data 404 Not Found if user doesn't exist
+   */
+  @GetMapping("/{userId}/contact")
+  public ResponseEntity<?> getUserContact(@PathVariable String userId) {
+    try {
+      User user = userService.getUserById(UUID.fromString(userId));
+      if (user == null) {
+        return ResponseEntity.notFound().build();
+      }
+
+      // Return contact information for notification service
+      Map<String, Object> contact = new HashMap<>();
+      contact.put("userId", user.getId());
+      contact.put("email", user.getEmail());
+      contact.put("phoneNumber", user.getPhone());
+      contact.put("firstName", user.getFirstName());
+      contact.put("lastName", user.getLastName());
+      contact.put("preferredLanguage", user.getPreferredLanguage());
+
+      return ResponseEntity.ok(contact);
+    } catch (Exception e) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
+   * Check if user exists (for notification service)
+   *
+   * @param userId User UUID as string
+   * @return 200 OK with boolean result
+   */
+  @GetMapping("/{userId}/exists")
+  public ResponseEntity<Boolean> userExists(@PathVariable String userId) {
+    try {
+      User user = userService.getUserById(UUID.fromString(userId));
+      return ResponseEntity.ok(user != null);
+    } catch (Exception e) {
+      return ResponseEntity.ok(false);
+    }
   }
 
   /**

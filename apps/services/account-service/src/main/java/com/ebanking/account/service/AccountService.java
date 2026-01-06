@@ -30,7 +30,7 @@ public class AccountService {
   private final CurrencyService currencyService;
 
   @Transactional
-  public Account createAccount(String userId, String accountType, String currency) {
+  public Account createAccount(String userId, String accountType, String currency, String nickname) {
     String accountNumber = generateAccountNumber();
 
     String iban = generateIban(accountNumber);
@@ -44,6 +44,7 @@ public class AccountService {
             .currency(currency)
             .balance(BigDecimal.ZERO)
             .status("ACTIVE")
+            .nickname(nickname)
             .build();
 
     Account savedAccount = accountRepository.save(account);
@@ -127,21 +128,21 @@ public class AccountService {
   }
 
   private String generateIban(String accountNumber) {
-    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23
-    // caractères)
-    // Format: FR76 XXXX XXXX XXXX XXXX XXXX XXX
-    // En production, utiliser une bibliothèque spécialisée pour générer des IBAN
-    // valides
+    // Génération simplifiée d'IBAN français (FR + 2 chiffres de contrôle + 23 caractères)
     String countryCode = "FR";
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
-    String numericAccount = accountNumber.replaceAll("[^0-9]", "");
-    String accountCode = numericAccount.substring(0, Math.min(11, numericAccount.length()));
+    String numericAccountNumber =
+        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
     // Compléter avec des zéros si nécessaire
+
+    StringBuilder accountCode = new StringBuilder(numericAccountNumber);
+
     while (accountCode.length() < 11) {
-      accountCode += "0";
+      accountCode.append('0');
     }
+
     String nationalCheck = "26"; // Clé RIB fictive
     return countryCode + checkDigits + bankCode + branchCode + accountCode + nationalCheck;
   }

@@ -32,7 +32,6 @@ public class PaymentFailedEvent extends BaseEvent {
       Long transactionId,
       String userId,
       Long accountId,
-      String accountNumber,
       BigDecimal amount,
       String currency,
       String failureReason,
@@ -41,7 +40,6 @@ public class PaymentFailedEvent extends BaseEvent {
     this.transactionId = transactionId;
     this.userId = userId;
     this.accountId = accountId;
-    this.accountNumber = accountNumber;
     this.amount = amount;
     this.currency = currency;
     this.failureReason = failureReason;

@@ -1,5 +1,6 @@
 package com.ebanking.user.infrastructure.kafka;
 
+import com.ebanking.shared.kafka.KafkaTopics;
 import com.ebanking.shared.kafka.events.BaseEvent;
 import com.ebanking.shared.kafka.events.UserCreatedEvent;
 import com.ebanking.shared.kafka.events.UserDeletedEvent;
@@ -14,29 +15,32 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class UserEventProducer {
 
-  private static final String USER_TOPIC =
-      "user-events"; // or use KafkaTopics directly if preferred
-
   private final KafkaTemplate<String, BaseEvent> kafkaTemplate;
 
   public void publishUserCreatedEvent(User user) {
+    // Convert UUID to stable long value for userId
+    long userId = user.getId().getMostSignificantBits() & Long.MAX_VALUE;
+
     UserCreatedEvent event =
         UserCreatedEvent.builder()
             .userId(user.getId().toString())
+            .username(user.getFirstName() + " " + user.getLastName())
             .email(user.getEmail())
             .firstName(user.getFirstName())
             .lastName(user.getLastName())
-            .status("ACTIVE") // or whatever initial status
+            .status(user.getStatus().name())
             .build();
 
-    kafkaTemplate.send(USER_TOPIC, user.getId().toString(), event);
+    kafkaTemplate.send(KafkaTopics.USER_CREATED, user.getId().toString(), event);
     log.info("Published UserCreatedEvent for user ID: {}", user.getId());
   }
 
   public void publishUserDeletedEvent(String userId, String reason) {
     UserDeletedEvent event = new UserDeletedEvent(userId, reason);
 
-    kafkaTemplate.send(USER_TOPIC, userId, event);
+    kafkaTemplate.send(KafkaTopics.USER_UPDATED, userId.toString(), event);
+
+    // kafkaTemplate.send(USER_TOPIC, userId, event);
     log.warn("Published UserDeletedEvent for user ID: {}, reason: {}", userId, reason);
   }
 

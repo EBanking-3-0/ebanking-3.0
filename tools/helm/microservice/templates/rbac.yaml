@@ -1,0 +1,27 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "ebanking-common.fullname" . }}-discovery-role
+  labels:
+    {{- include "ebanking-common.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["services", "pods", "endpoints"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "ebanking-common.fullname" . }}-discovery-rolebinding
+  labels:
+    {{- include "ebanking-common.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "ebanking-common.fullname" . }}-discovery-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "ebanking-common.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end -}}

@@ -37,7 +37,7 @@ public class AccountController {
     String userId = jwt.getClaimAsString("sub");
 
     Account account =
-        accountService.createAccount(userId, request.getType(), request.getCurrency());
+        accountService.createAccount(userId, request.getType(), request.getCurrency(), request.getNickname());
     return ResponseEntity.ok(accountMapper.mapToDTO(account));
   }
 
@@ -83,86 +83,33 @@ public class AccountController {
             .collect(Collectors.toList()));
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateAccount(
-      @PathVariable Long id, @RequestBody AccountDTO accountDTO) {
-    try {
-      Account account = accountService.updateAccount(id, accountDTO);
-      return ResponseEntity.ok(accountMapper.mapToDTO(account));
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.badRequest().body("Account not found");
-    }
-  }
-
-  @DeleteMapping("/{id}")
-  public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
-    try {
-      accountService.deleteAccount(id);
-      return ResponseEntity.ok("Account deleted successfully");
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
-  }
-
   @PostMapping("/{id}/deposit")
-  public ResponseEntity<?> deposit(@PathVariable Long id, @RequestBody BigDecimal amount) {
-    try {
-      accountService.deposit(id, amount);
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.badRequest().body("Account not found");
-    }
-    return ResponseEntity.ok("Deposit successful");
+  // @PreAuthorize("hasRole('user')")
+  public ResponseEntity<Void> deposit(@PathVariable Long id, @RequestBody BigDecimal amount)
+      throws AccountNotFoundException {
+    accountService.deposit(id, amount);
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping("/{id}/withdraw")
-  public ResponseEntity<?> withdraw(@PathVariable Long id, @RequestBody BigDecimal amount) {
-    try {
-      accountService.withdraw(id, amount);
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.badRequest().body("Account not found");
-    } catch (InsufficientBalance e) {
-      return ResponseEntity.badRequest().body("Insufficient balance");
-    }
-    return ResponseEntity.ok("Withdrawal successful");
+  // @PreAuthorize("hasRole('user')")
+  public ResponseEntity<Void> withdraw(@PathVariable Long id, @RequestBody BigDecimal amount)
+      throws AccountNotFoundException, InsufficientBalance {
+    accountService.withdraw(id, amount);
+    return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{id}/debit")
-  public ResponseEntity<DebitResponse> debit(
-      @PathVariable Long id, @RequestBody DebitRequest request) {
-    try {
-      DebitResponse response = accountService.debit(id, request);
-      return ResponseEntity.ok(response);
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    } catch (InsufficientBalance e) {
-      return ResponseEntity.badRequest()
-          .body(
-              DebitResponse.builder()
-                  .transactionId(request.getTransactionId())
-                  .status("FAILED")
-                  .message("Insufficient balance")
-                  .build());
-    }
-  }
-
-  @PostMapping("/{id}/credit")
-  public ResponseEntity<CreditResponse> credit(
-      @PathVariable Long id, @RequestBody CreditRequest request) {
-    try {
-      CreditResponse response = accountService.credit(id, request);
-      return ResponseEntity.ok(response);
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
-  }
-
-  @GetMapping("/{id}/balance")
-  public ResponseEntity<BalanceResponse> getBalance(@PathVariable Long id) {
-    try {
-      BalanceResponse response = accountService.getBalance(id);
-      return ResponseEntity.ok(response);
-    } catch (AccountNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+  private AccountDTO mapToDTO(Account account) {
+    return AccountDTO.builder()
+        .id(account.getId())
+        .accountNumber(account.getAccountNumber())
+        .userId(account.getUserId())
+        .balance(account.getBalance())
+        .currency(account.getCurrency())
+        .type(account.getType().name())
+        .status(account.getStatus())
+        .nickname(account.getNickname())
+        .createdAt(account.getCreatedAt())
+        .build();
   }
 }

@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1
 
-FROM eclipse-temurin:21-jre-alpine AS builder
+FROM eclipse-temurin:21-jre AS builder
 WORKDIR /builder
-ARG JAR_FILE=apps/services/account-service/build/libs/*.jar
+ARG JAR_FILE=apps/services/account-service/build/libs/account-service.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup --system spring && adduser --system --ingroup spring spring
 USER spring:spring
 COPY --from=builder /builder/dependencies/ ./
 COPY --from=builder /builder/spring-boot-loader/ ./
