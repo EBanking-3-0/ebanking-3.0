@@ -21,6 +21,13 @@
             "input": "apps/frontend/web-app/public"
           }
         ],
+        "styles": [
+          "apps/frontend/web-app/src/styles.scss"
+        ],
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "apollo-upload-client"
+        ],
         "styles": ["apps/frontend/web-app/src/styles.scss"],
         "scripts": []
       },

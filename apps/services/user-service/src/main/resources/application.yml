@@ -4,6 +4,12 @@ server:
 spring:
   application:
     name: user-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
   datasource:
     url: jdbc:postgresql://localhost:5432/ebanking
     username: ebanking
@@ -28,11 +34,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
       enable-auto-commit: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
+
 
 eureka:
   client:
@@ -43,12 +45,24 @@ eureka:
   instance:
     prefer-ip-address: true
 
+keycloak:
+  realm: ebanking-realm-realm
+  auth-server-url: http://localhost:8092
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics,prometheus
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
+
+app:
+  file-storage:
+    path: ./uploads
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

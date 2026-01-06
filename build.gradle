@@ -34,7 +34,7 @@ allprojects {
     pluginManager.withPlugin('java') {
         spotless {
             java {
-                googleJavaFormat()
+                googleJavaFormat("1.22.0")
                 removeUnusedImports()
                 trimTrailingWhitespace()
                 endWithNewline()

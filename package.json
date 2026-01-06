@@ -32,9 +32,10 @@
   "license": "ISC",
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.2.0",
-    "@angular/platform-browser-dynamic": "21.0.3",
+    "@angular/platform-browser-dynamic": "^21.0.0",
     "@nx/gradle": "^22.2.3",
     "@nx/vite": "^22.3.1",
+    "@types/apollo-upload-client": "^19.0.0",
     "nx": "22.1.3",
     "prettier": "^3.7.4",
     "sonarqube-scanner": "^3.5.0"
@@ -43,5 +44,14 @@
   "workspaces": [
     "apps/**",
     "libs/**"
-  ]
+  ],
+  "dependencies": {
+    "@apollo/client": "^4.0.11",
+    "apollo-angular": "^13.0.0",
+    "apollo-upload-client": "^19.0.0",
+    "extract-files": "^13.0.0",
+    "graphql": "^16.12.0",
+    "keycloak-angular": "^21.0.0",
+    "keycloak-js": "^26.2.2"
+  }
 }
