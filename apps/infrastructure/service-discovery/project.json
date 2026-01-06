@@ -97,19 +97,17 @@
     "docker-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -t $DOCKER_USER/ebanking-service-discovery:${TAG:-latest} -f apps/infrastructure/service-discovery/Dockerfile .",
+        "command": "echo 'Skipping docker-build for service-discovery (unused)'",
         "cwd": "."
       },
-      "dependsOn": ["build"],
       "cache": false
     },
     "docker-push": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker push $DOCKER_USER/ebanking-service-discovery:${TAG:-latest}",
+        "command": "echo 'Skipping docker-push for service-discovery (unused)'",
         "cwd": "."
       },
-      "dependsOn": ["docker-build"],
       "cache": false
     }
   }
