@@ -39,15 +39,15 @@ public class UserService {
   public String getFirstNameFromJwt(Authentication authentication) {
     Jwt jwt = (Jwt) authentication.getPrincipal();
     return jwt.getClaim("given_name") != null
-            ? jwt.getClaim("given_name")
-            : jwt.getClaim("firstName");
+        ? jwt.getClaim("given_name")
+        : jwt.getClaim("firstName");
   }
 
   public String getLastNameFromJwt(Authentication authentication) {
     Jwt jwt = (Jwt) authentication.getPrincipal();
     return jwt.getClaim("family_name") != null
-            ? jwt.getClaim("family_name")
-            : jwt.getClaim("lastName");
+        ? jwt.getClaim("family_name")
+        : jwt.getClaim("lastName");
   }
 
   // ==================== USER MANAGEMENT ====================
@@ -61,37 +61,37 @@ public class UserService {
 
   @Transactional
   public KycVerification submitKycWithUserCreation(
-          Authentication authentication,
-          KycRequest kycRequest,
-          MultipartFile cinImage,
-          MultipartFile selfieImage)
-          throws Exception {
+      Authentication authentication,
+      KycRequest kycRequest,
+      MultipartFile cinImage,
+      MultipartFile selfieImage)
+      throws Exception {
 
     String keycloakId = getKeycloakIdFromJwt(authentication);
 
     // Récupère ou crée l'utilisateur
     User user =
-            userRepository
-                    .findByKeycloakId(keycloakId)
-                    .orElseGet(
-                            () ->
-                                    User.builder()
-                                            .keycloakId(keycloakId)
-                                            .email(
-                                                    getEmailFromJwt(authentication) != null
-                                                            ? getEmailFromJwt(authentication)
-                                                            : "")
-                                            .firstName(
-                                                    getFirstNameFromJwt(authentication) != null
-                                                            ? getFirstNameFromJwt(authentication)
-                                                            : "")
-                                            .lastName(
-                                                    getLastNameFromJwt(authentication) != null
-                                                            ? getLastNameFromJwt(authentication)
-                                                            : "")
-                                            .phone("")
-                                            .status(User.UserStatus.PENDING_REVIEW)
-                                            .build());
+        userRepository
+            .findByKeycloakId(keycloakId)
+            .orElseGet(
+                () ->
+                    User.builder()
+                        .keycloakId(keycloakId)
+                        .email(
+                            getEmailFromJwt(authentication) != null
+                                ? getEmailFromJwt(authentication)
+                                : "")
+                        .firstName(
+                            getFirstNameFromJwt(authentication) != null
+                                ? getFirstNameFromJwt(authentication)
+                                : "")
+                        .lastName(
+                            getLastNameFromJwt(authentication) != null
+                                ? getLastNameFromJwt(authentication)
+                                : "")
+                        .phone("")
+                        .status(User.UserStatus.PENDING_REVIEW)
+                        .build());
 
     // Vérifie qu'une KYC n'est pas déjà en attente
     if (isKycAlreadySubmitted(user)) {
@@ -125,13 +125,13 @@ public class UserService {
 
     // Création KYC
     KycVerification kycVerification =
-            KycVerification.builder()
-                    .user(user)
-                    .cinNumber(kycRequest.getCinNumber())
-                    .idDocumentUrl(cinImageUrl)
-                    .selfieUrl(selfieUrl)
-                    .status(KycVerification.KycStatus.PENDING_REVIEW)
-                    .build();
+        KycVerification.builder()
+            .user(user)
+            .cinNumber(kycRequest.getCinNumber())
+            .idDocumentUrl(cinImageUrl)
+            .selfieUrl(selfieUrl)
+            .status(KycVerification.KycStatus.PENDING_REVIEW)
+            .build();
 
     kycVerification = kycVerificationRepository.save(kycVerification);
 
@@ -143,13 +143,13 @@ public class UserService {
           ConsentType type = ConsentType.valueOf(entry.getKey().toUpperCase());
           if (Boolean.TRUE.equals(entry.getValue())) {
             GdprConsent consent =
-                    GdprConsent.builder()
-                            .user(user)
-                            .consentType(type)
-                            .granted(true)
-                            .grantedAt(now)
-                            .consentVersion("v1.0")
-                            .build();
+                GdprConsent.builder()
+                    .user(user)
+                    .consentType(type)
+                    .granted(true)
+                    .grantedAt(now)
+                    .consentVersion("v1.0")
+                    .build();
             gdprConsentRepository.save(consent);
           }
         } catch (IllegalArgumentException ignored) {

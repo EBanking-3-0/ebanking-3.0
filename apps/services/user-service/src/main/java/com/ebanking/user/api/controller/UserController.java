@@ -1,7 +1,6 @@
 package com.ebanking.user.api.controller;
 
 import com.ebanking.shared.dto.UserProfileResponse;
-import com.ebanking.shared.dto.UpdateUserRequest;
 import com.ebanking.user.api.mapper.UserProfileMapper;
 import com.ebanking.user.application.service.UserService;
 import com.ebanking.user.domain.model.User;
@@ -9,9 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * User Controller - Gère les endpoints liés à la gestion des utilisateurs
@@ -53,7 +49,6 @@ public class UserController {
     UserProfileResponse response = userProfileMapper.toResponse(user);
     return ResponseEntity.ok(response);
   }
-
 
   /**
    * Récupérer les détails d'un utilisateur par son UUID
