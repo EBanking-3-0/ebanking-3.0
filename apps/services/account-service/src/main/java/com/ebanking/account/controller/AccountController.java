@@ -6,7 +6,6 @@ import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;

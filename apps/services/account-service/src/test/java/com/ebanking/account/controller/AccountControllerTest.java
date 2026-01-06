@@ -37,24 +37,19 @@ public class AccountControllerTest {
   @WithMockUser(roles = "user")
   void testCreateAccount() throws Exception {
     AccountDTO request =
-      AccountDTO.builder()
-        .userId(1L)
-        .type("SAVINGS")
-        .currency("USD")
-        .nickname("Main")
-        .build();
+        AccountDTO.builder().userId(1L).type("SAVINGS").currency("USD").nickname("Main").build();
 
     Account account =
-      Account.builder()
-        .id(1L)
-        .userId(1L)
-        .accountNumber("1234567890")
-        .type(com.ebanking.account.enums.AccountType.SAVINGS)
-        .currency("USD")
-        .balance(BigDecimal.ZERO)
-        .status("ACTIVE")
-        .nickname("Main")
-        .build();
+        Account.builder()
+            .id(1L)
+            .userId(1L)
+            .accountNumber("1234567890")
+            .type(com.ebanking.account.enums.AccountType.SAVINGS)
+            .currency("USD")
+            .balance(BigDecimal.ZERO)
+            .status("ACTIVE")
+            .nickname("Main")
+            .build();
 
     when(accountService.createAccount(any(), any(), any(), any())).thenReturn(account);
     when(accountMapper.mapToDTO(any(Account.class))).thenReturn(request);
