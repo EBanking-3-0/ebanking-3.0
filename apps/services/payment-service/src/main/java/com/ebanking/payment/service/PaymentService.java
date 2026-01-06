@@ -1,120 +1,116 @@
 package com.ebanking.payment.service;
 
-import com.ebanking.shared.kafka.events.FraudDetectedEvent;
-import com.ebanking.shared.kafka.events.PaymentFailedEvent;
-import com.ebanking.shared.kafka.events.TransactionCompletedEvent;
-import com.ebanking.shared.kafka.producer.TypedEventProducer;
+import com.ebanking.payment.dto.request.PaymentRequest;
+import com.ebanking.payment.dto.response.PaymentResult;
+import com.ebanking.payment.entity.*;
+import com.ebanking.payment.repository.PaymentRepository;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Payment service with Kafka event publishing. Publishes transaction.completed, payment.failed, and
- * fraud.detected events.
- */
-@Slf4j
+/** Service principal qui délègue aux services spécialisés selon le type de paiement. */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
 
-  private final TypedEventProducer eventProducer;
+  private final PaymentRepository paymentRepository;
+  private final InternalTransferService internalTransferService;
+  private final SepaTransferService sepaTransferService;
+  private final InstantTransferService instantTransferService;
+  private final MobileRechargeService mobileRechargeService;
+  private final PaymentSagaOrchestrator sagaOrchestrator;
+
+  private static final BigDecimal SCA_THRESHOLD = new BigDecimal("100.00");
 
   @Transactional
-  public void completeTransaction(
-      Long transactionId,
-      Long fromAccountId,
-      Long toAccountId,
-      String fromAccountNumber,
-      String toAccountNumber,
-      BigDecimal amount,
-      String currency,
-      String transactionType) {
-    // Transaction completion logic would go here
-    log.info("Completing transaction: {}", transactionId);
+  public PaymentResult initiatePayment(PaymentRequest request, Long userId) {
+    log.info("Initiating {} payment - User: {}", request.getType(), userId);
 
-    // After transaction completes, publish event
-    TransactionCompletedEvent event =
-        TransactionCompletedEvent.builder()
-            .transactionId(transactionId)
-            .fromAccountId(fromAccountId)
-            .toAccountId(toAccountId)
-            .fromAccountNumber(fromAccountNumber)
-            .toAccountNumber(toAccountNumber)
-            .amount(amount)
-            .currency(currency)
-            .transactionType(transactionType)
-            .status("COMPLETED")
-            .description("Transaction completed successfully")
-            .source("payment-service")
-            .build();
+    // Déléguer au service spécialisé selon le type
+    PaymentType paymentType = PaymentType.valueOf(request.getType());
 
-    eventProducer.publishTransactionCompleted(event);
-    log.info("Published transaction.completed event: {}", transactionId);
+    return switch (paymentType) {
+      case INTERNAL_TRANSFER -> internalTransferService.executeInternalTransfer(request, userId);
+      case SEPA_TRANSFER -> sepaTransferService.executeSepaTransfer(request, userId);
+      case SCT_INSTANT -> instantTransferService.executeInstantTransfer(request, userId);
+      case MOBILE_RECHARGE -> mobileRechargeService.executeMobileRecharge(request, userId);
+      case SWIFT_TRANSFER, MERCHANT_PAYMENT -> {
+        // Pour l'instant, utiliser la saga orchestrator pour ces types
+        log.warn("Payment type {} not yet fully implemented, using saga orchestrator", paymentType);
+        yield sagaOrchestrator.executePayment(createPaymentFromRequest(request, userId));
+      }
+    };
   }
 
   @Transactional
-  public void handlePaymentFailure(
-      Long transactionId,
-      Long accountId,
-      String accountNumber,
-      BigDecimal amount,
-      String currency,
-      String failureReason,
-      String errorCode) {
-    // Payment failure handling logic would go here
-    log.warn("Payment failed for transaction: {} - Reason: {}", transactionId, failureReason);
+  public PaymentResult authorizePayment(Long paymentId, String otpCode, Long userId) {
+    Payment payment =
+        paymentRepository
+            .findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
-    // Publish payment failed event
-    PaymentFailedEvent event =
-        PaymentFailedEvent.builder()
-            .transactionId(transactionId)
-            .accountId(accountId)
-            .accountNumber(accountNumber)
-            .amount(amount)
-            .currency(currency)
-            .failureReason(failureReason)
-            .errorCode(errorCode)
-            .source("payment-service")
-            .build();
+    if (!payment.getUserId().equals(userId)) {
+      throw new SecurityException("Unauthorized access to payment");
+    }
 
-    eventProducer.publishPaymentFailed(event);
-    log.info("Published payment.failed event: {}", transactionId);
+    // Mock OTP validation
+    if ("123456".equals(otpCode)) {
+      payment.setScaVerified(true);
+      payment.setStatus(PaymentStatus.AUTHORIZED);
+      paymentRepository.save(payment);
+
+      // Exécuter selon le type
+      PaymentRequest request = createRequestFromPayment(payment);
+      return initiatePayment(request, userId);
+    } else {
+      payment.setStatus(PaymentStatus.REJECTED);
+      payment.setFailureReason("Invalid SCA OTP");
+      paymentRepository.save(payment);
+      return PaymentResult.failure(payment, new SecurityException("Invalid OTP"));
+    }
   }
 
-  @Transactional
-  public void detectFraud(
-      Long transactionId,
-      Long accountId,
-      String accountNumber,
-      BigDecimal amount,
-      String currency,
-      String fraudType,
-      String severity,
-      String description) {
-    // Fraud detection logic would go here
-    log.warn(
-        "Fraud detected for transaction: {} - Type: {} - Severity: {}",
-        transactionId,
-        fraudType,
-        severity);
+  /** Crée un Payment à partir d'un PaymentRequest (pour les types non encore spécialisés). */
+  private Payment createPaymentFromRequest(PaymentRequest request, Long userId) {
+    return Payment.builder()
+        .transactionId(java.util.UUID.randomUUID().toString())
+        .idempotencyKey(request.getIdempotencyKey())
+        .paymentType(PaymentType.valueOf(request.getType()))
+        .status(PaymentStatus.CREATED)
+        .fromAccountId(request.getFromAccountId())
+        .toAccountId(request.getToAccountId())
+        .toIban(request.getToIban())
+        .beneficiaryName(request.getBeneficiaryName())
+        .amount(request.getAmount())
+        .currency(request.getCurrency())
+        .userId(userId)
+        .description(request.getDescription())
+        .reference(request.getEndToEndId())
+        .ipAddress(request.getIpAddress())
+        .userAgent(request.getUserAgent())
+        .phoneNumber(request.getPhoneNumber())
+        .operatorCode(request.getCountryCode())
+        .build();
+  }
 
-    // Publish fraud detected event
-    FraudDetectedEvent event =
-        FraudDetectedEvent.builder()
-            .transactionId(transactionId)
-            .accountId(accountId)
-            .accountNumber(accountNumber)
-            .amount(amount)
-            .currency(currency)
-            .fraudType(fraudType)
-            .severity(severity)
-            .description(description)
-            .source("payment-service")
-            .build();
-
-    eventProducer.publishFraudDetected(event);
-    log.info("Published fraud.detected event: {}", transactionId);
+  /** Crée un PaymentRequest à partir d'un Payment (pour la ré-autorisation). */
+  private PaymentRequest createRequestFromPayment(Payment payment) {
+    PaymentRequest request = new PaymentRequest();
+    request.setType(payment.getPaymentType().name());
+    request.setFromAccountId(payment.getFromAccountId());
+    request.setToAccountId(payment.getToAccountId());
+    request.setToIban(payment.getToIban());
+    request.setBeneficiaryName(payment.getBeneficiaryName());
+    request.setAmount(payment.getAmount());
+    request.setCurrency(payment.getCurrency());
+    request.setDescription(payment.getDescription());
+    request.setEndToEndId(payment.getReference());
+    request.setIdempotencyKey(payment.getIdempotencyKey());
+    request.setPhoneNumber(payment.getPhoneNumber());
+    request.setCountryCode(payment.getOperatorCode());
+    return request;
   }
 }

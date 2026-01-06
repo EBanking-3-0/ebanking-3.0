@@ -1,257 +1,346 @@
 package com.ebanking.notification.consumer;
 
-import com.ebanking.shared.kafka.KafkaTopics;
-import com.ebanking.shared.kafka.events.*;
-import com.ebanking.shared.kafka.producer.TypedEventProducer;
+import com.ebanking.notification.client.AccountServiceClient;
+import com.ebanking.notification.client.PaymentServiceClient;
+import com.ebanking.notification.enums.NotificationType;
+import com.ebanking.notification.service.NotificationService;
+import com.ebanking.notification.service.PreferenceService;
+import com.ebanking.shared.kafka.events.AccountCreatedEvent;
+import com.ebanking.shared.kafka.events.AlertTriggeredEvent;
+import com.ebanking.shared.kafka.events.AuthLoginEvent;
+import com.ebanking.shared.kafka.events.FraudDetectedEvent;
+import com.ebanking.shared.kafka.events.PaymentFailedEvent;
+import com.ebanking.shared.kafka.events.TransactionCompletedEvent;
+import com.ebanking.shared.kafka.events.UserCreatedEvent;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 /**
- * Consumer for notification-related events. Sends notifications (email/SMS/push) when events occur.
+ * Kafka consumer for processing events and sending notifications. Listens to various topics and
+ * triggers notifications based on event types.
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotificationConsumer {
 
-  private final TypedEventProducer eventProducer;
+  private final NotificationService notificationService;
+  private final PreferenceService preferenceService;
+  private final AccountServiceClient accountServiceClient;
+  private final PaymentServiceClient paymentServiceClient;
 
-  @KafkaListener(topics = KafkaTopics.USER_CREATED)
-  public void handleUserCreated(@Payload UserCreatedEvent event, Acknowledgment acknowledgment) {
+  /**
+   * Handle user created events - send welcome notification.
+   *
+   * @param event User created event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "user.created",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handleUserCreated(
+      @Payload UserCreatedEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
     try {
-      log.info("Received user.created event for user: {}", event.getUserId());
+      log.info("Received UserCreatedEvent for user: {} from topic: {}", event.getUserId(), topic);
 
-      // Send welcome email
-      sendWelcomeEmail(event.getEmail(), event.getFirstName());
+      // Initialize default preferences for new user
+      preferenceService.initializeDefaultPreferences(event.getUserId());
 
-      // Publish notification sent event
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getUserId())
-              .recipient(event.getEmail())
-              .notificationType("EMAIL")
-              .subject("Welcome to E-Banking")
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("username", event.getUsername());
+      variables.put("firstName", event.getFirstName());
+      variables.put("lastName", event.getLastName());
+      variables.put("email", event.getEmail());
 
-      eventProducer.publishNotificationSent(notificationEvent);
+      // Send welcome notification to all enabled channels
+      notificationService.sendToAllChannels(event.getUserId(), NotificationType.WELCOME, variables);
 
       acknowledgment.acknowledge();
-      log.info("Processed user.created event for user: {}", event.getUserId());
+      log.info("Successfully processed UserCreatedEvent for user: {}", event.getUserId());
 
     } catch (Exception e) {
-      log.error("Failed to process user.created event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge(); // Acknowledge to prevent blocking
+      log.error("Error processing UserCreatedEvent for user: {}", event.getUserId(), e);
+      // Don't acknowledge to retry
     }
   }
 
-  @KafkaListener(topics = KafkaTopics.TRANSACTION_COMPLETED)
+  /**
+   * Handle transaction completed events - send transaction notification.
+   *
+   * @param event Transaction completed event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "transaction.completed",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
   public void handleTransactionCompleted(
-      @Payload TransactionCompletedEvent event, Acknowledgment acknowledgment) {
-    try {
-      log.info("Received transaction.completed event: {}", event.getTransactionId());
+      @Payload TransactionCompletedEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
 
-      // Send transaction notification
-      sendTransactionNotification(event.getToAccountId(), event.getAmount(), event.getCurrency());
-
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getToAccountId()) // Using account ID as placeholder
-              .recipient("user@example.com") // Would get from account
-              .notificationType("EMAIL")
-              .subject("Transaction Completed")
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
-
-      eventProducer.publishNotificationSent(notificationEvent);
-
-      acknowledgment.acknowledge();
-
-    } catch (Exception e) {
-      log.error("Failed to process transaction.completed event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge();
-    }
-  }
-
-  @KafkaListener(topics = KafkaTopics.PAYMENT_FAILED)
-  public void handlePaymentFailed(
-      @Payload PaymentFailedEvent event, Acknowledgment acknowledgment) {
-    try {
-      log.info("Received payment.failed event: {}", event.getTransactionId());
-
-      // Send failure notification
-      sendFailureNotification(event.getAccountId(), event.getFailureReason());
-
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getAccountId())
-              .recipient("user@example.com")
-              .notificationType("EMAIL")
-              .subject("Payment Failed")
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
-
-      eventProducer.publishNotificationSent(notificationEvent);
-
-      acknowledgment.acknowledge();
-
-    } catch (Exception e) {
-      log.error("Failed to process payment.failed event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge();
-    }
-  }
-
-  @KafkaListener(topics = KafkaTopics.FRAUD_DETECTED)
-  public void handleFraudDetected(
-      @Payload FraudDetectedEvent event, Acknowledgment acknowledgment) {
-    try {
-      log.warn(
-          "Received fraud.detected event: {} - Severity: {}",
-          event.getTransactionId(),
-          event.getSeverity());
-
-      // Send fraud alert
-      sendFraudAlert(event.getAccountId(), event.getFraudType(), event.getSeverity());
-
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getAccountId())
-              .recipient("user@example.com")
-              .notificationType("EMAIL")
-              .subject("Fraud Alert")
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
-
-      eventProducer.publishNotificationSent(notificationEvent);
-
-      acknowledgment.acknowledge();
-
-    } catch (Exception e) {
-      log.error("Failed to process fraud.detected event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge();
-    }
-  }
-
-  @KafkaListener(topics = KafkaTopics.CRYPTO_TRADE_EXECUTED)
-  public void handleCryptoTradeExecuted(
-      @Payload CryptoTradeExecutedEvent event, Acknowledgment acknowledgment) {
-    try {
-      log.info("Received crypto.trade.executed event: {}", event.getTradeId());
-
-      // Send trade confirmation
-      sendTradeConfirmation(event.getUserId(), event.getCryptoCurrency(), event.getTradeType());
-
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getUserId())
-              .recipient("user@example.com")
-              .notificationType("EMAIL")
-              .subject("Crypto Trade Executed")
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
-
-      eventProducer.publishNotificationSent(notificationEvent);
-
-      acknowledgment.acknowledge();
-
-    } catch (Exception e) {
-      log.error("Failed to process crypto.trade.executed event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge();
-    }
-  }
-
-  @KafkaListener(topics = KafkaTopics.ALERT_TRIGGERED)
-  public void handleAlertTriggered(
-      @Payload AlertTriggeredEvent event, Acknowledgment acknowledgment) {
     try {
       log.info(
-          "Received alert.triggered event: {} - Type: {}",
-          event.getAlertId(),
-          event.getAlertType());
+          "Received TransactionCompletedEvent for transaction: {} from topic: {}",
+          event.getTransactionId(),
+          topic);
 
-      // Send alert notification
-      sendAlertNotification(event.getUserId(), event.getAlertType(), event.getMessage());
+      // Get account owner ID from account service
+      Long userId = accountServiceClient.getAccountOwnerId(event.getFromAccountId());
 
-      NotificationSentEvent notificationEvent =
-          NotificationSentEvent.builder()
-              .userId(event.getUserId())
-              .recipient("user@example.com")
-              .notificationType("EMAIL")
-              .subject("Alert: " + event.getAlertType())
-              .status("SENT")
-              .channel("EMAIL")
-              .source("notification-service")
-              .build();
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("transactionId", event.getTransactionId());
+      variables.put("amount", formatCurrency(event.getAmount(), event.getCurrency()));
+      variables.put("currency", event.getCurrency());
+      variables.put("transactionType", event.getTransactionType());
+      variables.put("fromAccount", event.getFromAccountNumber());
+      variables.put("toAccount", event.getToAccountNumber());
+      variables.put("description", event.getDescription());
+      variables.put("status", event.getStatus());
 
-      eventProducer.publishNotificationSent(notificationEvent);
+      // Send transaction notification to all enabled channels
+      notificationService.sendToAllChannels(userId, NotificationType.TRANSACTION, variables);
 
       acknowledgment.acknowledge();
+      log.info(
+          "Successfully processed TransactionCompletedEvent for transaction: {}",
+          event.getTransactionId());
 
     } catch (Exception e) {
-      log.error("Failed to process alert.triggered event: {}", event.getEventId(), e);
-      acknowledgment.acknowledge();
+      log.error(
+          "Error processing TransactionCompletedEvent for transaction: {}",
+          event.getTransactionId(),
+          e);
     }
   }
 
-  // Placeholder methods - would be implemented with actual email/SMS/push services
-  private void sendWelcomeEmail(String email, String firstName) {
-    log.info("Sending welcome email to: {} for user: {}", email, firstName);
-    // Implementation would use email service
+  /**
+   * Handle fraud detected events - send urgent fraud alert.
+   *
+   * @param event Fraud detected event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "fraud.detected",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handleFraudDetected(
+      @Payload FraudDetectedEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
+    try {
+      log.info("Received FraudDetectedEvent for user: {} from topic: {}", event.getUserId(), topic);
+
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("transactionId", event.getTransactionId());
+      variables.put("amount", formatCurrency(event.getAmount(), event.getCurrency()));
+      variables.put("currency", event.getCurrency());
+      variables.put("fraudType", event.getFraudType());
+      variables.put("severity", event.getSeverity());
+      variables.put("description", event.getDescription());
+      variables.put("accountId", event.getAccountId());
+
+      // Send fraud alert to ALL channels (critical priority)
+      notificationService.sendToAllChannels(
+          event.getUserId(), NotificationType.FRAUD_ALERT, variables);
+
+      acknowledgment.acknowledge();
+      log.info("Successfully processed FraudDetectedEvent for user: {}", event.getUserId());
+
+    } catch (Exception e) {
+      log.error("Error processing FraudDetectedEvent for user: {}", event.getUserId(), e);
+    }
   }
 
-  private void sendTransactionNotification(
-      Long accountId, java.math.BigDecimal amount, String currency) {
-    log.info(
-        "Sending transaction notification for account: {} - Amount: {} {}",
-        accountId,
-        amount,
-        currency);
-    // Implementation would use notification service
+  /**
+   * Handle alert triggered events - send account alerts.
+   *
+   * @param event Alert triggered event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "alert.triggered",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handleAlertTriggered(
+      @Payload AlertTriggeredEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
+    try {
+      log.info(
+          "Received AlertTriggeredEvent for user: {} from topic: {}", event.getUserId(), topic);
+
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("alertType", event.getAlertType());
+      variables.put("severity", event.getSeverity());
+      variables.put("message", event.getMessage());
+      variables.put("threshold", formatCurrency(event.getThreshold(), "USD"));
+      variables.put("currentValue", formatCurrency(event.getCurrentValue(), "USD"));
+      variables.put("accountNumber", event.getAccountNumber());
+
+      // Send alert notification
+      notificationService.sendToAllChannels(event.getUserId(), NotificationType.ALERT, variables);
+
+      acknowledgment.acknowledge();
+      log.info("Successfully processed AlertTriggeredEvent for user: {}", event.getUserId());
+
+    } catch (Exception e) {
+      log.error("Error processing AlertTriggeredEvent for user: {}", event.getUserId(), e);
+    }
   }
 
-  private void sendFailureNotification(Long accountId, String reason) {
-    log.info("Sending failure notification for account: {} - Reason: {}", accountId, reason);
-    // Implementation would use notification service
+  /**
+   * Handle account created events - send account creation notification.
+   *
+   * @param event Account created event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "account.created",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handleAccountCreated(
+      @Payload AccountCreatedEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
+    try {
+      log.info(
+          "Received AccountCreatedEvent for account: {} from topic: {}",
+          event.getAccountId(),
+          topic);
+
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("accountNumber", event.getAccountNumber());
+      variables.put("accountType", event.getAccountType());
+      variables.put("currency", event.getCurrency());
+      variables.put("balance", formatCurrency(event.getInitialBalance(), event.getCurrency()));
+
+      // Send account creation notification
+      notificationService.sendToAllChannels(
+          event.getUserId(), NotificationType.ACCOUNT_CREATED, variables);
+
+      acknowledgment.acknowledge();
+      log.info("Successfully processed AccountCreatedEvent for account: {}", event.getAccountId());
+
+    } catch (Exception e) {
+      log.error("Error processing AccountCreatedEvent for account: {}", event.getAccountId(), e);
+    }
   }
 
-  private void sendFraudAlert(Long accountId, String fraudType, String severity) {
-    log.warn(
-        "Sending fraud alert for account: {} - Type: {} - Severity: {}",
-        accountId,
-        fraudType,
-        severity);
-    // Implementation would use notification service
+  /**
+   * Handle payment failed events - send payment failure notification.
+   *
+   * @param event Payment failed event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "payment.failed",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handlePaymentFailed(
+      @Payload PaymentFailedEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
+    try {
+      log.info(
+          "Received PaymentFailedEvent for transaction: {} from topic: {}",
+          event.getTransactionId(),
+          topic);
+
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("paymentId", event.getTransactionId());
+      variables.put("amount", formatCurrency(event.getAmount(), event.getCurrency()));
+      variables.put("currency", event.getCurrency());
+      variables.put("reason", event.getFailureReason());
+      variables.put("errorCode", event.getErrorCode());
+      variables.put("accountNumber", event.getAccountNumber());
+
+      // Send payment failed notification
+      notificationService.sendToAllChannels(
+          event.getUserId(), NotificationType.PAYMENT_FAILED, variables);
+
+      acknowledgment.acknowledge();
+      log.info(
+          "Successfully processed PaymentFailedEvent for transaction: {}",
+          event.getTransactionId());
+
+    } catch (Exception e) {
+      log.error(
+          "Error processing PaymentFailedEvent for transaction: {}", event.getTransactionId(), e);
+    }
   }
 
-  private void sendTradeConfirmation(Long userId, String cryptoCurrency, String tradeType) {
-    log.info(
-        "Sending trade confirmation for user: {} - Crypto: {} - Type: {}",
-        userId,
-        cryptoCurrency,
-        tradeType);
-    // Implementation would use notification service
+  /**
+   * Handle auth login events - send login notification.
+   *
+   * @param event Auth login event
+   * @param acknowledgment Kafka acknowledgment
+   */
+  @KafkaListener(
+      topics = "auth.login",
+      groupId = "${spring.kafka.consumer.group-id}",
+      containerFactory = "kafkaListenerContainerFactory")
+  public void handleAuthLogin(
+      @Payload AuthLoginEvent event,
+      @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+      Acknowledgment acknowledgment) {
+
+    try {
+      log.info("Received AuthLoginEvent for user: {} from topic: {}", event.getUserId(), topic);
+
+      // Prepare template variables
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("ipAddress", event.getIpAddress());
+      variables.put("userAgent", event.getUserAgent());
+      variables.put("loginMethod", event.getLoginMethod());
+      variables.put("email", event.getEmail());
+      variables.put("success", event.isSuccess());
+
+      // Send login notification (usually only in-app by default)
+      notificationService.sendToAllChannels(event.getUserId(), NotificationType.LOGIN, variables);
+
+      acknowledgment.acknowledge();
+      log.info("Successfully processed AuthLoginEvent for user: {}", event.getUserId());
+
+    } catch (Exception e) {
+      log.error("Error processing AuthLoginEvent for user: {}", event.getUserId(), e);
+    }
   }
 
-  private void sendAlertNotification(Long userId, String alertType, String message) {
-    log.info(
-        "Sending alert notification for user: {} - Type: {} - Message: {}",
-        userId,
-        alertType,
-        message);
-    // Implementation would use notification service
+  /**
+   * Format currency amount with symbol.
+   *
+   * @param amount Amount
+   * @param currency Currency code
+   * @return Formatted string
+   */
+  private String formatCurrency(BigDecimal amount, String currency) {
+    if (amount == null) {
+      return "0.00";
+    }
+    return String.format("%s %.2f", currency, amount);
   }
 }

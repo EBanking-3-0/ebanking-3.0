@@ -1,0 +1,366 @@
+<div class="payment-view">
+  <!-- Dynamic Hero Header -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1><span class="gradient-text">Premium Payment</span> Hub</h1>
+      <p class="subtitle">Secure, instant, and reliable banking at your fingertips</p>
+    </div>
+    <div class="hero-actions">
+      <button (click)="togglePaymentsHistory()" class="btn-secondary-glass">
+        <span class="icon">{{ showPaymentsHistory ? '📋' : '🕒' }}</span>
+        {{ showPaymentsHistory ? 'Hide' : 'Show' }} History
+      </button>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Payment Selector Tabs -->
+    <nav class="payment-tabs-container">
+      <div class="tabs-scroll">
+        <button [class.active]="activeTab === 'internal'" (click)="setActiveTab('internal')" class="tab-chip">
+          <span class="tab-icon">🏦</span>
+          <span class="tab-label">Internal</span>
+        </button>
+        <button [class.active]="activeTab === 'sepa'" (click)="setActiveTab('sepa')" class="tab-chip">
+          <span class="tab-icon">🇪🇺</span>
+          <span class="tab-label">SEPA</span>
+        </button>
+        <button [class.active]="activeTab === 'instant'" (click)="setActiveTab('instant')" class="tab-chip">
+          <span class="tab-icon">⚡</span>
+          <span class="tab-label">Instant</span>
+        </button>
+        <button [class.active]="activeTab === 'mobile'" (click)="setActiveTab('mobile')" class="tab-chip">
+          <span class="tab-icon">📱</span>
+          <span class="tab-label">Mobile</span>
+        </button>
+      </div>
+    </nav>
+
+    <section class="form-workspace">
+      <div class="glass-card main-form-card">
+        <!-- Forms -->
+        @if (activeTab === 'internal') {
+        <form [formGroup]="internalForm" (ngSubmit)="onSubmit()" class="payment-form animate-fade-in">
+          <div class="form-header">
+            <h3>Internal Bank Transfer</h3>
+            <p>Transfer funds instantly between internal accounts</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label>From Account</label>
+              <div class="select-wrapper">
+                <select formControlName="fromAccountId" class="modern-input">
+                  <option [ngValue]="null" disabled>Select source account</option>
+                  @for (account of accounts; track account.id) {
+                  <option [ngValue]="account.id">
+                    {{ account.accountNumber }} — Balance: {{ account.balance | currency:account.currency }}
+                  </option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Recipient Account Number / IBAN</label>
+              <input type="text" formControlName="toAccountNumber" class="modern-input"
+                placeholder="Enter target identifier">
+              @if (internalForm.get('toAccountNumber')?.invalid && internalForm.get('toAccountNumber')?.touched) {
+              <span class="error-msg">Valid target account required</span>
+              }
+            </div>
+
+            <div class="form-field">
+              <label>Amount</label>
+              <div class="input-with-icon">
+                <span class="input-icon">💰</span>
+                <input type="number" step="0.01" formControlName="amount" class="modern-input">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Currency</label>
+              <select formControlName="currency" class="modern-input">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="MAD">MAD</option>
+              </select>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Description (Optional)</label>
+              <textarea formControlName="description" class="modern-input" rows="2"
+                placeholder="What's this for?"></textarea>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loading || internalForm.invalid" class="btn-primary full-width">
+            {{ loading ? 'Processing...' : 'Send Payment' }}
+          </button>
+        </form>
+        }
+
+        @if (activeTab === 'sepa') {
+        <form [formGroup]="sepaForm" (ngSubmit)="onSubmit()" class="payment-form animate-fade-in">
+          <div class="form-header">
+            <h3>SEPA Credit Transfer</h3>
+            <p>Standard European transfer (1-2 business days)</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label>Source Account</label>
+              <select formControlName="fromAccountId" class="modern-input">
+                <option [ngValue]="null" disabled>Select source account</option>
+                @for (account of accounts; track account.id) {
+                <option [ngValue]="account.id">
+                  {{ account.accountNumber }} — {{ account.balance | currency:account.currency }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Recipient IBAN</label>
+              <input type="text" formControlName="toIban" class="modern-input" placeholder="FR76...">
+            </div>
+
+            <div class="form-field full-width">
+              <label>Beneficiary Name</label>
+              <input type="text" formControlName="beneficiaryName" class="modern-input" placeholder="John Smith">
+            </div>
+
+            <div class="form-field">
+              <label>Amount</label>
+              <input type="number" step="0.01" formControlName="amount" class="modern-input">
+            </div>
+
+            <div class="form-field">
+              <label>Currency</label>
+              <select formControlName="currency" class="modern-input">
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loading || sepaForm.invalid" class="btn-primary full-width">
+            {{ loading ? 'Processing...' : 'Initiate SEPA Transfer' }}
+          </button>
+        </form>
+        }
+
+        @if (activeTab === 'instant') {
+        <form [formGroup]="instantForm" (ngSubmit)="onSubmit()" class="payment-form animate-fade-in">
+          <div class="form-header">
+            <h3>SCT Instant Transfer ⚡</h3>
+            <p>Processed in under 10 seconds. Maximum €15,000.</p>
+          </div>
+
+          <div class="status-info-box">
+            <span class="pulse"></span>
+            Real-time verification enabled
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label>Source Account</label>
+              <select formControlName="fromAccountId" class="modern-input">
+                @for (account of accounts; track account.id) {
+                <option [ngValue]="account.id">{{ account.accountNumber }} — Balance: {{ account.balance | currency }}
+                </option>
+                }
+              </select>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Recipient IBAN</label>
+              <input type="text" formControlName="toIban" class="modern-input" placeholder="DE89...">
+            </div>
+
+            <div class="form-field full-width">
+              <label>Beneficiary Name</label>
+              <input type="text" formControlName="beneficiaryName" class="modern-input" placeholder="Legal Name">
+            </div>
+
+            <div class="form-field">
+              <label>Amount (Limit €15k)</label>
+              <input type="number" step="0.01" formControlName="amount" class="modern-input">
+            </div>
+
+            <div class="form-field">
+              <label>Currency</label>
+              <input type="text" value="EUR" readonly class="modern-input read-only">
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loading || instantForm.invalid" class="btn-primary full-width">
+            {{ loading ? 'Executing...' : 'Send Instantly' }}
+          </button>
+        </form>
+        }
+
+        @if (activeTab === 'mobile') {
+        <form [formGroup]="mobileForm" (ngSubmit)="onSubmit()" class="payment-form animate-fade-in">
+          <div class="form-header">
+            <h3>Mobile Recharge</h3>
+            <p>Top up your phone balance instantly</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label>Source Account</label>
+              <select formControlName="fromAccountId" class="modern-input">
+                @for (account of accounts; track account.id) {
+                <option [ngValue]="account.id">{{ account.accountNumber }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Select Operator</label>
+              <div class="operator-grid">
+                @for (op of moroccanOperators; track op.id) {
+                <div class="operator-card" [class.selected]="mobileForm.get('operatorId')?.value === op.id"
+                  (click)="selectOperator(op)"
+                  [style.border-color]="mobileForm.get('operatorId')?.value === op.id ? op.color : 'transparent'">
+                  <div class="op-dot" [style.background-color]="op.color"></div>
+                  <span class="op-name">{{ op.name }}</span>
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Phone Number</label>
+              <div class="input-with-icon">
+                <span class="input-icon">📞</span>
+                <input type="text" formControlName="phoneNumber" class="modern-input" placeholder="+212 6XX XXXXXX">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Recharge Amount</label>
+              <input type="number" formControlName="amount" class="modern-input">
+            </div>
+
+            <div class="form-field">
+              <label>Currency</label>
+              <select formControlName="currency" class="modern-input">
+                <option value="MAD">MAD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loading || mobileForm.invalid" class="btn-primary full-width">
+            {{ loading ? 'Recharging...' : 'Confirm Recharge' }}
+          </button>
+        </form>
+        }
+      </div>
+    </section>
+
+    <!-- Side Feedback Panel -->
+    <aside class="feedback-panel">
+      <!-- Loading State -->
+      @if (loading) {
+      <div class="glass-card loading-card animate-pulse">
+        <div class="spinner"></div>
+        <p>Securing your transaction...</p>
+      </div>
+      }
+
+      <!-- Success Result -->
+      @if (result && !scaRequired) {
+      <div class="glass-card result-card success animate-slide-up">
+        <div class="result-icon">✅</div>
+        <h4>Transaction Successful</h4>
+        <div class="result-details">
+          <div class="detail-row">
+            <span>Reference:</span> <strong>{{ result.paymentId }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Amount:</span> <strong>{{ result.amount }} {{ result.currency }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Status:</span> <span class="badge success">{{ result.status }}</span>
+          </div>
+        </div>
+        <button (click)="result = null" class="btn-minimal">Dismiss</button>
+      </div>
+      }
+
+      <!-- Error Result -->
+      @if (error && !scaRequired) {
+      <div class="glass-card result-card error animate-shake">
+        <div class="result-icon">❌</div>
+        <h4>Payment Failed</h4>
+        <p class="error-text">{{ error }}</p>
+        <button (click)="error = null" class="btn-minimal">Try Again</button>
+      </div>
+      }
+    </aside>
+  </main>
+
+  <!-- SCA Modal Overlay -->
+  @if (scaRequired) {
+  <div class="modal-backdrop" (click)="cancelSca()">
+    <div class="glass-card sca-modal animate-scale-up" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="shield-icon">🛡️</span>
+        <h3>Secure Verification</h3>
+      </div>
+      <p>Please enter the 6-digit verification code sent to your device.</p>
+
+      <form [formGroup]="otpForm" (ngSubmit)="onAuthorizePayment()">
+        <div class="otp-field">
+          <input type="text" formControlName="otpCode" class="otp-input" placeholder="000 000" maxlength="6">
+          @if (otpError) { <p class="error-msg">{{ otpError }}</p> }
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" (click)="cancelSca()" class="btn-ghost">Cancel</button>
+          <button type="submit" [disabled]="otpForm.invalid || loading" class="btn-primary">
+            Verify & Pay
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  }
+
+  <!-- History Panel Overlay -->
+  @if (showPaymentsHistory) {
+  <section class="history-overlay animate-fade-in">
+    <div class="glass-card history-card">
+      <div class="card-header">
+        <h3>Transaction History</h3>
+        <button (click)="showPaymentsHistory = false" class="close-btn">×</button>
+      </div>
+
+      <div class="history-content">
+        @if (paymentsLoading) {
+        <div class="skeleton-loader"></div>
+        } @else if (userPayments.length === 0) {
+        <p class="empty-state">No transactions yet.</p>
+        } @else {
+        <div class="history-list">
+          @for (payment of userPayments; track payment.paymentId) {
+          <div class="history-item" (click)="result = payment">
+            <div class="item-left">
+              <span class="type-pill">{{ getPaymentTypeLabel(payment.paymentType) }}</span>
+              <span class="date">{{ payment.createdAt | date:'shortDate' }}</span>
+            </div>
+            <div class="item-right">
+              <span class="amount">{{ payment.amount | currency:payment.currency }}</span>
+              <span class="status-dot" [ngClass]="getStatusClass(payment.status)"></span>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+  }
+</div>

@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class TransactionCompletedEvent extends BaseEvent {
 
   private Long transactionId;
+  private Long userId;
   private Long fromAccountId;
   private Long toAccountId;
   private String fromAccountNumber;
@@ -32,6 +33,7 @@ public class TransactionCompletedEvent extends BaseEvent {
 
   public TransactionCompletedEvent(
       Long transactionId,
+      Long userId,
       Long fromAccountId,
       Long toAccountId,
       String fromAccountNumber,
@@ -43,6 +45,7 @@ public class TransactionCompletedEvent extends BaseEvent {
       String description) {
     super(KafkaTopics.TRANSACTION_COMPLETED);
     this.transactionId = transactionId;
+    this.userId = userId;
     this.fromAccountId = fromAccountId;
     this.toAccountId = toAccountId;
     this.fromAccountNumber = fromAccountNumber;

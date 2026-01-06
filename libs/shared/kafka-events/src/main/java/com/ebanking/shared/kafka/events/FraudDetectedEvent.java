@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class FraudDetectedEvent extends BaseEvent {
 
   private Long transactionId;
+  private Long userId;
   private Long accountId;
   private String accountNumber;
   private BigDecimal amount;
@@ -30,6 +31,7 @@ public class FraudDetectedEvent extends BaseEvent {
 
   public FraudDetectedEvent(
       Long transactionId,
+      Long userId,
       Long accountId,
       String accountNumber,
       BigDecimal amount,
@@ -39,6 +41,7 @@ public class FraudDetectedEvent extends BaseEvent {
       String description) {
     super(KafkaTopics.FRAUD_DETECTED);
     this.transactionId = transactionId;
+    this.userId = userId;
     this.accountId = accountId;
     this.accountNumber = accountNumber;
     this.amount = amount;

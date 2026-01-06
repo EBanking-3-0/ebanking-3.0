@@ -1,0 +1,53 @@
+<div class="history-container">
+  <div class="header">
+    <h2>📜 Payment History</h2>
+    <button (click)="loadPayments()" [disabled]="loading" class="refresh-btn">
+      🔄 Refresh
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading">Loading payments...</div>
+  }
+
+  @if (error) {
+    <div class="error-message">{{ error }}</div>
+  }
+
+  @if (!loading && !error) {
+    @if (payments.length === 0) {
+      <div class="empty-state">
+        <p>No payments found. Make your first payment to see it here!</p>
+      </div>
+    } @else {
+      <div class="payments-list">
+        @for (payment of payments; track payment.paymentId) {
+          <div class="payment-item" [ngClass]="getStatusClass(payment.status)">
+            <div class="payment-header">
+              <div class="payment-info">
+                <span class="payment-id">#{{ payment.paymentId }}</span>
+                <span class="transaction-id">{{ payment.transactionId }}</span>
+              </div>
+              <span class="status-badge" [ngClass]="getStatusClass(payment.status)">
+                {{ payment.status }}
+              </span>
+            </div>
+            <div class="payment-body">
+              <div class="amount">
+                <strong>{{ payment.amount }} {{ payment.currency }}</strong>
+              </div>
+              <div class="message">{{ payment.message }}</div>
+              <div class="date">
+                Created: {{ payment.createdAt | date:'medium' }}
+                @if (payment.estimatedCompletionDate) {
+                  <br>
+                  Estimated: {{ payment.estimatedCompletionDate | date:'medium' }}
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

@@ -1,8 +1,12 @@
 package com.ebanking.account.controller;
 
-import com.ebanking.account.dto.AccountDTO;
+import com.ebanking.account.dto.*;
+import com.ebanking.account.exception.AccountNotFoundException;
+import com.ebanking.account.exception.InsufficientBalance;
+import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +21,21 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
   private final AccountService accountService;
+  private final AccountMapper accountMapper;
 
   @PostMapping
   @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
-    // todo:k In a real app, extract userId from token or look it up.
-    // For simplicity, we trust the request or use a hardcoded/looked-up ID if available in token.
-    // Ideally: Long userId = Long.parseLong(authentication.getName()); // if subject is ID
+    // todo: In a real app, extract userId from token or look it up.
+    // For simplicity, we trust the request or use a hardcoded/looked-up ID if
+    // available in token.
+    // Ideally: Long userId = Long.parseLong(authentication.getName()); // if
+    // subject is ID
     // Or using JwtAuthConverter to put ID in principal.
 
-    // For this demo, we'll assume userId is passed in request, but verify it matches token if
+    // For this demo, we'll assume userId is passed in request, but verify it
+    // matches token if
     // needed.
 
     Account account =
@@ -42,7 +50,7 @@ public class AccountController {
     // Again, verify userId matches token in production
     return ResponseEntity.ok(
         accountService.getAccountsByUserId(userId).stream()
-            .map(this::mapToDTO)
+            .map(accountMapper::mapToDTO)
             .collect(Collectors.toList()));
   }
 

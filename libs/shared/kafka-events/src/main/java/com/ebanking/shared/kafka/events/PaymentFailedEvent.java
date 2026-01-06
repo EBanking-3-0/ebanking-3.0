@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class PaymentFailedEvent extends BaseEvent {
 
   private Long transactionId;
+  private Long userId;
   private Long accountId;
   private String accountNumber;
   private BigDecimal amount;
@@ -29,16 +30,16 @@ public class PaymentFailedEvent extends BaseEvent {
 
   public PaymentFailedEvent(
       Long transactionId,
+      Long userId,
       Long accountId,
-      String accountNumber,
       BigDecimal amount,
       String currency,
       String failureReason,
       String errorCode) {
     super(KafkaTopics.PAYMENT_FAILED);
     this.transactionId = transactionId;
+    this.userId = userId;
     this.accountId = accountId;
-    this.accountNumber = accountNumber;
     this.amount = amount;
     this.currency = currency;
     this.failureReason = failureReason;

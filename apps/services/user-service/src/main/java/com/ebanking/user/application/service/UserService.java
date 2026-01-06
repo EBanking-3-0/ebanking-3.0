@@ -8,6 +8,7 @@ import com.ebanking.user.domain.repository.KycVerificationRepository;
 import com.ebanking.user.domain.repository.UserRepository;
 import com.ebanking.user.infrastructure.storage.FileStorageService;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -55,6 +56,15 @@ public class UserService {
   @Transactional(readOnly = true)
   public User getUserByKeycloakIdOptional(String keycloakId) {
     return userRepository.findByKeycloakId(keycloakId).orElse(null);
+  }
+
+  public User getUserById(String id) {
+    try {
+      UUID uuid = UUID.fromString(id);
+      return userRepository.findById(uuid).orElse(null);
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 
   // ==================== KYC SUBMISSION (version multipart) ====================

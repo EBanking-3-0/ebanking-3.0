@@ -62,6 +62,10 @@ public class TypedEventProducer {
     eventProducer.publishEvent(KafkaTopics.NOTIFICATION_SENT, event);
   }
 
+  public void publishNotificationFailed(NotificationFailedEvent event) {
+    eventProducer.publishEvent(KafkaTopics.NOTIFICATION_FAILED, event);
+  }
+
   public void publishAlertTriggered(AlertTriggeredEvent event) {
     eventProducer.publishEvent(KafkaTopics.ALERT_TRIGGERED, event);
   }
