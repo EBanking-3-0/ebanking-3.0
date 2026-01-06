@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
@@ -38,7 +36,8 @@ public class GraphQLSecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/graphiql", "/actuator/**", "/graphql")
-                    .permitAll() // Allow GraphQL endpoint, we will handle auth in resolvers or context
+                    .permitAll() // Allow GraphQL endpoint, we will handle auth in resolvers or
+                    // context
                     .anyRequest()
                     .authenticated())
         .oauth2ResourceServer(
@@ -47,10 +46,5 @@ public class GraphQLSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     return http.build();
-  }
-
-  @Bean
-  public JwtDecoder jwtDecoder() {
-    return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
   }
 }

@@ -1,10 +1,12 @@
 package com.ebanking.graphql.resolver;
 
 import com.ebanking.graphql.client.UserClient;
+import com.ebanking.graphql.model.CreateUserInput;
 import com.ebanking.graphql.model.KycRequestInput;
 import com.ebanking.shared.dto.KycRequest;
 import com.ebanking.shared.dto.KycResponse;
 import com.ebanking.shared.dto.UserProfileResponse;
+import com.ebanking.shared.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -21,6 +23,26 @@ public class UserResolver {
   @QueryMapping
   public UserProfileResponse me() {
     return userClient.getCurrentUserProfile();
+  }
+
+  @QueryMapping
+  public java.util.List<UserProfileResponse> users() {
+    return userClient.getUsers();
+  }
+
+  @QueryMapping
+  public UserProfileResponse user(@Argument String id) {
+    return userClient.getUser(id);
+  }
+
+  @MutationMapping
+  public UserProfileResponse createUser(@Argument("input") CreateUserInput input) {
+    UserRequest request = new UserRequest();
+    request.setEmail(input.getEmail());
+    request.setFirstName(input.getFirstName());
+    request.setLastName(input.getLastName());
+    request.setPhone(input.getPhone());
+    return userClient.createUser(request);
   }
 
   @MutationMapping

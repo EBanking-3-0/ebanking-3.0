@@ -32,6 +32,12 @@ export const routes: Routes = [
     canMatch: [kycGuard],
   },
 
+  {
+    path: 'payments',
+    component: PaymentComponent,
+    canMatch: [kycGuard],
+  },
+
   // Fallback
   { path: '**', redirectTo: '' },
 ];

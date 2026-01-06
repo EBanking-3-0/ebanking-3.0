@@ -1,13 +1,14 @@
 package com.ebanking.user.api.controller;
 
 import com.ebanking.shared.dto.UserProfileResponse;
+import com.ebanking.shared.dto.UserRequest;
 import com.ebanking.user.api.mapper.UserProfileMapper;
 import com.ebanking.user.application.service.UserService;
 import com.ebanking.user.domain.model.User;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,18 @@ public class UserController {
 
   private final UserService userService;
   private final UserProfileMapper userProfileMapper;
+
+  /**
+   * Créer un nouvel utilisateur (Interne/Admin)
+   *
+   * @param request Données de l'utilisateur
+   * @return 200 OK avec le profil utilisateur créé
+   */
+  @PostMapping
+  public ResponseEntity<UserProfileResponse> createUser(@RequestBody @Valid UserRequest request) {
+    User user = userService.createUser(request);
+    return ResponseEntity.ok(userProfileMapper.toResponse(user));
+  }
 
   /**
    * Récupérer le profil de l'utilisateur actuel
@@ -63,11 +76,36 @@ public class UserController {
    * @param userId UUID de l'utilisateur
    * @return 200 OK avec les détails utilisateur 404 Not Found si l'utilisateur n'existe pas
    */
+  /**
+   * Récupérer la liste de tous les utilisateurs (Admin)
+   *
+   * @return 200 OK avec la liste des utilisateurs
+   */
+  @GetMapping
+  public ResponseEntity<java.util.List<UserProfileResponse>> getAllUsers() {
+    java.util.List<User> users = userService.getAllUsers();
+    return ResponseEntity.ok(users.stream().map(userProfileMapper::toResponse).toList());
+  }
+
+  /**
+   * Récupérer les détails d'un utilisateur par son UUID
+   *
+   * <p>Accessible uniquement aux administrateurs ou au propriétaire du compte
+   *
+   * @param userId UUID de l'utilisateur
+   * @return 200 OK avec les détails utilisateur 404 Not Found si l'utilisateur n'existe pas
+   */
   @GetMapping("/{userId}")
   public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable String userId) {
-    // TODO : Implémenter la logique de récupération d'utilisateur par ID
-    // Ajouter les contrôles de sécurité (admin ou propriétaire)
-    return ResponseEntity.notFound().build();
+    try {
+      User user = userService.getUserById(UUID.fromString(userId));
+      if (user == null) {
+        return ResponseEntity.notFound().build();
+      }
+      return ResponseEntity.ok(userProfileMapper.toResponse(user));
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   /**

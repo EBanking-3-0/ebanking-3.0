@@ -94,6 +94,29 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  @Transactional
+  public User createUser(com.ebanking.shared.dto.UserRequest request) {
+    // Check if user already exists
+    System.out.println("do we acehive here");
+    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+      throw new IllegalArgumentException(
+          "User with email " + request.getEmail() + " already exists");
+    }
+    System.out.println("do we acehive here");
+
+    User user =
+        User.builder()
+            .keycloakId(UUID.randomUUID().toString()) // Placeholder Keycloak ID
+            .email(request.getEmail())
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .phone(request.getPhone())
+            .status(User.UserStatus.PENDING_REVIEW)
+            .build();
+
+    return userRepository.save(user);
+  }
+
   // ==================== KYC SUBMISSION (version multipart) ====================
 
   @Transactional
@@ -179,13 +202,13 @@ public class UserService {
             .selfieUrl(selfieUrl)
             .status(KycVerification.KycStatus.PENDING_REVIEW)
             .build();
-        KycVerification.builder()
-            .user(user)
-            .cinNumber(kycRequest.getCinNumber())
-            .idDocumentUrl(cinImageUrl)
-            .selfieUrl(selfieUrl)
-            .status(KycVerification.KycStatus.PENDING_REVIEW)
-            .build();
+    KycVerification.builder()
+        .user(user)
+        .cinNumber(kycRequest.getCinNumber())
+        .idDocumentUrl(cinImageUrl)
+        .selfieUrl(selfieUrl)
+        .status(KycVerification.KycStatus.PENDING_REVIEW)
+        .build();
 
     kycVerification = kycVerificationRepository.save(kycVerification);
     log.info("KycVerification record saved: {}", kycVerification.getId());
@@ -230,5 +253,9 @@ public class UserService {
 
   public User getUserById(UUID id) {
     return userRepository.findById(id).orElse(null);
+  }
+
+  public java.util.List<User> getAllUsers() {
+    return userRepository.findAll();
   }
 }
