@@ -25,7 +25,7 @@ import {
  * Only attach Bearer token to backend / GraphQL requests
  */
 const backendCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^http:\/\/localhost:80(81|83)(\/.*)?$/i,  // Matches both 8081 and 8083
+  urlPattern: new RegExp(`${environment.apiUrl.replace('/graphql', '')}|${environment.kycApiUrl.replace('/api/v1/kyc', '')}`, 'i'),
 });
 
 export const appConfig: ApplicationConfig = {
@@ -87,7 +87,7 @@ export const appConfig: ApplicationConfig = {
         const keycloak = inject(Keycloak);
 
         const uploadLink = new (UploadHttpLink as any)({
-          uri: 'http://localhost:8081/graphql',
+          uri: environment.apiUrl,
           credentials: 'include',
         }) as unknown as ApolloLink;
 
