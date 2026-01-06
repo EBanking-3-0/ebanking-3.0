@@ -17,6 +17,7 @@ env:
   SPRING_PROFILES_ACTIVE: kubernetes
   SPRING_DATASOURCE_URL: "jdbc:postgresql://ebanking-infra-postgresql.ebanking.svc.cluster.local:5432/staging_db"
   SPRING_DATASOURCE_USERNAME: "ebanking_user"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "5"
   SPRING_KAFKA_BOOTSTRAP_SERVERS: "ebanking-infra-kafka-broker.ebanking.svc.cluster.local:9092"
   EUREKA_CLIENT_ENABLED: "false"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
