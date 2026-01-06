@@ -42,4 +42,3 @@ mvn spring-boot:run
 - Config Server
 - User Service
 - PostgreSQL
-

@@ -58,7 +58,8 @@ public class AccountServiceTest {
 
     when(accountRepository.save(any(Account.class))).thenReturn(savedAccount);
 
-    Account result = accountService.createAccount(userId, accountType.toString(), currency, nickname);
+    Account result =
+        accountService.createAccount(userId, accountType.toString(), currency, nickname);
 
     assertNotNull(result);
     assertEquals(userId, result.getUserId());
