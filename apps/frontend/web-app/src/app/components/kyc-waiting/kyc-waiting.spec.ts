@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { KycWaiting } from './kyc-waiting';
+import { KycWaitingComponent } from './kyc-waiting';
 
-describe('KycWaiting', () => {
-  let component: KycWaiting;
-  let fixture: ComponentFixture<KycWaiting>;
+describe('KycWaitingComponent', () => {
+  let component: KycWaitingComponent;
+  let fixture: ComponentFixture<KycWaitingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [KycWaiting]
-    })
-    .compileComponents();
+      imports: [KycWaitingComponent, RouterTestingModule],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(KycWaiting);
+    fixture = TestBed.createComponent(KycWaitingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
