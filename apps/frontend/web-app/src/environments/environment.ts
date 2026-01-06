@@ -1,13 +1,7 @@
 export const environment = {
-  // production: true,
-  // apiUrl: 'http://localhost:8081/graphql',
-  // keycloak: {
-  //   url: 'http://localhost:8092',
-  //   realm: 'ebanking-realm',
-  //   clientId: 'ebanking-client',
-  // },
-
-  apiUrl: 'http://api.ebanking.local/graphql',
+  production: false,
+  apiUrl: 'http://localhost:8081/graphql',
+  apiRestUrl: 'http://localhost:8083',
   keycloak: {
     url: 'http://localhost:8092',
     realm: 'ebanking-realm',
