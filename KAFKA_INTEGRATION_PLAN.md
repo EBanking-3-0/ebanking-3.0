@@ -54,12 +54,12 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/user-service/`
 
 **Tasks**:
-1. Add kafka-events dependency to build.gradle
-2. Add Kafka configuration to application.yml
-3. Inject TypedEventProducer into UserService
-4. Publish UserCreatedEvent in createUser() method
-5. Publish UserUpdatedEvent in updateUser() method
-6. Add source field to events (set to "user-service")
+1. [x] Add kafka-events dependency to build.gradle
+2. [x] Add Kafka configuration to application.yml
+3. [x] Inject TypedEventProducer into UserService
+4. [x] Publish UserCreatedEvent in createUser() method
+5. [x] Publish UserUpdatedEvent in updateUser() method
+6. [x] Add source field to events (set to "user-service")
 
 **Files to Modify**:
 - `build.gradle` - Add dependency

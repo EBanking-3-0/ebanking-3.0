@@ -30,7 +30,7 @@ public class AccountService {
   private final CurrencyService currencyService;
 
   @Transactional
-  public Account createAccount(Long userId, String accountType, String currency) {
+  public Account createAccount(Long userId, String accountType, String currency, String nickname) {
     String accountNumber = generateAccountNumber();
 
     String iban = generateIban(accountNumber);
@@ -44,6 +44,7 @@ public class AccountService {
             .currency(currency)
             .balance(BigDecimal.ZERO)
             .status("ACTIVE")
+            .nickname(nickname)
             .build();
 
     Account savedAccount = accountRepository.save(account);

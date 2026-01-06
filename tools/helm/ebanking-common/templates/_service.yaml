@@ -1,0 +1,20 @@
+{{/*
+Standard Service Template
+*/}}
+{{- define "ebanking-common.service" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ebanking-common.fullname" . }}
+  labels:
+    {{- include "ebanking-common.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ebanking-common.selectorLabels" . | nindent 4 }}
+{{- end -}}

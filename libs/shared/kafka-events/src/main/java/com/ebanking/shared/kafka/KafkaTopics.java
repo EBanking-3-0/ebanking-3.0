@@ -13,6 +13,8 @@ public final class KafkaTopics {
   // User Events
   public static final String USER_CREATED = "user.created";
   public static final String USER_UPDATED = "user.updated";
+  public static final String USER_KYC_UPDATED = "user.kyc.updated";
+  public static final String USER_DELETED = "user.deleted";
 
   // Account Events
   public static final String ACCOUNT_CREATED = "account.created";

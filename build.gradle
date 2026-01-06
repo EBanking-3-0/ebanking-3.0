@@ -34,10 +34,24 @@ allprojects {
     pluginManager.withPlugin('java') {
         spotless {
             java {
-                googleJavaFormat()
+                googleJavaFormat("1.22.0")
                 removeUnusedImports()
                 trimTrailingWhitespace()
                 endWithNewline()
+            }
+        }
+    }
+
+    pluginManager.withPlugin('org.springframework.boot') {
+        dependencies {
+            implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-all'
+        }
+    }
+
+    pluginManager.withPlugin('io.spring.dependency-management') {
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
             }
         }
     }

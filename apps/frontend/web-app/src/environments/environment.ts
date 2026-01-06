@@ -1,8 +1,7 @@
 export const environment = {
-  production: true,
+  production: false,
   apiUrl: 'http://localhost:8081/graphql',
-  paymentApiUrl: 'http://localhost:8085/api/payments',
-  accountApiUrl: 'http://localhost:8084/api/accounts',
+  apiRestUrl: 'http://localhost:8083',
   keycloak: {
     url: 'http://localhost:8092',
     realm: 'ebanking-realm',

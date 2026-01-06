@@ -1,0 +1,35 @@
+# values.yaml for user-service
+replicaCount: 1
+fullnameOverride: user-service
+
+image:
+  repository: ebanking/user-service
+  tag: local
+  pullPolicy: Never # Use local image from Minikube
+
+service:
+  type: ClusterIP
+  port: 80 # External port for the service
+  targetPort: 8083 # Internal port of the user-service application
+
+env:
+  SPRING_PROFILES_ACTIVE: kubernetes # Activate Kubernetes profile if available
+  SPRING_DATASOURCE_URL: jdbc:postgresql://ebanking-infra-postgresql:5432/ebanking_db
+  SPRING_DATASOURCE_USERNAME: ebanking_user
+  # SPRING_DATASOURCE_PASSWORD moved to extraEnv
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: ebanking-infra-kafka-broker:9092
+  EUREKA_CLIENT_ENABLED: "false" # Disable Eureka client as K8s service discovery is used
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.ebanking.local/realms/ebanking-realm
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http:80/realms/ebanking-realm/protocol/openid-connect/certs
+  # Add other necessary environment variables if any
+
+extraEnv:
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-secret
+        key: password
+
+serviceAccount:
+  create: true
+  name: user-service-microservice
