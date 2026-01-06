@@ -1,12 +1,9 @@
 package com.ebanking.account.controller;
 
 import com.ebanking.account.dto.*;
-import com.ebanking.account.exception.AccountNotFoundException;
-import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +32,7 @@ public class AccountController {
     // Or using JwtAuthConverter to put ID in principal.
 
     // For this demo, we'll assume userId is passed in request, but verify it
-    // matches token if
-    // needed.
+    // matches token if needed.
 
     Account account =
         accountService.createAccount(
