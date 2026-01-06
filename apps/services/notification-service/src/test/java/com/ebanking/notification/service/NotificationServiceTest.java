@@ -87,7 +87,7 @@ class NotificationServiceTest {
     Long userId = 1L;
     SendNotificationRequest request =
         SendNotificationRequest.builder()
-            .userId(userId)
+            .userId(userId.toString())
             .type(NotificationType.WELCOME)
             .channel(NotificationChannel.EMAIL)
             .subject("Welcome!")
@@ -96,7 +96,7 @@ class NotificationServiceTest {
 
     UserContactDTO userContact =
         UserContactDTO.builder()
-            .userId(userId)
+            .userId(userId.toString())
             .email("test@example.com")
             .firstName("John")
             .lastName("Doe")
@@ -107,7 +107,7 @@ class NotificationServiceTest {
     Notification notification =
         Notification.builder()
             .id(1L)
-            .userId(userId)
+            .userId(userId.toString())
             .type(NotificationType.WELCOME)
             .channel(NotificationChannel.EMAIL)
             .status(NotificationStatus.SENT)
@@ -116,9 +116,9 @@ class NotificationServiceTest {
             .build();
 
     when(preferenceService.isChannelEnabled(
-            userId, NotificationType.WELCOME, NotificationChannel.EMAIL))
+            userId.toString(), NotificationType.WELCOME, NotificationChannel.EMAIL))
         .thenReturn(true);
-    when(userService.getUserContact(userId)).thenReturn(userContact);
+    when(userService.getUserContact(userId.toString())).thenReturn(userContact);
     lenient()
         .when(templateService.getSubject(NotificationType.WELCOME, NotificationChannel.EMAIL, null))
         .thenReturn("Welcome!");
@@ -136,7 +136,7 @@ class NotificationServiceTest {
 
     // Assert
     assertNotNull(result);
-    assertEquals(userId, result.getUserId());
+    assertEquals(userId.toString(), result.getUserId());
     assertEquals(NotificationType.WELCOME, result.getType());
     verify(notificationRepository, atLeastOnce()).save(any(Notification.class));
     verify(strategyFactory).getStrategy(NotificationChannel.EMAIL);
@@ -149,14 +149,14 @@ class NotificationServiceTest {
     Long userId = 1L;
     SendNotificationRequest request =
         SendNotificationRequest.builder()
-            .userId(userId)
+            .userId(userId.toString())
             .type(NotificationType.WELCOME)
             .channel(NotificationChannel.EMAIL)
             .subject("Welcome!")
             .build();
 
     when(preferenceService.isChannelEnabled(
-            userId, NotificationType.WELCOME, NotificationChannel.EMAIL))
+            userId.toString(), NotificationType.WELCOME, NotificationChannel.EMAIL))
         .thenReturn(false);
 
     // Act & Assert
@@ -177,7 +177,7 @@ class NotificationServiceTest {
 
     UserContactDTO userContact =
         UserContactDTO.builder()
-            .userId(userId)
+            .userId(userId.toString())
             .email("test@example.com")
             .firstName("John")
             .lastName("Doe")
@@ -188,19 +188,19 @@ class NotificationServiceTest {
     Notification notification =
         Notification.builder()
             .id(1L)
-            .userId(userId)
+            .userId(userId.toString())
             .type(type)
             .status(NotificationStatus.SENT)
             .build();
 
     lenient()
-        .when(preferenceService.getEnabledChannels(userId, type))
+        .when(preferenceService.getEnabledChannels(userId.toString(), type))
         .thenReturn(List.of(NotificationChannel.EMAIL));
 
     lenient().when(templateService.getSubject(any(), any(), any())).thenReturn("Transaction");
 
-    lenient().when(userService.getUserContact(userId)).thenReturn(userContact);
-    lenient().when(preferenceService.isChannelEnabled(anyLong(), any(), any())).thenReturn(true);
+    lenient().when(userService.getUserContact(userId.toString())).thenReturn(userContact);
+    lenient().when(preferenceService.isChannelEnabled(anyString(), any(), any())).thenReturn(true);
     lenient()
         .when(templateService.renderTemplate(any(), any(), any(), any()))
         .thenReturn("Transaction content");
@@ -209,7 +209,7 @@ class NotificationServiceTest {
     lenient().when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
 
     // Act
-    List<NotificationDTO> results = notificationService.sendToAllChannels(userId, type, variables);
+    List<NotificationDTO> results = notificationService.sendToAllChannels(userId.toString(), type, variables);
 
     // Assert
     assertNotNull(results);
@@ -226,14 +226,14 @@ class NotificationServiceTest {
     Notification notification =
         Notification.builder()
             .id(notificationId)
-            .userId(userId)
+            .userId(userId.toString())
             .status(NotificationStatus.SENT)
             .build();
 
     Notification updatedNotification =
         Notification.builder()
             .id(notificationId)
-            .userId(userId)
+            .userId(userId.toString())
             .status(NotificationStatus.READ)
             .build();
 
@@ -241,7 +241,7 @@ class NotificationServiceTest {
     when(notificationRepository.save(any(Notification.class))).thenReturn(updatedNotification);
 
     // Act
-    NotificationDTO result = notificationService.markAsRead(notificationId, userId);
+    NotificationDTO result = notificationService.markAsRead(notificationId, userId.toString());
 
     // Assert
     assertNotNull(result);
@@ -258,16 +258,16 @@ class NotificationServiceTest {
     Notification notification =
         Notification.builder()
             .id(1L)
-            .userId(userId)
+            .userId(userId.toString())
             .channel(NotificationChannel.IN_APP)
             .status(NotificationStatus.SENT)
             .build();
 
-    when(notificationRepository.findUnreadInAppNotifications(userId, NotificationChannel.IN_APP))
+    when(notificationRepository.findUnreadInAppNotifications(userId.toString(), NotificationChannel.IN_APP))
         .thenReturn(List.of(notification));
 
     // Act
-    List<NotificationDTO> results = notificationService.getUnreadInAppNotifications(userId);
+    List<NotificationDTO> results = notificationService.getUnreadInAppNotifications(userId.toString());
 
     // Assert
     assertNotNull(results);
@@ -283,7 +283,7 @@ class NotificationServiceTest {
     Notification failedNotification =
         Notification.builder()
             .id(notificationId)
-            .userId(1L)
+            .userId("1")
             .type(NotificationType.WELCOME)
             .channel(NotificationChannel.EMAIL)
             .status(NotificationStatus.FAILED)
@@ -296,7 +296,7 @@ class NotificationServiceTest {
     Notification sentNotification =
         Notification.builder()
             .id(notificationId)
-            .userId(1L)
+            .userId("1")
             .type(NotificationType.WELCOME)
             .channel(NotificationChannel.EMAIL)
             .status(NotificationStatus.SENT)

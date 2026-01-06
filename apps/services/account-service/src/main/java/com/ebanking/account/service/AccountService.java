@@ -134,8 +134,10 @@ public class AccountService {
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
-    String numericAccountNumber =
-        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
+    String numericAccountNumber = accountNumber.replaceAll("[^0-9]", "");
+    if (numericAccountNumber.length() > 11) {
+      numericAccountNumber = numericAccountNumber.substring(0, 11);
+    }
     // Compléter avec des zéros si nécessaire
 
     StringBuilder accountCode = new StringBuilder(numericAccountNumber);

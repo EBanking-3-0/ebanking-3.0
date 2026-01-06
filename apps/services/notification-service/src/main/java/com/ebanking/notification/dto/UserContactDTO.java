@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserContactDTO {
-  private Long userId;
+  private String userId;
   private String email;
   private String phoneNumber;
   private String firstName;

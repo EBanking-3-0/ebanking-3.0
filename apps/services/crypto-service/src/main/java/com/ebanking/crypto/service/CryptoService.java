@@ -19,7 +19,7 @@ public class CryptoService {
   @Transactional
   public void executeTrade(
       Long tradeId,
-      Long userId,
+      String userId,
       Long accountId,
       String cryptoCurrency,
       String tradeType,

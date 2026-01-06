@@ -58,10 +58,10 @@ class PreferenceServiceTest {
     List<NotificationChannel> enabledChannels =
         List.of(NotificationChannel.EMAIL, NotificationChannel.IN_APP);
 
-    when(preferenceRepository.findEnabledChannels(userId, type)).thenReturn(enabledChannels);
+    when(preferenceRepository.findEnabledChannels(userId.toString(), type)).thenReturn(enabledChannels);
 
     // Act
-    List<NotificationChannel> result = preferenceService.getEnabledChannels(userId, type);
+    List<NotificationChannel> result = preferenceService.getEnabledChannels(userId.toString(), type);
 
     // Assert
     assertNotNull(result);
@@ -69,7 +69,7 @@ class PreferenceServiceTest {
     assertTrue(result.contains(NotificationChannel.EMAIL));
     assertTrue(result.contains(NotificationChannel.IN_APP));
     assertFalse(result.contains(NotificationChannel.SMS));
-    verify(preferenceRepository, times(1)).findEnabledChannels(userId, type);
+    verify(preferenceRepository, times(1)).findEnabledChannels(userId.toString(), type);
   }
 
   @Test
@@ -79,10 +79,10 @@ class PreferenceServiceTest {
     Long userId = 1L;
     NotificationType type = NotificationType.WELCOME;
 
-    when(preferenceRepository.findEnabledChannels(userId, type)).thenReturn(List.of());
+    when(preferenceRepository.findEnabledChannels(userId.toString(), type)).thenReturn(List.of());
 
     // Act
-    List<NotificationChannel> result = preferenceService.getEnabledChannels(userId, type);
+    List<NotificationChannel> result = preferenceService.getEnabledChannels(userId.toString(), type);
 
     // Assert
     assertNotNull(result);
@@ -97,10 +97,10 @@ class PreferenceServiceTest {
     NotificationType type = NotificationType.TRANSACTION;
     NotificationChannel channel = NotificationChannel.EMAIL;
 
-    when(preferenceRepository.isChannelEnabled(userId, type, channel)).thenReturn(true);
+    when(preferenceRepository.isChannelEnabled(userId.toString(), type, channel)).thenReturn(true);
 
     // Act
-    boolean result = preferenceService.isChannelEnabled(userId, type, channel);
+    boolean result = preferenceService.isChannelEnabled(userId.toString(), type, channel);
 
     // Assert
     assertTrue(result);
@@ -115,7 +115,7 @@ class PreferenceServiceTest {
     NotificationChannel channel = NotificationChannel.PUSH;
 
     // Act
-    boolean result = preferenceService.isChannelEnabled(userId, type, channel);
+    boolean result = preferenceService.isChannelEnabled(userId.toString(), type, channel);
 
     // Assert
     assertFalse(result);
@@ -127,7 +127,7 @@ class PreferenceServiceTest {
     // Arrange
     NotificationPreferenceDTO dto =
         NotificationPreferenceDTO.builder()
-            .userId(1L)
+            .userId("1")
             .notificationType(NotificationType.TRANSACTION)
             .channel(NotificationChannel.EMAIL)
             .enabled(true)
@@ -135,7 +135,7 @@ class PreferenceServiceTest {
 
     NotificationPreference preference =
         NotificationPreference.builder()
-            .userId(1L)
+            .userId("1")
             .notificationType(NotificationType.TRANSACTION)
             .channel(NotificationChannel.EMAIL)
             .enabled(true)
@@ -157,7 +157,7 @@ class PreferenceServiceTest {
   @DisplayName("Should initialize default preferences for new user")
   void testInitializeDefaultPreferences() {
     // Arrange
-    Long userId = 1L;
+    String userId = "1";
 
     when(preferenceRepository.saveAll(anyList()))
         .thenAnswer(invocation -> invocation.getArgument(0));
