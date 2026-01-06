@@ -21,10 +21,11 @@ allprojects {
     version = '3.0.0'
 
     repositories {
-        mavenCentral()
-        // Fallback mirrors to avoid transient 403s from Maven Central in CI
+        // Prefer mirrors first to dodge intermittent 403s from Maven Central in CI
         maven { url = 'https://repo1.maven.org/maven2' }
         maven { url = 'https://maven-central.storage-download.googleapis.com/maven2' }
+        // Keep the canonical endpoint last as a fallback
+        mavenCentral()
         maven { url = 'https://repo.spring.io/milestone' }
     }
 
