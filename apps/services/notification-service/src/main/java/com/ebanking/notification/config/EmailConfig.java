@@ -3,6 +3,7 @@ package com.ebanking.notification.config;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 /** Configuration for email sending using JavaMailSender. */
 @Slf4j
 @Configuration
+@EnableConfigurationProperties(MailProperties.class)
 public class EmailConfig {
 
   /**
