@@ -40,9 +40,8 @@ public class AccountServiceTest {
     AccountType accountType = AccountType.SAVINGS;
     String currency = "USD";
     String nickname = "Main";
-    String accountNumber = generateAccountNumber();
-    // String iban = generateIban(accountNumber);
-    String iban = "FR1234567890";
+    String accountNumber = "1234567890";
+    String iban = generateIban(accountNumber);
 
     Account savedAccount =
         Account.builder()

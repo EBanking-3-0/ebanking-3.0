@@ -1,9 +1,13 @@
 package com.ebanking.account.controller;
 
 import com.ebanking.account.dto.*;
+import com.ebanking.account.exception.AccountNotFoundException;
+import com.ebanking.account.exception.InsufficientBalance;
 import com.ebanking.account.mappers.account.AccountMapper;
 import com.ebanking.account.model.Account;
 import com.ebanking.account.service.AccountService;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +52,22 @@ public class AccountController {
         accountService.getAccountsByUserId(userId).stream()
             .map(accountMapper::mapToDTO)
             .collect(Collectors.toList()));
+  }
+
+  @PostMapping("/{id}/deposit")
+  @PreAuthorize("hasRole('user')")
+  public ResponseEntity<Void> deposit(@PathVariable Long id, @RequestBody BigDecimal amount)
+      throws AccountNotFoundException {
+    accountService.deposit(id, amount);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/{id}/withdraw")
+  @PreAuthorize("hasRole('user')")
+  public ResponseEntity<Void> withdraw(@PathVariable Long id, @RequestBody BigDecimal amount)
+      throws AccountNotFoundException, InsufficientBalance {
+    accountService.withdraw(id, amount);
+    return ResponseEntity.ok().build();
   }
 
   private AccountDTO mapToDTO(Account account) {

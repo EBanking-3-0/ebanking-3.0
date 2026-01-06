@@ -37,9 +37,24 @@ public class AccountControllerTest {
   @WithMockUser(roles = "user")
   void testCreateAccount() throws Exception {
     AccountDTO request =
-        AccountDTO.builder().userId(1L).type("SAVINGS").currency("USD").nickname("Main").build();
+      AccountDTO.builder()
+        .userId(1L)
+        .type("SAVINGS")
+        .currency("USD")
+        .nickname("Main")
+        .build();
 
-    Account account = Account.builder().id(1L).userId(1L).accountNumber("1234567890").build();
+    Account account =
+      Account.builder()
+        .id(1L)
+        .userId(1L)
+        .accountNumber("1234567890")
+        .type(com.ebanking.account.enums.AccountType.SAVINGS)
+        .currency("USD")
+        .balance(BigDecimal.ZERO)
+        .status("ACTIVE")
+        .nickname("Main")
+        .build();
 
     when(accountService.createAccount(any(), any(), any(), any())).thenReturn(account);
     when(accountMapper.mapToDTO(any(Account.class))).thenReturn(request);
@@ -69,6 +84,8 @@ public class AccountControllerTest {
   void testDeposit() throws Exception {
     BigDecimal amount = BigDecimal.valueOf(100);
 
+    when(accountService.deposit(anyLong(), any(BigDecimal.class))).thenReturn(true);
+
     mockMvc
         .perform(
             post("/api/accounts/1/deposit")
@@ -82,6 +99,8 @@ public class AccountControllerTest {
   @WithMockUser(roles = "user")
   void testWithdraw() throws Exception {
     BigDecimal amount = BigDecimal.valueOf(50);
+
+    when(accountService.withdraw(anyLong(), any(BigDecimal.class))).thenReturn(true);
 
     mockMvc
         .perform(
