@@ -27,6 +27,7 @@ dependencies {
     
     // Shared Security
     implementation project(':libs:shared:security')
+    implementation project(':libs:shared:dto')
 
     // GraphQL
     implementation 'com.graphql-java:graphql-java-extended-scalars:21.0'
