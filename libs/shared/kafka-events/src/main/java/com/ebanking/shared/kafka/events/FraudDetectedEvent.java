@@ -19,6 +19,7 @@ public class FraudDetectedEvent extends BaseEvent {
   private Long transactionId;
   private Long userId;
   private Long accountId;
+  private String accountNumber;
   private BigDecimal amount;
   private String currency;
   private String fraudType; // SUSPICIOUS_AMOUNT, UNUSUAL_LOCATION, MULTIPLE_FAILED_ATTEMPTS, etc.
@@ -33,6 +34,7 @@ public class FraudDetectedEvent extends BaseEvent {
       Long transactionId,
       Long userId,
       Long accountId,
+      String accountNumber,
       BigDecimal amount,
       String currency,
       String fraudType,
@@ -42,6 +44,7 @@ public class FraudDetectedEvent extends BaseEvent {
     this.transactionId = transactionId;
     this.userId = userId;
     this.accountId = accountId;
+    this.accountNumber = accountNumber;
     this.amount = amount;
     this.currency = currency;
     this.fraudType = fraudType;
