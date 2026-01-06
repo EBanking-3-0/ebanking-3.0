@@ -57,7 +57,7 @@ public class AccountController {
         .userId(account.getUserId())
         .balance(account.getBalance())
         .currency(account.getCurrency())
-        .type(account.getType())
+        .type(account.getType().name())
         .status(account.getStatus())
         .nickname(account.getNickname())
         .createdAt(account.getCreatedAt())
