@@ -16,5 +16,5 @@ public interface AccountClient {
   AccountDTO createAccount(@RequestBody CreateAccountInput input);
 
   @GetMapping("/api/accounts/my-accounts")
-  List<AccountDTO> getMyAccounts(@RequestParam("userId") Long userId);
+  List<AccountDTO> getMyAccounts();
 }

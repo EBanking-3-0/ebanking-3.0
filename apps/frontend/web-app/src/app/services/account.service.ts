@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 
 export interface AccountDTO {
     id: number;
@@ -14,15 +14,32 @@ export interface AccountDTO {
     createdAt: string;
 }
 
+const MY_ACCOUNTS = gql`
+  query MyAccounts {
+    myAccounts {
+      id
+      accountNumber
+      userId
+      balance
+      currency
+      type
+      status
+      createdAt
+    }
+  }
+`;
+
 @Injectable({
     providedIn: 'root'
 })
 export class AccountService {
-    private apiUrl = environment.accountApiUrl;
 
-    constructor(private http: HttpClient) { }
+    constructor(private apollo: Apollo) { }
 
-    getMyAccounts(userId: string): Observable<AccountDTO[]> {
-        return this.http.get<AccountDTO[]>(`${this.apiUrl}/my-accounts`);
+    getMyAccounts(): Observable<AccountDTO[]> {
+        return this.apollo.query<{ myAccounts: AccountDTO[] }>({
+            query: MY_ACCOUNTS,
+            fetchPolicy: 'network-only'
+        }).pipe(map(result => result.data?.myAccounts || []));
     }
 }

@@ -17,8 +17,8 @@ public class AccountResolver {
   private final AccountClient accountClient;
 
   @QueryMapping
-  public List<AccountDTO> myAccounts(@Argument Long userId) {
-    return accountClient.getMyAccounts(userId);
+  public List<AccountDTO> myAccounts() {
+    return accountClient.getMyAccounts();
   }
 
   @MutationMapping

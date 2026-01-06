@@ -5,7 +5,7 @@ type Query {
   users: [User]
   user(id: ID!): User
   userByEmail(email: String!): User
-  myAccounts(userId: ID!): [Account]
+  myAccounts: [Account]
   me: UserProfile
 
   # AI Assistant queries

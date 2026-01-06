@@ -78,7 +78,7 @@ export class PaymentComponent implements OnInit {
     if (!this.currentUserId) return;
     
     this.accountsLoading = true;
-    this.accountService.getMyAccounts(this.currentUserId).subscribe({
+    this.accountService.getMyAccounts().subscribe({
       next: (accounts) => {
         this.accounts = accounts;
         this.accountsLoading = false;
