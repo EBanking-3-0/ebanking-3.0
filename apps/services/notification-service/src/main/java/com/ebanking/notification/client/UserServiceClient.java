@@ -27,7 +27,7 @@ public class UserServiceClient {
    * @param userId User ID
    * @return User contact information
    */
-  public UserContactDTO getUserContact(Long userId) {
+  public UserContactDTO getUserContact(String userId) {
     try {
       String url = userServiceBaseUrl + "/api/users/{userId}/contact";
       UserContactDTO response = restTemplate.getForObject(url, UserContactDTO.class, userId);
@@ -52,7 +52,7 @@ public class UserServiceClient {
    * @param userId User ID
    * @return true if user exists
    */
-  public boolean userExists(Long userId) {
+  public boolean userExists(String userId) {
     try {
       String url = userServiceBaseUrl + "/api/users/{userId}/exists";
       Boolean response = restTemplate.getForObject(url, Boolean.class, userId);

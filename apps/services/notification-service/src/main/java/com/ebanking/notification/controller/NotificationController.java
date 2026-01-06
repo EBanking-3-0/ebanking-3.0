@@ -54,7 +54,7 @@ public class NotificationController {
    */
   @GetMapping("/user/{userId}")
   public ResponseEntity<Page<NotificationDTO>> getUserNotifications(
-      @PathVariable Long userId, Pageable pageable) {
+      @PathVariable String userId, Pageable pageable) {
 
     log.debug("Fetching notifications for user: {}", userId);
 
@@ -71,7 +71,7 @@ public class NotificationController {
    * @return List of unread notifications
    */
   @GetMapping("/user/{userId}/unread")
-  public ResponseEntity<List<NotificationDTO>> getUnreadNotifications(@PathVariable Long userId) {
+  public ResponseEntity<List<NotificationDTO>> getUnreadNotifications(@PathVariable String userId) {
     log.debug("Fetching unread notifications for user: {}", userId);
 
     List<NotificationDTO> notifications = notificationService.getUnreadInAppNotifications(userId);
@@ -86,7 +86,7 @@ public class NotificationController {
    * @return Unread count
    */
   @GetMapping("/user/{userId}/unread/count")
-  public ResponseEntity<Long> getUnreadCount(@PathVariable Long userId) {
+  public ResponseEntity<Long> getUnreadCount(@PathVariable String userId) {
     log.debug("Fetching unread count for user: {}", userId);
 
     long count = notificationService.getUnreadCount(userId);
@@ -103,7 +103,7 @@ public class NotificationController {
    */
   @PutMapping("/{notificationId}/read")
   public ResponseEntity<NotificationDTO> markAsRead(
-      @PathVariable Long notificationId, @RequestParam Long userId) {
+      @PathVariable Long notificationId, @RequestParam String userId) {
 
     log.info("Marking notification {} as read for user {}", notificationId, userId);
 
@@ -119,7 +119,7 @@ public class NotificationController {
    * @return Success message
    */
   @PutMapping("/user/{userId}/read-all")
-  public ResponseEntity<String> markAllAsRead(@PathVariable Long userId) {
+  public ResponseEntity<String> markAllAsRead(@PathVariable String userId) {
     log.info("Marking all notifications as read for user {}", userId);
 
     notificationService.markAllAsRead(userId);
@@ -150,7 +150,7 @@ public class NotificationController {
    */
   @GetMapping("/preferences/user/{userId}")
   public ResponseEntity<List<NotificationPreferenceDTO>> getUserPreferences(
-      @PathVariable Long userId) {
+      @PathVariable String userId) {
 
     log.debug("Fetching preferences for user: {}", userId);
 
@@ -200,7 +200,7 @@ public class NotificationController {
    * @return Success message
    */
   @PostMapping("/preferences/user/{userId}/init")
-  public ResponseEntity<String> initializePreferences(@PathVariable Long userId) {
+  public ResponseEntity<String> initializePreferences(@PathVariable String userId) {
     log.info("Initializing default preferences for user: {}", userId);
 
     preferenceService.initializeDefaultPreferences(userId);

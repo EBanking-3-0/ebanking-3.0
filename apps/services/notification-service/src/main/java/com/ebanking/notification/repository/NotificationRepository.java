@@ -24,7 +24,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
    * @param pageable Pagination information
    * @return Page of notifications
    */
-  Page<Notification> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
+  Page<Notification> findByUserIdOrderByCreatedAtDesc(String userId, Pageable pageable);
 
   /**
    * Find notifications by user ID and status.
@@ -35,7 +35,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
    * @return Page of notifications
    */
   Page<Notification> findByUserIdAndStatusOrderByCreatedAtDesc(
-      Long userId, NotificationStatus status, Pageable pageable);
+      String userId, NotificationStatus status, Pageable pageable);
 
   /**
    * Find notifications by user ID and type.
@@ -46,7 +46,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
    * @return Page of notifications
    */
   Page<Notification> findByUserIdAndTypeOrderByCreatedAtDesc(
-      Long userId, NotificationType type, Pageable pageable);
+      String userId, NotificationType type, Pageable pageable);
 
   /**
    * Find unread in-app notifications for a user.
@@ -59,7 +59,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
       "SELECT n FROM Notification n WHERE n.userId = :userId AND n.channel = :channel "
           + "AND n.status NOT IN ('READ', 'FAILED') ORDER BY n.createdAt DESC")
   List<Notification> findUnreadInAppNotifications(
-      @Param("userId") Long userId, @Param("channel") NotificationChannel channel);
+      @Param("userId") String userId, @Param("channel") NotificationChannel channel);
 
   /**
    * Find failed notifications that need retry.
@@ -96,7 +96,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
       "SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.channel = :channel "
           + "AND n.status NOT IN ('READ', 'FAILED')")
   long countUnreadInAppNotifications(
-      @Param("userId") Long userId, @Param("channel") NotificationChannel channel);
+      @Param("userId") String userId, @Param("channel") NotificationChannel channel);
 
   /**
    * Find notifications by event ID.

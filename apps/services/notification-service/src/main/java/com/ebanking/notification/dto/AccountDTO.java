@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AccountDTO {
 
   private Long id;
-  private Long userId;
+  private String userId;
   private String accountNumber;
   private String accountType;
   private String currency;

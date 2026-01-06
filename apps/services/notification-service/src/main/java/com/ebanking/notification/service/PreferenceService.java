@@ -30,7 +30,7 @@ public class PreferenceService {
    * @param userId User ID
    * @return List of preference DTOs
    */
-  public List<NotificationPreferenceDTO> getUserPreferences(Long userId) {
+  public List<NotificationPreferenceDTO> getUserPreferences(String userId) {
     log.debug("Fetching preferences for user: {}", userId);
 
     return preferenceRepository.findByUserId(userId).stream().map(this::toDTO).toList();
@@ -44,7 +44,7 @@ public class PreferenceService {
    * @return List of preference DTOs
    */
   public List<NotificationPreferenceDTO> getUserPreferencesByType(
-      Long userId, NotificationType notificationType) {
+      String userId, NotificationType notificationType) {
 
     log.debug("Fetching preferences for user: {} and type: {}", userId, notificationType);
 
@@ -62,7 +62,7 @@ public class PreferenceService {
    * @return List of enabled channels
    */
   public List<NotificationChannel> getEnabledChannels(
-      Long userId, NotificationType notificationType) {
+      String userId, NotificationType notificationType) {
 
     List<NotificationChannel> channels =
         preferenceRepository.findEnabledChannels(userId, notificationType);
@@ -87,7 +87,7 @@ public class PreferenceService {
    * @return true if enabled
    */
   public boolean isChannelEnabled(
-      Long userId, NotificationType notificationType, NotificationChannel channel) {
+      String userId, NotificationType notificationType, NotificationChannel channel) {
 
     return preferenceRepository.isChannelEnabled(userId, notificationType, channel);
   }
@@ -156,7 +156,7 @@ public class PreferenceService {
    * @param userId User ID
    */
   @Transactional
-  public void deleteUserPreferences(Long userId) {
+  public void deleteUserPreferences(String userId) {
     log.info("Deleting all preferences for user: {}", userId);
     preferenceRepository.deleteByUserId(userId);
   }
@@ -167,7 +167,7 @@ public class PreferenceService {
    * @param userId User ID
    */
   @Transactional
-  public void initializeDefaultPreferences(Long userId) {
+  public void initializeDefaultPreferences(String userId) {
     log.info("Initializing default preferences for user: {}", userId);
 
     // Create default preferences for important notification types
@@ -229,7 +229,7 @@ public class PreferenceService {
    * @return NotificationPreference entity
    */
   private NotificationPreference createPreference(
-      Long userId, NotificationType type, NotificationChannel channel, boolean enabled) {
+      String userId, NotificationType type, NotificationChannel channel, boolean enabled) {
     return NotificationPreference.builder()
         .userId(userId)
         .notificationType(type)

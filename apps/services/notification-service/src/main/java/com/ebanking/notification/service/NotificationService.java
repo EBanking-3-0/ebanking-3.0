@@ -118,7 +118,7 @@ public class NotificationService {
    */
   @Transactional
   public List<NotificationDTO> sendToAllChannels(
-      Long userId, NotificationType type, Map<String, Object> variables) {
+      String userId, NotificationType type, Map<String, Object> variables) {
 
     log.info("Sending notification to all enabled channels for user: {}, type: {}", userId, type);
 
@@ -155,7 +155,7 @@ public class NotificationService {
    * @param pageable Pagination
    * @return Page of notifications
    */
-  public Page<NotificationDTO> getUserNotifications(Long userId, Pageable pageable) {
+  public Page<NotificationDTO> getUserNotifications(String userId, Pageable pageable) {
     return notificationRepository
         .findByUserIdOrderByCreatedAtDesc(userId, pageable)
         .map(this::toDTO);
@@ -167,7 +167,7 @@ public class NotificationService {
    * @param userId User ID
    * @return List of unread notifications
    */
-  public List<NotificationDTO> getUnreadInAppNotifications(Long userId) {
+  public List<NotificationDTO> getUnreadInAppNotifications(String userId) {
     return notificationRepository
         .findUnreadInAppNotifications(userId, NotificationChannel.IN_APP)
         .stream()
@@ -181,7 +181,7 @@ public class NotificationService {
    * @param userId User ID
    * @return Count of unread notifications
    */
-  public long getUnreadCount(Long userId) {
+  public long getUnreadCount(String userId) {
     return notificationRepository.countUnreadInAppNotifications(userId, NotificationChannel.IN_APP);
   }
 
@@ -193,7 +193,7 @@ public class NotificationService {
    * @return Updated notification DTO
    */
   @Transactional
-  public NotificationDTO markAsRead(Long notificationId, Long userId) {
+  public NotificationDTO markAsRead(Long notificationId, String userId) {
     Notification notification =
         notificationRepository
             .findById(notificationId)
@@ -219,7 +219,7 @@ public class NotificationService {
    * @param userId User ID
    */
   @Transactional
-  public void markAllAsRead(Long userId) {
+  public void markAllAsRead(String userId) {
     List<Notification> unread =
         notificationRepository.findUnreadInAppNotifications(userId, NotificationChannel.IN_APP);
 

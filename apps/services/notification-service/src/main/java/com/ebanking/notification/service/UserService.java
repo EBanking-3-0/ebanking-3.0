@@ -23,7 +23,7 @@ public class UserService {
    * @param userId User ID
    * @return User contact DTO
    */
-  public UserContactDTO getUserContact(Long userId) {
+  public UserContactDTO getUserContact(String userId) {
     return userServiceClient.getUserContact(userId);
   }
 
@@ -33,7 +33,7 @@ public class UserService {
    * @param userId User ID
    * @return true if user exists
    */
-  public boolean userExists(Long userId) {
+  public boolean userExists(String userId) {
     return userServiceClient.userExists(userId);
   }
 }

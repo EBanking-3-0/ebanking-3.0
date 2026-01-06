@@ -21,7 +21,7 @@ public interface NotificationPreferenceRepository
    * @param userId User ID
    * @return List of preferences
    */
-  List<NotificationPreference> findByUserId(Long userId);
+  List<NotificationPreference> findByUserId(String userId);
 
   /**
    * Find preferences for a user and notification type.
@@ -31,7 +31,7 @@ public interface NotificationPreferenceRepository
    * @return List of preferences
    */
   List<NotificationPreference> findByUserIdAndNotificationType(
-      Long userId, NotificationType notificationType);
+      String userId, NotificationType notificationType);
 
   /**
    * Find a specific preference.
@@ -42,7 +42,7 @@ public interface NotificationPreferenceRepository
    * @return Optional preference
    */
   Optional<NotificationPreference> findByUserIdAndNotificationTypeAndChannel(
-      Long userId, NotificationType notificationType, NotificationChannel channel);
+      String userId, NotificationType notificationType, NotificationChannel channel);
 
   /**
    * Find enabled channels for a user and notification type.
@@ -55,7 +55,7 @@ public interface NotificationPreferenceRepository
       "SELECT np.channel FROM NotificationPreference np WHERE np.userId = :userId "
           + "AND np.notificationType = :notificationType AND np.enabled = true")
   List<NotificationChannel> findEnabledChannels(
-      @Param("userId") Long userId, @Param("notificationType") NotificationType notificationType);
+      @Param("userId") String userId, @Param("notificationType") NotificationType notificationType);
 
   /**
    * Check if a channel is enabled for a user and notification type.
@@ -70,7 +70,7 @@ public interface NotificationPreferenceRepository
           + "WHERE np.userId = :userId AND np.notificationType = :notificationType "
           + "AND np.channel = :channel AND np.enabled = true")
   boolean isChannelEnabled(
-      @Param("userId") Long userId,
+      @Param("userId") String userId,
       @Param("notificationType") NotificationType notificationType,
       @Param("channel") NotificationChannel channel);
 
@@ -79,5 +79,5 @@ public interface NotificationPreferenceRepository
    *
    * @param userId User ID
    */
-  void deleteByUserId(Long userId);
+  void deleteByUserId(String userId);
 }

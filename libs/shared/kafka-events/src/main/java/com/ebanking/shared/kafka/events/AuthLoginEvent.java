@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class AuthLoginEvent extends BaseEvent {
 
-  private Long userId;
+  private String userId;
   private String email;
   private String ipAddress;
   private String userAgent;
@@ -26,7 +26,7 @@ public class AuthLoginEvent extends BaseEvent {
   }
 
   public AuthLoginEvent(
-      Long userId,
+      String userId,
       String email,
       String ipAddress,
       String userAgent,

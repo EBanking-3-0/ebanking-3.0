@@ -49,7 +49,7 @@ public class AccountServiceClient {
    * @param accountId Account ID
    * @return User ID of account owner
    */
-  public Long getAccountOwnerId(Long accountId) {
+  public String getAccountOwnerId(Long accountId) {
     try {
       AccountDTO account = getAccount(accountId);
       return account.getUserId();

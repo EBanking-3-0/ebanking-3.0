@@ -33,7 +33,8 @@ public class NotificationTestController {
    * @return Sent notifications
    */
   @PostMapping("/welcome")
-  public ResponseEntity<List<NotificationDTO>> testWelcomeNotification(@RequestParam Long userId) {
+  public ResponseEntity<List<NotificationDTO>> testWelcomeNotification(
+      @RequestParam String userId) {
     log.info("Testing welcome notification for user: {}", userId);
 
     Map<String, Object> variables = new HashMap<>();
@@ -55,7 +56,7 @@ public class NotificationTestController {
    */
   @PostMapping("/transaction")
   public ResponseEntity<List<NotificationDTO>> testTransactionNotification(
-      @RequestParam Long userId) {
+      @RequestParam String userId) {
 
     log.info("Testing transaction notification for user: {}", userId);
 
@@ -82,7 +83,7 @@ public class NotificationTestController {
    * @return Sent notifications
    */
   @PostMapping("/fraud-alert")
-  public ResponseEntity<List<NotificationDTO>> testFraudAlert(@RequestParam Long userId) {
+  public ResponseEntity<List<NotificationDTO>> testFraudAlert(@RequestParam String userId) {
     log.info("Testing fraud alert notification for user: {}", userId);
 
     Map<String, Object> variables = new HashMap<>();
@@ -107,7 +108,7 @@ public class NotificationTestController {
    * @return Sent notifications
    */
   @PostMapping("/alert")
-  public ResponseEntity<List<NotificationDTO>> testAlert(@RequestParam Long userId) {
+  public ResponseEntity<List<NotificationDTO>> testAlert(@RequestParam String userId) {
     log.info("Testing alert notification for user: {}", userId);
 
     Map<String, Object> variables = new HashMap<>();
@@ -160,7 +161,7 @@ public class NotificationTestController {
    */
   @PostMapping("/email")
   public ResponseEntity<NotificationDTO> testEmail(
-      @RequestParam Long userId, @RequestParam String subject, @RequestParam String content) {
+      @RequestParam String userId, @RequestParam String subject, @RequestParam String content) {
 
     log.info("Testing email notification for user: {}", userId);
 
@@ -189,7 +190,7 @@ public class NotificationTestController {
    */
   @PostMapping("/in-app")
   public ResponseEntity<NotificationDTO> testInApp(
-      @RequestParam Long userId, @RequestParam String subject, @RequestParam String content) {
+      @RequestParam String userId, @RequestParam String subject, @RequestParam String content) {
 
     log.info("Testing in-app notification for user: {}", userId);
 

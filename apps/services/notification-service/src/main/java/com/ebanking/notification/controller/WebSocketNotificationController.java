@@ -35,11 +35,11 @@ public class WebSocketNotificationController {
   @MessageMapping("/notifications/unread")
   @SendToUser("/queue/notifications/list")
   public List<NotificationDTO> getUnreadNotifications(
-      @Payload Long userId, Authentication authentication) {
+      @Payload String userId, Authentication authentication) {
     log.debug("WebSocket request for unread notifications from user: {}", userId);
 
     // Validate that the authenticated user matches the requested userId
-    Long authenticatedUserId = jwtUtils.extractUserId(authentication);
+    String authenticatedUserId = jwtUtils.extractUserId(authentication);
     if (authenticatedUserId == null || !authenticatedUserId.equals(userId)) {
       log.warn(
           "Unauthorized WebSocket request: authenticated userId {} doesn't match requested userId {}",
@@ -62,7 +62,7 @@ public class WebSocketNotificationController {
   public void markAsRead(@Payload Long notificationId, Authentication authentication) {
     log.debug("WebSocket request to mark notification {} as read", notificationId);
 
-    Long userId = jwtUtils.extractUserId(authentication);
+    String userId = jwtUtils.extractUserId(authentication);
     if (userId == null) {
       log.warn("Could not extract userId from authentication for notification {}", notificationId);
       return;

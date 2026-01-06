@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class SendNotificationRequest {
 
   @NotNull(message = "User ID is required")
-  private Long userId;
+  private String userId;
 
   @NotNull(message = "Notification type is required")
   private NotificationType type;

@@ -16,7 +16,7 @@ public class AuthService {
   private final TypedEventProducer eventProducer;
 
   public void handleLogin(
-      Long userId,
+      String userId,
       String email,
       String ipAddress,
       String userAgent,
@@ -42,7 +42,7 @@ public class AuthService {
   }
 
   public void handleMfaVerification(
-      Long userId, String email, String mfaType, boolean verified, String ipAddress) {
+      String userId, String email, String mfaType, boolean verified, String ipAddress) {
     // MFA verification logic would go here
     log.info("MFA verification for user: {} - Type: {} - Verified: {}", email, mfaType, verified);
 

@@ -20,7 +20,7 @@ public class AnalyticsService {
 
   public void triggerAlert(
       Long alertId,
-      Long userId,
+      String userId,
       String alertType,
       String severity,
       String message,

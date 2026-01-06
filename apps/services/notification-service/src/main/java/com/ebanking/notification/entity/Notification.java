@@ -46,7 +46,7 @@ public class Notification {
 
   /** User ID this notification is for */
   @Column(nullable = false)
-  private Long userId;
+  private String userId;
 
   /** Type of notification */
   @Enumerated(EnumType.STRING)

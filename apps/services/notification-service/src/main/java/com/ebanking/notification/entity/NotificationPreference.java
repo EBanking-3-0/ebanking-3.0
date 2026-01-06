@@ -45,7 +45,7 @@ public class NotificationPreference {
 
   /** User ID these preferences belong to */
   @Column(nullable = false)
-  private Long userId;
+  private String userId;
 
   /** Type of notification */
   @Enumerated(EnumType.STRING)

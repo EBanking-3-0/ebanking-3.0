@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 public class JwtUtils {
 
   /**
-   * Extract user ID from JWT authentication token. Tries multiple claim names in order: 1. userId
-   * (custom claim) 2. sub (subject - standard JWT claim)
+   * Extract user ID from JWT authentication token.
    *
    * @param authentication Spring Security Authentication object
-   * @return User ID as Long, or null if not found or invalid
+   * @return User ID as String (UUID), or null if not found
    */
-  public Long extractUserId(Authentication authentication) {
+  public String extractUserId(Authentication authentication) {
     if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
       log.warn("Authentication is null or principal is not a JWT");
       return null;
@@ -28,29 +27,22 @@ public class JwtUtils {
 
     Jwt jwt = (Jwt) authentication.getPrincipal();
 
-    // Try userId claim first (custom claim from Keycloak/Auth service)
-    Object userIdClaim = jwt.getClaim("userId");
-    if (userIdClaim != null) {
-      return convertToLong(userIdClaim);
-    }
-
-    // Try user_id claim (alternative format)
-    userIdClaim = jwt.getClaim("user_id");
-    if (userIdClaim != null) {
-      return convertToLong(userIdClaim);
-    }
-
-    // Fall back to sub (subject) claim
+    // Try sub (subject) claim first - this is the standard Keycloak ID
     String sub = jwt.getSubject();
     if (sub != null) {
-      Long userId = convertToLong(sub);
-      if (userId != null) {
-        return userId;
-      }
+      return sub;
+    }
 
-      // If sub is a UUID string, generate stable numeric ID
-      log.debug("Converting UUID sub to numeric userId: {}", sub);
-      return (long) Math.abs(sub.hashCode());
+    // Try userId claim
+    Object userIdClaim = jwt.getClaim("userId");
+    if (userIdClaim != null) {
+      return userIdClaim.toString();
+    }
+
+    // Try user_id claim
+    userIdClaim = jwt.getClaim("user_id");
+    if (userIdClaim != null) {
+      return userIdClaim.toString();
     }
 
     log.warn("Could not extract userId from JWT token");
@@ -99,33 +91,5 @@ public class JwtUtils {
 
     Jwt jwt = (Jwt) authentication.getPrincipal();
     return jwt.getClaim("email");
-  }
-
-  /**
-   * Convert object to Long, handling various numeric types.
-   *
-   * @param value Object to convert
-   * @return Long value, or null if conversion fails
-   */
-  private Long convertToLong(Object value) {
-    if (value == null) {
-      return null;
-    }
-
-    try {
-      if (value instanceof Long) {
-        return (Long) value;
-      } else if (value instanceof Integer) {
-        return ((Integer) value).longValue();
-      } else if (value instanceof String) {
-        return Long.valueOf((String) value);
-      } else if (value instanceof Number) {
-        return ((Number) value).longValue();
-      }
-    } catch (NumberFormatException e) {
-      log.debug("Failed to convert value to Long: {}", value);
-    }
-
-    return null;
   }
 }

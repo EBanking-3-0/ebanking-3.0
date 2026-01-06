@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class MfaVerifiedEvent extends BaseEvent {
 
-  private Long userId;
+  private String userId;
   private String email;
   private String mfaType; // SMS, EMAIL, BIOMETRIC, TOTP
   private boolean verified;
@@ -25,7 +25,7 @@ public class MfaVerifiedEvent extends BaseEvent {
   }
 
   public MfaVerifiedEvent(
-      Long userId, String email, String mfaType, boolean verified, String ipAddress) {
+      String userId, String email, String mfaType, boolean verified, String ipAddress) {
     super(KafkaTopics.MFA_VERIFIED);
     this.userId = userId;
     this.email = email;

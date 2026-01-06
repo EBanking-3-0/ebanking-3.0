@@ -100,7 +100,7 @@ public class NotificationConsumer {
           topic);
 
       // Get account owner ID from account service
-      Long userId = accountServiceClient.getAccountOwnerId(event.getFromAccountId());
+      String userId = accountServiceClient.getAccountOwnerId(event.getFromAccountId());
 
       // Prepare template variables
       Map<String, Object> variables = new HashMap<>();

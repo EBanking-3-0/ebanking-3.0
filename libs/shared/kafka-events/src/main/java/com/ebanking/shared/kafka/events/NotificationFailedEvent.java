@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class NotificationFailedEvent extends BaseEvent {
 
-  private Long userId;
+  private String userId;
   private String recipient;
   private String notificationType;
   private String channel;
@@ -23,7 +23,7 @@ public class NotificationFailedEvent extends BaseEvent {
   }
 
   public NotificationFailedEvent(
-      Long userId,
+      String userId,
       String recipient,
       String notificationType,
       String channel,

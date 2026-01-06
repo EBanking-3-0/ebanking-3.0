@@ -24,7 +24,7 @@ public class WebSocketNotificationPublisher {
    * @param userId User ID
    * @param notification Notification to send
    */
-  public void publishToUser(Long userId, NotificationDTO notification) {
+  public void publishToUser(String userId, NotificationDTO notification) {
     try {
       log.debug(
           "Publishing notification {} to user {} via WebSocket", notification.getId(), userId);
@@ -55,7 +55,7 @@ public class WebSocketNotificationPublisher {
    * @param userId User ID
    * @param count Unread notification count
    */
-  public void publishCountUpdate(Long userId, Long count) {
+  public void publishCountUpdate(String userId, Long count) {
     try {
       log.debug("Publishing notification count {} to user {} via WebSocket", count, userId);
 
