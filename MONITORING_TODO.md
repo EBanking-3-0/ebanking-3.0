@@ -5,13 +5,15 @@ This guide outlines the steps to add professional monitoring (Prometheus + Grafa
 ## Phase 1: Infrastructure Installation
 
 - [ ] **Add Helm Repository**
+
   ```bash
   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
   helm repo update
   ```
 
 - [ ] **Install Kube-Prometheus-Stack**
-  Deploy the full stack into a dedicated namespace.
+      Deploy the full stack into a dedicated namespace.
+
   ```bash
   helm install monitoring prometheus-community/kube-prometheus-stack \
     --namespace monitoring \
@@ -24,7 +26,7 @@ This guide outlines the steps to add professional monitoring (Prometheus + Grafa
   ```
 
 - [ ] **Configure DNS**
-  Point the monitoring domain to your DO Load Balancer IP.
+      Point the monitoring domain to your DO Load Balancer IP.
   ```bash
   flarectl dns create --zone h4k5.net --name monitoring --type A --content 68.183.252.138 --proxy
   ```
@@ -32,10 +34,9 @@ This guide outlines the steps to add professional monitoring (Prometheus + Grafa
 ## Phase 2: App Integration (The "Auto-Magic" Discovery)
 
 - [ ] **Add ServiceMonitor Template**
-  Create `tools/helm/microservice/templates/servicemonitor.yaml` to tell Prometheus where to find the `/actuator/prometheus` endpoint.
-  
+      Create `tools/helm/microservice/templates/servicemonitor.yaml` to tell Prometheus where to find the `/actuator/prometheus` endpoint.
 - [ ] **Enable Metrics in Values**
-  Update `values.yaml` for all services to toggle the ServiceMonitor.
+      Update `values.yaml` for all services to toggle the ServiceMonitor.
   ```yaml
   metrics:
     enabled: true
@@ -51,7 +52,7 @@ This guide outlines the steps to add professional monitoring (Prometheus + Grafa
   - Password: Get via `kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode`
 
 - [ ] **Import Dashboards**
-  Import the following community dashboards for instant visibility:
+      Import the following community dashboards for instant visibility:
   - **JVM Dashboard**: ID `4701` (Micrometer standard)
   - **Spring Boot Statistics**: ID `11378`
   - **K8s / Node Exporter**: Included by default in the stack.
@@ -59,11 +60,12 @@ This guide outlines the steps to add professional monitoring (Prometheus + Grafa
 ## Phase 4: Persistence (Optional but Recommended)
 
 - [ ] **Enable PVC for Prometheus**
-  By default, data is lost on pod restart. To save history, enable block storage in the Helm command:
+      By default, data is lost on pod restart. To save history, enable block storage in the Helm command:
   ```bash
   --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName=do-block-storage
   --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi
   ```
 
 ---
-*Created on: January 4, 2026*
+
+_Created on: January 4, 2026_

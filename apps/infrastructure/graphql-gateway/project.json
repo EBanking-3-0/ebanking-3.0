@@ -50,9 +50,7 @@
         "development": {}
       },
       "defaultConfiguration": "development",
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "clean": {
       "executor": "@nx/gradle:gradle",

@@ -11,7 +11,7 @@ import {
   enableExperimentalFragmentVariables,
   gql,
   makeVar,
-  resetCaches
+  resetCaches,
 } from "./chunk-77WSKPK6.js";
 import {
   CombinedGraphQLErrors,
@@ -34,7 +34,7 @@ import {
   rewriteURIForGET,
   selectHttpOptionsAndBody,
   selectHttpOptionsAndBodyInternal,
-  selectURI
+  selectURI,
 } from "./chunk-WIMS3ZYR.js";
 import {
   ApolloLink,
@@ -45,12 +45,10 @@ import {
   from,
   setVerbosity,
   split,
-  version
+  version,
 } from "./chunk-6KBCFBRM.js";
 import "./chunk-4NVJHVNJ.js";
-import {
-  Observable
-} from "./chunk-NLOMSAMV.js";
+import { Observable } from "./chunk-NLOMSAMV.js";
 import "./chunk-OC4HWNDI.js";
 export {
   ApolloCache,
@@ -96,5 +94,5 @@ export {
   selectURI,
   setVerbosity as setLogVerbosity,
   split,
-  version
+  version,
 };

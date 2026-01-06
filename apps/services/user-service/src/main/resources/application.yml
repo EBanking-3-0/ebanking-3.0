@@ -35,7 +35,6 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
 
-
 eureka:
   client:
     service-url:

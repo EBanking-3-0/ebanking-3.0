@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { CanMatch, Router } from '@angular/router';
 import Keycloak from 'keycloak-js';
 
-export const authGuard: () => (boolean) = () => {
+export const authGuard: () => boolean = () => {
   const keycloak = inject(Keycloak);
   const router = inject(Router);
 

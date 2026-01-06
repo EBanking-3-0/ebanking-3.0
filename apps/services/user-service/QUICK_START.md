@@ -5,21 +5,28 @@ Bienvenue dans le User Service de l'e-banking! Ce guide vous aide à démarrer r
 ## 🚀 Démarrage en 5 minutes
 
 ### 1. Comprendre l'architecture (3 min)
+
 ```
 Lire: ARCHITECTURE.md - Section "Vue d'ensemble"
 ```
+
 L'application est organisée en **5 couches**:
+
 - API (Controllers) → Mappers → Service → Domain → Infrastructure
 
 ### 2. Examiner les endpoints (2 min)
+
 ```
 Lire: API_REFERENCE.md - Section "Endpoints principaux"
 ```
+
 Deux controllers principaux:
+
 - `UserController` → Gestion des utilisateurs
 - `KycController` → Vérification KYC
 
 ### 3. Vous êtes prêt! 🎉
+
 ```
 Fichier: QUICK_START.md (ce fichier)
 ```
@@ -48,28 +55,36 @@ user-service/
 ## 📖 Documentation - Où trouver quoi?
 
 ### Pour comprendre l'architecture
+
 **→ Lire: `ARCHITECTURE.md`**
+
 - Vue d'ensemble du design
 - Diagrammes des flux (création utilisateur, KYC)
 - Organisation des couches
 - Statuts et transitions
 
 ### Pour développer une fonctionnalité
+
 **→ Lire: `DEVELOPMENT_GUIDE.md`**
+
 - 6 étapes pour ajouter un endpoint
 - Bonnes pratiques
 - Exemples de tests
 - Checklist avant commit
 
 ### Pour utiliser l'API
+
 **→ Lire: `API_REFERENCE.md`**
+
 - Tous les endpoints avec exemples
 - Exemples cURL et JavaScript
 - Codes d'erreur expliqués
 - Cas d'utilisation complets
 
 ### Pour les détails des modifications
+
 **→ Lire: `RESTRUCTURING_SUMMARY.md`**
+
 - Liste des changements effectués
 - Avant/après comparaison
 - Metrics de qualité
@@ -81,6 +96,7 @@ user-service/
 ### Controller - Endpoints REST
 
 **UserController** (`api/controller/UserController.java`)
+
 ```
 GET    /api/v1/users/me           - Profil utilisateur
 GET    /api/v1/users/{userId}     - Profil d'un utilisateur
@@ -89,6 +105,7 @@ GET    /api/v1/users/test         - Test
 ```
 
 **KycController** (`api/controller/KycController.java`)
+
 ```
 POST   /api/v1/kyc                - Soumettre KYC
 GET    /api/v1/kyc/status         - Statut KYC
@@ -97,11 +114,13 @@ GET    /api/v1/kyc/status         - Statut KYC
 ### Service - Logique métier
 
 **UserService** (`application/service/UserService.java`)
+
 - 6 sections logiques claires
 - ~30 méthodes organisées
 - Chaque méthode documentée
 
 Sections:
+
 ```
 1. JWT EXTRACTION         (5 méthodes)  - Extraire données du JWT
 2. USER MANAGEMENT       (3 méthodes)  - CRUD utilisateur
@@ -120,10 +139,12 @@ Sections:
 ### Entités - Modèles JPA
 
 **User** - Utilisateur du système
+
 - Statuts: PENDING_REVIEW, ACTIVE, REJECTED
 - Relations: OneToOne avec KycVerification, OneToMany avec GdprConsent
 
 **KycVerification** - Vérification KYC
+
 - Statuts: PENDING_REVIEW, VERIFIED, REJECTED, MORE_INFO_NEEDED
 - Stockage: Images en base64
 
@@ -161,18 +182,18 @@ curl -X POST http://localhost:8083/api/v1/kyc \
 
 ```javascript
 // Récupérer le profil
-fetch('http://localhost:8083/api/v1/users/me', {
-  headers: { 'Authorization': `Bearer ${jwtToken}` }
+fetch("http://localhost:8083/api/v1/users/me", {
+  headers: { Authorization: `Bearer ${jwtToken}` },
 })
-.then(r => r.json())
-.then(data => console.log('Profil:', data))
+  .then((r) => r.json())
+  .then((data) => console.log("Profil:", data));
 
 // Récupérer statut KYC
-fetch('http://localhost:8083/api/v1/kyc/status', {
-  headers: { 'Authorization': `Bearer ${jwtToken}` }
+fetch("http://localhost:8083/api/v1/kyc/status", {
+  headers: { Authorization: `Bearer ${jwtToken}` },
 })
-.then(r => r.json())
-.then(data => console.log('Statut KYC:', data.status))
+  .then((r) => r.json())
+  .then((data) => console.log("Statut KYC:", data.status));
 ```
 
 → Pour plus d'exemples: Voir `API_REFERENCE.md`
@@ -310,18 +331,22 @@ Voir détails complets dans `DEVELOPMENT_GUIDE.md`
 ## 🚨 Erreurs courantes
 
 ### Erreur: 404 Not Found au get profile
+
 **Cause**: Utilisateur n'existe pas (pas de KYC soumis)
 **Solution**: Soumettre d'abord une KYC avant d'accéder au profil
 
 ### Erreur: 409 Conflict au soumettre KYC
+
 **Cause**: Une KYC est déjà soumise et en attente
 **Solution**: Attendre l'approbation ou le rejet de la KYC
 
 ### Erreur: 401 Unauthorized
+
 **Cause**: JWT invalide ou expiré
 **Solution**: Renégocier l'authentification avec Keycloak
 
 ### Erreur: 400 Bad Request
+
 **Cause**: Validation échouée (champs obligatoires manquants)
 **Solution**: Vérifier les champs obligatoires dans `API_REFERENCE.md`
 
@@ -345,12 +370,12 @@ Voir détails complets dans `DEVELOPMENT_GUIDE.md`
 
 ## 🎯 Résumé rapide
 
-| Besoin | Fichier | Temps |
-|--------|---------|-------|
-| Comprendre design | ARCHITECTURE.md | 10 min |
+| Besoin                 | Fichier              | Temps  |
+| ---------------------- | -------------------- | ------ |
+| Comprendre design      | ARCHITECTURE.md      | 10 min |
 | Apprendre à développer | DEVELOPMENT_GUIDE.md | 20 min |
-| Utiliser l'API | API_REFERENCE.md | 5 min |
-| Tester un endpoint | API_REFERENCE.md | 2 min |
+| Utiliser l'API         | API_REFERENCE.md     | 5 min  |
+| Tester un endpoint     | API_REFERENCE.md     | 2 min  |
 | Ajouter fonctionnalité | DEVELOPMENT_GUIDE.md | 30 min |
 
 ---
@@ -358,6 +383,7 @@ Voir détails complets dans `DEVELOPMENT_GUIDE.md`
 ## ✅ Vous êtes maintenant prêt!
 
 Vous pouvez:
+
 - ✅ Comprendre l'architecture globale
 - ✅ Naviguer dans le code source
 - ✅ Tester les endpoints
@@ -381,4 +407,3 @@ Vous pouvez:
 
 **Dernière mise à jour**: Janvier 2024
 **Version**: User Service v1.0 (Restructuré)
-

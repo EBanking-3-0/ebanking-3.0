@@ -4,16 +4,11 @@ import {
   parseAndCheckHttpResponse,
   rewriteURIForGET,
   selectHttpOptionsAndBodyInternal,
-  selectURI
+  selectURI,
 } from "./chunk-WIMS3ZYR.js";
-import {
-  ApolloLink,
-  filterOperationVariables
-} from "./chunk-6KBCFBRM.js";
+import { ApolloLink, filterOperationVariables } from "./chunk-6KBCFBRM.js";
 import "./chunk-4NVJHVNJ.js";
-import {
-  Observable
-} from "./chunk-NLOMSAMV.js";
+import { Observable } from "./chunk-NLOMSAMV.js";
 import "./chunk-OC4HWNDI.js";
 
 // node_modules/is-plain-obj/index.js
@@ -22,7 +17,13 @@ function isPlainObject(value) {
     return false;
   }
   const prototype = Object.getPrototypeOf(value);
-  return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
+  return (
+    (prototype === null ||
+      prototype === Object.prototype ||
+      Object.getPrototypeOf(prototype) === null) &&
+    !(Symbol.toStringTag in value) &&
+    !(Symbol.iterator in value)
+  );
 }
 
 // node_modules/extract-files/extractFiles.mjs
@@ -40,21 +41,24 @@ function extractFiles(value, isExtractable, path = "") {
       filePaths ? filePaths.push(path2) : files.set(value2, [path2]);
       return null;
     }
-    const valueIsList = Array.isArray(value2) || typeof FileList !== "undefined" && value2 instanceof FileList;
+    const valueIsList =
+      Array.isArray(value2) ||
+      (typeof FileList !== "undefined" && value2 instanceof FileList);
     const valueIsPlainObject = isPlainObject(value2);
     if (valueIsList || valueIsPlainObject) {
       let clone = clones.get(value2);
       const uncloned = !clone;
       if (uncloned) {
-        clone = valueIsList ? [] : (
-          // Replicate if the plain object is an `Object` instance.
-          value2 instanceof /** @type {any} */
-          Object ? {} : /* @__PURE__ */ Object.create(null)
-        );
+        clone = valueIsList
+          ? []
+          : // Replicate if the plain object is an `Object` instance.
+            value2 instanceof /** @type {any} */ Object
+            ? {}
+            : /* @__PURE__ */ Object.create(null);
         clones.set(
           value2,
           /** @type {Clone} */
-          clone
+          clone,
         );
       }
       if (!recursed.has(value2)) {
@@ -66,7 +70,7 @@ function extractFiles(value, isExtractable, path = "") {
             const itemClone = recurse(
               item,
               pathPrefix + index++,
-              recursedDeeper
+              recursedDeeper,
             );
             if (uncloned) clone.push(itemClone);
           }
@@ -75,10 +79,9 @@ function extractFiles(value, isExtractable, path = "") {
             const propertyClone = recurse(
               value2[key],
               pathPrefix + key,
-              recursedDeeper
+              recursedDeeper,
             );
-            if (uncloned)
-              clone[key] = propertyClone;
+            if (uncloned) clone[key] = propertyClone;
           }
       }
       return clone;
@@ -87,18 +90,23 @@ function extractFiles(value, isExtractable, path = "") {
   }
   return {
     clone: recurse(value, path, /* @__PURE__ */ new Set()),
-    files
+    files,
   };
 }
 
 // node_modules/apollo-upload-client/formDataAppendFile.mjs
 function formDataAppendFile(formData, fieldName, file) {
-  "name" in file ? formData.append(fieldName, file, file.name) : formData.append(fieldName, file);
+  "name" in file
+    ? formData.append(fieldName, file, file.name)
+    : formData.append(fieldName, file);
 }
 
 // node_modules/extract-files/isExtractableFile.mjs
 function isExtractableFile(value) {
-  return typeof File !== "undefined" && value instanceof File || typeof Blob !== "undefined" && value instanceof Blob;
+  return (
+    (typeof File !== "undefined" && value instanceof File) ||
+    (typeof Blob !== "undefined" && value instanceof Blob)
+  );
 }
 
 // node_modules/apollo-upload-client/UploadHttpLink.mjs
@@ -150,120 +158,123 @@ var UploadHttpLink = class extends ApolloLink {
     credentials,
     headers,
     includeExtensions,
-    includeUnusedVariables = false
+    includeUnusedVariables = false,
   } = {}) {
     super(
-      (operation) => new Observable((observer) => {
-        const context = operation.getContext();
-        const { options, body } = selectHttpOptionsAndBodyInternal(
-          operation,
-          print,
-          fallbackHttpConfig,
-          {
-            http: {
-              includeExtensions
+      (operation) =>
+        new Observable((observer) => {
+          const context = operation.getContext();
+          const { options, body } = selectHttpOptionsAndBodyInternal(
+            operation,
+            print,
+            fallbackHttpConfig,
+            {
+              http: {
+                includeExtensions,
+              },
+              options: fetchOptions,
+              credentials,
+              headers,
             },
-            options: fetchOptions,
-            credentials,
-            headers
-          },
-          {
-            http: context.http,
-            options: context.fetchOptions,
-            credentials: context.credentials,
-            headers: context.headers
-          }
-        );
-        if (body.variables && !includeUnusedVariables)
-          body.variables = filterOperationVariables(
-            body.variables,
-            operation.query
+            {
+              http: context.http,
+              options: context.fetchOptions,
+              credentials: context.credentials,
+              headers: context.headers,
+            },
           );
-        const { clone, files } = extractFiles(
-          body,
-          customIsExtractableFile,
-          ""
-        );
-        let uri = selectURI(operation, fetchUri);
-        if (files.size) {
-          if (options.headers)
-            delete options.headers["content-type"];
-          const RuntimeFormData = CustomFormData || FormData;
-          const form = new RuntimeFormData();
-          form.append("operations", JSON.stringify(clone));
-          const map = {};
-          let i = 0;
-          files.forEach((paths) => {
-            map[++i] = paths;
-          });
-          form.append("map", JSON.stringify(map));
-          i = 0;
-          files.forEach((_paths, file) => {
-            customFormDataAppendFile(form, String(++i), file);
-          });
-          options.body = form;
-        } else {
-          if (useGETForQueries && // If the operation contains some mutations GET shouldn’t be used.
-          !operation.query.definitions.some(
-            (definition) => definition.kind === "OperationDefinition" && definition.operation === "mutation"
-          ))
-            options.method = "GET";
-          if (options.method === "GET") {
-            const result = (
-              /** @type {{ newURI: string } | { parseError: unknown }} */
-              // The return type is incorrect; `newURI` and `parseError`
-              // will never both be present.
-              rewriteURIForGET(uri, body)
+          if (body.variables && !includeUnusedVariables)
+            body.variables = filterOperationVariables(
+              body.variables,
+              operation.query,
             );
-            if ("parseError" in result) throw result.parseError;
-            uri = result.newURI;
-          } else options.body = JSON.stringify(clone);
-        }
-        let controller;
-        if (typeof AbortController !== "undefined") {
-          controller = new AbortController();
-          if (options.signal)
-            options.signal.aborted ? (
-              // Signal already aborted, so immediately abort.
-              controller.abort()
-            ) : (
-              // Signal not already aborted, so setup a listener to abort
-              // when it does.
-              options.signal.addEventListener(
-                "abort",
-                () => {
-                  controller.abort();
-                },
-                {
-                  // Prevent a memory leak if the user configured abort
-                  // controller is long lasting, or controls multiple
-                  // things.
-                  once: true
-                }
+          const { clone, files } = extractFiles(
+            body,
+            customIsExtractableFile,
+            "",
+          );
+          let uri = selectURI(operation, fetchUri);
+          if (files.size) {
+            if (options.headers) delete options.headers["content-type"];
+            const RuntimeFormData = CustomFormData || FormData;
+            const form = new RuntimeFormData();
+            form.append("operations", JSON.stringify(clone));
+            const map = {};
+            let i = 0;
+            files.forEach((paths) => {
+              map[++i] = paths;
+            });
+            form.append("map", JSON.stringify(map));
+            i = 0;
+            files.forEach((_paths, file) => {
+              customFormDataAppendFile(form, String(++i), file);
+            });
+            options.body = form;
+          } else {
+            if (
+              useGETForQueries && // If the operation contains some mutations GET shouldn’t be used.
+              !operation.query.definitions.some(
+                (definition) =>
+                  definition.kind === "OperationDefinition" &&
+                  definition.operation === "mutation",
               )
-            );
-          options.signal = controller.signal;
-        }
-        const runtimeFetch = customFetch || fetch;
-        let cleaningUp;
-        runtimeFetch(uri, options).then((response) => {
-          operation.setContext({ response });
-          return response;
-        }).then(parseAndCheckHttpResponse(operation)).then((result) => {
-          observer.next(result);
-          observer.complete();
-        }).catch((error) => {
-          if (!cleaningUp) observer.error(error);
-        });
-        return () => {
-          cleaningUp = true;
-          if (controller) controller.abort();
-        };
-      })
+            )
+              options.method = "GET";
+            if (options.method === "GET") {
+              const result =
+                /** @type {{ newURI: string } | { parseError: unknown }} */
+                // The return type is incorrect; `newURI` and `parseError`
+                // will never both be present.
+                rewriteURIForGET(uri, body);
+              if ("parseError" in result) throw result.parseError;
+              uri = result.newURI;
+            } else options.body = JSON.stringify(clone);
+          }
+          let controller;
+          if (typeof AbortController !== "undefined") {
+            controller = new AbortController();
+            if (options.signal)
+              options.signal.aborted
+                ? // Signal already aborted, so immediately abort.
+                  controller.abort()
+                : // Signal not already aborted, so setup a listener to abort
+                  // when it does.
+                  options.signal.addEventListener(
+                    "abort",
+                    () => {
+                      controller.abort();
+                    },
+                    {
+                      // Prevent a memory leak if the user configured abort
+                      // controller is long lasting, or controls multiple
+                      // things.
+                      once: true,
+                    },
+                  );
+            options.signal = controller.signal;
+          }
+          const runtimeFetch = customFetch || fetch;
+          let cleaningUp;
+          runtimeFetch(uri, options)
+            .then((response) => {
+              operation.setContext({ response });
+              return response;
+            })
+            .then(parseAndCheckHttpResponse(operation))
+            .then((result) => {
+              observer.next(result);
+              observer.complete();
+            })
+            .catch((error) => {
+              if (!cleaningUp) observer.error(error);
+            });
+          return () => {
+            cleaningUp = true;
+            if (controller) controller.abort();
+          };
+        }),
     );
   }
 };
-export {
-  UploadHttpLink as default
-};
+export { UploadHttpLink as default };
 //# sourceMappingURL=apollo-upload-client_UploadHttpLink__mjs.js.map

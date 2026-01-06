@@ -54,7 +54,6 @@ management:
       prometheus:
         enabled: true
 
-
 payment:
   fraud:
     max-transactions-per-hour: 100

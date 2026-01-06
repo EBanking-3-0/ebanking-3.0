@@ -51,6 +51,7 @@ The User Service is built with Spring Boot and follows a layered architecture:
 ### 1. Domain Models
 
 #### User Entity
+
 - **Purpose**: Represents a user in the system
 - **Key Fields**:
   - `keycloakId`: Unique identifier from Keycloak (JWT "sub" claim)
@@ -63,6 +64,7 @@ The User Service is built with Spring Boot and follows a layered architecture:
   - `consents`: One-to-many relationship with GDPR consents
 
 #### KycVerification Entity
+
 - **Purpose**: Stores KYC verification data and status
 - **Key Fields**:
   - `cinNumber`: National ID number
@@ -73,6 +75,7 @@ The User Service is built with Spring Boot and follows a layered architecture:
   - `verifiedBy`: ID of the agent who verified
 
 #### GdprConsent Entity
+
 - **Purpose**: Tracks user's GDPR consent preferences
 - **Key Fields**:
   - `consentType`: Type of consent (MARKETING_EMAIL, MARKETING_SMS, etc.)
@@ -84,9 +87,11 @@ The User Service is built with Spring Boot and follows a layered architecture:
 ### 2. Services
 
 #### UserService
+
 Main service handling user and KYC operations:
 
 **Key Methods**:
+
 - `getKeycloakIdFromJwt(Authentication)`: Extracts Keycloak ID from JWT token
 - `getEmailFromJwt(Authentication)`: Extracts email from JWT token
 - `getUserByKeycloakId(String)`: Finds user by Keycloak ID
@@ -97,14 +102,17 @@ Main service handling user and KYC operations:
 - `getKycVerification(User)`: Gets current KYC status
 
 #### FileStorageService
+
 Handles file uploads and storage:
 
 **Key Methods**:
+
 - `storeBase64Image(String, String, String)`: Stores base64 encoded image
 - `storeFile(MultipartFile, String, String)`: Stores multipart file
 - `deleteFile(String)`: Deletes a stored file
 
 **Storage Structure**:
+
 ```
 uploads/
   └── {userId}/
@@ -117,6 +125,7 @@ uploads/
 ### 3. Controllers
 
 #### KycController
+
 Handles KYC-related endpoints:
 
 - `GET /api/v1/users/me`: Get current user's profile
@@ -126,12 +135,14 @@ Handles KYC-related endpoints:
 ## API Endpoints
 
 ### Get Current User Profile
+
 ```
 GET /api/v1/users/me
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response**:
+
 ```json
 {
   "id": "uuid",
@@ -151,6 +162,7 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 ### Submit KYC Verification
+
 ```
 POST /api/v1/users/me/kyc
 Authorization: Bearer {JWT_TOKEN}
@@ -158,6 +170,7 @@ Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "firstName": "John",
@@ -180,6 +193,7 @@ Content-Type: application/json
 ```
 
 **Response** (201 Created):
+
 ```json
 {
   "cinNumber": "12345678",
@@ -192,12 +206,14 @@ Content-Type: application/json
 ```
 
 ### Get KYC Status
+
 ```
 GET /api/v1/users/me/kyc
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response**:
+
 ```json
 {
   "cinNumber": "12345678",
@@ -214,16 +230,19 @@ Authorization: Bearer {JWT_TOKEN}
 ## KYC Flow
 
 ### 1. User Registration & Login
+
 - User registers in Keycloak
 - Email verification is completed
 - User logs in and receives JWT token
 
 ### 2. Initial Access
+
 - User is redirected to KYC page after login
 - Frontend calls `GET /api/v1/users/me` to check profile status
 - If no profile exists, user is prompted to complete KYC
 
 ### 3. KYC Submission
+
 - User fills out KYC form with:
   - Personal information (name, phone, address)
   - CIN number
@@ -239,12 +258,14 @@ Authorization: Bearer {JWT_TOKEN}
   5. Returns KYC response
 
 ### 4. Verification Process
+
 - External agent reviews submitted documents
 - Agent updates KYC status to VERIFIED or REJECTED
 - If verified, user status is updated to ACTIVE
 - User can now access protected routes
 
 ### 5. Status Flow
+
 ```
 User Registration
     ↓
@@ -320,6 +341,7 @@ Files are served via Spring MVC resource handler at `/uploads/**` path.
 ## Database Schema
 
 ### Users Table
+
 ```sql
 CREATE TABLE users.users (
     id UUID PRIMARY KEY,
@@ -340,6 +362,7 @@ CREATE TABLE users.users (
 ```
 
 ### KYC Verifications Table
+
 ```sql
 CREATE TABLE users.kyc_verifications (
     id UUID PRIMARY KEY,
@@ -357,6 +380,7 @@ CREATE TABLE users.kyc_verifications (
 ```
 
 ### GDPR Consents Table
+
 ```sql
 CREATE TABLE users.gdpr_consents (
     id UUID PRIMARY KEY,
@@ -395,6 +419,7 @@ The frontend Angular application integrates with the User Service through:
 ### Authentication
 
 All endpoints require JWT authentication:
+
 - Token is extracted from `Authorization: Bearer {token}` header
 - Keycloak ID is extracted from JWT "sub" claim
 - Email is extracted from JWT "email" claim
@@ -402,6 +427,7 @@ All endpoints require JWT authentication:
 ### Error Handling
 
 **Common Errors**:
+
 - `409 Conflict`: KYC already submitted and pending
 - `404 Not Found`: User or KYC not found
 - `401 Unauthorized`: Invalid or missing JWT token
@@ -454,6 +480,7 @@ app:
 ### Manual Testing Flow
 
 1. **Start Services**:
+
    ```bash
    # Start PostgreSQL
    # Start Keycloak
@@ -513,6 +540,7 @@ app:
 ## Support
 
 For issues or questions:
+
 - Check logs in `logs/` directory
 - Review application logs for detailed error messages
 - Contact the development team
@@ -521,4 +549,3 @@ For issues or questions:
 
 **Last Updated**: 2024-12-30
 **Version**: 1.0.0
-

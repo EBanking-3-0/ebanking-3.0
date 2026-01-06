@@ -1,6 +1,12 @@
 import { Component, OnInit, effect, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { PaymentService, PaymentRequest, PaymentResponse } from '../../services/payment.service';
 import { AccountService, AccountDTO } from '../../services/account.service';
 import { Observable } from 'rxjs';
@@ -12,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './payment.component.html',
-  styleUrl: './payment.component.scss'
+  styleUrl: './payment.component.scss',
 })
 export class PaymentComponent implements OnInit {
   activeTab: 'internal' | 'sepa' | 'instant' | 'mobile' = 'internal';
@@ -44,7 +50,7 @@ export class PaymentComponent implements OnInit {
   moroccanOperators = [
     { id: 'IAM', name: 'Maroc Telecom', color: '#0054a6' },
     { id: 'ORANGE', name: 'Orange', color: '#ff7900' },
-    { id: 'INWI', name: 'Inwi', color: '#911d7e' }
+    { id: 'INWI', name: 'Inwi', color: '#911d7e' },
   ];
 
   selectedOperator: any = null;
@@ -57,7 +63,7 @@ export class PaymentComponent implements OnInit {
   ) {
     this.initializeForms();
     this.initializeOtpForm();
-    
+
     // React to user changes
     effect(() => {
       const user = this.authService.currentUser();
@@ -76,7 +82,7 @@ export class PaymentComponent implements OnInit {
 
   loadAccounts() {
     if (!this.currentUserId) return;
-    
+
     this.accountsLoading = true;
     this.accountService.getMyAccounts().subscribe({
       next: (accounts) => {
@@ -96,7 +102,7 @@ export class PaymentComponent implements OnInit {
         console.error('Failed to load accounts', err);
         this.error = 'Failed to load user accounts';
         this.accountsLoading = false;
-      }
+      },
     });
   }
 
@@ -112,13 +118,13 @@ export class PaymentComponent implements OnInit {
       error: (err) => {
         console.error('Failed to load payments', err);
         this.paymentsLoading = false;
-      }
+      },
     });
   }
 
   initializeOtpForm() {
     this.otpForm = this.fb.group({
-      otpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+      otpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
   }
 
@@ -127,29 +133,35 @@ export class PaymentComponent implements OnInit {
     this.internalForm = this.fb.group({
       fromAccountId: [null, [Validators.required]],
       toAccountNumber: ['', [Validators.required]],
-      amount: [100.00, [Validators.required, Validators.min(0.01)]],
+      amount: [100.0, [Validators.required, Validators.min(0.01)]],
       currency: ['EUR', [Validators.required, Validators.pattern(/^[A-Z]{3}$/)]],
-      description: ['Test internal transfer']
+      description: ['Test internal transfer'],
     });
 
     // SEPA Transfer Form
     this.sepaForm = this.fb.group({
       fromAccountId: [null, [Validators.required]],
-      toIban: ['FR1420041010050500013M02606', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/)]],
+      toIban: [
+        'FR1420041010050500013M02606',
+        [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/)],
+      ],
       beneficiaryName: ['', [Validators.required]],
-      amount: [500.00, [Validators.required, Validators.min(0.01)]],
+      amount: [500.0, [Validators.required, Validators.min(0.01)]],
       currency: ['EUR', [Validators.required]],
-      description: ['Test SEPA transfer']
+      description: ['Test SEPA transfer'],
     });
 
     // Instant Transfer Form
     this.instantForm = this.fb.group({
       fromAccountId: [null, [Validators.required]],
-      toIban: ['DE89370400440532013000', [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/)]],
+      toIban: [
+        'DE89370400440532013000',
+        [Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/)],
+      ],
       beneficiaryName: ['', [Validators.required]],
-      amount: [1000.00, [Validators.required, Validators.min(0.01), Validators.max(15000)]],
+      amount: [1000.0, [Validators.required, Validators.min(0.01), Validators.max(15000)]],
       currency: ['EUR', [Validators.required]],
-      description: ['']
+      description: [''],
     });
 
     // Mobile Recharge Form
@@ -158,8 +170,8 @@ export class PaymentComponent implements OnInit {
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
       operatorId: ['IAM', Validators.required],
       countryCode: ['MA', [Validators.required]],
-      amount: [20.00, [Validators.required, Validators.min(5)]],
-      currency: ['MAD', [Validators.required]]
+      amount: [20.0, [Validators.required, Validators.min(5)]],
+      currency: ['MAD', [Validators.required]],
     });
   }
 
@@ -185,10 +197,14 @@ export class PaymentComponent implements OnInit {
 
   getCurrentForm(): FormGroup {
     switch (this.activeTab) {
-      case 'internal': return this.internalForm;
-      case 'sepa': return this.sepaForm;
-      case 'instant': return this.instantForm;
-      case 'mobile': return this.mobileForm;
+      case 'internal':
+        return this.internalForm;
+      case 'sepa':
+        return this.sepaForm;
+      case 'instant':
+        return this.instantForm;
+      case 'mobile':
+        return this.mobileForm;
     }
   }
 
@@ -213,7 +229,7 @@ export class PaymentComponent implements OnInit {
       description: formValue.description || '',
       idempotencyKey: this.generateIdempotencyKey(),
       ipAddress: '', // Will be set by backend if needed
-      userAgent: navigator.userAgent
+      userAgent: navigator.userAgent,
     };
 
     // Add type-specific fields
@@ -241,7 +257,7 @@ export class PaymentComponent implements OnInit {
 
     let paymentObservable: Observable<PaymentResponse>;
     const userId = this.currentUserId;
-    
+
     if (!userId) {
       this.error = 'User not authenticated';
       this.loading = false;
@@ -268,9 +284,11 @@ export class PaymentComponent implements OnInit {
         this.result = response;
         this.loading = false;
         // Check if SCA is required
-        if (response.status === 'AUTHORIZED' && response.message?.includes('SCA') ||
+        if (
+          (response.status === 'AUTHORIZED' && response.message?.includes('SCA')) ||
           response.message === 'SCA_REQUIRED' ||
-          response.status === 'VALIDATED') {
+          response.status === 'VALIDATED'
+        ) {
           // Handle SCA flow
           this.scaRequired = true;
           this.scaPaymentId = response.paymentId;
@@ -284,7 +302,7 @@ export class PaymentComponent implements OnInit {
         this.error = err.error?.message || err.message || 'An error occurred';
         this.loading = false;
         console.error('Payment error:', err);
-      }
+      },
     });
   }
 
@@ -297,10 +315,7 @@ export class PaymentComponent implements OnInit {
     this.loading = true;
     this.otpError = null;
 
-    this.paymentService.authorizePayment(
-      this.scaPaymentId,
-      this.otpForm.value.otpCode
-    ).subscribe({
+    this.paymentService.authorizePayment(this.scaPaymentId, this.otpForm.value.otpCode).subscribe({
       next: (response) => {
         this.result = response;
         this.loading = false;
@@ -314,7 +329,7 @@ export class PaymentComponent implements OnInit {
         this.otpError = err.error?.message || err.message || 'Invalid OTP code';
         this.loading = false;
         console.error('Authorization error:', err);
-      }
+      },
     });
   }
 
@@ -336,49 +351,76 @@ export class PaymentComponent implements OnInit {
   getStatusClass(status: string): string {
     switch (status?.toUpperCase()) {
       case 'COMPLETED':
-      case 'SETTLED': return 'status-completed';
+      case 'SETTLED':
+        return 'status-completed';
       case 'PROCESSING':
       case 'AUTHORIZED':
       case 'RESERVED':
-      case 'SENT': return 'status-processing';
+      case 'SENT':
+        return 'status-processing';
       case 'FAILED':
-      case 'REJECTED': return 'status-failed';
-      case 'COMPENSATED': return 'status-compensated';
+      case 'REJECTED':
+        return 'status-failed';
+      case 'COMPENSATED':
+        return 'status-compensated';
       case 'CREATED':
-      case 'VALIDATED': return 'status-pending';
-      case 'CANCELLED': return 'status-cancelled';
-      default: return 'status-default';
+      case 'VALIDATED':
+        return 'status-pending';
+      case 'CANCELLED':
+        return 'status-cancelled';
+      default:
+        return 'status-default';
     }
   }
 
   getStatusLabel(status: string): string {
     switch (status?.toUpperCase()) {
-      case 'COMPLETED': return 'Completed';
-      case 'SETTLED': return 'Settled';
-      case 'PROCESSING': return 'Processing';
-      case 'AUTHORIZED': return 'Authorized';
-      case 'RESERVED': return 'Reserved';
-      case 'SENT': return 'Sent';
-      case 'FAILED': return 'Failed';
-      case 'REJECTED': return 'Rejected';
-      case 'COMPENSATED': return 'Compensated';
-      case 'CREATED': return 'Created';
-      case 'VALIDATED': return 'Validated';
-      case 'CANCELLED': return 'Cancelled';
-      default: return status || 'Unknown';
+      case 'COMPLETED':
+        return 'Completed';
+      case 'SETTLED':
+        return 'Settled';
+      case 'PROCESSING':
+        return 'Processing';
+      case 'AUTHORIZED':
+        return 'Authorized';
+      case 'RESERVED':
+        return 'Reserved';
+      case 'SENT':
+        return 'Sent';
+      case 'FAILED':
+        return 'Failed';
+      case 'REJECTED':
+        return 'Rejected';
+      case 'COMPENSATED':
+        return 'Compensated';
+      case 'CREATED':
+        return 'Created';
+      case 'VALIDATED':
+        return 'Validated';
+      case 'CANCELLED':
+        return 'Cancelled';
+      default:
+        return status || 'Unknown';
     }
   }
 
   getPaymentTypeLabel(paymentType: string | undefined): string {
     if (!paymentType) return 'N/A';
     switch (paymentType.toUpperCase()) {
-      case 'INTERNAL_TRANSFER': return 'Internal';
-      case 'SEPA_TRANSFER': return 'SEPA';
-      case 'SCT_INSTANT': return 'Instant';
-      case 'MOBILE_RECHARGE': return 'Mobile';
-      case 'SWIFT_TRANSFER': return 'SWIFT';
-      case 'MERCHANT_PAYMENT': return 'Merchant';
-      default: return paymentType;
+      case 'INTERNAL_TRANSFER':
+        return 'Internal';
+      case 'SEPA_TRANSFER':
+        return 'SEPA';
+      case 'SCT_INSTANT':
+        return 'Instant';
+      case 'MOBILE_RECHARGE':
+        return 'Mobile';
+      case 'SWIFT_TRANSFER':
+        return 'SWIFT';
+      case 'MERCHANT_PAYMENT':
+        return 'Merchant';
+      default:
+        return paymentType;
     }
   }
 }

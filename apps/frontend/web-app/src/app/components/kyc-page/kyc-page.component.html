@@ -40,10 +40,7 @@
     <div class="form-group">
       <label for="phone">Phone Number</label>
       <input type="text" id="phone" formControlName="phone" class="form-control" />
-      <div
-        *ngIf="kycForm.get('phone')?.invalid && kycForm.get('phone')?.touched"
-        class="error"
-      >
+      <div *ngIf="kycForm.get('phone')?.invalid && kycForm.get('phone')?.touched" class="error">
         Phone number is required.
       </div>
     </div>
@@ -89,7 +86,12 @@
     <!-- File Uploads -->
     <div class="form-group">
       <label for="cinImage">CIN Document Image</label>
-      <input type="file" id="cinImage" (change)="onFileChange($event, 'cinImage')" accept="image/*" />
+      <input
+        type="file"
+        id="cinImage"
+        (change)="onFileChange($event, 'cinImage')"
+        accept="image/*"
+      />
       <div
         *ngIf="kycForm.get('cinImage')?.invalid && kycForm.get('cinImage')?.touched"
         class="error"
@@ -100,7 +102,12 @@
 
     <div class="form-group">
       <label for="selfieImage">Selfie Image (with your face clearly visible)</label>
-      <input type="file" id="selfieImage" (change)="onFileChange($event, 'selfieImage')" accept="image/*" />
+      <input
+        type="file"
+        id="selfieImage"
+        (change)="onFileChange($event, 'selfieImage')"
+        accept="image/*"
+      />
       <div
         *ngIf="kycForm.get('selfieImage')?.invalid && kycForm.get('selfieImage')?.touched"
         class="error"
@@ -116,11 +123,7 @@
 
       <div class="consent-group" formGroupName="gdprConsents">
         <div class="consent-item" *ngFor="let consent of consentTypes">
-          <input
-            type="checkbox"
-            [id]="consent.key"
-            [formControlName]="consent.key"
-          />
+          <input type="checkbox" [id]="consent.key" [formControlName]="consent.key" />
           <label [for]="consent.key">{{ consent.label }}</label>
         </div>
       </div>
@@ -133,11 +136,7 @@
     </div>
 
     <!-- Submit Button -->
-    <button
-      type="submit"
-      [disabled]="!kycForm.valid || submitting"
-      class="submit-btn"
-    >
+    <button type="submit" [disabled]="!kycForm.valid || submitting" class="submit-btn">
       {{ submitting ? 'Submitting...' : 'Submit KYC' }}
     </button>
   </form>

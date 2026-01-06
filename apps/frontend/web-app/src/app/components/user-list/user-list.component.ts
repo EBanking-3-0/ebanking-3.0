@@ -8,7 +8,7 @@ import { User, UserService } from '../../services/user.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit {
         this.loading = false;
         this.users = [];
         console.error('Error loading users:', error);
-      }
+      },
     });
   }
 
@@ -48,7 +48,7 @@ export class UserListComponent implements OnInit {
         error: (error) => {
           console.error('Error deleting user:', error);
           alert('Failed to delete user');
-        }
+        },
       });
     }
   }
@@ -60,15 +60,18 @@ export class UserListComponent implements OnInit {
           alert('No accounts found for this user.');
           return;
         }
-        const accountDetails = accounts.map(a => 
-          `#${a.accountNumber} (${a.type}) - ${a.currency} ${a.balance}\nNickname: ${a.nickname || 'None'}`
-        ).join('\n\n');
+        const accountDetails = accounts
+          .map(
+            (a) =>
+              `#${a.accountNumber} (${a.type}) - ${a.currency} ${a.balance}\nNickname: ${a.nickname || 'None'}`,
+          )
+          .join('\n\n');
         alert(`Accounts for user ${userId}:\n\n${accountDetails}`);
       },
       error: (err) => {
         console.error('Error fetching accounts:', err);
         alert('Failed to fetch accounts.');
-      }
+      },
     });
   }
 }

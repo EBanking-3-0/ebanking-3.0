@@ -33,7 +33,9 @@
     }
   }
 
-  .loading, .error-message, .empty-state {
+  .loading,
+  .error-message,
+  .empty-state {
     text-align: center;
     padding: 3rem;
     color: #7f8c8d;

@@ -2,7 +2,6 @@
 
 Here is a visual representation and summary of your Kubernetes infrastructure deployed in the `ebanking` namespace.
 
-
 ```text
 +-----------------------------------------------------------------------------------------+
 |                                  NAMESPACE: ebanking                                    |
@@ -54,10 +53,10 @@ Here is a visual representation and summary of your Kubernetes infrastructure de
 
 ## Infrastructure Details Summary
 
-| Component | Resource Type | Name | Replicas | Service Name | Ports | Version |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Kafka** | StatefulSet | `ebanking-infra-kafka-broker` | **1** | `ebanking-infra-kafka-broker` | 9092 (Broker), 9091 (Controller) | 3.7.1 |
-| **PostgreSQL** | StatefulSet | `ebanking-infra-postgresql` | **1** | `ebanking-infra-postgresql` | 5432 | 16.2.0 (Chart 18.2.0) |
-| **Keycloak** | Deployment | `ebanking-infra-keycloak` | **1** | `ebanking-infra-keycloak` | 8080 | 26.4.7 |
+| Component      | Resource Type | Name                          | Replicas | Service Name                  | Ports                            | Version               |
+| :------------- | :------------ | :---------------------------- | :------- | :---------------------------- | :------------------------------- | :-------------------- |
+| **Kafka**      | StatefulSet   | `ebanking-infra-kafka-broker` | **1**    | `ebanking-infra-kafka-broker` | 9092 (Broker), 9091 (Controller) | 3.7.1                 |
+| **PostgreSQL** | StatefulSet   | `ebanking-infra-postgresql`   | **1**    | `ebanking-infra-postgresql`   | 5432                             | 16.2.0 (Chart 18.2.0) |
+| **Keycloak**   | Deployment    | `ebanking-infra-keycloak`     | **1**    | `ebanking-infra-keycloak`     | 8080                             | 26.4.7                |
 
 Your infrastructure is currently running in a minimal, single-replica development mode (1 replica for each stateful service). This is suitable for development but would need scaling (replicas > 1) for production high availability.

@@ -1,4 +1,4 @@
 - [ ] fix the graphql api gateway, locally not in k8s.
-    - run graphql api gateway
-    - run discovery service
-    - run user service
+  - run graphql api gateway
+  - run discovery service
+  - run user service

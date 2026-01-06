@@ -119,14 +119,18 @@
       gap: 0.75rem;
       margin-bottom: 1rem;
 
-      .logo-icon { font-size: 1.5rem; }
+      .logo-icon {
+        font-size: 1.5rem;
+      }
       h3 {
         margin: 0;
         color: #f8fafc;
         font-size: 1.5rem;
         font-weight: 800;
         letter-spacing: -0.025em;
-        span { color: #38bdf8; }
+        span {
+          color: #38bdf8;
+        }
       }
     }
     p {
@@ -160,7 +164,9 @@
         font-size: 0.9rem;
         transition: color 0.2s;
 
-        &:hover { color: #38bdf8; }
+        &:hover {
+          color: #38bdf8;
+        }
       }
     }
   }
@@ -188,7 +194,9 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.025em;
-      transition: transform 0.2s, filter 0.2s;
+      transition:
+        transform 0.2s,
+        filter 0.2s;
       cursor: default;
 
       &:hover {
@@ -196,10 +204,23 @@
         filter: brightness(1.1);
       }
 
-      &.angular { background: #dd0031; color: white; }
-      &.graphql { background: #e10098; color: white; }
-      &.spring { background: #6db33f; color: white; }
-      &.kafka { background: #000; color: white; border: 1px solid #334155; }
+      &.angular {
+        background: #dd0031;
+        color: white;
+      }
+      &.graphql {
+        background: #e10098;
+        color: white;
+      }
+      &.spring {
+        background: #6db33f;
+        color: white;
+      }
+      &.kafka {
+        background: #000;
+        color: white;
+        border: 1px solid #334155;
+      }
     }
   }
 
@@ -250,7 +271,16 @@
 }
 
 @keyframes pulse {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.2); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

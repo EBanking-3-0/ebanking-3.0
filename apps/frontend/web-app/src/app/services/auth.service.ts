@@ -14,7 +14,7 @@ export interface UserProfile {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   // Signal to hold the current user profile
@@ -25,17 +25,18 @@ export class AuthService {
   }
 
   loadUserProfile() {
-    this.userService.getMe()
+    this.userService
+      .getMe()
       .pipe(
-        tap(user => {
+        tap((user) => {
           console.log('User profile loaded:', user);
           // Map User to UserProfile if needed, but they seem compatible
           this.currentUser.set(user as unknown as UserProfile);
         }),
-        catchError(err => {
+        catchError((err) => {
           console.error('Failed to load user profile', err);
           return of(null);
-        })
+        }),
       )
       .subscribe();
   }
@@ -43,7 +44,7 @@ export class AuthService {
   getCurrentUserId(): string | undefined {
     return this.currentUser()?.id;
   }
-  
+
   isAuthenticated(): boolean {
     return !!this.currentUser();
   }

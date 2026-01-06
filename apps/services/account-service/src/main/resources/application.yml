@@ -35,8 +35,6 @@ spring:
           issuer-uri: ${JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
           jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs}
 
-
-
   # security:
   #   oauth2:
   #     resourceserver:
@@ -58,11 +56,9 @@ eureka:
   instance:
     prefer-ip-address: true
 
-
 # keycloak:
 #   realm: ebanking-realm-realm
 #   auth-server-url: http://localhost:8092
-
 
 management:
   endpoints:

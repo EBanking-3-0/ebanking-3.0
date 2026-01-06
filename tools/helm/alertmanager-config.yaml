@@ -7,18 +7,18 @@ metadata:
     release: monitoring
 spec:
   route:
-    groupBy: ['job', 'alertname', 'severity']
+    groupBy: ["job", "alertname", "severity"]
     groupWait: 30s
     groupInterval: 5m
     repeatInterval: 12h
-    receiver: 'slack'
+    receiver: "slack"
   receivers:
-  - name: 'slack'
-    slackConfigs:
-    - sendResolved: true
-      apiURL:
-        name: slack-webhook
-        key: url
-      channel: '#alerts'
-      title: '{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}'
-      text: '{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}'
+    - name: "slack"
+      slackConfigs:
+        - sendResolved: true
+          apiURL:
+            name: slack-webhook
+            key: url
+          channel: "#alerts"
+          title: '{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}'
+          text: '{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}'

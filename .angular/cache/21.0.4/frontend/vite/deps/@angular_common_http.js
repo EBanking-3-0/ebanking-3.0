@@ -37,7 +37,7 @@ import {
   withJsonpSupport,
   withNoXsrfProtection,
   withRequestsMadeViaParent,
-  withXsrfConfiguration
+  withXsrfConfiguration,
 } from "./chunk-GHML3VU6.js";
 import "./chunk-DCQPKT2A.js";
 import "./chunk-P4KDGOZN.js";
@@ -84,5 +84,5 @@ export {
   HTTP_ROOT_INTERCEPTOR_FNS as ɵHTTP_ROOT_INTERCEPTOR_FNS,
   HttpInterceptorHandler as ɵHttpInterceptingHandler,
   REQUESTS_CONTRIBUTE_TO_STABILITY as ɵREQUESTS_CONTRIBUTE_TO_STABILITY,
-  withHttpTransferCache as ɵwithHttpTransferCache
+  withHttpTransferCache as ɵwithHttpTransferCache,
 };

@@ -69,7 +69,6 @@ postgresql:
           GRANT ALL ON SCHEMA notifications TO ebanking_user;
           GRANT ALL ON SCHEMA analytics TO ebanking_user;
 
-
 kafka:
   enabled: true
 

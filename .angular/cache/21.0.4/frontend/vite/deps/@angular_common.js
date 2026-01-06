@@ -85,7 +85,7 @@ import {
   provideImageKitLoader,
   provideImgixLoader,
   provideNetlifyLoader,
-  registerLocaleData
+  registerLocaleData,
 } from "./chunk-B6JS5ISQ.js";
 import {
   BrowserPlatformLocation,
@@ -95,12 +95,9 @@ import {
   XhrFactory,
   getDOM,
   parseCookieValue,
-  setRootDomAdapter
+  setRootDomAdapter,
 } from "./chunk-DCQPKT2A.js";
-import {
-  DOCUMENT,
-  IMAGE_CONFIG
-} from "./chunk-P4KDGOZN.js";
+import { DOCUMENT, IMAGE_CONFIG } from "./chunk-P4KDGOZN.js";
 import "./chunk-4D55VNEQ.js";
 import "./chunk-4NVJHVNJ.js";
 import "./chunk-NLOMSAMV.js";
@@ -203,5 +200,5 @@ export {
   getDOM as ɵgetDOM,
   normalizeQueryParams as ɵnormalizeQueryParams,
   parseCookieValue as ɵparseCookieValue,
-  setRootDomAdapter as ɵsetRootDomAdapter
+  setRootDomAdapter as ɵsetRootDomAdapter,
 };

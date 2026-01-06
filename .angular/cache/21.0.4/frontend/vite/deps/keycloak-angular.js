@@ -1,14 +1,6 @@
-import {
-  Keycloak
-} from "./chunk-2HZE3ATQ.js";
-import {
-  HTTP_INTERCEPTORS,
-  HttpHeaders
-} from "./chunk-GHML3VU6.js";
-import {
-  CommonModule,
-  isPlatformBrowser
-} from "./chunk-B6JS5ISQ.js";
+import { Keycloak } from "./chunk-2HZE3ATQ.js";
+import { HTTP_INTERCEPTORS, HttpHeaders } from "./chunk-GHML3VU6.js";
+import { CommonModule, isPlatformBrowser } from "./chunk-B6JS5ISQ.js";
 import "./chunk-DCQPKT2A.js";
 import {
   Directive,
@@ -32,7 +24,7 @@ import {
   ɵɵdefineDirective,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵdefineNgModule
+  ɵɵdefineNgModule,
 } from "./chunk-P4KDGOZN.js";
 import "./chunk-4D55VNEQ.js";
 import "./chunk-4NVJHVNJ.js";
@@ -42,25 +34,31 @@ import {
   from,
   map,
   mergeMap,
-  of
+  of,
 } from "./chunk-NLOMSAMV.js";
-import {
-  __async,
-  __spreadProps,
-  __spreadValues
-} from "./chunk-OC4HWNDI.js";
+import { __async, __spreadProps, __spreadValues } from "./chunk-OC4HWNDI.js";
 
 // node_modules/keycloak-angular/fesm2022/keycloak-angular.mjs
 var KeycloakEventTypeLegacy;
-(function(KeycloakEventTypeLegacy2) {
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnAuthError"] = 0] = "OnAuthError";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnAuthLogout"] = 1] = "OnAuthLogout";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnAuthRefreshError"] = 2] = "OnAuthRefreshError";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnAuthRefreshSuccess"] = 3] = "OnAuthRefreshSuccess";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnAuthSuccess"] = 4] = "OnAuthSuccess";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnReady"] = 5] = "OnReady";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnTokenExpired"] = 6] = "OnTokenExpired";
-  KeycloakEventTypeLegacy2[KeycloakEventTypeLegacy2["OnActionUpdate"] = 7] = "OnActionUpdate";
+(function (KeycloakEventTypeLegacy2) {
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnAuthError"] = 0)] =
+    "OnAuthError";
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnAuthLogout"] = 1)] =
+    "OnAuthLogout";
+  KeycloakEventTypeLegacy2[
+    (KeycloakEventTypeLegacy2["OnAuthRefreshError"] = 2)
+  ] = "OnAuthRefreshError";
+  KeycloakEventTypeLegacy2[
+    (KeycloakEventTypeLegacy2["OnAuthRefreshSuccess"] = 3)
+  ] = "OnAuthRefreshSuccess";
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnAuthSuccess"] = 4)] =
+    "OnAuthSuccess";
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnReady"] = 5)] =
+    "OnReady";
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnTokenExpired"] = 6)] =
+    "OnTokenExpired";
+  KeycloakEventTypeLegacy2[(KeycloakEventTypeLegacy2["OnActionUpdate"] = 7)] =
+    "OnActionUpdate";
 })(KeycloakEventTypeLegacy || (KeycloakEventTypeLegacy = {}));
 var KeycloakAuthGuard = class {
   constructor(router, keycloakAngular) {
@@ -81,7 +79,9 @@ var KeycloakAuthGuard = class {
         this.roles = yield this.keycloakAngular.getUserRoles(true);
         return yield this.isAccessAllowed(route, state);
       } catch (error) {
-        throw new Error("An error happened during access validation. Details:" + error);
+        throw new Error(
+          "An error happened during access validation. Details:" + error,
+        );
       }
     });
   }
@@ -101,44 +101,44 @@ var KeycloakService = class _KeycloakService {
     this._instance.onAuthError = (errorData) => {
       this._keycloakEvents$.next({
         args: errorData,
-        type: KeycloakEventTypeLegacy.OnAuthError
+        type: KeycloakEventTypeLegacy.OnAuthError,
       });
     };
     this._instance.onAuthLogout = () => {
       this._keycloakEvents$.next({
-        type: KeycloakEventTypeLegacy.OnAuthLogout
+        type: KeycloakEventTypeLegacy.OnAuthLogout,
       });
     };
     this._instance.onAuthRefreshSuccess = () => {
       this._keycloakEvents$.next({
-        type: KeycloakEventTypeLegacy.OnAuthRefreshSuccess
+        type: KeycloakEventTypeLegacy.OnAuthRefreshSuccess,
       });
     };
     this._instance.onAuthRefreshError = () => {
       this._keycloakEvents$.next({
-        type: KeycloakEventTypeLegacy.OnAuthRefreshError
+        type: KeycloakEventTypeLegacy.OnAuthRefreshError,
       });
     };
     this._instance.onAuthSuccess = () => {
       this._keycloakEvents$.next({
-        type: KeycloakEventTypeLegacy.OnAuthSuccess
+        type: KeycloakEventTypeLegacy.OnAuthSuccess,
       });
     };
     this._instance.onTokenExpired = () => {
       this._keycloakEvents$.next({
-        type: KeycloakEventTypeLegacy.OnTokenExpired
+        type: KeycloakEventTypeLegacy.OnTokenExpired,
       });
     };
     this._instance.onActionUpdate = (state) => {
       this._keycloakEvents$.next({
         args: state,
-        type: KeycloakEventTypeLegacy.OnActionUpdate
+        type: KeycloakEventTypeLegacy.OnActionUpdate,
       });
     };
     this._instance.onReady = (authenticated) => {
       this._keycloakEvents$.next({
         args: authenticated,
-        type: KeycloakEventTypeLegacy.OnReady
+        type: KeycloakEventTypeLegacy.OnReady,
       });
     };
   }
@@ -156,12 +156,12 @@ var KeycloakService = class _KeycloakService {
       if (typeof item === "string") {
         excludedUrl = {
           urlPattern: new RegExp(item, "i"),
-          httpMethods: []
+          httpMethods: [],
         };
       } else {
         excludedUrl = {
           urlPattern: new RegExp(item.url, "i"),
-          httpMethods: item.httpMethods
+          httpMethods: item.httpMethods,
         };
       }
       excludedUrls.push(excludedUrl);
@@ -182,7 +182,7 @@ var KeycloakService = class _KeycloakService {
     initOptions,
     updateMinValidity = 20,
     shouldAddToken = () => true,
-    shouldUpdateToken = () => true
+    shouldUpdateToken = () => true,
   }) {
     this._enableBearerInterceptor = enableBearerInterceptor;
     this._loadUserProfileAtStartUp = loadUserProfileAtStartUp;
@@ -239,10 +239,7 @@ var KeycloakService = class _KeycloakService {
   init() {
     return __async(this, arguments, function* (options = {}) {
       this.initServiceValues(options);
-      const {
-        config,
-        initOptions
-      } = options;
+      const { config, initOptions } = options;
       this._instance = new Keycloak(config);
       this.bindsKeycloakEvents();
       const authenticated = yield this._instance.init(initOptions);
@@ -292,7 +289,7 @@ var KeycloakService = class _KeycloakService {
   logout(redirectUri) {
     return __async(this, null, function* () {
       const options = {
-        redirectUri
+        redirectUri,
       };
       yield this._instance.logout(options);
       this._userProfile = void 0;
@@ -309,11 +306,17 @@ var KeycloakService = class _KeycloakService {
    * A void Promise if the register flow was successful.
    */
   register() {
-    return __async(this, arguments, function* (options = {
-      action: "register"
-    }) {
-      yield this._instance.register(options);
-    });
+    return __async(
+      this,
+      arguments,
+      function* (
+        options = {
+          action: "register",
+        },
+      ) {
+        yield this._instance.register(options);
+      },
+    );
   }
   /**
    * Check if the user has access to the specified role. It will look for roles in
@@ -401,22 +404,28 @@ var KeycloakService = class _KeycloakService {
    * Promise with a boolean indicating if the token was succesfully updated.
    */
   updateToken() {
-    return __async(this, arguments, function* (minValidity = this._updateMinValidity) {
-      if (this._silentRefresh) {
-        if (this.isTokenExpired()) {
-          throw new Error("Failed to refresh the token, or the session is expired");
+    return __async(
+      this,
+      arguments,
+      function* (minValidity = this._updateMinValidity) {
+        if (this._silentRefresh) {
+          if (this.isTokenExpired()) {
+            throw new Error(
+              "Failed to refresh the token, or the session is expired",
+            );
+          }
+          return true;
         }
-        return true;
-      }
-      if (!this._instance) {
-        throw new Error("Keycloak Angular library is not initialized.");
-      }
-      try {
-        return yield this._instance.updateToken(minValidity);
-      } catch (error) {
-        return false;
-      }
-    });
+        if (!this._instance) {
+          throw new Error("Keycloak Angular library is not initialized.");
+        }
+        try {
+          return yield this._instance.updateToken(minValidity);
+        } catch (error) {
+          return false;
+        }
+      },
+    );
   }
   /**
    * Loads the user profile.
@@ -434,9 +443,11 @@ var KeycloakService = class _KeycloakService {
         return this._userProfile;
       }
       if (!this._instance.authenticated) {
-        throw new Error("The user profile was not loaded as the user is not logged in.");
+        throw new Error(
+          "The user profile was not loaded as the user is not logged in.",
+        );
       }
-      return this._userProfile = yield this._instance.loadUserProfile();
+      return (this._userProfile = yield this._instance.loadUserProfile());
     });
   }
   /**
@@ -478,7 +489,16 @@ var KeycloakService = class _KeycloakService {
    * An observable with with the HTTP Authorization header and the current token.
    */
   addTokenToHeader(headers = new HttpHeaders()) {
-    return from(this.getToken()).pipe(map((token) => token ? headers.set(this._authorizationHeaderName, this._bearerPrefix + token) : headers));
+    return from(this.getToken()).pipe(
+      map((token) =>
+        token
+          ? headers.set(
+              this._authorizationHeaderName,
+              this._bearerPrefix + token,
+            )
+          : headers,
+      ),
+    );
   }
   /**
    * Returns the original Keycloak instance, if you need any customization that
@@ -540,14 +560,22 @@ var KeycloakService = class _KeycloakService {
   static {
     this.ɵprov = ɵɵdefineInjectable({
       token: _KeycloakService,
-      factory: _KeycloakService.ɵfac
+      factory: _KeycloakService.ɵfac,
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(KeycloakService, [{
-    type: Injectable
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      KeycloakService,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var KeycloakBearerInterceptor = class _KeycloakBearerInterceptor {
   constructor() {
@@ -577,14 +605,10 @@ var KeycloakBearerInterceptor = class _KeycloakBearerInterceptor {
    * @param excludedUrlRegex contains the url pattern and the http methods,
    * excluded from adding the bearer at the Http Request.
    */
-  isUrlExcluded({
-    method,
-    url
-  }, {
-    urlPattern,
-    httpMethods
-  }) {
-    const httpTest = httpMethods.length === 0 || httpMethods.join().indexOf(method.toUpperCase()) > -1;
+  isUrlExcluded({ method, url }, { urlPattern, httpMethods }) {
+    const httpTest =
+      httpMethods.length === 0 ||
+      httpMethods.join().indexOf(method.toUpperCase()) > -1;
     const urlTest = urlPattern.test(url);
     return httpTest && urlTest;
   }
@@ -596,18 +620,26 @@ var KeycloakBearerInterceptor = class _KeycloakBearerInterceptor {
    * @param next
    */
   intercept(req, next) {
-    const {
-      enableBearerInterceptor,
-      excludedUrls
-    } = this.keycloak;
+    const { enableBearerInterceptor, excludedUrls } = this.keycloak;
     if (!enableBearerInterceptor) {
       return next.handle(req);
     }
-    const shallPass = !this.keycloak.shouldAddToken(req) || excludedUrls.findIndex((item) => this.isUrlExcluded(req, item)) > -1;
+    const shallPass =
+      !this.keycloak.shouldAddToken(req) ||
+      excludedUrls.findIndex((item) => this.isUrlExcluded(req, item)) > -1;
     if (shallPass) {
       return next.handle(req);
     }
-    return combineLatest([from(this.conditionallyUpdateToken(req)), of(this.keycloak.isLoggedIn())]).pipe(mergeMap(([_, isLoggedIn]) => isLoggedIn ? this.handleRequestWithTokenHeader(req, next) : next.handle(req)));
+    return combineLatest([
+      from(this.conditionallyUpdateToken(req)),
+      of(this.keycloak.isLoggedIn()),
+    ]).pipe(
+      mergeMap(([_, isLoggedIn]) =>
+        isLoggedIn
+          ? this.handleRequestWithTokenHeader(req, next)
+          : next.handle(req),
+      ),
+    );
   }
   /**
    * Adds the token of the current user to the Authorization header
@@ -616,12 +648,14 @@ var KeycloakBearerInterceptor = class _KeycloakBearerInterceptor {
    * @param next
    */
   handleRequestWithTokenHeader(req, next) {
-    return this.keycloak.addTokenToHeader(req.headers).pipe(mergeMap((headersWithBearer) => {
-      const kcReq = req.clone({
-        headers: headersWithBearer
-      });
-      return next.handle(kcReq);
-    }));
+    return this.keycloak.addTokenToHeader(req.headers).pipe(
+      mergeMap((headersWithBearer) => {
+        const kcReq = req.clone({
+          headers: headersWithBearer,
+        });
+        return next.handle(kcReq);
+      }),
+    );
   }
   static {
     this.ɵfac = function KeycloakBearerInterceptor_Factory(__ngFactoryType__) {
@@ -631,14 +665,22 @@ var KeycloakBearerInterceptor = class _KeycloakBearerInterceptor {
   static {
     this.ɵprov = ɵɵdefineInjectable({
       token: _KeycloakBearerInterceptor,
-      factory: _KeycloakBearerInterceptor.ɵfac
+      factory: _KeycloakBearerInterceptor.ɵfac,
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(KeycloakBearerInterceptor, [{
-    type: Injectable
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      KeycloakBearerInterceptor,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var CoreModule = class _CoreModule {
   static {
@@ -649,32 +691,48 @@ var CoreModule = class _CoreModule {
   static {
     this.ɵmod = ɵɵdefineNgModule({
       type: _CoreModule,
-      imports: [CommonModule]
+      imports: [CommonModule],
     });
   }
   static {
     this.ɵinj = ɵɵdefineInjector({
-      providers: [KeycloakService, {
-        provide: HTTP_INTERCEPTORS,
-        useClass: KeycloakBearerInterceptor,
-        multi: true
-      }],
-      imports: [CommonModule]
+      providers: [
+        KeycloakService,
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: KeycloakBearerInterceptor,
+          multi: true,
+        },
+      ],
+      imports: [CommonModule],
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CoreModule, [{
-    type: NgModule,
-    args: [{
-      imports: [CommonModule],
-      providers: [KeycloakService, {
-        provide: HTTP_INTERCEPTORS,
-        useClass: KeycloakBearerInterceptor,
-        multi: true
-      }]
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      CoreModule,
+      [
+        {
+          type: NgModule,
+          args: [
+            {
+              imports: [CommonModule],
+              providers: [
+                KeycloakService,
+                {
+                  provide: HTTP_INTERCEPTORS,
+                  useClass: KeycloakBearerInterceptor,
+                  multi: true,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var KeycloakAngularModule = class _KeycloakAngularModule {
   static {
@@ -685,26 +743,37 @@ var KeycloakAngularModule = class _KeycloakAngularModule {
   static {
     this.ɵmod = ɵɵdefineNgModule({
       type: _KeycloakAngularModule,
-      imports: [CoreModule]
+      imports: [CoreModule],
     });
   }
   static {
     this.ɵinj = ɵɵdefineInjector({
-      imports: [CoreModule]
+      imports: [CoreModule],
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(KeycloakAngularModule, [{
-    type: NgModule,
-    args: [{
-      imports: [CoreModule]
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      KeycloakAngularModule,
+      [
+        {
+          type: NgModule,
+          args: [
+            {
+              imports: [CoreModule],
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var KeycloakEventType;
-(function(KeycloakEventType2) {
-  KeycloakEventType2["KeycloakAngularNotInitialized"] = "KeycloakAngularNotInitialized";
+(function (KeycloakEventType2) {
+  KeycloakEventType2["KeycloakAngularNotInitialized"] =
+    "KeycloakAngularNotInitialized";
   KeycloakEventType2["KeycloakAngularInit"] = "KeycloakAngularInit";
   KeycloakEventType2["AuthError"] = "AuthError";
   KeycloakEventType2["AuthLogout"] = "AuthLogout";
@@ -717,32 +786,39 @@ var KeycloakEventType;
 })(KeycloakEventType || (KeycloakEventType = {}));
 var typeEventArgs = (args) => args;
 var createKeycloakSignal = (keycloak) => {
-  const keycloakSignal = signal({
-    type: KeycloakEventType.KeycloakAngularInit
-  }, ...ngDevMode ? [{
-    debugName: "keycloakSignal"
-  }] : []);
+  const keycloakSignal = signal(
+    {
+      type: KeycloakEventType.KeycloakAngularInit,
+    },
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "keycloakSignal",
+          },
+        ]
+      : []),
+  );
   if (!keycloak) {
     keycloakSignal.set({
-      type: KeycloakEventType.KeycloakAngularNotInitialized
+      type: KeycloakEventType.KeycloakAngularNotInitialized,
     });
     return keycloakSignal;
   }
   keycloak.onReady = (authenticated) => {
     keycloakSignal.set({
       type: KeycloakEventType.Ready,
-      args: authenticated
+      args: authenticated,
     });
   };
   keycloak.onAuthError = (errorData) => {
     keycloakSignal.set({
       type: KeycloakEventType.AuthError,
-      args: errorData
+      args: errorData,
     });
   };
   keycloak.onAuthLogout = () => {
     keycloakSignal.set({
-      type: KeycloakEventType.AuthLogout
+      type: KeycloakEventType.AuthLogout,
     });
   };
   keycloak.onActionUpdate = (status, action) => {
@@ -750,28 +826,28 @@ var createKeycloakSignal = (keycloak) => {
       type: KeycloakEventType.ActionUpdate,
       args: {
         status,
-        action
-      }
+        action,
+      },
     });
   };
   keycloak.onAuthRefreshError = () => {
     keycloakSignal.set({
-      type: KeycloakEventType.AuthRefreshError
+      type: KeycloakEventType.AuthRefreshError,
     });
   };
   keycloak.onAuthRefreshSuccess = () => {
     keycloakSignal.set({
-      type: KeycloakEventType.AuthRefreshSuccess
+      type: KeycloakEventType.AuthRefreshSuccess,
     });
   };
   keycloak.onAuthSuccess = () => {
     keycloakSignal.set({
-      type: KeycloakEventType.AuthSuccess
+      type: KeycloakEventType.AuthSuccess,
     });
   };
   keycloak.onTokenExpired = () => {
     keycloakSignal.set({
-      type: KeycloakEventType.TokenExpired
+      type: KeycloakEventType.TokenExpired,
     });
   };
   return keycloakSignal;
@@ -832,8 +908,12 @@ var HasRolesDirective = class _HasRolesDirective {
    * @returns True if the user has access, false otherwise.
    */
   checkUserRoles() {
-    const hasResourceRole = this.roles.some((role) => this.keycloak.hasResourceRole(role, this.resource));
-    const hasRealmRole = this.checkRealm ? this.roles.some((role) => this.keycloak.hasRealmRole(role)) : false;
+    const hasResourceRole = this.roles.some((role) =>
+      this.keycloak.hasResourceRole(role, this.resource),
+    );
+    const hasRealmRole = this.checkRealm
+      ? this.roles.some((role) => this.keycloak.hasRealmRole(role))
+      : false;
     return hasResourceRole || hasRealmRole;
   }
   static {
@@ -848,45 +928,75 @@ var HasRolesDirective = class _HasRolesDirective {
       inputs: {
         roles: [0, "kaHasRoles", "roles"],
         resource: [0, "kaHasRolesResource", "resource"],
-        checkRealm: [0, "kaHasRolesCheckRealm", "checkRealm"]
+        checkRealm: [0, "kaHasRolesCheckRealm", "checkRealm"],
       },
-      features: [ɵɵNgOnChangesFeature]
+      features: [ɵɵNgOnChangesFeature],
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(HasRolesDirective, [{
-    type: Directive,
-    args: [{
-      selector: "[kaHasRoles]"
-    }]
-  }], () => [], {
-    roles: [{
-      type: Input,
-      args: ["kaHasRoles"]
-    }],
-    resource: [{
-      type: Input,
-      args: ["kaHasRolesResource"]
-    }],
-    checkRealm: [{
-      type: Input,
-      args: ["kaHasRolesCheckRealm"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      HasRolesDirective,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[kaHasRoles]",
+            },
+          ],
+        },
+      ],
+      () => [],
+      {
+        roles: [
+          {
+            type: Input,
+            args: ["kaHasRoles"],
+          },
+        ],
+        resource: [
+          {
+            type: Input,
+            args: ["kaHasRolesResource"],
+          },
+        ],
+        checkRealm: [
+          {
+            type: Input,
+            args: ["kaHasRolesCheckRealm"],
+          },
+        ],
+      },
+    );
 })();
 var UserActivityService = class _UserActivityService {
   constructor() {
-    this.lastActivity = signal(Date.now(), ...ngDevMode ? [{
-      debugName: "lastActivity"
-    }] : []);
+    this.lastActivity = signal(
+      Date.now(),
+      ...(ngDevMode
+        ? [
+            {
+              debugName: "lastActivity",
+            },
+          ]
+        : []),
+    );
     this.isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     this.eventListeners = [];
     this.debounceTimeoutId = null;
     this.debounceTime = 300;
-    this.lastActivitySignal = computed(() => this.lastActivity(), ...ngDevMode ? [{
-      debugName: "lastActivitySignal"
-    }] : []);
+    this.lastActivitySignal = computed(
+      () => this.lastActivity(),
+      ...(ngDevMode
+        ? [
+            {
+              debugName: "lastActivitySignal",
+            },
+          ]
+        : []),
+    );
   }
   /**
    * Starts monitoring user activity events (`mousemove`, `touchstart`, `keydown`, `click`, `scroll`)
@@ -900,9 +1010,11 @@ var UserActivityService = class _UserActivityService {
     const handler = () => this.debouncedUpdate();
     events.forEach((event) => {
       window.addEventListener(event, handler, {
-        passive: true
+        passive: true,
       });
-      this.eventListeners.push(() => window.removeEventListener(event, handler));
+      this.eventListeners.push(() =>
+        window.removeEventListener(event, handler),
+      );
     });
   }
   /**
@@ -953,14 +1065,22 @@ var UserActivityService = class _UserActivityService {
   static {
     this.ɵprov = ɵɵdefineInjectable({
       token: _UserActivityService,
-      factory: _UserActivityService.ɵfac
+      factory: _UserActivityService.ɵfac,
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(UserActivityService, [{
-    type: Injectable
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      UserActivityService,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var AutoRefreshTokenService = class _AutoRefreshTokenService {
   constructor() {
@@ -981,16 +1101,24 @@ var AutoRefreshTokenService = class _AutoRefreshTokenService {
       sessionTimeout: 3e5,
       onInactivityTimeout: "logout",
       logoutOptions: void 0,
-      loginOptions: void 0
+      loginOptions: void 0,
     };
   }
   executeOnInactivityTimeout() {
     switch (this.options.onInactivityTimeout) {
       case "login":
-        this.keycloak.login(this.options.loginOptions).catch((error) => console.error("Failed to execute the login call", error));
+        this.keycloak
+          .login(this.options.loginOptions)
+          .catch((error) =>
+            console.error("Failed to execute the login call", error),
+          );
         break;
       case "logout":
-        this.keycloak.logout(this.options.logoutOptions).catch((error) => console.error("Failed to execute the logout call", error));
+        this.keycloak
+          .logout(this.options.logoutOptions)
+          .catch((error) =>
+            console.error("Failed to execute the logout call", error),
+          );
         break;
       default:
         break;
@@ -1001,13 +1129,18 @@ var AutoRefreshTokenService = class _AutoRefreshTokenService {
       return;
     }
     if (this.userActivity.isActive(this.options.sessionTimeout)) {
-      this.keycloak.updateToken().catch(() => this.executeOnInactivityTimeout());
+      this.keycloak
+        .updateToken()
+        .catch(() => this.executeOnInactivityTimeout());
     } else {
       this.executeOnInactivityTimeout();
     }
   }
   start(options) {
-    this.options = __spreadValues(__spreadValues({}, this.defaultOptions), options);
+    this.options = __spreadValues(
+      __spreadValues({}, this.defaultOptions),
+      options,
+    );
     this.initialized = true;
     this.userActivity.startMonitoring();
   }
@@ -1019,21 +1152,29 @@ var AutoRefreshTokenService = class _AutoRefreshTokenService {
   static {
     this.ɵprov = ɵɵdefineInjectable({
       token: _AutoRefreshTokenService,
-      factory: _AutoRefreshTokenService.ɵfac
+      factory: _AutoRefreshTokenService.ɵfac,
     });
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AutoRefreshTokenService, [{
-    type: Injectable
-  }], () => [], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      AutoRefreshTokenService,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      () => [],
+      null,
+    );
 })();
 function withAutoRefreshToken(options) {
   return {
     configure: () => {
       const autoRefreshTokenService = inject(AutoRefreshTokenService);
       autoRefreshTokenService.start(options);
-    }
+    },
   };
 }
 var mapResourceRoles = (resourceAccess = {}) => {
@@ -1048,104 +1189,146 @@ var createAuthGuard = (isAccessAllowed) => {
     const authenticated = keycloak?.authenticated ?? false;
     const grantedRoles = {
       resourceRoles: mapResourceRoles(keycloak?.resourceAccess),
-      realmRoles: keycloak?.realmAccess?.roles ?? []
+      realmRoles: keycloak?.realmAccess?.roles ?? [],
     };
     const authData = {
       authenticated,
       keycloak,
-      grantedRoles
+      grantedRoles,
     };
     return isAccessAllowed(next, state, authData);
   };
 };
 var BEARER_PREFIX = "Bearer";
 var AUTHORIZATION_HEADER_NAME = "Authorization";
-var createInterceptorCondition = (value) => __spreadProps(__spreadValues({}, value), {
-  bearerPrefix: value.bearerPrefix ?? BEARER_PREFIX,
-  authorizationHeaderName: value.authorizationHeaderName ?? AUTHORIZATION_HEADER_NAME,
-  shouldUpdateToken: value.shouldUpdateToken ?? (() => true)
-});
-var conditionallyUpdateToken = (_0, _1, _2) => __async(null, [_0, _1, _2], function* (req, keycloak, {
-  shouldUpdateToken = (_) => true
-}) {
-  if (shouldUpdateToken(req)) {
-    return yield keycloak.updateToken().catch(() => false);
-  }
-  return true;
-});
+var createInterceptorCondition = (value) =>
+  __spreadProps(__spreadValues({}, value), {
+    bearerPrefix: value.bearerPrefix ?? BEARER_PREFIX,
+    authorizationHeaderName:
+      value.authorizationHeaderName ?? AUTHORIZATION_HEADER_NAME,
+    shouldUpdateToken: value.shouldUpdateToken ?? (() => true),
+  });
+var conditionallyUpdateToken = (_0, _1, _2) =>
+  __async(
+    null,
+    [_0, _1, _2],
+    function* (req, keycloak, { shouldUpdateToken = (_) => true }) {
+      if (shouldUpdateToken(req)) {
+        return yield keycloak.updateToken().catch(() => false);
+      }
+      return true;
+    },
+  );
 var addAuthorizationHeader = (req, next, keycloak, condition) => {
   const {
     bearerPrefix = BEARER_PREFIX,
-    authorizationHeaderName = AUTHORIZATION_HEADER_NAME
+    authorizationHeaderName = AUTHORIZATION_HEADER_NAME,
   } = condition;
   const clonedRequest = req.clone({
     setHeaders: {
-      [authorizationHeaderName]: `${bearerPrefix} ${keycloak.token}`
-    }
+      [authorizationHeaderName]: `${bearerPrefix} ${keycloak.token}`,
+    },
   });
   return next(clonedRequest);
 };
-var CUSTOM_BEARER_TOKEN_INTERCEPTOR_CONFIG = new InjectionToken("Include the bearer token as implemented by the provided function");
+var CUSTOM_BEARER_TOKEN_INTERCEPTOR_CONFIG = new InjectionToken(
+  "Include the bearer token as implemented by the provided function",
+);
 var customBearerTokenInterceptor = (req, next) => {
   const conditions = inject(CUSTOM_BEARER_TOKEN_INTERCEPTOR_CONFIG) ?? [];
   const keycloak = inject(Keycloak);
-  return from(Promise.all(conditions.map((condition) => __async(null, null, function* () {
-    return yield condition.shouldAddToken(req, next, keycloak);
-  })))).pipe(mergeMap((evaluatedConditions) => {
-    const matchingConditionIndex = evaluatedConditions.findIndex(Boolean);
-    const matchingCondition = conditions[matchingConditionIndex];
-    if (!matchingCondition) {
-      return next(req);
-    }
-    return from(conditionallyUpdateToken(req, keycloak, matchingCondition)).pipe(mergeMap(() => keycloak.authenticated ? addAuthorizationHeader(req, next, keycloak, matchingCondition) : next(req)));
-  }));
+  return from(
+    Promise.all(
+      conditions.map((condition) =>
+        __async(null, null, function* () {
+          return yield condition.shouldAddToken(req, next, keycloak);
+        }),
+      ),
+    ),
+  ).pipe(
+    mergeMap((evaluatedConditions) => {
+      const matchingConditionIndex = evaluatedConditions.findIndex(Boolean);
+      const matchingCondition = conditions[matchingConditionIndex];
+      if (!matchingCondition) {
+        return next(req);
+      }
+      return from(
+        conditionallyUpdateToken(req, keycloak, matchingCondition),
+      ).pipe(
+        mergeMap(() =>
+          keycloak.authenticated
+            ? addAuthorizationHeader(req, next, keycloak, matchingCondition)
+            : next(req),
+        ),
+      );
+    }),
+  );
 };
-var INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG = new InjectionToken("Include the bearer token when explicitly defined int the URL pattern condition");
-var findMatchingCondition = ({
-  method,
-  url
-}, {
-  urlPattern,
-  httpMethods = []
-}) => {
-  const httpMethodTest = httpMethods.length === 0 || httpMethods.join().indexOf(method.toUpperCase()) > -1;
+var INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG = new InjectionToken(
+  "Include the bearer token when explicitly defined int the URL pattern condition",
+);
+var findMatchingCondition = (
+  { method, url },
+  { urlPattern, httpMethods = [] },
+) => {
+  const httpMethodTest =
+    httpMethods.length === 0 ||
+    httpMethods.join().indexOf(method.toUpperCase()) > -1;
   const urlTest = urlPattern.test(url);
   return httpMethodTest && urlTest;
 };
 var includeBearerTokenInterceptor = (req, next) => {
   const conditions = inject(INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG) ?? [];
-  const matchingCondition = conditions.find((condition) => findMatchingCondition(req, condition));
+  const matchingCondition = conditions.find((condition) =>
+    findMatchingCondition(req, condition),
+  );
   if (!matchingCondition) {
     return next(req);
   }
   const keycloak = inject(Keycloak);
-  return from(conditionallyUpdateToken(req, keycloak, matchingCondition)).pipe(mergeMap(() => keycloak.authenticated ? addAuthorizationHeader(req, next, keycloak, matchingCondition) : next(req)));
+  return from(conditionallyUpdateToken(req, keycloak, matchingCondition)).pipe(
+    mergeMap(() =>
+      keycloak.authenticated
+        ? addAuthorizationHeader(req, next, keycloak, matchingCondition)
+        : next(req),
+    ),
+  );
 };
 var provideKeycloakInAppInitializer = (keycloak, options) => {
-  const {
-    initOptions,
-    features = []
-  } = options;
+  const { initOptions, features = [] } = options;
   if (!initOptions) {
     return [];
   }
-  return provideAppInitializer(() => __async(null, null, function* () {
-    const injector = inject(EnvironmentInjector);
-    runInInjectionContext(injector, () => features.forEach((feature) => feature.configure()));
-    yield keycloak.init(initOptions).catch((error) => console.error("Keycloak initialization failed", error));
-  }));
+  return provideAppInitializer(() =>
+    __async(null, null, function* () {
+      const injector = inject(EnvironmentInjector);
+      runInInjectionContext(injector, () =>
+        features.forEach((feature) => feature.configure()),
+      );
+      yield keycloak
+        .init(initOptions)
+        .catch((error) =>
+          console.error("Keycloak initialization failed", error),
+        );
+    }),
+  );
 };
 function provideKeycloak(options) {
   const keycloak = new Keycloak(options.config);
   const providers = options.providers ?? [];
   const keycloakSignal = createKeycloakSignal(keycloak);
-  return makeEnvironmentProviders([{
-    provide: KEYCLOAK_EVENT_SIGNAL,
-    useValue: keycloakSignal
-  }, {
-    provide: Keycloak,
-    useValue: keycloak
-  }, ...providers, provideKeycloakInAppInitializer(keycloak, options)]);
+  return makeEnvironmentProviders([
+    {
+      provide: KEYCLOAK_EVENT_SIGNAL,
+      useValue: keycloakSignal,
+    },
+    {
+      provide: Keycloak,
+      useValue: keycloak,
+    },
+    ...providers,
+    provideKeycloakInAppInitializer(keycloak, options),
+  ]);
 }
 export {
   AutoRefreshTokenService,
@@ -1170,6 +1353,6 @@ export {
   includeBearerTokenInterceptor,
   provideKeycloak,
   typeEventArgs,
-  withAutoRefreshToken
+  withAutoRefreshToken,
 };
 //# sourceMappingURL=keycloak-angular.js.map

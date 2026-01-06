@@ -140,19 +140,19 @@ user-service/
 
 ### UserController - Gestion des profils
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| GET | `/api/v1/users/me` | Profil utilisateur actuel |
-| GET | `/api/v1/users/{userId}` | Profil d'un utilisateur spécifique |
-| DELETE | `/api/v1/users/me` | Supprimer le compte actuel |
-| GET | `/api/v1/users/test` | Endpoint de test |
+| Méthode | Endpoint                 | Description                        |
+| ------- | ------------------------ | ---------------------------------- |
+| GET     | `/api/v1/users/me`       | Profil utilisateur actuel          |
+| GET     | `/api/v1/users/{userId}` | Profil d'un utilisateur spécifique |
+| DELETE  | `/api/v1/users/me`       | Supprimer le compte actuel         |
+| GET     | `/api/v1/users/test`     | Endpoint de test                   |
 
 ### KycController - Vérification KYC
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/v1/kyc` | Soumettre une vérification KYC |
-| GET | `/api/v1/kyc/status` | Récupérer le statut KYC |
+| Méthode | Endpoint             | Description                    |
+| ------- | -------------------- | ------------------------------ |
+| POST    | `/api/v1/kyc`        | Soumettre une vérification KYC |
+| GET     | `/api/v1/kyc/status` | Récupérer le statut KYC        |
 
 ## Statuts utilisateur
 
@@ -281,6 +281,7 @@ Exécuter les tests :
 ```
 
 Les tests couvrent :
+
 - Extraction JWT
 - Création utilisateur
 - Soumission KYC
@@ -312,4 +313,3 @@ Métriques Micrometer à surveiller :
 - Taux de soumission KYC
 - Taux d'approbation KYC
 - Temps de traitement KYC
-

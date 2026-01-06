@@ -28,7 +28,6 @@ ingress:
         - ebanking.local
 
 env:
-
   API_URL: "https://api.ebanking.local/graphql"
   KEYCLOAK_URL: "https://auth.ebanking.local"
   KEYCLOAK_REALM: "ebanking-realm"

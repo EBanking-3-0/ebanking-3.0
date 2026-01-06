@@ -109,10 +109,9 @@ const DELETE_USER = gql`
 `;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   constructor(private apollo: Apollo) {}
 
   getUsers(): Observable<User[]> {
@@ -120,9 +119,7 @@ export class UserService {
       .watchQuery<{ users: User[] }>({
         query: GET_USERS,
       })
-      .valueChanges.pipe(
-        map(result => (result.data?.users || []) as User[])
-      );
+      .valueChanges.pipe(map((result) => (result.data?.users || []) as User[]));
   }
 
   getUser(id: string): Observable<User> {
@@ -130,11 +127,9 @@ export class UserService {
       .query<{ user: User }>({
         query: GET_USER,
         variables: { id },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
-      .pipe(
-        map(result => result.data?.user as User)
-      );
+      .pipe(map((result) => result.data?.user as User));
   }
 
   createUser(user: Omit<User, 'id' | 'status'>): Observable<User> {
@@ -144,7 +139,7 @@ export class UserService {
         variables: { input: user },
         refetchQueries: [{ query: GET_USERS }],
       })
-      .pipe(map(result => result.data?.createUser as User));
+      .pipe(map((result) => result.data?.createUser as User));
   }
 
   updateUser(id: string, user: Omit<User, 'id' | 'email' | 'status'>): Observable<User> {
@@ -154,7 +149,7 @@ export class UserService {
         variables: { id, input: user },
         refetchQueries: [{ query: GET_USERS }],
       })
-      .pipe(map(result => result.data?.updateUser as User));
+      .pipe(map((result) => result.data?.updateUser as User));
   }
 
   deleteUser(id: string): Observable<boolean> {
@@ -164,18 +159,16 @@ export class UserService {
         variables: { id },
         refetchQueries: [{ query: GET_USERS }],
       })
-      .pipe(map(result => result.data?.deleteUser as boolean));
+      .pipe(map((result) => result.data?.deleteUser as boolean));
   }
 
   getMe(): Observable<User> {
     return this.apollo
       .query<{ me: User }>({
         query: GET_ME,
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
-      .pipe(
-        map(result => result.data?.me as User)
-      );
+      .pipe(map((result) => result.data?.me as User));
   }
 
   getAccounts(userId: string): Observable<Account[]> {
@@ -183,10 +176,8 @@ export class UserService {
       .query<{ myAccounts: Account[] }>({
         query: GET_ACCOUNTS,
         variables: { userId },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
-      .pipe(
-        map(result => (result.data?.myAccounts || []) as Account[])
-      );
+      .pipe(map((result) => (result.data?.myAccounts || []) as Account[]));
   }
 }

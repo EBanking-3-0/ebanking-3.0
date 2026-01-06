@@ -7,7 +7,7 @@ import { PaymentService, PaymentResponse } from '../../services/payment.service'
   standalone: true,
   imports: [CommonModule],
   templateUrl: './payment-history.component.html',
-  styleUrl: './payment-history.component.scss'
+  styleUrl: './payment-history.component.scss',
 })
 export class PaymentHistoryComponent implements OnInit {
   payments: PaymentResponse[] = [];
@@ -32,17 +32,22 @@ export class PaymentHistoryComponent implements OnInit {
       error: (err) => {
         this.error = err.error?.message || 'Failed to load payments';
         this.loading = false;
-      }
+      },
     });
   }
 
   getStatusClass(status: string): string {
     switch (status?.toUpperCase()) {
-      case 'COMPLETED': return 'status-completed';
-      case 'PROCESSING': return 'status-processing';
-      case 'FAILED': return 'status-failed';
-      case 'COMPENSATED': return 'status-compensated';
-      default: return 'status-default';
+      case 'COMPLETED':
+        return 'status-completed';
+      case 'PROCESSING':
+        return 'status-processing';
+      case 'FAILED':
+        return 'status-failed';
+      case 'COMPENSATED':
+        return 'status-compensated';
+      default:
+        return 'status-default';
     }
   }
 }

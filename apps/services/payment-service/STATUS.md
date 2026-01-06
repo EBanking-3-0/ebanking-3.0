@@ -3,6 +3,7 @@
 ## 🎯 Ce qui fonctionne
 
 ### ✅ Backend
+
 - ✅ **PaymentController** : Tous les endpoints REST sont configurés
   - `/api/payments/internal` - Virement interne
   - `/api/payments/sepa` - Virement SEPA
@@ -61,6 +62,7 @@
 - ✅ **Repository** : Toutes les méthodes nécessaires
 
 ### ✅ Frontend
+
 - ✅ **PaymentComponent** : Composant Angular complet
   - 4 onglets : Internal, SEPA, Instant, Mobile
   - Formulaires réactifs avec validation
@@ -79,16 +81,20 @@
 ## ⚠️ Notes importantes
 
 ### Erreurs d'import dans l'IDE
+
 Les erreurs d'import `PaymentRequest cannot be resolved` sont **probablement dues au cache de l'IDE**. Les fichiers existent bien :
+
 - ✅ `com.ebanking.payment.dto.request.PaymentRequest` existe
 - ✅ `com.ebanking.payment.dto.request.ScaVerificationRequest` existe
 
-**Solution** : 
+**Solution** :
+
 1. Rebuild le projet : `./gradlew clean build`
 2. Invalider les caches de l'IDE (IntelliJ : File → Invalidate Caches)
 3. Re-synchroniser le projet Gradle
 
 ### Services non utilisés
+
 - `InstantTransferService` : Supprimé (non utilisé par le controller)
 - `MobileRechargeService` : Supprimé (non utilisé par le controller)
 
@@ -97,6 +103,7 @@ Le controller utilise directement `PaymentService.initiatePayment()` qui gère t
 ## 🔄 Flux complet
 
 ### 1. Frontend → Backend
+
 ```
 Angular PaymentComponent
   ↓
@@ -114,6 +121,7 @@ PaymentEventProducer (Kafka)
 ```
 
 ### 2. Types de paiement supportés
+
 - **INTERNAL_TRANSFER** : Virement interne (même banque)
 - **SEPA_TRANSFER** : Virement SEPA (Europe, 1-2 jours)
 - **SCT_INSTANT** : Virement instantané (< 30s, max 15k€)
@@ -137,12 +145,14 @@ PaymentEventProducer (Kafka)
 ## 🚀 Pour tester
 
 1. **Démarrer les services** :
+
    ```bash
    docker-compose up -d  # Kafka, PostgreSQL, etc.
    ./gradlew :apps:services:payment-service:bootRun
    ```
 
 2. **Démarrer le frontend** :
+
    ```bash
    cd apps/frontend/web-app
    npm start
@@ -156,6 +166,7 @@ PaymentEventProducer (Kafka)
 ## 🔧 Si erreurs d'import persistent
 
 1. **Rebuild complet** :
+
    ```bash
    ./gradlew clean build --refresh-dependencies
    ```

@@ -37,7 +37,8 @@ public class AccountController {
     String userId = jwt.getClaimAsString("sub");
 
     Account account =
-        accountService.createAccount(userId, request.getType(), request.getCurrency(), request.getNickname());
+        accountService.createAccount(
+            userId, request.getType(), request.getCurrency(), request.getNickname());
     return ResponseEntity.ok(accountMapper.mapToDTO(account));
   }
 

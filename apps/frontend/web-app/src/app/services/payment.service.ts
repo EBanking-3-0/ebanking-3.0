@@ -120,51 +120,62 @@ const MY_PAYMENTS = gql`
 `;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentService {
-
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo) {}
 
   createInternalTransfer(request: PaymentRequest): Observable<PaymentResponse> {
-    return this.apollo.mutate<{ initiateInternalTransfer: PaymentResponse }>({
-      mutation: INITIATE_INTERNAL_TRANSFER,
-      variables: { input: request }
-    }).pipe(map(result => result.data!.initiateInternalTransfer));
+    return this.apollo
+      .mutate<{ initiateInternalTransfer: PaymentResponse }>({
+        mutation: INITIATE_INTERNAL_TRANSFER,
+        variables: { input: request },
+      })
+      .pipe(map((result) => result.data!.initiateInternalTransfer));
   }
 
   createSepaTransfer(request: PaymentRequest): Observable<PaymentResponse> {
-    return this.apollo.mutate<{ initiateSepaTransfer: PaymentResponse }>({
-      mutation: INITIATE_SEPA_TRANSFER,
-      variables: { input: request }
-    }).pipe(map(result => result.data!.initiateSepaTransfer));
+    return this.apollo
+      .mutate<{ initiateSepaTransfer: PaymentResponse }>({
+        mutation: INITIATE_SEPA_TRANSFER,
+        variables: { input: request },
+      })
+      .pipe(map((result) => result.data!.initiateSepaTransfer));
   }
 
   createInstantTransfer(request: PaymentRequest): Observable<PaymentResponse> {
-    return this.apollo.mutate<{ initiateInstantTransfer: PaymentResponse }>({
-      mutation: INITIATE_INSTANT_TRANSFER,
-      variables: { input: request }
-    }).pipe(map(result => result.data!.initiateInstantTransfer));
+    return this.apollo
+      .mutate<{ initiateInstantTransfer: PaymentResponse }>({
+        mutation: INITIATE_INSTANT_TRANSFER,
+        variables: { input: request },
+      })
+      .pipe(map((result) => result.data!.initiateInstantTransfer));
   }
 
   createMobileRecharge(request: PaymentRequest): Observable<PaymentResponse> {
-    return this.apollo.mutate<{ initiateMobileRecharge: PaymentResponse }>({
-      mutation: INITIATE_MOBILE_RECHARGE,
-      variables: { input: request }
-    }).pipe(map(result => result.data!.initiateMobileRecharge));
+    return this.apollo
+      .mutate<{ initiateMobileRecharge: PaymentResponse }>({
+        mutation: INITIATE_MOBILE_RECHARGE,
+        variables: { input: request },
+      })
+      .pipe(map((result) => result.data!.initiateMobileRecharge));
   }
 
   getUserPayments(): Observable<PaymentResponse[]> {
-    return this.apollo.query<{ myPayments: PaymentResponse[] }>({
-      query: MY_PAYMENTS,
-      fetchPolicy: 'network-only'
-    }).pipe(map(result => result.data?.myPayments || []));
+    return this.apollo
+      .query<{ myPayments: PaymentResponse[] }>({
+        query: MY_PAYMENTS,
+        fetchPolicy: 'network-only',
+      })
+      .pipe(map((result) => result.data?.myPayments || []));
   }
 
   authorizePayment(paymentId: number, otpCode: string): Observable<PaymentResponse> {
-    return this.apollo.mutate<{ authorizePayment: PaymentResponse }>({
-      mutation: AUTHORIZE_PAYMENT,
-      variables: { paymentId, otpCode }
-    }).pipe(map(result => result.data!.authorizePayment));
+    return this.apollo
+      .mutate<{ authorizePayment: PaymentResponse }>({
+        mutation: AUTHORIZE_PAYMENT,
+        variables: { paymentId, otpCode },
+      })
+      .pipe(map((result) => result.data!.authorizePayment));
   }
 }

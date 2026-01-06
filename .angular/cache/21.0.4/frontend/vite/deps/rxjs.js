@@ -26,7 +26,7 @@ import {
   queue,
   queueScheduler,
   range,
-  using
+  using,
 } from "./chunk-4NVJHVNJ.js";
 import {
   ArgumentOutOfRangeError,
@@ -173,7 +173,7 @@ import {
   withLatestFrom,
   zip,
   zipAll,
-  zipWith
+  zipWith,
 } from "./chunk-NLOMSAMV.js";
 import "./chunk-OC4HWNDI.js";
 export {
@@ -349,5 +349,5 @@ export {
   withLatestFrom,
   zip,
   zipAll,
-  zipWith
+  zipWith,
 };

@@ -10,7 +10,7 @@ type Query {
 
   # AI Assistant queries
   conversation(id: ID!): Conversation
-  
+
   # Payment queries
   myPayments: [PaymentResponse]
 }
@@ -20,7 +20,11 @@ type Mutation {
   updateUser(id: ID!, input: UpdateUserInput!): User
   deleteUser(id: ID!): Boolean
   createAccount(input: CreateAccountInput!): Account
-  submitKyc(input: KycRequestInput!, cinImage: Upload!, selfieImage: Upload!): KycResponse
+  submitKyc(
+    input: KycRequestInput!
+    cinImage: Upload!
+    selfieImage: Upload!
+  ): KycResponse
 
   # AI Assistant mutations
   sendChatMessage(input: ChatMessageInput!): ChatResponse
@@ -115,7 +119,6 @@ input KycRequestInput {
   cinNumber: String!
   gdprConsents: JSON
 }
-
 
 # AI Assistant Types
 type Conversation {

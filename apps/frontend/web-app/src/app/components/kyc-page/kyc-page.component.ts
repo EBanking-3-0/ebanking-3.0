@@ -7,8 +7,8 @@ import { of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 interface ConsentItem {
-  key: string;      // e.g. "MARKETING_EMAIL"
-  label: string;    // Human readable label
+  key: string; // e.g. "MARKETING_EMAIL"
+  label: string; // Human readable label
 }
 
 @Component({
@@ -35,10 +35,13 @@ export class KycPageComponent implements OnInit {
     { key: 'OPEN_BANKING_SHARING', label: 'Enable open banking data sharing' },
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+  ) {
     // Build the gdprConsents form group with false as default
     const gdprControls: any = {};
-    this.consentTypes.forEach(c => {
+    this.consentTypes.forEach((c) => {
       gdprControls[c.key] = [false]; // unchecked by default
     });
 
@@ -117,7 +120,7 @@ export class KycPageComponent implements OnInit {
           this.submissionError = message;
           this.submitting = false;
           return of(null);
-        })
+        }),
       )
       .subscribe((response: any) => {
         this.submitting = false;
@@ -132,7 +135,7 @@ export class KycPageComponent implements OnInit {
   // (your backend ignores false values anyway, but sending only true is cleaner)
   private transformConsentsToMap(consents: any): { [key: string]: boolean } {
     const map: { [key: string]: boolean } = {};
-    Object.keys(consents).forEach(key => {
+    Object.keys(consents).forEach((key) => {
       if (consents[key] === true) {
         map[key] = true;
       }

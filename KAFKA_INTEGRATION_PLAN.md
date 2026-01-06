@@ -1,13 +1,15 @@
 # Kafka Events Integration Plan
 
 ## Overview
+
 Integrate Kafka event-driven communication into all microservices in the E-Banking 3.0 system. This plan covers adding event producers (publishers) and consumers (subscribers) to each service based on their responsibilities and the event flow defined in the architecture.
 
 ## Current State Analysis
 
 ### Services with Kafka-Events Dependency Already
+
 - ✅ account-service
-- ✅ payment-service  
+- ✅ payment-service
 - ✅ notification-service
 - ✅ audit-service
 - ✅ auth-service
@@ -15,9 +17,11 @@ Integrate Kafka event-driven communication into all microservices in the E-Banki
 - ✅ crypto-service
 
 ### Services Needing Dependency
+
 - ❌ user-service (needs kafka-events dependency)
 
 ### Services Status
+
 - All services have `spring-kafka` dependency
 - Kafka infrastructure is configured in docker-compose.yml
 - No actual event publishing/consuming implementation yet
@@ -25,12 +29,15 @@ Integrate Kafka event-driven communication into all microservices in the E-Banki
 ## Integration Strategy
 
 ### Phase 1: Foundation Setup
+
 1. Add kafka-events dependency to user-service
 2. Add Kafka configuration to all service application.yml files
 3. Verify auto-configuration works
 
 ### Phase 2: Event Producers (Publishers)
+
 Integrate event publishing into services that produce events:
+
 - User Service: publish user.created, user.updated
 - Account Service: publish account.created, balance.updated
 - Payment Service: publish transaction.completed, payment.failed, fraud.detected
@@ -40,7 +47,9 @@ Integrate event publishing into services that produce events:
 - Analytics Service: publish alert.triggered
 
 ### Phase 3: Event Consumers (Subscribers)
+
 Integrate event consumption into services that react to events:
+
 - Notification Service: consume user.created, transaction.completed, fraud.detected, crypto.trade.executed, alert.triggered
 - Audit Service: consume user.created, account.created, transaction.completed, payment.failed, fraud.detected, auth.login, mfa.verified, crypto.trade.executed, notification.sent
 - Analytics Service: consume user.created, account.created, transaction.completed, crypto.trade.executed
@@ -54,6 +63,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/user-service/`
 
 **Tasks**:
+
 1. [x] Add kafka-events dependency to build.gradle
 2. [x] Add Kafka configuration to application.yml
 3. [x] Inject TypedEventProducer into UserService
@@ -62,11 +72,13 @@ Integrate event consumption into services that react to events:
 6. [x] Add source field to events (set to "user-service")
 
 **Files to Modify**:
+
 - `build.gradle` - Add dependency
 - `src/main/resources/application.yml` - Add Kafka config
 - `src/main/java/com/ebanking/user/service/UserService.java` - Add event publishing
 
 **Events to Publish**:
+
 - `user.created` - When new user is created
 - `user.updated` - When user profile is updated
 
@@ -75,6 +87,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/account-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Inject TypedEventProducer into AccountService
@@ -84,14 +97,17 @@ Integrate event consumption into services that react to events:
 7. Add source field to events
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Service classes - Add event publishing and consumption
 
 **Events to Publish**:
+
 - `account.created` - When new account is created
 - `balance.updated` - When account balance changes
 
 **Events to Consume**:
+
 - `transaction.completed` - To update account balances
 
 ### 3. Payment Service Integration
@@ -99,6 +115,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/payment-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Inject TypedEventProducer into PaymentService
@@ -108,10 +125,12 @@ Integrate event consumption into services that react to events:
 7. Add source field to events
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Service classes - Add event publishing
 
 **Events to Publish**:
+
 - `transaction.completed` - When transaction succeeds
 - `payment.failed` - When payment fails
 - `fraud.detected` - When fraud is detected
@@ -121,6 +140,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/auth-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Inject TypedEventProducer into AuthService
@@ -129,10 +149,12 @@ Integrate event consumption into services that react to events:
 6. Add source field to events
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Service classes - Add event publishing
 
 **Events to Publish**:
+
 - `auth.login` - When user logs in
 - `mfa.verified` - When MFA verification completes
 
@@ -141,6 +163,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/crypto-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Inject TypedEventProducer into CryptoService
@@ -149,13 +172,16 @@ Integrate event consumption into services that react to events:
 6. Add source field to events
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Service classes - Add event publishing and consumption
 
 **Events to Publish**:
+
 - `crypto.trade.executed` - When crypto trade completes
 
 **Events to Consume**:
+
 - `account.created` - To initialize crypto wallet for new account
 
 ### 6. Notification Service Integration
@@ -163,6 +189,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/notification-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Create NotificationConsumer class
@@ -176,11 +203,13 @@ Integrate event consumption into services that react to events:
 11. Inject TypedEventProducer for publishing
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Create `src/main/java/com/ebanking/notification/consumer/NotificationConsumer.java`
 - Service classes - Add event publishing
 
 **Events to Consume**:
+
 - `user.created` - Send welcome email
 - `transaction.completed` - Send transaction notification
 - `payment.failed` - Send failure notification
@@ -189,6 +218,7 @@ Integrate event consumption into services that react to events:
 - `alert.triggered` - Send alert notification
 
 **Events to Publish**:
+
 - `notification.sent` - After notification is sent
 
 ### 7. Audit Service Integration
@@ -196,6 +226,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/audit-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Create AuditConsumer class extending BaseEventConsumer
@@ -210,11 +241,13 @@ Integrate event consumption into services that react to events:
 5. Save audit logs to MongoDB
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Create `src/main/java/com/ebanking/audit/consumer/AuditConsumer.java`
 - Create audit log entity/repository if needed
 
 **Events to Consume**:
+
 - All events for comprehensive audit trail
 
 ### 8. Analytics Service Integration
@@ -222,6 +255,7 @@ Integrate event consumption into services that react to events:
 **Location**: `apps/services/analytics-service/`
 
 **Tasks**:
+
 1. Verify kafka-events dependency exists
 2. Add Kafka configuration to application.yml
 3. Create AnalyticsConsumer class
@@ -233,17 +267,20 @@ Integrate event consumption into services that react to events:
 7. Inject TypedEventProducer for publishing
 
 **Files to Modify**:
+
 - `src/main/resources/application.yml` - Add Kafka config
 - Create `src/main/java/com/ebanking/analytics/consumer/AnalyticsConsumer.java`
 - Service classes - Add event publishing
 
 **Events to Consume**:
+
 - `user.created` - Track user growth
 - `account.created` - Track account creation
 - `transaction.completed` - Aggregate transaction data
 - `crypto.trade.executed` - Track crypto activity
 
 **Events to Publish**:
+
 - `alert.triggered` - When budget/threshold alerts are triggered
 
 ## Configuration Template
@@ -268,6 +305,7 @@ spring:
 ```
 
 For Docker environment, use:
+
 ```yaml
 spring:
   kafka:
@@ -283,17 +321,17 @@ spring:
 @RequiredArgsConstructor
 public class YourService {
     private final TypedEventProducer eventProducer;
-    
+
     public void yourBusinessMethod() {
         // ... business logic ...
-        
+
         // Publish event
         YourEvent event = YourEvent.builder()
             .field1(value1)
             .field2(value2)
             .source("your-service")
             .build();
-            
+
         eventProducer.publishYourEvent(event);
     }
 }
@@ -306,7 +344,7 @@ public class YourService {
 @RequiredArgsConstructor
 @Slf4j
 public class YourConsumer {
-    
+
     @KafkaListener(topics = KafkaTopics.YOUR_TOPIC)
     public void handleEvent(
             @Payload YourEvent event,
@@ -328,7 +366,7 @@ public class YourConsumer {
 
 1. **Unit Tests**: Mock KafkaTemplate for producer tests
 2. **Integration Tests**: Use EmbeddedKafka for consumer tests
-3. **Manual Testing**: 
+3. **Manual Testing**:
    - Start Kafka via docker-compose
    - Trigger events through API calls
    - Verify events are published and consumed
@@ -337,6 +375,7 @@ public class YourConsumer {
 ## Verification Checklist
 
 For each service:
+
 - [ ] Kafka dependency added (if needed)
 - [ ] Kafka configuration added to application.yml
 - [ ] Event producers integrated in service classes
@@ -349,6 +388,7 @@ For each service:
 ## Order of Implementation
 
 Recommended order to minimize dependencies:
+
 1. **User Service** (foundation - other services depend on user events)
 2. **Account Service** (depends on user, publishes account events)
 3. **Auth Service** (publishes auth events)
@@ -376,4 +416,3 @@ Recommended order to minimize dependencies:
 - Implement idempotency in consumers where needed
 - Add proper logging for debugging
 - Handle errors gracefully to prevent blocking
-

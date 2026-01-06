@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
     <title>Welcome to E-Banking</title>
     <style>
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         line-height: 1.6;
         color: #333333;
         background-color: #f4f4f4;
@@ -75,7 +75,7 @@
         position: relative;
       }
       .features li:before {
-        content: '✓';
+        content: "✓";
         position: absolute;
         left: 0;
         color: #667eea;
@@ -121,7 +121,7 @@
           </ul>
         </div>
 
-        <p style="text-align: center;">
+        <p style="text-align: center">
           <a href="https://ebanking.com/login" class="button">Get Started</a>
         </p>
 
@@ -137,11 +137,10 @@
 
       <div class="footer">
         <p>
-          This email was sent to <span th:text="${email}">user@example.com</span>
+          This email was sent to
+          <span th:text="${email}">user@example.com</span>
         </p>
-        <p>
-          &copy; 2026 E-Banking Platform. All rights reserved.
-        </p>
+        <p>&copy; 2026 E-Banking Platform. All rights reserved.</p>
       </div>
     </div>
   </body>

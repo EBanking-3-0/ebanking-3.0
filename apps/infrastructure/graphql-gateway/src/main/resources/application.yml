@@ -23,7 +23,6 @@ spring:
       allowed-headers: "*"
       allow-credentials: true
 
-
 eureka:
   client:
     service-url:

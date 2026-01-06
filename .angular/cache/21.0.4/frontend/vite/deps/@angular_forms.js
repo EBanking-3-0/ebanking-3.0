@@ -1,7 +1,5 @@
 import "./chunk-B6JS5ISQ.js";
-import {
-  getDOM
-} from "./chunk-DCQPKT2A.js";
+import { getDOM } from "./chunk-DCQPKT2A.js";
 import {
   ApplicationRef,
   ChangeDetectorRef,
@@ -44,30 +42,19 @@ import {
   ɵɵdefineNgModule,
   ɵɵdirectiveInject,
   ɵɵgetInheritedFactory,
-  ɵɵlistener
+  ɵɵlistener,
 } from "./chunk-P4KDGOZN.js";
 import "./chunk-4D55VNEQ.js";
-import {
-  forkJoin
-} from "./chunk-4NVJHVNJ.js";
-import {
-  Subject,
-  from,
-  map
-} from "./chunk-NLOMSAMV.js";
-import {
-  __spreadProps,
-  __spreadValues
-} from "./chunk-OC4HWNDI.js";
+import { forkJoin } from "./chunk-4NVJHVNJ.js";
+import { Subject, from, map } from "./chunk-NLOMSAMV.js";
+import { __spreadProps, __spreadValues } from "./chunk-OC4HWNDI.js";
 
 // node_modules/@angular/forms/fesm2022/forms.mjs
 var BaseControlValueAccessor = class _BaseControlValueAccessor {
   _renderer;
   _elementRef;
-  onChange = (_) => {
-  };
-  onTouched = () => {
-  };
+  onChange = (_) => {};
+  onTouched = () => {};
   constructor(_renderer, _elementRef) {
     this._renderer = _renderer;
     this._elementRef = _elementRef;
@@ -85,43 +72,72 @@ var BaseControlValueAccessor = class _BaseControlValueAccessor {
     this.setProperty("disabled", isDisabled);
   }
   static ɵfac = function BaseControlValueAccessor_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _BaseControlValueAccessor)(ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ElementRef));
+    return new (__ngFactoryType__ || _BaseControlValueAccessor)(
+      ɵɵdirectiveInject(Renderer2),
+      ɵɵdirectiveInject(ElementRef),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
-    type: _BaseControlValueAccessor
+    type: _BaseControlValueAccessor,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BaseControlValueAccessor, [{
-    type: Directive
-  }], () => [{
-    type: Renderer2
-  }, {
-    type: ElementRef
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      BaseControlValueAccessor,
+      [
+        {
+          type: Directive,
+        },
+      ],
+      () => [
+        {
+          type: Renderer2,
+        },
+        {
+          type: ElementRef,
+        },
+      ],
+      null,
+    );
 })();
 var BuiltInControlValueAccessor = class _BuiltInControlValueAccessor extends BaseControlValueAccessor {
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵBuiltInControlValueAccessor_BaseFactory;
     return function BuiltInControlValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵBuiltInControlValueAccessor_BaseFactory || (ɵBuiltInControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_BuiltInControlValueAccessor)))(__ngFactoryType__ || _BuiltInControlValueAccessor);
+      return (
+        ɵBuiltInControlValueAccessor_BaseFactory ||
+        (ɵBuiltInControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(
+          _BuiltInControlValueAccessor,
+        ))
+      )(__ngFactoryType__ || _BuiltInControlValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _BuiltInControlValueAccessor,
-    features: [ɵɵInheritDefinitionFeature]
+    features: [ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BuiltInControlValueAccessor, [{
-    type: Directive
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      BuiltInControlValueAccessor,
+      [
+        {
+          type: Directive,
+        },
+      ],
+      null,
+      null,
+    );
 })();
-var NG_VALUE_ACCESSOR = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "NgValueAccessor" : "");
+var NG_VALUE_ACCESSOR = new InjectionToken(
+  typeof ngDevMode !== "undefined" && ngDevMode ? "NgValueAccessor" : "",
+);
 var CHECKBOX_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => CheckboxControlValueAccessor),
-  multi: true
+  multi: true,
 };
 var CheckboxControlValueAccessor = class _CheckboxControlValueAccessor extends BuiltInControlValueAccessor {
   writeValue(value) {
@@ -130,49 +146,82 @@ var CheckboxControlValueAccessor = class _CheckboxControlValueAccessor extends B
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵCheckboxControlValueAccessor_BaseFactory;
     return function CheckboxControlValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵCheckboxControlValueAccessor_BaseFactory || (ɵCheckboxControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_CheckboxControlValueAccessor)))(__ngFactoryType__ || _CheckboxControlValueAccessor);
+      return (
+        ɵCheckboxControlValueAccessor_BaseFactory ||
+        (ɵCheckboxControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(
+          _CheckboxControlValueAccessor,
+        ))
+      )(__ngFactoryType__ || _CheckboxControlValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _CheckboxControlValueAccessor,
-    selectors: [["input", "type", "checkbox", "formControlName", ""], ["input", "type", "checkbox", "formControl", ""], ["input", "type", "checkbox", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "checkbox", "formControlName", ""],
+      ["input", "type", "checkbox", "formControl", ""],
+      ["input", "type", "checkbox", "ngModel", ""],
+    ],
     hostBindings: function CheckboxControlValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("change", function CheckboxControlValueAccessor_change_HostBindingHandler($event) {
-          return ctx.onChange($event.target.checked);
-        })("blur", function CheckboxControlValueAccessor_blur_HostBindingHandler() {
-          return ctx.onTouched();
-        });
+        ɵɵlistener(
+          "change",
+          function CheckboxControlValueAccessor_change_HostBindingHandler(
+            $event,
+          ) {
+            return ctx.onChange($event.target.checked);
+          },
+        )(
+          "blur",
+          function CheckboxControlValueAccessor_blur_HostBindingHandler() {
+            return ctx.onTouched();
+          },
+        );
       }
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([CHECKBOX_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([CHECKBOX_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CheckboxControlValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]",
-      host: {
-        "(change)": "onChange($any($event.target).checked)",
-        "(blur)": "onTouched()"
-      },
-      providers: [CHECKBOX_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      CheckboxControlValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]",
+              host: {
+                "(change)": "onChange($any($event.target).checked)",
+                "(blur)": "onTouched()",
+              },
+              providers: [CHECKBOX_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var DEFAULT_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => DefaultValueAccessor),
-  multi: true
+  multi: true,
 };
 function _isAndroid() {
   const userAgent = getDOM() ? getDOM().getUserAgent() : "";
   return /android (\d+)/.test(userAgent.toLowerCase());
 }
-var COMPOSITION_BUFFER_MODE = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "CompositionEventMode" : "");
+var COMPOSITION_BUFFER_MODE = new InjectionToken(
+  typeof ngDevMode !== "undefined" && ngDevMode ? "CompositionEventMode" : "",
+);
 var DefaultValueAccessor = class _DefaultValueAccessor extends BaseControlValueAccessor {
   _compositionMode;
   _composing = false;
@@ -188,7 +237,7 @@ var DefaultValueAccessor = class _DefaultValueAccessor extends BaseControlValueA
     this.setProperty("value", normalizedValue);
   }
   _handleInput(value) {
-    if (!this._compositionMode || this._compositionMode && !this._composing) {
+    if (!this._compositionMode || (this._compositionMode && !this._composing)) {
       this.onChange(value);
     }
   }
@@ -200,55 +249,100 @@ var DefaultValueAccessor = class _DefaultValueAccessor extends BaseControlValueA
     this._compositionMode && this.onChange(value);
   }
   static ɵfac = function DefaultValueAccessor_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _DefaultValueAccessor)(ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(COMPOSITION_BUFFER_MODE, 8));
+    return new (__ngFactoryType__ || _DefaultValueAccessor)(
+      ɵɵdirectiveInject(Renderer2),
+      ɵɵdirectiveInject(ElementRef),
+      ɵɵdirectiveInject(COMPOSITION_BUFFER_MODE, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _DefaultValueAccessor,
-    selectors: [["input", "formControlName", "", 3, "type", "checkbox"], ["textarea", "formControlName", ""], ["input", "formControl", "", 3, "type", "checkbox"], ["textarea", "formControl", ""], ["input", "ngModel", "", 3, "type", "checkbox"], ["textarea", "ngModel", ""], ["", "ngDefaultControl", ""]],
+    selectors: [
+      ["input", "formControlName", "", 3, "type", "checkbox"],
+      ["textarea", "formControlName", ""],
+      ["input", "formControl", "", 3, "type", "checkbox"],
+      ["textarea", "formControl", ""],
+      ["input", "ngModel", "", 3, "type", "checkbox"],
+      ["textarea", "ngModel", ""],
+      ["", "ngDefaultControl", ""],
+    ],
     hostBindings: function DefaultValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("input", function DefaultValueAccessor_input_HostBindingHandler($event) {
-          return ctx._handleInput($event.target.value);
-        })("blur", function DefaultValueAccessor_blur_HostBindingHandler() {
+        ɵɵlistener(
+          "input",
+          function DefaultValueAccessor_input_HostBindingHandler($event) {
+            return ctx._handleInput($event.target.value);
+          },
+        )("blur", function DefaultValueAccessor_blur_HostBindingHandler() {
           return ctx.onTouched();
-        })("compositionstart", function DefaultValueAccessor_compositionstart_HostBindingHandler() {
-          return ctx._compositionStart();
-        })("compositionend", function DefaultValueAccessor_compositionend_HostBindingHandler($event) {
-          return ctx._compositionEnd($event.target.value);
-        });
+        })(
+          "compositionstart",
+          function DefaultValueAccessor_compositionstart_HostBindingHandler() {
+            return ctx._compositionStart();
+          },
+        )(
+          "compositionend",
+          function DefaultValueAccessor_compositionend_HostBindingHandler(
+            $event,
+          ) {
+            return ctx._compositionEnd($event.target.value);
+          },
+        );
       }
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([DEFAULT_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([DEFAULT_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DefaultValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]",
-      host: {
-        "(input)": "_handleInput($any($event.target).value)",
-        "(blur)": "onTouched()",
-        "(compositionstart)": "_compositionStart()",
-        "(compositionend)": "_compositionEnd($any($event.target).value)"
-      },
-      providers: [DEFAULT_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], () => [{
-    type: Renderer2
-  }, {
-    type: ElementRef
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [COMPOSITION_BUFFER_MODE]
-    }]
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      DefaultValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]",
+              host: {
+                "(input)": "_handleInput($any($event.target).value)",
+                "(blur)": "onTouched()",
+                "(compositionstart)": "_compositionStart()",
+                "(compositionend)":
+                  "_compositionEnd($any($event.target).value)",
+              },
+              providers: [DEFAULT_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: Renderer2,
+        },
+        {
+          type: ElementRef,
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [COMPOSITION_BUFFER_MODE],
+            },
+          ],
+        },
+      ],
+      null,
+    );
 })();
 function isEmptyInputValue(value) {
   return value == null || lengthOrSize(value) === 0;
@@ -263,9 +357,14 @@ function lengthOrSize(value) {
   }
   return null;
 }
-var NG_VALIDATORS = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "NgValidators" : "");
-var NG_ASYNC_VALIDATORS = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "NgAsyncValidators" : "");
-var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+var NG_VALIDATORS = new InjectionToken(
+  typeof ngDevMode !== "undefined" && ngDevMode ? "NgValidators" : "",
+);
+var NG_ASYNC_VALIDATORS = new InjectionToken(
+  typeof ngDevMode !== "undefined" && ngDevMode ? "NgAsyncValidators" : "",
+);
+var EMAIL_REGEXP =
+  /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 var Validators = class {
   static min(min) {
     return minValidator(min);
@@ -307,12 +406,14 @@ function minValidator(min) {
       return null;
     }
     const value = parseFloat(control.value);
-    return !isNaN(value) && value < min ? {
-      "min": {
-        "min": min,
-        "actual": control.value
-      }
-    } : null;
+    return !isNaN(value) && value < min
+      ? {
+          min: {
+            min: min,
+            actual: control.value,
+          },
+        }
+      : null;
   };
 }
 function maxValidator(max) {
@@ -321,31 +422,39 @@ function maxValidator(max) {
       return null;
     }
     const value = parseFloat(control.value);
-    return !isNaN(value) && value > max ? {
-      "max": {
-        "max": max,
-        "actual": control.value
-      }
-    } : null;
+    return !isNaN(value) && value > max
+      ? {
+          max: {
+            max: max,
+            actual: control.value,
+          },
+        }
+      : null;
   };
 }
 function requiredValidator(control) {
-  return isEmptyInputValue(control.value) ? {
-    "required": true
-  } : null;
+  return isEmptyInputValue(control.value)
+    ? {
+        required: true,
+      }
+    : null;
 }
 function requiredTrueValidator(control) {
-  return control.value === true ? null : {
-    "required": true
-  };
+  return control.value === true
+    ? null
+    : {
+        required: true,
+      };
 }
 function emailValidator(control) {
   if (isEmptyInputValue(control.value)) {
     return null;
   }
-  return EMAIL_REGEXP.test(control.value) ? null : {
-    "email": true
-  };
+  return EMAIL_REGEXP.test(control.value)
+    ? null
+    : {
+        email: true,
+      };
 }
 function minLengthValidator(minLength) {
   return (control) => {
@@ -353,12 +462,14 @@ function minLengthValidator(minLength) {
     if (length === null || length === 0) {
       return null;
     }
-    return length < minLength ? {
-      "minlength": {
-        "requiredLength": minLength,
-        "actualLength": length
-      }
-    } : null;
+    return length < minLength
+      ? {
+          minlength: {
+            requiredLength: minLength,
+            actualLength: length,
+          },
+        }
+      : null;
   };
 }
 function maxLengthValidator(maxLength) {
@@ -366,10 +477,10 @@ function maxLengthValidator(maxLength) {
     const length = control.value?.length ?? lengthOrSize(control.value);
     if (length !== null && length > maxLength) {
       return {
-        "maxlength": {
-          "requiredLength": maxLength,
-          "actualLength": length
-        }
+        maxlength: {
+          requiredLength: maxLength,
+          actualLength: length,
+        },
       };
     }
     return null;
@@ -394,12 +505,14 @@ function patternValidator(pattern) {
       return null;
     }
     const value = control.value;
-    return regex.test(value) ? null : {
-      "pattern": {
-        "requiredPattern": regexStr,
-        "actualValue": value
-      }
-    };
+    return regex.test(value)
+      ? null
+      : {
+          pattern: {
+            requiredPattern: regexStr,
+            actualValue: value,
+          },
+        };
   };
 }
 function nullValidator(control) {
@@ -413,7 +526,8 @@ function toObservable(value) {
   if ((typeof ngDevMode === "undefined" || ngDevMode) && !isSubscribable(obs)) {
     let errorMessage = `Expected async validator to return Promise or Observable.`;
     if (typeof value === "object") {
-      errorMessage += " Are you using a synchronous validator where an async validator is expected?";
+      errorMessage +=
+        " Are you using a synchronous validator where an async validator is expected?";
     }
     throw new RuntimeError(-1101, errorMessage);
   }
@@ -422,7 +536,8 @@ function toObservable(value) {
 function mergeErrors(arrayOfErrors) {
   let res = {};
   arrayOfErrors.forEach((errors) => {
-    res = errors != null ? __spreadValues(__spreadValues({}, res), errors) : res;
+    res =
+      errors != null ? __spreadValues(__spreadValues({}, res), errors) : res;
   });
   return Object.keys(res).length === 0 ? null : res;
 }
@@ -441,7 +556,7 @@ function compose(validators) {
   if (!validators) return null;
   const presentValidators = validators.filter(isPresent);
   if (presentValidators.length == 0) return null;
-  return function(control) {
+  return function (control) {
     return mergeErrors(executeValidators(control, presentValidators));
   };
 }
@@ -452,17 +567,23 @@ function composeAsync(validators) {
   if (!validators) return null;
   const presentValidators = validators.filter(isPresent);
   if (presentValidators.length == 0) return null;
-  return function(control) {
-    const observables = executeValidators(control, presentValidators).map(toObservable);
+  return function (control) {
+    const observables = executeValidators(control, presentValidators).map(
+      toObservable,
+    );
     return forkJoin(observables).pipe(map(mergeErrors));
   };
 }
 function composeAsyncValidators(validators) {
-  return validators != null ? composeAsync(normalizeValidators(validators)) : null;
+  return validators != null
+    ? composeAsync(normalizeValidators(validators))
+    : null;
 }
 function mergeValidators(controlValidators, dirValidator) {
   if (controlValidators === null) return [dirValidator];
-  return Array.isArray(controlValidators) ? [...controlValidators, dirValidator] : [controlValidators, dirValidator];
+  return Array.isArray(controlValidators)
+    ? [...controlValidators, dirValidator]
+    : [controlValidators, dirValidator];
 }
 function getControlValidators(control) {
   return control._rawValidators;
@@ -475,7 +596,9 @@ function makeValidatorsArray(validators) {
   return Array.isArray(validators) ? validators : [validators];
 }
 function hasValidator(validators, validator) {
-  return Array.isArray(validators) ? validators.includes(validator) : validators === validator;
+  return Array.isArray(validators)
+    ? validators.includes(validator)
+    : validators === validator;
 }
 function addValidators(validators, currentValidators) {
   const current = makeValidatorsArray(currentValidators);
@@ -488,7 +611,9 @@ function addValidators(validators, currentValidators) {
   return current;
 }
 function removeValidators(validators, currentValidators) {
-  return makeValidatorsArray(currentValidators).filter((v) => !hasValidator(validators, v));
+  return makeValidatorsArray(currentValidators).filter(
+    (v) => !hasValidator(validators, v),
+  );
 }
 var AbstractControlDirective = class {
   get value() {
@@ -546,7 +671,9 @@ var AbstractControlDirective = class {
   }
   _setAsyncValidators(validators) {
     this._rawAsyncValidators = validators || [];
-    this._composedAsyncValidatorFn = composeAsyncValidators(this._rawAsyncValidators);
+    this._composedAsyncValidatorFn = composeAsyncValidators(
+      this._rawAsyncValidators,
+    );
   }
   get validator() {
     return this._composedValidatorFn || null;
@@ -627,81 +754,142 @@ var ngControlStatusHost = {
   "[class.ng-dirty]": "isDirty",
   "[class.ng-valid]": "isValid",
   "[class.ng-invalid]": "isInvalid",
-  "[class.ng-pending]": "isPending"
+  "[class.ng-pending]": "isPending",
 };
 var NgControlStatus = class _NgControlStatus extends AbstractControlStatus {
   constructor(cd) {
     super(cd);
   }
   static ɵfac = function NgControlStatus_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgControlStatus)(ɵɵdirectiveInject(NgControl, 2));
+    return new (__ngFactoryType__ || _NgControlStatus)(
+      ɵɵdirectiveInject(NgControl, 2),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgControlStatus,
-    selectors: [["", "formControlName", ""], ["", "ngModel", ""], ["", "formControl", ""]],
+    selectors: [
+      ["", "formControlName", ""],
+      ["", "ngModel", ""],
+      ["", "formControl", ""],
+    ],
     hostVars: 14,
     hostBindings: function NgControlStatus_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵclassProp("ng-untouched", ctx.isUntouched)("ng-touched", ctx.isTouched)("ng-pristine", ctx.isPristine)("ng-dirty", ctx.isDirty)("ng-valid", ctx.isValid)("ng-invalid", ctx.isInvalid)("ng-pending", ctx.isPending);
+        ɵɵclassProp("ng-untouched", ctx.isUntouched)(
+          "ng-touched",
+          ctx.isTouched,
+        )("ng-pristine", ctx.isPristine)("ng-dirty", ctx.isDirty)(
+          "ng-valid",
+          ctx.isValid,
+        )("ng-invalid", ctx.isInvalid)("ng-pending", ctx.isPending);
       }
     },
     standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    features: [ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgControlStatus, [{
-    type: Directive,
-    args: [{
-      selector: "[formControlName],[ngModel],[formControl]",
-      host: ngControlStatusHost,
-      standalone: false
-    }]
-  }], () => [{
-    type: NgControl,
-    decorators: [{
-      type: Self
-    }]
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgControlStatus,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formControlName],[ngModel],[formControl]",
+              host: ngControlStatusHost,
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: NgControl,
+          decorators: [
+            {
+              type: Self,
+            },
+          ],
+        },
+      ],
+      null,
+    );
 })();
 var NgControlStatusGroup = class _NgControlStatusGroup extends AbstractControlStatus {
   constructor(cd) {
     super(cd);
   }
   static ɵfac = function NgControlStatusGroup_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgControlStatusGroup)(ɵɵdirectiveInject(ControlContainer, 10));
+    return new (__ngFactoryType__ || _NgControlStatusGroup)(
+      ɵɵdirectiveInject(ControlContainer, 10),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgControlStatusGroup,
-    selectors: [["", "formGroupName", ""], ["", "formArrayName", ""], ["", "ngModelGroup", ""], ["", "formGroup", ""], ["", "formArray", ""], ["form", 3, "ngNoForm", ""], ["", "ngForm", ""]],
+    selectors: [
+      ["", "formGroupName", ""],
+      ["", "formArrayName", ""],
+      ["", "ngModelGroup", ""],
+      ["", "formGroup", ""],
+      ["", "formArray", ""],
+      ["form", 3, "ngNoForm", ""],
+      ["", "ngForm", ""],
+    ],
     hostVars: 16,
     hostBindings: function NgControlStatusGroup_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵclassProp("ng-untouched", ctx.isUntouched)("ng-touched", ctx.isTouched)("ng-pristine", ctx.isPristine)("ng-dirty", ctx.isDirty)("ng-valid", ctx.isValid)("ng-invalid", ctx.isInvalid)("ng-pending", ctx.isPending)("ng-submitted", ctx.isSubmitted);
+        ɵɵclassProp("ng-untouched", ctx.isUntouched)(
+          "ng-touched",
+          ctx.isTouched,
+        )("ng-pristine", ctx.isPristine)("ng-dirty", ctx.isDirty)(
+          "ng-valid",
+          ctx.isValid,
+        )("ng-invalid", ctx.isInvalid)("ng-pending", ctx.isPending)(
+          "ng-submitted",
+          ctx.isSubmitted,
+        );
       }
     },
     standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    features: [ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgControlStatusGroup, [{
-    type: Directive,
-    args: [{
-      selector: "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],[formArray],form:not([ngNoForm]),[ngForm]",
-      host: __spreadProps(__spreadValues({}, ngControlStatusHost), {
-        "[class.ng-submitted]": "isSubmitted"
-      }),
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }]
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgControlStatusGroup,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],[formArray],form:not([ngNoForm]),[ngForm]",
+              host: __spreadProps(__spreadValues({}, ngControlStatusHost), {
+                "[class.ng-submitted]": "isSubmitted",
+              }),
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+          ],
+        },
+      ],
+      null,
+    );
 })();
 var formControlNameExample = `
   <div [formGroup]="myGroup">
@@ -753,14 +941,17 @@ var ngModelWithFormGroupExample = `
   </div>
 `;
 function controlParentException(nameOrIndex) {
-  return new RuntimeError(1050, `formControlName must be used with a parent formGroup or formArray directive. You'll want to add a formGroup/formArray
+  return new RuntimeError(
+    1050,
+    `formControlName must be used with a parent formGroup or formArray directive. You'll want to add a formGroup/formArray
       directive and pass it an existing FormGroup/FormArray instance (you can create one in your class).
 
       ${describeFormControl(nameOrIndex)}
 
     Example:
 
-    ${formControlNameExample}`);
+    ${formControlNameExample}`,
+  );
 }
 function describeFormControl(nameOrIndex) {
   if (nameOrIndex == null || nameOrIndex === "") {
@@ -770,7 +961,9 @@ function describeFormControl(nameOrIndex) {
   return `Affected Form Control ${valueType}: "${nameOrIndex}"`;
 }
 function ngModelGroupException() {
-  return new RuntimeError(1051, `formControlName cannot be used with an ngModelGroup parent. It is only compatible with parents
+  return new RuntimeError(
+    1051,
+    `formControlName cannot be used with an ngModelGroup parent. It is only compatible with parents
       that also have a "form" prefix: formGroupName, formArrayName, or formGroup.
 
       Option 1:  Update the parent to be formGroupName (reactive form strategy)
@@ -779,30 +972,40 @@ function ngModelGroupException() {
 
       Option 2: Use ngModel instead of formControlName (template-driven strategy)
 
-      ${ngModelGroupExample}`);
+      ${ngModelGroupExample}`,
+  );
 }
 function missingFormException() {
-  return new RuntimeError(1052, `formGroup expects a FormGroup instance. Please pass one in.
+  return new RuntimeError(
+    1052,
+    `formGroup expects a FormGroup instance. Please pass one in.
 
       Example:
 
-      ${formControlNameExample}`);
+      ${formControlNameExample}`,
+  );
 }
 function groupParentException() {
-  return new RuntimeError(1053, `formGroupName must be used with a parent formGroup directive.  You'll want to add a formGroup
+  return new RuntimeError(
+    1053,
+    `formGroupName must be used with a parent formGroup directive.  You'll want to add a formGroup
     directive and pass it an existing FormGroup instance (you can create one in your class).
 
     Example:
 
-    ${formGroupNameExample}`);
+    ${formGroupNameExample}`,
+  );
 }
 function arrayParentException() {
-  return new RuntimeError(1054, `formArrayName must be used with a parent formGroup directive.  You'll want to add a formGroup
+  return new RuntimeError(
+    1054,
+    `formArrayName must be used with a parent formGroup directive.  You'll want to add a formGroup
       directive and pass it an existing FormGroup instance (you can create one in your class).
 
       Example:
 
-      ${formArrayNameExample}`);
+      ${formArrayNameExample}`,
+  );
 }
 var disabledAttrWarning = `
   It looks like you're using the disabled attribute with a reactive form directive. If you set disabled to true
@@ -865,8 +1068,7 @@ var VALID = "VALID";
 var INVALID = "INVALID";
 var PENDING = "PENDING";
 var DISABLED = "DISABLED";
-var ControlEvent = class {
-};
+var ControlEvent = class {};
 var ValueChangeEvent = class extends ControlEvent {
   value;
   source;
@@ -918,10 +1120,16 @@ var FormResetEvent = class extends ControlEvent {
   }
 };
 function pickValidators(validatorOrOpts) {
-  return (isOptionsObj(validatorOrOpts) ? validatorOrOpts.validators : validatorOrOpts) || null;
+  return (
+    (isOptionsObj(validatorOrOpts)
+      ? validatorOrOpts.validators
+      : validatorOrOpts) || null
+  );
 }
 function coerceToValidator(validator) {
-  return Array.isArray(validator) ? composeValidators(validator) : validator || null;
+  return Array.isArray(validator)
+    ? composeValidators(validator)
+    : validator || null;
 }
 function pickAsyncValidators(asyncValidator, validatorOrOpts) {
   if (typeof ngDevMode === "undefined" || ngDevMode) {
@@ -929,28 +1137,53 @@ function pickAsyncValidators(asyncValidator, validatorOrOpts) {
       console.warn(asyncValidatorsDroppedWithOptsWarning);
     }
   }
-  return (isOptionsObj(validatorOrOpts) ? validatorOrOpts.asyncValidators : asyncValidator) || null;
+  return (
+    (isOptionsObj(validatorOrOpts)
+      ? validatorOrOpts.asyncValidators
+      : asyncValidator) || null
+  );
 }
 function coerceToAsyncValidator(asyncValidator) {
-  return Array.isArray(asyncValidator) ? composeAsyncValidators(asyncValidator) : asyncValidator || null;
+  return Array.isArray(asyncValidator)
+    ? composeAsyncValidators(asyncValidator)
+    : asyncValidator || null;
 }
 function isOptionsObj(validatorOrOpts) {
-  return validatorOrOpts != null && !Array.isArray(validatorOrOpts) && typeof validatorOrOpts === "object";
+  return (
+    validatorOrOpts != null &&
+    !Array.isArray(validatorOrOpts) &&
+    typeof validatorOrOpts === "object"
+  );
 }
 function assertControlPresent(parent, isGroup, key) {
   const controls = parent.controls;
   const collection = isGroup ? Object.keys(controls) : controls;
   if (!collection.length) {
-    throw new RuntimeError(1e3, typeof ngDevMode === "undefined" || ngDevMode ? noControlsError(isGroup) : "");
+    throw new RuntimeError(
+      1e3,
+      typeof ngDevMode === "undefined" || ngDevMode
+        ? noControlsError(isGroup)
+        : "",
+    );
   }
   if (!controls[key]) {
-    throw new RuntimeError(1001, typeof ngDevMode === "undefined" || ngDevMode ? missingControlError(isGroup, key) : "");
+    throw new RuntimeError(
+      1001,
+      typeof ngDevMode === "undefined" || ngDevMode
+        ? missingControlError(isGroup, key)
+        : "",
+    );
   }
 }
 function assertAllValuesPresent(control, isGroup, value) {
   control._forEachChild((_, key) => {
     if (value[key] === void 0) {
-      throw new RuntimeError(1002, typeof ngDevMode === "undefined" || ngDevMode ? missingControlValueError(isGroup, key) : "");
+      throw new RuntimeError(
+        1002,
+        typeof ngDevMode === "undefined" || ngDevMode
+          ? missingControlValueError(isGroup, key)
+          : "",
+      );
     }
   });
 }
@@ -958,8 +1191,7 @@ var AbstractControl = class {
   _pendingDirty = false;
   _hasOwnPendingAsyncValidator = null;
   _pendingTouched = false;
-  _onCollectionChange = () => {
-  };
+  _onCollectionChange = () => {};
   _updateOn;
   _parent = null;
   _asyncValidationSubscription;
@@ -982,7 +1214,8 @@ var AbstractControl = class {
     return this._composedAsyncValidatorFn;
   }
   set asyncValidator(asyncValidatorFn) {
-    this._rawAsyncValidators = this._composedAsyncValidatorFn = asyncValidatorFn;
+    this._rawAsyncValidators = this._composedAsyncValidatorFn =
+      asyncValidatorFn;
   }
   get parent() {
     return this._parent;
@@ -993,12 +1226,26 @@ var AbstractControl = class {
   set status(v) {
     untracked(() => this.statusReactive.set(v));
   }
-  _status = computed(() => this.statusReactive(), ...ngDevMode ? [{
-    debugName: "_status"
-  }] : []);
-  statusReactive = signal(void 0, ...ngDevMode ? [{
-    debugName: "statusReactive"
-  }] : []);
+  _status = computed(
+    () => this.statusReactive(),
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_status",
+          },
+        ]
+      : []),
+  );
+  statusReactive = signal(
+    void 0,
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "statusReactive",
+          },
+        ]
+      : []),
+  );
   get valid() {
     return this.status === VALID;
   }
@@ -1021,12 +1268,26 @@ var AbstractControl = class {
   set pristine(v) {
     untracked(() => this.pristineReactive.set(v));
   }
-  _pristine = computed(() => this.pristineReactive(), ...ngDevMode ? [{
-    debugName: "_pristine"
-  }] : []);
-  pristineReactive = signal(true, ...ngDevMode ? [{
-    debugName: "pristineReactive"
-  }] : []);
+  _pristine = computed(
+    () => this.pristineReactive(),
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_pristine",
+          },
+        ]
+      : []),
+  );
+  pristineReactive = signal(
+    true,
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "pristineReactive",
+          },
+        ]
+      : []),
+  );
   get dirty() {
     return !this.pristine;
   }
@@ -1036,12 +1297,26 @@ var AbstractControl = class {
   set touched(v) {
     untracked(() => this.touchedReactive.set(v));
   }
-  _touched = computed(() => this.touchedReactive(), ...ngDevMode ? [{
-    debugName: "_touched"
-  }] : []);
-  touchedReactive = signal(false, ...ngDevMode ? [{
-    debugName: "touchedReactive"
-  }] : []);
+  _touched = computed(
+    () => this.touchedReactive(),
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_touched",
+          },
+        ]
+      : []),
+  );
+  touchedReactive = signal(
+    false,
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "touchedReactive",
+          },
+        ]
+      : []),
+  );
   get untouched() {
     return !this.touched;
   }
@@ -1050,7 +1325,11 @@ var AbstractControl = class {
   valueChanges;
   statusChanges;
   get updateOn() {
-    return this._updateOn ? this._updateOn : this.parent ? this.parent.updateOn : "change";
+    return this._updateOn
+      ? this._updateOn
+      : this.parent
+        ? this.parent.updateOn
+        : "change";
   }
   setValidators(validators) {
     this._assignValidators(validators);
@@ -1062,13 +1341,17 @@ var AbstractControl = class {
     this.setValidators(addValidators(validators, this._rawValidators));
   }
   addAsyncValidators(validators) {
-    this.setAsyncValidators(addValidators(validators, this._rawAsyncValidators));
+    this.setAsyncValidators(
+      addValidators(validators, this._rawAsyncValidators),
+    );
   }
   removeValidators(validators) {
     this.setValidators(removeValidators(validators, this._rawValidators));
   }
   removeAsyncValidators(validators) {
-    this.setAsyncValidators(removeValidators(validators, this._rawAsyncValidators));
+    this.setAsyncValidators(
+      removeValidators(validators, this._rawAsyncValidators),
+    );
   }
   hasValidator(validator) {
     return hasValidator(this._rawValidators, validator);
@@ -1087,9 +1370,11 @@ var AbstractControl = class {
     this.touched = true;
     const sourceControl = opts.sourceControl ?? this;
     if (this._parent && !opts.onlySelf) {
-      this._parent.markAsTouched(__spreadProps(__spreadValues({}, opts), {
-        sourceControl
-      }));
+      this._parent.markAsTouched(
+        __spreadProps(__spreadValues({}, opts), {
+          sourceControl,
+        }),
+      );
     }
     if (changed && opts.emitEvent !== false) {
       this._events.next(new TouchedChangeEvent(true, sourceControl));
@@ -1099,7 +1384,7 @@ var AbstractControl = class {
     this.markAsDirty({
       onlySelf: true,
       emitEvent: opts.emitEvent,
-      sourceControl: this
+      sourceControl: this,
     });
     this._forEachChild((control) => control.markAllAsDirty(opts));
   }
@@ -1107,7 +1392,7 @@ var AbstractControl = class {
     this.markAsTouched({
       onlySelf: true,
       emitEvent: opts.emitEvent,
-      sourceControl: this
+      sourceControl: this,
     });
     this._forEachChild((control) => control.markAllAsTouched(opts));
   }
@@ -1120,7 +1405,7 @@ var AbstractControl = class {
       control.markAsUntouched({
         onlySelf: true,
         emitEvent: opts.emitEvent,
-        sourceControl
+        sourceControl,
       });
     });
     if (this._parent && !opts.onlySelf) {
@@ -1135,9 +1420,11 @@ var AbstractControl = class {
     this.pristine = false;
     const sourceControl = opts.sourceControl ?? this;
     if (this._parent && !opts.onlySelf) {
-      this._parent.markAsDirty(__spreadProps(__spreadValues({}, opts), {
-        sourceControl
-      }));
+      this._parent.markAsDirty(
+        __spreadProps(__spreadValues({}, opts), {
+          sourceControl,
+        }),
+      );
     }
     if (changed && opts.emitEvent !== false) {
       this._events.next(new PristineChangeEvent(false, sourceControl));
@@ -1151,7 +1438,7 @@ var AbstractControl = class {
     this._forEachChild((control) => {
       control.markAsPristine({
         onlySelf: true,
-        emitEvent: opts.emitEvent
+        emitEvent: opts.emitEvent,
       });
     });
     if (this._parent && !opts.onlySelf) {
@@ -1169,9 +1456,11 @@ var AbstractControl = class {
       this.statusChanges.emit(this.status);
     }
     if (this._parent && !opts.onlySelf) {
-      this._parent.markAsPending(__spreadProps(__spreadValues({}, opts), {
-        sourceControl
-      }));
+      this._parent.markAsPending(
+        __spreadProps(__spreadValues({}, opts), {
+          sourceControl,
+        }),
+      );
     }
   }
   disable(opts = {}) {
@@ -1179,9 +1468,11 @@ var AbstractControl = class {
     this.status = DISABLED;
     this.errors = null;
     this._forEachChild((control) => {
-      control.disable(__spreadProps(__spreadValues({}, opts), {
-        onlySelf: true
-      }));
+      control.disable(
+        __spreadProps(__spreadValues({}, opts), {
+          onlySelf: true,
+        }),
+      );
     });
     this._updateValue();
     const sourceControl = opts.sourceControl ?? this;
@@ -1191,26 +1482,34 @@ var AbstractControl = class {
       this.valueChanges.emit(this.value);
       this.statusChanges.emit(this.status);
     }
-    this._updateAncestors(__spreadProps(__spreadValues({}, opts), {
-      skipPristineCheck
-    }), this);
+    this._updateAncestors(
+      __spreadProps(__spreadValues({}, opts), {
+        skipPristineCheck,
+      }),
+      this,
+    );
     this._onDisabledChange.forEach((changeFn) => changeFn(true));
   }
   enable(opts = {}) {
     const skipPristineCheck = this._parentMarkedDirty(opts.onlySelf);
     this.status = VALID;
     this._forEachChild((control) => {
-      control.enable(__spreadProps(__spreadValues({}, opts), {
-        onlySelf: true
-      }));
+      control.enable(
+        __spreadProps(__spreadValues({}, opts), {
+          onlySelf: true,
+        }),
+      );
     });
     this.updateValueAndValidity({
       onlySelf: true,
-      emitEvent: opts.emitEvent
+      emitEvent: opts.emitEvent,
     });
-    this._updateAncestors(__spreadProps(__spreadValues({}, opts), {
-      skipPristineCheck
-    }), this);
+    this._updateAncestors(
+      __spreadProps(__spreadValues({}, opts), {
+        skipPristineCheck,
+      }),
+      this,
+    );
     this._onDisabledChange.forEach((changeFn) => changeFn(false));
   }
   _updateAncestors(opts, sourceControl) {
@@ -1247,18 +1546,22 @@ var AbstractControl = class {
       this.statusChanges.emit(this.status);
     }
     if (this._parent && !opts.onlySelf) {
-      this._parent.updateValueAndValidity(__spreadProps(__spreadValues({}, opts), {
-        sourceControl
-      }));
+      this._parent.updateValueAndValidity(
+        __spreadProps(__spreadValues({}, opts), {
+          sourceControl,
+        }),
+      );
     }
   }
-  _updateTreeValidity(opts = {
-    emitEvent: true
-  }) {
+  _updateTreeValidity(
+    opts = {
+      emitEvent: true,
+    },
+  ) {
     this._forEachChild((ctrl) => ctrl._updateTreeValidity(opts));
     this.updateValueAndValidity({
       onlySelf: true,
-      emitEvent: opts.emitEvent
+      emitEvent: opts.emitEvent,
     });
   }
   _setInitialStatus() {
@@ -1272,14 +1575,14 @@ var AbstractControl = class {
       this.status = PENDING;
       this._hasOwnPendingAsyncValidator = {
         emitEvent: emitEvent !== false,
-        shouldHaveEmitted: shouldHaveEmitted !== false
+        shouldHaveEmitted: shouldHaveEmitted !== false,
       };
       const obs = toObservable(this.asyncValidator(this));
       this._asyncValidationSubscription = obs.subscribe((errors) => {
         this._hasOwnPendingAsyncValidator = null;
         this.setErrors(errors, {
           emitEvent,
-          shouldHaveEmitted
+          shouldHaveEmitted,
         });
       });
     }
@@ -1287,7 +1590,10 @@ var AbstractControl = class {
   _cancelExistingSubscription() {
     if (this._asyncValidationSubscription) {
       this._asyncValidationSubscription.unsubscribe();
-      const shouldHaveEmitted = (this._hasOwnPendingAsyncValidator?.emitEvent || this._hasOwnPendingAsyncValidator?.shouldHaveEmitted) ?? false;
+      const shouldHaveEmitted =
+        (this._hasOwnPendingAsyncValidator?.emitEvent ||
+          this._hasOwnPendingAsyncValidator?.shouldHaveEmitted) ??
+        false;
       this._hasOwnPendingAsyncValidator = null;
       return shouldHaveEmitted;
     }
@@ -1295,14 +1601,21 @@ var AbstractControl = class {
   }
   setErrors(errors, opts = {}) {
     this.errors = errors;
-    this._updateControlsErrors(opts.emitEvent !== false, this, opts.shouldHaveEmitted);
+    this._updateControlsErrors(
+      opts.emitEvent !== false,
+      this,
+      opts.shouldHaveEmitted,
+    );
   }
   get(path) {
     let currPath = path;
     if (currPath == null) return null;
     if (!Array.isArray(currPath)) currPath = currPath.split(".");
     if (currPath.length === 0) return null;
-    return currPath.reduce((control, name) => control && control._find(name), this);
+    return currPath.reduce(
+      (control, name) => control && control._find(name),
+      this,
+    );
   }
   getError(errorCode, path) {
     const control = path ? this.get(path) : this;
@@ -1327,7 +1640,11 @@ var AbstractControl = class {
       this._events.next(new StatusChangeEvent(this.status, changedControl));
     }
     if (this._parent) {
-      this._parent._updateControlsErrors(emitEvent, changedControl, shouldHaveEmitted);
+      this._parent._updateControlsErrors(
+        emitEvent,
+        changedControl,
+        shouldHaveEmitted,
+      );
     }
   }
   _initObservables() {
@@ -1337,7 +1654,11 @@ var AbstractControl = class {
   _calculateStatus() {
     if (this._allControlsDisabled()) return DISABLED;
     if (this.errors) return INVALID;
-    if (this._hasOwnPendingAsyncValidator || this._anyControlsHaveStatus(PENDING)) return PENDING;
+    if (
+      this._hasOwnPendingAsyncValidator ||
+      this._anyControlsHaveStatus(PENDING)
+    )
+      return PENDING;
     if (this._anyControlsHaveStatus(INVALID)) return INVALID;
     return VALID;
   }
@@ -1385,25 +1706,35 @@ var AbstractControl = class {
     return null;
   }
   _assignValidators(validators) {
-    this._rawValidators = Array.isArray(validators) ? validators.slice() : validators;
+    this._rawValidators = Array.isArray(validators)
+      ? validators.slice()
+      : validators;
     this._composedValidatorFn = coerceToValidator(this._rawValidators);
   }
   _assignAsyncValidators(validators) {
-    this._rawAsyncValidators = Array.isArray(validators) ? validators.slice() : validators;
-    this._composedAsyncValidatorFn = coerceToAsyncValidator(this._rawAsyncValidators);
+    this._rawAsyncValidators = Array.isArray(validators)
+      ? validators.slice()
+      : validators;
+    this._composedAsyncValidatorFn = coerceToAsyncValidator(
+      this._rawAsyncValidators,
+    );
   }
 };
 var FormGroup = class extends AbstractControl {
   constructor(controls, validatorOrOpts, asyncValidator) {
-    super(pickValidators(validatorOrOpts), pickAsyncValidators(asyncValidator, validatorOrOpts));
-    (typeof ngDevMode === "undefined" || ngDevMode) && validateFormGroupControls(controls);
+    super(
+      pickValidators(validatorOrOpts),
+      pickAsyncValidators(asyncValidator, validatorOrOpts),
+    );
+    (typeof ngDevMode === "undefined" || ngDevMode) &&
+      validateFormGroupControls(controls);
     this.controls = controls;
     this._initObservables();
     this._setUpdateStrategy(validatorOrOpts);
     this._setUpControls();
     this.updateValueAndValidity({
       onlySelf: true,
-      emitEvent: !!this.asyncValidator
+      emitEvent: !!this.asyncValidator,
     });
   }
   controls;
@@ -1417,31 +1748,34 @@ var FormGroup = class extends AbstractControl {
   addControl(name, control, options = {}) {
     this.registerControl(name, control);
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
     this._onCollectionChange();
   }
   removeControl(name, options = {}) {
-    if (this.controls[name]) this.controls[name]._registerOnCollectionChange(() => {
-    });
+    if (this.controls[name])
+      this.controls[name]._registerOnCollectionChange(() => {});
     delete this.controls[name];
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
     this._onCollectionChange();
   }
   setControl(name, control, options = {}) {
-    if (this.controls[name]) this.controls[name]._registerOnCollectionChange(() => {
-    });
+    if (this.controls[name])
+      this.controls[name]._registerOnCollectionChange(() => {});
     delete this.controls[name];
     if (control) this.registerControl(name, control);
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
     this._onCollectionChange();
   }
   contains(controlName) {
-    return this.controls.hasOwnProperty(controlName) && this.controls[controlName].enabled;
+    return (
+      this.controls.hasOwnProperty(controlName) &&
+      this.controls[controlName].enabled
+    );
   }
   setValue(value, options = {}) {
     assertAllValuesPresent(this, true, value);
@@ -1449,7 +1783,7 @@ var FormGroup = class extends AbstractControl {
       assertControlPresent(this, true, name);
       this.controls[name].setValue(value[name], {
         onlySelf: true,
-        emitEvent: options.emitEvent
+        emitEvent: options.emitEvent,
       });
     });
     this.updateValueAndValidity(options);
@@ -1461,7 +1795,7 @@ var FormGroup = class extends AbstractControl {
       if (control) {
         control.patchValue(value[name], {
           onlySelf: true,
-          emitEvent: options.emitEvent
+          emitEvent: options.emitEvent,
         });
       }
     });
@@ -1469,9 +1803,12 @@ var FormGroup = class extends AbstractControl {
   }
   reset(value = {}, options = {}) {
     this._forEachChild((control, name) => {
-      control.reset(value ? value[name] : null, __spreadProps(__spreadValues({}, options), {
-        onlySelf: true
-      }));
+      control.reset(
+        value ? value[name] : null,
+        __spreadProps(__spreadValues({}, options), {
+          onlySelf: true,
+        }),
+      );
     });
     this._updatePristine(options, this);
     this._updateTouched(options, this);
@@ -1490,9 +1827,10 @@ var FormGroup = class extends AbstractControl {
     let subtreeUpdated = this._reduceChildren(false, (updated, child) => {
       return child._syncPendingControls() ? true : updated;
     });
-    if (subtreeUpdated) this.updateValueAndValidity({
-      onlySelf: true
-    });
+    if (subtreeUpdated)
+      this.updateValueAndValidity({
+        onlySelf: true,
+      });
     return subtreeUpdated;
   }
   _forEachChild(cb) {
@@ -1549,22 +1887,30 @@ var FormGroup = class extends AbstractControl {
 function validateFormGroupControls(controls) {
   const invalidKeys = Object.keys(controls).filter((key) => key.includes("."));
   if (invalidKeys.length > 0) {
-    console.warn(`FormGroup keys cannot include \`.\`, please replace the keys for: ${invalidKeys.join(",")}.`);
+    console.warn(
+      `FormGroup keys cannot include \`.\`, please replace the keys for: ${invalidKeys.join(",")}.`,
+    );
   }
 }
 var UntypedFormGroup = FormGroup;
 var isFormGroup = (control) => control instanceof FormGroup;
-var FormRecord = class extends FormGroup {
-};
+var FormRecord = class extends FormGroup {};
 var isFormRecord = (control) => control instanceof FormRecord;
-var CALL_SET_DISABLED_STATE = new InjectionToken(typeof ngDevMode === "undefined" || ngDevMode ? "CallSetDisabledState" : "", {
-  factory: () => setDisabledStateDefault
-});
+var CALL_SET_DISABLED_STATE = new InjectionToken(
+  typeof ngDevMode === "undefined" || ngDevMode ? "CallSetDisabledState" : "",
+  {
+    factory: () => setDisabledStateDefault,
+  },
+);
 var setDisabledStateDefault = "always";
 function controlPath(name, parent) {
   return [...parent.path, name];
 }
-function setUpControl(control, dir, callSetDisabledState = setDisabledStateDefault) {
+function setUpControl(
+  control,
+  dir,
+  callSetDisabledState = setDisabledStateDefault,
+) {
   if (typeof ngDevMode === "undefined" || ngDevMode) {
     if (!control) _throwError(dir, "Cannot find control with");
     if (!dir.valueAccessor) _throwMissingValueAccessorError(dir);
@@ -1581,7 +1927,10 @@ function setUpControl(control, dir, callSetDisabledState = setDisabledStateDefau
 }
 function cleanUpControl(control, dir, validateControlPresenceOnChange = true) {
   const noop = () => {
-    if (validateControlPresenceOnChange && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      validateControlPresenceOnChange &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       _noControlError(dir);
     }
   };
@@ -1592,13 +1941,13 @@ function cleanUpControl(control, dir, validateControlPresenceOnChange = true) {
   cleanUpValidators(control, dir);
   if (control) {
     dir._invokeOnDestroyCallbacks();
-    control._registerOnCollectionChange(() => {
-    });
+    control._registerOnCollectionChange(() => {});
   }
 }
 function registerOnValidatorChange(validators, onChange) {
   validators.forEach((validator) => {
-    if (validator.registerOnValidatorChange) validator.registerOnValidatorChange(onChange);
+    if (validator.registerOnValidatorChange)
+      validator.registerOnValidatorChange(onChange);
   });
 }
 function setUpDisabledChangeHandler(control, dir) {
@@ -1621,7 +1970,9 @@ function setUpValidators(control, dir) {
   }
   const asyncValidators = getControlAsyncValidators(control);
   if (dir.asyncValidator !== null) {
-    control.setAsyncValidators(mergeValidators(asyncValidators, dir.asyncValidator));
+    control.setAsyncValidators(
+      mergeValidators(asyncValidators, dir.asyncValidator),
+    );
   } else if (typeof asyncValidators === "function") {
     control.setAsyncValidators([asyncValidators]);
   }
@@ -1635,7 +1986,9 @@ function cleanUpValidators(control, dir) {
     if (dir.validator !== null) {
       const validators = getControlValidators(control);
       if (Array.isArray(validators) && validators.length > 0) {
-        const updatedValidators = validators.filter((validator) => validator !== dir.validator);
+        const updatedValidators = validators.filter(
+          (validator) => validator !== dir.validator,
+        );
         if (updatedValidators.length !== validators.length) {
           isControlUpdated = true;
           control.setValidators(updatedValidators);
@@ -1645,7 +1998,9 @@ function cleanUpValidators(control, dir) {
     if (dir.asyncValidator !== null) {
       const asyncValidators = getControlAsyncValidators(control);
       if (Array.isArray(asyncValidators) && asyncValidators.length > 0) {
-        const updatedAsyncValidators = asyncValidators.filter((asyncValidator) => asyncValidator !== dir.asyncValidator);
+        const updatedAsyncValidators = asyncValidators.filter(
+          (asyncValidator) => asyncValidator !== dir.asyncValidator,
+        );
         if (updatedAsyncValidators.length !== asyncValidators.length) {
           isControlUpdated = true;
           control.setAsyncValidators(updatedAsyncValidators);
@@ -1653,8 +2008,7 @@ function cleanUpValidators(control, dir) {
       }
     }
   }
-  const noop = () => {
-  };
+  const noop = () => {};
   registerOnValidatorChange(dir._rawValidators, noop);
   registerOnValidatorChange(dir._rawAsyncValidators, noop);
   return isControlUpdated;
@@ -1670,14 +2024,15 @@ function setUpViewChangePipeline(control, dir) {
 function setUpBlurPipeline(control, dir) {
   dir.valueAccessor.registerOnTouched(() => {
     control._pendingTouched = true;
-    if (control.updateOn === "blur" && control._pendingChange) updateControl(control, dir);
+    if (control.updateOn === "blur" && control._pendingChange)
+      updateControl(control, dir);
     if (control.updateOn !== "submit") control.markAsTouched();
   });
 }
 function updateControl(control, dir) {
   if (control._pendingDirty) control.markAsDirty();
   control.setValue(control._pendingValue, {
-    emitModelToViewChange: false
+    emitModelToViewChange: false,
   });
   dir.viewToModelUpdate(control._pendingValue);
   control._pendingChange = false;
@@ -1693,14 +2048,18 @@ function setUpModelChangePipeline(control, dir) {
   });
 }
 function setUpFormContainer(control, dir) {
-  if (control == null && (typeof ngDevMode === "undefined" || ngDevMode)) _throwError(dir, "Cannot find control with");
+  if (control == null && (typeof ngDevMode === "undefined" || ngDevMode))
+    _throwError(dir, "Cannot find control with");
   setUpValidators(control, dir);
 }
 function cleanUpFormContainer(control, dir) {
   return cleanUpValidators(control, dir);
 }
 function _noControlError(dir) {
-  return _throwError(dir, "There is no FormControl instance attached to form control element with");
+  return _throwError(
+    dir,
+    "There is no FormControl instance attached to form control element with",
+  );
 }
 function _throwError(dir, message) {
   const messageEnd = _describeControlLocation(dir);
@@ -1718,7 +2077,10 @@ function _throwMissingValueAccessorError(dir) {
 }
 function _throwInvalidValueAccessorError(dir) {
   const loc = _describeControlLocation(dir);
-  throw new RuntimeError(1200, `Value accessor was not provided as an array for form control with ${loc}. Check that the \`NG_VALUE_ACCESSOR\` token is configured as a \`multi: true\` provider.`);
+  throw new RuntimeError(
+    1200,
+    `Value accessor was not provided as an array for form control with ${loc}. Check that the \`NG_VALUE_ACCESSOR\` token is configured as a \`multi: true\` provider.`,
+  );
 }
 function isPropertyUpdated(changes, viewModel) {
   if (!changes.hasOwnProperty("model")) return false;
@@ -1727,7 +2089,10 @@ function isPropertyUpdated(changes, viewModel) {
   return !Object.is(viewModel, change.currentValue);
 }
 function isBuiltInAccessor(valueAccessor) {
-  return Object.getPrototypeOf(valueAccessor.constructor) === BuiltInControlValueAccessor;
+  return (
+    Object.getPrototypeOf(valueAccessor.constructor) ===
+    BuiltInControlValueAccessor
+  );
 }
 function syncPendingControls(form, directives) {
   form._syncPendingControls();
@@ -1741,7 +2106,11 @@ function syncPendingControls(form, directives) {
 }
 function selectValueAccessor(dir, valueAccessors) {
   if (!valueAccessors) return null;
-  if (!Array.isArray(valueAccessors) && (typeof ngDevMode === "undefined" || ngDevMode)) _throwInvalidValueAccessorError(dir);
+  if (
+    !Array.isArray(valueAccessors) &&
+    (typeof ngDevMode === "undefined" || ngDevMode)
+  )
+    _throwInvalidValueAccessorError(dir);
   let defaultAccessor = void 0;
   let builtinAccessor = void 0;
   let customAccessor = void 0;
@@ -1749,10 +2118,18 @@ function selectValueAccessor(dir, valueAccessors) {
     if (v.constructor === DefaultValueAccessor) {
       defaultAccessor = v;
     } else if (isBuiltInAccessor(v)) {
-      if (builtinAccessor && (typeof ngDevMode === "undefined" || ngDevMode)) _throwError(dir, "More than one built-in value accessor matches form control with");
+      if (builtinAccessor && (typeof ngDevMode === "undefined" || ngDevMode))
+        _throwError(
+          dir,
+          "More than one built-in value accessor matches form control with",
+        );
       builtinAccessor = v;
     } else {
-      if (customAccessor && (typeof ngDevMode === "undefined" || ngDevMode)) _throwError(dir, "More than one custom value accessor matches form control with");
+      if (customAccessor && (typeof ngDevMode === "undefined" || ngDevMode))
+        _throwError(
+          dir,
+          "More than one custom value accessor matches form control with",
+        );
       customAccessor = v;
     }
   });
@@ -1770,7 +2147,11 @@ function removeListItem$1(list, el) {
 }
 function _ngModelWarning(name, type, instance, warningConfig) {
   if (warningConfig === "never") return;
-  if ((warningConfig === null || warningConfig === "once") && !type._ngModelWarningSentOnce || warningConfig === "always" && !instance._ngModelWarningSent) {
+  if (
+    ((warningConfig === null || warningConfig === "once") &&
+      !type._ngModelWarningSentOnce) ||
+    (warningConfig === "always" && !instance._ngModelWarningSent)
+  ) {
     console.warn(ngModelWarning(name));
     type._ngModelWarningSentOnce = true;
     instance._ngModelWarningSent = true;
@@ -1778,7 +2159,7 @@ function _ngModelWarning(name, type, instance, warningConfig) {
 }
 var formDirectiveProvider$2 = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => NgForm)
+  useExisting: forwardRef(() => NgForm),
 };
 var resolvedPromise$1 = (() => Promise.resolve())();
 var NgForm = class _NgForm extends ControlContainer {
@@ -1786,12 +2167,26 @@ var NgForm = class _NgForm extends ControlContainer {
   get submitted() {
     return untracked(this.submittedReactive);
   }
-  _submitted = computed(() => this.submittedReactive(), ...ngDevMode ? [{
-    debugName: "_submitted"
-  }] : []);
-  submittedReactive = signal(false, ...ngDevMode ? [{
-    debugName: "submittedReactive"
-  }] : []);
+  _submitted = computed(
+    () => this.submittedReactive(),
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_submitted",
+          },
+        ]
+      : []),
+  );
+  submittedReactive = signal(
+    false,
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "submittedReactive",
+          },
+        ]
+      : []),
+  );
   _directives = /* @__PURE__ */ new Set();
   form;
   ngSubmit = new EventEmitter();
@@ -1799,7 +2194,11 @@ var NgForm = class _NgForm extends ControlContainer {
   constructor(validators, asyncValidators, callSetDisabledState) {
     super();
     this.callSetDisabledState = callSetDisabledState;
-    this.form = new FormGroup({}, composeValidators(validators), composeAsyncValidators(asyncValidators));
+    this.form = new FormGroup(
+      {},
+      composeValidators(validators),
+      composeAsyncValidators(asyncValidators),
+    );
   }
   ngAfterViewInit() {
     this._setUpdateStrategy();
@@ -1822,7 +2221,7 @@ var NgForm = class _NgForm extends ControlContainer {
       dir.control = container.registerControl(dir.name, dir.control);
       setUpControl(dir.control, dir, this.callSetDisabledState);
       dir.control.updateValueAndValidity({
-        emitEvent: false
+        emitEvent: false,
       });
       this._directives.add(dir);
     });
@@ -1846,7 +2245,7 @@ var NgForm = class _NgForm extends ControlContainer {
       setUpFormContainer(group, dir);
       container.registerControl(dir.name, group);
       group.updateValueAndValidity({
-        emitEvent: false
+        emitEvent: false,
       });
     });
   }
@@ -1894,11 +2293,19 @@ var NgForm = class _NgForm extends ControlContainer {
     return path.length ? this.form.get(path) : this.form;
   }
   static ɵfac = function NgForm_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgForm)(ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10), ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8));
+    return new (__ngFactoryType__ || _NgForm)(
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+      ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgForm,
-    selectors: [["form", 3, "ngNoForm", "", 3, "formGroup", "", 3, "formArray", ""], ["ng-form"], ["", "ngForm", ""]],
+    selectors: [
+      ["form", 3, "ngNoForm", "", 3, "formGroup", "", 3, "formArray", ""],
+      ["ng-form"],
+      ["", "ngForm", ""],
+    ],
     hostBindings: function NgForm_HostBindings(rf, ctx) {
       if (rf & 1) {
         ɵɵlistener("submit", function NgForm_submit_HostBindingHandler($event) {
@@ -1909,71 +2316,108 @@ var NgForm = class _NgForm extends ControlContainer {
       }
     },
     inputs: {
-      options: [0, "ngFormOptions", "options"]
+      options: [0, "ngFormOptions", "options"],
     },
     outputs: {
-      ngSubmit: "ngSubmit"
+      ngSubmit: "ngSubmit",
     },
     exportAs: ["ngForm"],
     standalone: false,
-    features: [ɵɵProvidersFeature([formDirectiveProvider$2]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([formDirectiveProvider$2]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgForm, [{
-    type: Directive,
-    args: [{
-      selector: "form:not([ngNoForm]):not([formGroup]):not([formArray]),ng-form,[ngForm]",
-      providers: [formDirectiveProvider$2],
-      host: {
-        "(submit)": "onSubmit($event)",
-        "(reset)": "onReset()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgForm,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "form:not([ngNoForm]):not([formGroup]):not([formArray]),ng-form,[ngForm]",
+              providers: [formDirectiveProvider$2],
+              host: {
+                "(submit)": "onSubmit($event)",
+                "(reset)": "onReset()",
+              },
+              outputs: ["ngSubmit"],
+              exportAs: "ngForm",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [CALL_SET_DISABLED_STATE],
+            },
+          ],
+        },
+      ],
+      {
+        options: [
+          {
+            type: Input,
+            args: ["ngFormOptions"],
+          },
+        ],
       },
-      outputs: ["ngSubmit"],
-      exportAs: "ngForm",
-      standalone: false
-    }]
-  }], () => [{
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [CALL_SET_DISABLED_STATE]
-    }]
-  }], {
-    options: [{
-      type: Input,
-      args: ["ngFormOptions"]
-    }]
-  });
+    );
 })();
 function removeListItem(list, el) {
   const index = list.indexOf(el);
   if (index > -1) list.splice(index, 1);
 }
 function isFormControlState(formState) {
-  return typeof formState === "object" && formState !== null && Object.keys(formState).length === 2 && "value" in formState && "disabled" in formState;
+  return (
+    typeof formState === "object" &&
+    formState !== null &&
+    Object.keys(formState).length === 2 &&
+    "value" in formState &&
+    "disabled" in formState
+  );
 }
 var FormControl = class FormControl2 extends AbstractControl {
   defaultValue = null;
@@ -1981,15 +2425,21 @@ var FormControl = class FormControl2 extends AbstractControl {
   _pendingValue;
   _pendingChange = false;
   constructor(formState = null, validatorOrOpts, asyncValidator) {
-    super(pickValidators(validatorOrOpts), pickAsyncValidators(asyncValidator, validatorOrOpts));
+    super(
+      pickValidators(validatorOrOpts),
+      pickAsyncValidators(asyncValidator, validatorOrOpts),
+    );
     this._applyFormState(formState);
     this._setUpdateStrategy(validatorOrOpts);
     this._initObservables();
     this.updateValueAndValidity({
       onlySelf: true,
-      emitEvent: !!this.asyncValidator
+      emitEvent: !!this.asyncValidator,
     });
-    if (isOptionsObj(validatorOrOpts) && (validatorOrOpts.nonNullable || validatorOrOpts.initialValueIsDefault)) {
+    if (
+      isOptionsObj(validatorOrOpts) &&
+      (validatorOrOpts.nonNullable || validatorOrOpts.initialValueIsDefault)
+    ) {
       if (isFormControlState(formState)) {
         this.defaultValue = formState.value;
       } else {
@@ -2000,7 +2450,9 @@ var FormControl = class FormControl2 extends AbstractControl {
   setValue(value, options = {}) {
     this.value = this._pendingValue = value;
     if (this._onChange.length && options.emitModelToViewChange !== false) {
-      this._onChange.forEach((changeFn) => changeFn(this.value, options.emitViewToModelChange !== false));
+      this._onChange.forEach((changeFn) =>
+        changeFn(this.value, options.emitViewToModelChange !== false),
+      );
     }
     this.updateValueAndValidity(options);
   }
@@ -2020,8 +2472,7 @@ var FormControl = class FormControl2 extends AbstractControl {
       this._events.next(new FormResetEvent(this));
     }
   }
-  _updateValue() {
-  }
+  _updateValue() {}
   _anyControls(condition) {
     return false;
   }
@@ -2040,8 +2491,7 @@ var FormControl = class FormControl2 extends AbstractControl {
   _unregisterOnDisabledChange(fn) {
     removeListItem(this._onDisabledChange, fn);
   }
-  _forEachChild(cb) {
-  }
+  _forEachChild(cb) {}
   _syncPendingControls() {
     if (this.updateOn === "submit") {
       if (this._pendingDirty) this.markAsDirty();
@@ -2049,7 +2499,7 @@ var FormControl = class FormControl2 extends AbstractControl {
       if (this._pendingChange) {
         this.setValue(this._pendingValue, {
           onlySelf: true,
-          emitModelToViewChange: false
+          emitModelToViewChange: false,
         });
         return true;
       }
@@ -2059,13 +2509,15 @@ var FormControl = class FormControl2 extends AbstractControl {
   _applyFormState(formState) {
     if (isFormControlState(formState)) {
       this.value = this._pendingValue = formState.value;
-      formState.disabled ? this.disable({
-        onlySelf: true,
-        emitEvent: false
-      }) : this.enable({
-        onlySelf: true,
-        emitEvent: false
-      });
+      formState.disabled
+        ? this.disable({
+            onlySelf: true,
+            emitEvent: false,
+          })
+        : this.enable({
+            onlySelf: true,
+            emitEvent: false,
+          });
     } else {
       this.value = this._pendingValue = formState;
     }
@@ -2088,35 +2540,54 @@ var AbstractFormGroupDirective = class _AbstractFormGroupDirective extends Contr
     return this.formDirective.getFormGroup(this);
   }
   get path() {
-    return controlPath(this.name == null ? this.name : this.name.toString(), this._parent);
+    return controlPath(
+      this.name == null ? this.name : this.name.toString(),
+      this._parent,
+    );
   }
   get formDirective() {
     return this._parent ? this._parent.formDirective : null;
   }
-  _checkParentType() {
-  }
+  _checkParentType() {}
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵAbstractFormGroupDirective_BaseFactory;
     return function AbstractFormGroupDirective_Factory(__ngFactoryType__) {
-      return (ɵAbstractFormGroupDirective_BaseFactory || (ɵAbstractFormGroupDirective_BaseFactory = ɵɵgetInheritedFactory(_AbstractFormGroupDirective)))(__ngFactoryType__ || _AbstractFormGroupDirective);
+      return (
+        ɵAbstractFormGroupDirective_BaseFactory ||
+        (ɵAbstractFormGroupDirective_BaseFactory = ɵɵgetInheritedFactory(
+          _AbstractFormGroupDirective,
+        ))
+      )(__ngFactoryType__ || _AbstractFormGroupDirective);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _AbstractFormGroupDirective,
     standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    features: [ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AbstractFormGroupDirective, [{
-    type: Directive,
-    args: [{
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      AbstractFormGroupDirective,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 function modelParentException() {
-  return new RuntimeError(1350, `
+  return new RuntimeError(
+    1350,
+    `
     ngModel cannot be used to register form controls with a parent formGroup directive.  Try using
     formGroup's partner directive "formControlName" instead.  Example:
 
@@ -2126,10 +2597,13 @@ function modelParentException() {
 
     Example:
 
-    ${ngModelWithFormGroupExample}`);
+    ${ngModelWithFormGroupExample}`,
+  );
 }
 function formGroupNameException() {
-  return new RuntimeError(1351, `
+  return new RuntimeError(
+    1351,
+    `
     ngModel cannot be used to register form controls with a parent formGroupName or formArrayName directive.
 
     Option 1: Use formControlName instead of ngModel (reactive strategy):
@@ -2138,17 +2612,23 @@ function formGroupNameException() {
 
     Option 2:  Update ngModel's parent be ngModelGroup (template-driven strategy):
 
-    ${ngModelGroupExample}`);
+    ${ngModelGroupExample}`,
+  );
 }
 function missingNameException() {
-  return new RuntimeError(1352, `If ngModel is used within a form tag, either the name attribute must be set or the form
+  return new RuntimeError(
+    1352,
+    `If ngModel is used within a form tag, either the name attribute must be set or the form
     control must be defined as 'standalone' in ngModelOptions.
 
     Example 1: <input [(ngModel)]="person.firstName" name="first">
-    Example 2: <input [(ngModel)]="person.firstName" [ngModelOptions]="{standalone: true}">`);
+    Example 2: <input [(ngModel)]="person.firstName" [ngModelOptions]="{standalone: true}">`,
+  );
 }
 function modelGroupParentException() {
-  return new RuntimeError(1353, `
+  return new RuntimeError(
+    1353,
+    `
     ngModelGroup cannot be used with a parent formGroup directive.
 
     Option 1: Use formGroupName instead of ngModelGroup (reactive strategy):
@@ -2157,11 +2637,12 @@ function modelGroupParentException() {
 
     Option 2:  Use a regular form tag instead of the formGroup directive (template-driven strategy):
 
-    ${ngModelGroupExample}`);
+    ${ngModelGroupExample}`,
+  );
 }
 var modelGroupProvider = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => NgModelGroup)
+  useExisting: forwardRef(() => NgModelGroup),
 };
 var NgModelGroup = class _NgModelGroup extends AbstractFormGroupDirective {
   name = "";
@@ -2172,70 +2653,108 @@ var NgModelGroup = class _NgModelGroup extends AbstractFormGroupDirective {
     this._setAsyncValidators(asyncValidators);
   }
   _checkParentType() {
-    if (!(this._parent instanceof _NgModelGroup) && !(this._parent instanceof NgForm) && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      !(this._parent instanceof _NgModelGroup) &&
+      !(this._parent instanceof NgForm) &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       throw modelGroupParentException();
     }
   }
   static ɵfac = function NgModelGroup_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgModelGroup)(ɵɵdirectiveInject(ControlContainer, 5), ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10));
+    return new (__ngFactoryType__ || _NgModelGroup)(
+      ɵɵdirectiveInject(ControlContainer, 5),
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgModelGroup,
     selectors: [["", "ngModelGroup", ""]],
     inputs: {
-      name: [0, "ngModelGroup", "name"]
+      name: [0, "ngModelGroup", "name"],
     },
     exportAs: ["ngModelGroup"],
     standalone: false,
-    features: [ɵɵProvidersFeature([modelGroupProvider]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([modelGroupProvider]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgModelGroup, [{
-    type: Directive,
-    args: [{
-      selector: "[ngModelGroup]",
-      providers: [modelGroupProvider],
-      exportAs: "ngModelGroup",
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Host
-    }, {
-      type: SkipSelf
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }], {
-    name: [{
-      type: Input,
-      args: ["ngModelGroup"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgModelGroup,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[ngModelGroup]",
+              providers: [modelGroupProvider],
+              exportAs: "ngModelGroup",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Host,
+            },
+            {
+              type: SkipSelf,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+            args: ["ngModelGroup"],
+          },
+        ],
+      },
+    );
 })();
 var formControlBinding$1 = {
   provide: NgControl,
-  useExisting: forwardRef(() => NgModel)
+  useExisting: forwardRef(() => NgModel),
 };
 var resolvedPromise = (() => Promise.resolve())();
 var NgModel = class _NgModel extends NgControl {
@@ -2250,7 +2769,14 @@ var NgModel = class _NgModel extends NgControl {
   model;
   options;
   update = new EventEmitter();
-  constructor(parent, validators, asyncValidators, valueAccessors, _changeDetectorRef, callSetDisabledState) {
+  constructor(
+    parent,
+    validators,
+    asyncValidators,
+    valueAccessors,
+    _changeDetectorRef,
+    callSetDisabledState,
+  ) {
     super();
     this._changeDetectorRef = _changeDetectorRef;
     this.callSetDisabledState = callSetDisabledState;
@@ -2268,7 +2794,7 @@ var NgModel = class _NgModel extends NgControl {
           const oldName = changes["name"].previousValue;
           this.formDirective.removeControl({
             name: oldName,
-            path: this._getPath(oldName)
+            path: this._getPath(oldName),
           });
         }
       }
@@ -2297,7 +2823,9 @@ var NgModel = class _NgModel extends NgControl {
   }
   _setUpControl() {
     this._setUpdateStrategy();
-    this._isStandalone() ? this._setUpStandalone() : this.formDirective.addControl(this);
+    this._isStandalone()
+      ? this._setUpStandalone()
+      : this.formDirective.addControl(this);
     this._registered = true;
   }
   _setUpdateStrategy() {
@@ -2311,25 +2839,32 @@ var NgModel = class _NgModel extends NgControl {
   _setUpStandalone() {
     setUpControl(this.control, this, this.callSetDisabledState);
     this.control.updateValueAndValidity({
-      emitEvent: false
+      emitEvent: false,
     });
   }
   _checkForErrors() {
-    if ((typeof ngDevMode === "undefined" || ngDevMode) && !this._isStandalone()) {
+    if (
+      (typeof ngDevMode === "undefined" || ngDevMode) &&
+      !this._isStandalone()
+    ) {
       checkParentType$1(this._parent);
     }
     this._checkName();
   }
   _checkName() {
     if (this.options && this.options.name) this.name = this.options.name;
-    if (!this._isStandalone() && !this.name && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      !this._isStandalone() &&
+      !this.name &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       throw missingNameException();
     }
   }
   _updateValue(value) {
     resolvedPromise.then(() => {
       this.control.setValue(value, {
-        emitViewToModelChange: false
+        emitViewToModelChange: false,
       });
       this._changeDetectorRef?.markForCheck();
     });
@@ -2347,114 +2882,180 @@ var NgModel = class _NgModel extends NgControl {
     });
   }
   _getPath(controlName) {
-    return this._parent ? controlPath(controlName, this._parent) : [controlName];
+    return this._parent
+      ? controlPath(controlName, this._parent)
+      : [controlName];
   }
   static ɵfac = function NgModel_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgModel)(ɵɵdirectiveInject(ControlContainer, 9), ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10), ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10), ɵɵdirectiveInject(ChangeDetectorRef, 8), ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8));
+    return new (__ngFactoryType__ || _NgModel)(
+      ɵɵdirectiveInject(ControlContainer, 9),
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10),
+      ɵɵdirectiveInject(ChangeDetectorRef, 8),
+      ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgModel,
-    selectors: [["", "ngModel", "", 3, "formControlName", "", 3, "formControl", ""]],
+    selectors: [
+      ["", "ngModel", "", 3, "formControlName", "", 3, "formControl", ""],
+    ],
     inputs: {
       name: "name",
       isDisabled: [0, "disabled", "isDisabled"],
       model: [0, "ngModel", "model"],
-      options: [0, "ngModelOptions", "options"]
+      options: [0, "ngModelOptions", "options"],
     },
     outputs: {
-      update: "ngModelChange"
+      update: "ngModelChange",
     },
     exportAs: ["ngModel"],
     standalone: false,
-    features: [ɵɵProvidersFeature([formControlBinding$1]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature]
+    features: [
+      ɵɵProvidersFeature([formControlBinding$1]),
+      ɵɵInheritDefinitionFeature,
+      ɵɵNgOnChangesFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgModel, [{
-    type: Directive,
-    args: [{
-      selector: "[ngModel]:not([formControlName]):not([formControl])",
-      providers: [formControlBinding$1],
-      exportAs: "ngModel",
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALUE_ACCESSOR]
-    }]
-  }, {
-    type: ChangeDetectorRef,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [ChangeDetectorRef]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [CALL_SET_DISABLED_STATE]
-    }]
-  }], {
-    name: [{
-      type: Input
-    }],
-    isDisabled: [{
-      type: Input,
-      args: ["disabled"]
-    }],
-    model: [{
-      type: Input,
-      args: ["ngModel"]
-    }],
-    options: [{
-      type: Input,
-      args: ["ngModelOptions"]
-    }],
-    update: [{
-      type: Output,
-      args: ["ngModelChange"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgModel,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[ngModel]:not([formControlName]):not([formControl])",
+              providers: [formControlBinding$1],
+              exportAs: "ngModel",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALUE_ACCESSOR],
+            },
+          ],
+        },
+        {
+          type: ChangeDetectorRef,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [ChangeDetectorRef],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [CALL_SET_DISABLED_STATE],
+            },
+          ],
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+          },
+        ],
+        isDisabled: [
+          {
+            type: Input,
+            args: ["disabled"],
+          },
+        ],
+        model: [
+          {
+            type: Input,
+            args: ["ngModel"],
+          },
+        ],
+        options: [
+          {
+            type: Input,
+            args: ["ngModelOptions"],
+          },
+        ],
+        update: [
+          {
+            type: Output,
+            args: ["ngModelChange"],
+          },
+        ],
+      },
+    );
 })();
 function checkParentType$1(parent) {
-  if (!(parent instanceof NgModelGroup) && parent instanceof AbstractFormGroupDirective) {
+  if (
+    !(parent instanceof NgModelGroup) &&
+    parent instanceof AbstractFormGroupDirective
+  ) {
     throw formGroupNameException();
   } else if (!(parent instanceof NgModelGroup) && !(parent instanceof NgForm)) {
     throw modelParentException();
@@ -2468,25 +3069,35 @@ var ɵNgNoValidate = class _ɵNgNoValidate {
     type: _ɵNgNoValidate,
     selectors: [["form", 3, "ngNoForm", "", 3, "ngNativeValidate", ""]],
     hostAttrs: ["novalidate", ""],
-    standalone: false
+    standalone: false,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ɵNgNoValidate, [{
-    type: Directive,
-    args: [{
-      selector: "form:not([ngNoForm]):not([ngNativeValidate])",
-      host: {
-        "novalidate": ""
-      },
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      ɵNgNoValidate,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "form:not([ngNoForm]):not([ngNativeValidate])",
+              host: {
+                novalidate: "",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var NUMBER_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => NumberValueAccessor),
-  multi: true
+  multi: true,
 };
 var NumberValueAccessor = class _NumberValueAccessor extends BuiltInControlValueAccessor {
   writeValue(value) {
@@ -2501,49 +3112,77 @@ var NumberValueAccessor = class _NumberValueAccessor extends BuiltInControlValue
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵNumberValueAccessor_BaseFactory;
     return function NumberValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵNumberValueAccessor_BaseFactory || (ɵNumberValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_NumberValueAccessor)))(__ngFactoryType__ || _NumberValueAccessor);
+      return (
+        ɵNumberValueAccessor_BaseFactory ||
+        (ɵNumberValueAccessor_BaseFactory =
+          ɵɵgetInheritedFactory(_NumberValueAccessor))
+      )(__ngFactoryType__ || _NumberValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _NumberValueAccessor,
-    selectors: [["input", "type", "number", "formControlName", ""], ["input", "type", "number", "formControl", ""], ["input", "type", "number", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "number", "formControlName", ""],
+      ["input", "type", "number", "formControl", ""],
+      ["input", "type", "number", "ngModel", ""],
+    ],
     hostBindings: function NumberValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("input", function NumberValueAccessor_input_HostBindingHandler($event) {
-          return ctx.onChange($event.target.value);
-        })("blur", function NumberValueAccessor_blur_HostBindingHandler() {
+        ɵɵlistener(
+          "input",
+          function NumberValueAccessor_input_HostBindingHandler($event) {
+            return ctx.onChange($event.target.value);
+          },
+        )("blur", function NumberValueAccessor_blur_HostBindingHandler() {
           return ctx.onTouched();
         });
       }
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([NUMBER_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([NUMBER_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NumberValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=number][formControlName],input[type=number][formControl],input[type=number][ngModel]",
-      host: {
-        "(input)": "onChange($any($event.target).value)",
-        "(blur)": "onTouched()"
-      },
-      providers: [NUMBER_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NumberValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=number][formControlName],input[type=number][formControl],input[type=number][ngModel]",
+              host: {
+                "(input)": "onChange($any($event.target).value)",
+                "(blur)": "onTouched()",
+              },
+              providers: [NUMBER_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var RADIO_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => RadioControlValueAccessor),
-  multi: true
+  multi: true,
 };
 function throwNameError() {
-  throw new RuntimeError(1202, `
+  throw new RuntimeError(
+    1202,
+    `
       If you define both a name and a formControlName attribute on your radio button, their values
       must match. Ex: <input type="radio" formControlName="food" name="food">
-    `);
+    `,
+  );
 }
 var RadioControlRegistry = class _RadioControlRegistry {
   _accessors = [];
@@ -2567,7 +3206,10 @@ var RadioControlRegistry = class _RadioControlRegistry {
   }
   _isSameGroup(controlPair, accessor) {
     if (!controlPair[0].control) return false;
-    return controlPair[0]._parent === accessor._control._parent && controlPair[1].name === accessor.name;
+    return (
+      controlPair[0]._parent === accessor._control._parent &&
+      controlPair[1].name === accessor.name
+    );
   }
   static ɵfac = function RadioControlRegistry_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _RadioControlRegistry)();
@@ -2575,16 +3217,26 @@ var RadioControlRegistry = class _RadioControlRegistry {
   static ɵprov = ɵɵdefineInjectable({
     token: _RadioControlRegistry,
     factory: _RadioControlRegistry.ɵfac,
-    providedIn: "root"
+    providedIn: "root",
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(RadioControlRegistry, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      RadioControlRegistry,
+      [
+        {
+          type: Injectable,
+          args: [
+            {
+              providedIn: "root",
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltInControlValueAccessor {
   _registry;
@@ -2593,14 +3245,14 @@ var RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltIn
   _control;
   _fn;
   setDisabledStateFired = false;
-  onChange = () => {
-  };
+  onChange = () => {};
   name;
   formControlName;
   value;
-  callSetDisabledState = inject(CALL_SET_DISABLED_STATE, {
-    optional: true
-  }) ?? setDisabledStateDefault;
+  callSetDisabledState =
+    inject(CALL_SET_DISABLED_STATE, {
+      optional: true,
+    }) ?? setDisabledStateDefault;
   constructor(renderer, elementRef, _registry, _injector) {
     super(renderer, elementRef);
     this._registry = _registry;
@@ -2626,7 +3278,11 @@ var RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltIn
     };
   }
   setDisabledState(isDisabled) {
-    if (this.setDisabledStateFired || isDisabled || this.callSetDisabledState === "whenDisabledForLegacyCode") {
+    if (
+      this.setDisabledStateFired ||
+      isDisabled ||
+      this.callSetDisabledState === "whenDisabledForLegacyCode"
+    ) {
       this.setProperty("disabled", isDisabled);
     }
     this.setDisabledStateFired = true;
@@ -2635,22 +3291,39 @@ var RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltIn
     this.writeValue(value);
   }
   _checkName() {
-    if (this.name && this.formControlName && this.name !== this.formControlName && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      this.name &&
+      this.formControlName &&
+      this.name !== this.formControlName &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       throwNameError();
     }
     if (!this.name && this.formControlName) this.name = this.formControlName;
   }
   static ɵfac = function RadioControlValueAccessor_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _RadioControlValueAccessor)(ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(RadioControlRegistry), ɵɵdirectiveInject(Injector));
+    return new (__ngFactoryType__ || _RadioControlValueAccessor)(
+      ɵɵdirectiveInject(Renderer2),
+      ɵɵdirectiveInject(ElementRef),
+      ɵɵdirectiveInject(RadioControlRegistry),
+      ɵɵdirectiveInject(Injector),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _RadioControlValueAccessor,
-    selectors: [["input", "type", "radio", "formControlName", ""], ["input", "type", "radio", "formControl", ""], ["input", "type", "radio", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "radio", "formControlName", ""],
+      ["input", "type", "radio", "formControl", ""],
+      ["input", "type", "radio", "ngModel", ""],
+    ],
     hostBindings: function RadioControlValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("change", function RadioControlValueAccessor_change_HostBindingHandler() {
-          return ctx.onChange();
-        })("blur", function RadioControlValueAccessor_blur_HostBindingHandler() {
+        ɵɵlistener(
+          "change",
+          function RadioControlValueAccessor_change_HostBindingHandler() {
+            return ctx.onChange();
+          },
+        )("blur", function RadioControlValueAccessor_blur_HostBindingHandler() {
           return ctx.onTouched();
         });
       }
@@ -2658,48 +3331,73 @@ var RadioControlValueAccessor = class _RadioControlValueAccessor extends BuiltIn
     inputs: {
       name: "name",
       formControlName: "formControlName",
-      value: "value"
+      value: "value",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([RADIO_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([RADIO_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(RadioControlValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=radio][formControlName],input[type=radio][formControl],input[type=radio][ngModel]",
-      host: {
-        "(change)": "onChange()",
-        "(blur)": "onTouched()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      RadioControlValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=radio][formControlName],input[type=radio][formControl],input[type=radio][ngModel]",
+              host: {
+                "(change)": "onChange()",
+                "(blur)": "onTouched()",
+              },
+              providers: [RADIO_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: Renderer2,
+        },
+        {
+          type: ElementRef,
+        },
+        {
+          type: RadioControlRegistry,
+        },
+        {
+          type: Injector,
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+          },
+        ],
+        formControlName: [
+          {
+            type: Input,
+          },
+        ],
+        value: [
+          {
+            type: Input,
+          },
+        ],
       },
-      providers: [RADIO_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], () => [{
-    type: Renderer2
-  }, {
-    type: ElementRef
-  }, {
-    type: RadioControlRegistry
-  }, {
-    type: Injector
-  }], {
-    name: [{
-      type: Input
-    }],
-    formControlName: [{
-      type: Input
-    }],
-    value: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var RANGE_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => RangeValueAccessor),
-  multi: true
+  multi: true,
 };
 var RangeValueAccessor = class _RangeValueAccessor extends BuiltInControlValueAccessor {
   writeValue(value) {
@@ -2713,52 +3411,83 @@ var RangeValueAccessor = class _RangeValueAccessor extends BuiltInControlValueAc
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵRangeValueAccessor_BaseFactory;
     return function RangeValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵRangeValueAccessor_BaseFactory || (ɵRangeValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_RangeValueAccessor)))(__ngFactoryType__ || _RangeValueAccessor);
+      return (
+        ɵRangeValueAccessor_BaseFactory ||
+        (ɵRangeValueAccessor_BaseFactory =
+          ɵɵgetInheritedFactory(_RangeValueAccessor))
+      )(__ngFactoryType__ || _RangeValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _RangeValueAccessor,
-    selectors: [["input", "type", "range", "formControlName", ""], ["input", "type", "range", "formControl", ""], ["input", "type", "range", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "range", "formControlName", ""],
+      ["input", "type", "range", "formControl", ""],
+      ["input", "type", "range", "ngModel", ""],
+    ],
     hostBindings: function RangeValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("change", function RangeValueAccessor_change_HostBindingHandler($event) {
-          return ctx.onChange($event.target.value);
-        })("input", function RangeValueAccessor_input_HostBindingHandler($event) {
-          return ctx.onChange($event.target.value);
-        })("blur", function RangeValueAccessor_blur_HostBindingHandler() {
+        ɵɵlistener(
+          "change",
+          function RangeValueAccessor_change_HostBindingHandler($event) {
+            return ctx.onChange($event.target.value);
+          },
+        )(
+          "input",
+          function RangeValueAccessor_input_HostBindingHandler($event) {
+            return ctx.onChange($event.target.value);
+          },
+        )("blur", function RangeValueAccessor_blur_HostBindingHandler() {
           return ctx.onTouched();
         });
       }
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([RANGE_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([RANGE_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(RangeValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=range][formControlName],input[type=range][formControl],input[type=range][ngModel]",
-      host: {
-        "(change)": "onChange($any($event.target).value)",
-        "(input)": "onChange($any($event.target).value)",
-        "(blur)": "onTouched()"
-      },
-      providers: [RANGE_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      RangeValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=range][formControlName],input[type=range][formControl],input[type=range][ngModel]",
+              host: {
+                "(change)": "onChange($any($event.target).value)",
+                "(input)": "onChange($any($event.target).value)",
+                "(blur)": "onTouched()",
+              },
+              providers: [RANGE_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var FormArray = class extends AbstractControl {
   constructor(controls, validatorOrOpts, asyncValidator) {
-    super(pickValidators(validatorOrOpts), pickAsyncValidators(asyncValidator, validatorOrOpts));
+    super(
+      pickValidators(validatorOrOpts),
+      pickAsyncValidators(asyncValidator, validatorOrOpts),
+    );
     this.controls = controls;
     this._initObservables();
     this._setUpdateStrategy(validatorOrOpts);
     this._setUpControls();
     this.updateValueAndValidity({
       onlySelf: true,
-      emitEvent: !!this.asyncValidator
+      emitEvent: !!this.asyncValidator,
     });
   }
   controls;
@@ -2776,7 +3505,7 @@ var FormArray = class extends AbstractControl {
       this._registerControl(control);
     }
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
     this._onCollectionChange();
   }
@@ -2784,31 +3513,31 @@ var FormArray = class extends AbstractControl {
     this.controls.splice(index, 0, control);
     this._registerControl(control);
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
   }
   removeAt(index, options = {}) {
     let adjustedIndex = this._adjustIndex(index);
     if (adjustedIndex < 0) adjustedIndex = 0;
-    if (this.controls[adjustedIndex]) this.controls[adjustedIndex]._registerOnCollectionChange(() => {
-    });
+    if (this.controls[adjustedIndex])
+      this.controls[adjustedIndex]._registerOnCollectionChange(() => {});
     this.controls.splice(adjustedIndex, 1);
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
   }
   setControl(index, control, options = {}) {
     let adjustedIndex = this._adjustIndex(index);
     if (adjustedIndex < 0) adjustedIndex = 0;
-    if (this.controls[adjustedIndex]) this.controls[adjustedIndex]._registerOnCollectionChange(() => {
-    });
+    if (this.controls[adjustedIndex])
+      this.controls[adjustedIndex]._registerOnCollectionChange(() => {});
     this.controls.splice(adjustedIndex, 1);
     if (control) {
       this.controls.splice(adjustedIndex, 0, control);
       this._registerControl(control);
     }
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
     this._onCollectionChange();
   }
@@ -2821,7 +3550,7 @@ var FormArray = class extends AbstractControl {
       assertControlPresent(this, false, index);
       this.at(index).setValue(newValue, {
         onlySelf: true,
-        emitEvent: options.emitEvent
+        emitEvent: options.emitEvent,
       });
     });
     this.updateValueAndValidity(options);
@@ -2832,7 +3561,7 @@ var FormArray = class extends AbstractControl {
       if (this.at(index)) {
         this.at(index).patchValue(newValue, {
           onlySelf: true,
-          emitEvent: options.emitEvent
+          emitEvent: options.emitEvent,
         });
       }
     });
@@ -2840,9 +3569,12 @@ var FormArray = class extends AbstractControl {
   }
   reset(value = [], options = {}) {
     this._forEachChild((control, index) => {
-      control.reset(value[index], __spreadProps(__spreadValues({}, options), {
-        onlySelf: true
-      }));
+      control.reset(
+        value[index],
+        __spreadProps(__spreadValues({}, options), {
+          onlySelf: true,
+        }),
+      );
     });
     this._updatePristine(options, this);
     this._updateTouched(options, this);
@@ -2856,11 +3588,12 @@ var FormArray = class extends AbstractControl {
   }
   clear(options = {}) {
     if (this.controls.length < 1) return;
-    this._forEachChild((control) => control._registerOnCollectionChange(() => {
-    }));
+    this._forEachChild((control) =>
+      control._registerOnCollectionChange(() => {}),
+    );
     this.controls.splice(0);
     this.updateValueAndValidity({
-      emitEvent: options.emitEvent
+      emitEvent: options.emitEvent,
     });
   }
   _adjustIndex(index) {
@@ -2870,9 +3603,10 @@ var FormArray = class extends AbstractControl {
     let subtreeUpdated = this.controls.reduce((updated, child) => {
       return child._syncPendingControls() ? true : updated;
     }, false);
-    if (subtreeUpdated) this.updateValueAndValidity({
-      onlySelf: true
-    });
+    if (subtreeUpdated)
+      this.updateValueAndValidity({
+        onlySelf: true,
+      });
     return subtreeUpdated;
   }
   _forEachChild(cb) {
@@ -2881,10 +3615,14 @@ var FormArray = class extends AbstractControl {
     });
   }
   _updateValue() {
-    this.value = this.controls.filter((control) => control.enabled || this.disabled).map((control) => control.value);
+    this.value = this.controls
+      .filter((control) => control.enabled || this.disabled)
+      .map((control) => control.value);
   }
   _anyControls(condition) {
-    return this.controls.some((control) => control.enabled && condition(control));
+    return this.controls.some(
+      (control) => control.enabled && condition(control),
+    );
   }
   _setUpControls() {
     this._forEachChild((control) => this._registerControl(control));
@@ -2913,12 +3651,26 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
   set submitted(value) {
     this._submittedReactive.set(value);
   }
-  _submitted = computed(() => this._submittedReactive(), ...ngDevMode ? [{
-    debugName: "_submitted"
-  }] : []);
-  _submittedReactive = signal(false, ...ngDevMode ? [{
-    debugName: "_submittedReactive"
-  }] : []);
+  _submitted = computed(
+    () => this._submittedReactive(),
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_submitted",
+          },
+        ]
+      : []),
+  );
+  _submittedReactive = signal(
+    false,
+    ...(ngDevMode
+      ? [
+          {
+            debugName: "_submittedReactive",
+          },
+        ]
+      : []),
+  );
   _oldForm;
   _onCollectionChange = () => this._updateDomValue();
   directives = [];
@@ -2947,8 +3699,7 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
     if (this.form) {
       cleanUpValidators(this.form, this);
       if (this.form._onCollectionChange === this._onCollectionChange) {
-        this.form._registerOnCollectionChange(() => {
-        });
+        this.form._registerOnCollectionChange(() => {});
       }
     }
   }
@@ -2962,7 +3713,7 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
     const ctrl = this.form.get(dir.path);
     setUpControl(ctrl, dir, this.callSetDisabledState);
     ctrl.updateValueAndValidity({
-      emitEvent: false
+      emitEvent: false,
     });
     this.directives.push(dir);
     return ctrl;
@@ -3023,14 +3774,14 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
       }
     });
     this.form._updateTreeValidity({
-      emitEvent: false
+      emitEvent: false,
     });
   }
   _setUpFormContainer(dir) {
     const ctrl = this.form.get(dir.path);
     setUpFormContainer(ctrl, dir);
     ctrl.updateValueAndValidity({
-      emitEvent: false
+      emitEvent: false,
     });
   }
   _cleanUpFormContainer(dir) {
@@ -3040,7 +3791,7 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
         const isControlUpdated = cleanUpFormContainer(ctrl, dir);
         if (isControlUpdated) {
           ctrl.updateValueAndValidity({
-            emitEvent: false
+            emitEvent: false,
           });
         }
       }
@@ -3049,8 +3800,7 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
   _updateRegistrations() {
     this.form._registerOnCollectionChange(this._onCollectionChange);
     if (this._oldForm) {
-      this._oldForm._registerOnCollectionChange(() => {
-      });
+      this._oldForm._registerOnCollectionChange(() => {});
     }
   }
   _updateValidators() {
@@ -3065,49 +3815,76 @@ var AbstractFormDirective = class _AbstractFormDirective extends ControlContaine
     }
   }
   static ɵfac = function AbstractFormDirective_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _AbstractFormDirective)(ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10), ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8));
+    return new (__ngFactoryType__ || _AbstractFormDirective)(
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+      ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _AbstractFormDirective,
-    features: [ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature]
+    features: [ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AbstractFormDirective, [{
-    type: Directive
-  }], () => [{
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [CALL_SET_DISABLED_STATE]
-    }]
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      AbstractFormDirective,
+      [
+        {
+          type: Directive,
+        },
+      ],
+      () => [
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [CALL_SET_DISABLED_STATE],
+            },
+          ],
+        },
+      ],
+      null,
+    );
 })();
 var formDirectiveProvider$1 = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => FormArrayDirective)
+  useExisting: forwardRef(() => FormArrayDirective),
 };
 var FormArrayDirective = class _FormArrayDirective extends AbstractFormDirective {
   form = null;
@@ -3118,7 +3895,11 @@ var FormArrayDirective = class _FormArrayDirective extends AbstractFormDirective
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFormArrayDirective_BaseFactory;
     return function FormArrayDirective_Factory(__ngFactoryType__) {
-      return (ɵFormArrayDirective_BaseFactory || (ɵFormArrayDirective_BaseFactory = ɵɵgetInheritedFactory(_FormArrayDirective)))(__ngFactoryType__ || _FormArrayDirective);
+      return (
+        ɵFormArrayDirective_BaseFactory ||
+        (ɵFormArrayDirective_BaseFactory =
+          ɵɵgetInheritedFactory(_FormArrayDirective))
+      )(__ngFactoryType__ || _FormArrayDirective);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
@@ -3126,51 +3907,75 @@ var FormArrayDirective = class _FormArrayDirective extends AbstractFormDirective
     selectors: [["", "formArray", ""]],
     hostBindings: function FormArrayDirective_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("submit", function FormArrayDirective_submit_HostBindingHandler($event) {
-          return ctx.onSubmit($event);
-        })("reset", function FormArrayDirective_reset_HostBindingHandler() {
+        ɵɵlistener(
+          "submit",
+          function FormArrayDirective_submit_HostBindingHandler($event) {
+            return ctx.onSubmit($event);
+          },
+        )("reset", function FormArrayDirective_reset_HostBindingHandler() {
           return ctx.onReset();
         });
       }
     },
     inputs: {
-      form: [0, "formArray", "form"]
+      form: [0, "formArray", "form"],
     },
     outputs: {
-      ngSubmit: "ngSubmit"
+      ngSubmit: "ngSubmit",
     },
     exportAs: ["ngForm"],
     standalone: false,
-    features: [ɵɵProvidersFeature([formDirectiveProvider$1]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([formDirectiveProvider$1]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormArrayDirective, [{
-    type: Directive,
-    args: [{
-      selector: "[formArray]",
-      providers: [formDirectiveProvider$1],
-      host: {
-        "(submit)": "onSubmit($event)",
-        "(reset)": "onReset()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormArrayDirective,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formArray]",
+              providers: [formDirectiveProvider$1],
+              host: {
+                "(submit)": "onSubmit($event)",
+                "(reset)": "onReset()",
+              },
+              exportAs: "ngForm",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        form: [
+          {
+            type: Input,
+            args: ["formArray"],
+          },
+        ],
+        ngSubmit: [
+          {
+            type: Output,
+          },
+        ],
       },
-      exportAs: "ngForm",
-      standalone: false
-    }]
-  }], null, {
-    form: [{
-      type: Input,
-      args: ["formArray"]
-    }],
-    ngSubmit: [{
-      type: Output
-    }]
-  });
+    );
 })();
-var NG_MODEL_WITH_FORM_CONTROL_WARNING = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "NgModelWithFormControlWarning" : "");
+var NG_MODEL_WITH_FORM_CONTROL_WARNING = new InjectionToken(
+  typeof ngDevMode !== "undefined" && ngDevMode
+    ? "NgModelWithFormControlWarning"
+    : "",
+);
 var formControlBinding = {
   provide: NgControl,
-  useExisting: forwardRef(() => FormControlDirective)
+  useExisting: forwardRef(() => FormControlDirective),
 };
 var FormControlDirective = class _FormControlDirective extends NgControl {
   _ngModelWarningConfig;
@@ -3186,7 +3991,13 @@ var FormControlDirective = class _FormControlDirective extends NgControl {
   update = new EventEmitter();
   static _ngModelWarningSentOnce = false;
   _ngModelWarningSent = false;
-  constructor(validators, asyncValidators, valueAccessors, _ngModelWarningConfig, callSetDisabledState) {
+  constructor(
+    validators,
+    asyncValidators,
+    valueAccessors,
+    _ngModelWarningConfig,
+    callSetDisabledState,
+  ) {
     super();
     this._ngModelWarningConfig = _ngModelWarningConfig;
     this.callSetDisabledState = callSetDisabledState;
@@ -3202,12 +4013,17 @@ var FormControlDirective = class _FormControlDirective extends NgControl {
       }
       setUpControl(this.form, this, this.callSetDisabledState);
       this.form.updateValueAndValidity({
-        emitEvent: false
+        emitEvent: false,
       });
     }
     if (isPropertyUpdated(changes, this.viewModel)) {
       if (typeof ngDevMode === "undefined" || ngDevMode) {
-        _ngModelWarning("formControl", _FormControlDirective, this, this._ngModelWarningConfig);
+        _ngModelWarning(
+          "formControl",
+          _FormControlDirective,
+          this,
+          this._ngModelWarningConfig,
+        );
       }
       this.form.setValue(this.model);
       this.viewModel = this.model;
@@ -3232,7 +4048,13 @@ var FormControlDirective = class _FormControlDirective extends NgControl {
     return changes.hasOwnProperty("form");
   }
   static ɵfac = function FormControlDirective_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _FormControlDirective)(ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10), ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10), ɵɵdirectiveInject(NG_MODEL_WITH_FORM_CONTROL_WARNING, 8), ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8));
+    return new (__ngFactoryType__ || _FormControlDirective)(
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10),
+      ɵɵdirectiveInject(NG_MODEL_WITH_FORM_CONTROL_WARNING, 8),
+      ɵɵdirectiveInject(CALL_SET_DISABLED_STATE, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _FormControlDirective,
@@ -3240,93 +4062,139 @@ var FormControlDirective = class _FormControlDirective extends NgControl {
     inputs: {
       form: [0, "formControl", "form"],
       isDisabled: [0, "disabled", "isDisabled"],
-      model: [0, "ngModel", "model"]
+      model: [0, "ngModel", "model"],
     },
     outputs: {
-      update: "ngModelChange"
+      update: "ngModelChange",
     },
     exportAs: ["ngForm"],
     standalone: false,
-    features: [ɵɵProvidersFeature([formControlBinding]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature]
+    features: [
+      ɵɵProvidersFeature([formControlBinding]),
+      ɵɵInheritDefinitionFeature,
+      ɵɵNgOnChangesFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormControlDirective, [{
-    type: Directive,
-    args: [{
-      selector: "[formControl]",
-      providers: [formControlBinding],
-      exportAs: "ngForm",
-      standalone: false
-    }]
-  }], () => [{
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALUE_ACCESSOR]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [NG_MODEL_WITH_FORM_CONTROL_WARNING]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [CALL_SET_DISABLED_STATE]
-    }]
-  }], {
-    form: [{
-      type: Input,
-      args: ["formControl"]
-    }],
-    isDisabled: [{
-      type: Input,
-      args: ["disabled"]
-    }],
-    model: [{
-      type: Input,
-      args: ["ngModel"]
-    }],
-    update: [{
-      type: Output,
-      args: ["ngModelChange"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormControlDirective,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formControl]",
+              providers: [formControlBinding],
+              exportAs: "ngForm",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALUE_ACCESSOR],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [NG_MODEL_WITH_FORM_CONTROL_WARNING],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [CALL_SET_DISABLED_STATE],
+            },
+          ],
+        },
+      ],
+      {
+        form: [
+          {
+            type: Input,
+            args: ["formControl"],
+          },
+        ],
+        isDisabled: [
+          {
+            type: Input,
+            args: ["disabled"],
+          },
+        ],
+        model: [
+          {
+            type: Input,
+            args: ["ngModel"],
+          },
+        ],
+        update: [
+          {
+            type: Output,
+            args: ["ngModelChange"],
+          },
+        ],
+      },
+    );
 })();
 var formGroupNameProvider = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => FormGroupName)
+  useExisting: forwardRef(() => FormGroupName),
 };
 var FormGroupName = class _FormGroupName extends AbstractFormGroupDirective {
   name = null;
@@ -3337,70 +4205,108 @@ var FormGroupName = class _FormGroupName extends AbstractFormGroupDirective {
     this._setAsyncValidators(asyncValidators);
   }
   _checkParentType() {
-    if (hasInvalidParent(this._parent) && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      hasInvalidParent(this._parent) &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       throw groupParentException();
     }
   }
   static ɵfac = function FormGroupName_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _FormGroupName)(ɵɵdirectiveInject(ControlContainer, 13), ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10));
+    return new (__ngFactoryType__ || _FormGroupName)(
+      ɵɵdirectiveInject(ControlContainer, 13),
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _FormGroupName,
     selectors: [["", "formGroupName", ""]],
     inputs: {
-      name: [0, "formGroupName", "name"]
+      name: [0, "formGroupName", "name"],
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([formGroupNameProvider]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([formGroupNameProvider]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormGroupName, [{
-    type: Directive,
-    args: [{
-      selector: "[formGroupName]",
-      providers: [formGroupNameProvider],
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }, {
-      type: SkipSelf
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }], {
-    name: [{
-      type: Input,
-      args: ["formGroupName"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormGroupName,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formGroupName]",
+              providers: [formGroupNameProvider],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+            {
+              type: SkipSelf,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+            args: ["formGroupName"],
+          },
+        ],
+      },
+    );
 })();
 var formArrayNameProvider = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => FormArrayName)
+  useExisting: forwardRef(() => FormArrayName),
 };
 var FormArrayName = class _FormArrayName extends ControlContainer {
   _parent;
@@ -3412,7 +4318,10 @@ var FormArrayName = class _FormArrayName extends ControlContainer {
     this._setAsyncValidators(asyncValidators);
   }
   ngOnInit() {
-    if (hasInvalidParent(this._parent) && (typeof ngDevMode === "undefined" || ngDevMode)) {
+    if (
+      hasInvalidParent(this._parent) &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
       throw arrayParentException();
     }
     this.formDirective.addFormArray(this);
@@ -3427,71 +4336,113 @@ var FormArrayName = class _FormArrayName extends ControlContainer {
     return this._parent ? this._parent.formDirective : null;
   }
   get path() {
-    return controlPath(this.name == null ? this.name : this.name.toString(), this._parent);
+    return controlPath(
+      this.name == null ? this.name : this.name.toString(),
+      this._parent,
+    );
   }
   static ɵfac = function FormArrayName_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _FormArrayName)(ɵɵdirectiveInject(ControlContainer, 13), ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10));
+    return new (__ngFactoryType__ || _FormArrayName)(
+      ɵɵdirectiveInject(ControlContainer, 13),
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _FormArrayName,
     selectors: [["", "formArrayName", ""]],
     inputs: {
-      name: [0, "formArrayName", "name"]
+      name: [0, "formArrayName", "name"],
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([formArrayNameProvider]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([formArrayNameProvider]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormArrayName, [{
-    type: Directive,
-    args: [{
-      selector: "[formArrayName]",
-      providers: [formArrayNameProvider],
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }, {
-      type: SkipSelf
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }], {
-    name: [{
-      type: Input,
-      args: ["formArrayName"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormArrayName,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formArrayName]",
+              providers: [formArrayNameProvider],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+            {
+              type: SkipSelf,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+            args: ["formArrayName"],
+          },
+        ],
+      },
+    );
 })();
 function hasInvalidParent(parent) {
-  return !(parent instanceof FormGroupName) && !(parent instanceof AbstractFormDirective) && !(parent instanceof FormArrayName);
+  return (
+    !(parent instanceof FormGroupName) &&
+    !(parent instanceof AbstractFormDirective) &&
+    !(parent instanceof FormArrayName)
+  );
 }
 var controlNameBinding = {
   provide: NgControl,
-  useExisting: forwardRef(() => FormControlName)
+  useExisting: forwardRef(() => FormControlName),
 };
 var FormControlName = class _FormControlName extends NgControl {
   _ngModelWarningConfig;
@@ -3508,7 +4459,13 @@ var FormControlName = class _FormControlName extends NgControl {
   update = new EventEmitter();
   static _ngModelWarningSentOnce = false;
   _ngModelWarningSent = false;
-  constructor(parent, validators, asyncValidators, valueAccessors, _ngModelWarningConfig) {
+  constructor(
+    parent,
+    validators,
+    asyncValidators,
+    valueAccessors,
+    _ngModelWarningConfig,
+  ) {
     super();
     this._ngModelWarningConfig = _ngModelWarningConfig;
     this._parent = parent;
@@ -3520,7 +4477,12 @@ var FormControlName = class _FormControlName extends NgControl {
     if (!this._added) this._setUpControl();
     if (isPropertyUpdated(changes, this.viewModel)) {
       if (typeof ngDevMode === "undefined" || ngDevMode) {
-        _ngModelWarning("formControlName", _FormControlName, this, this._ngModelWarningConfig);
+        _ngModelWarning(
+          "formControlName",
+          _FormControlName,
+          this,
+          this._ngModelWarningConfig,
+        );
       }
       this.viewModel = this.model;
       this.formDirective.updateModel(this, this.model);
@@ -3536,7 +4498,10 @@ var FormControlName = class _FormControlName extends NgControl {
     this.update.emit(newValue);
   }
   get path() {
-    return controlPath(this.name == null ? this.name : this.name.toString(), this._parent);
+    return controlPath(
+      this.name == null ? this.name : this.name.toString(),
+      this._parent,
+    );
   }
   get formDirective() {
     return this._parent ? this._parent.formDirective : null;
@@ -3549,7 +4514,13 @@ var FormControlName = class _FormControlName extends NgControl {
     this._added = true;
   }
   static ɵfac = function FormControlName_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _FormControlName)(ɵɵdirectiveInject(ControlContainer, 13), ɵɵdirectiveInject(NG_VALIDATORS, 10), ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10), ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10), ɵɵdirectiveInject(NG_MODEL_WITH_FORM_CONTROL_WARNING, 8));
+    return new (__ngFactoryType__ || _FormControlName)(
+      ɵɵdirectiveInject(ControlContainer, 13),
+      ɵɵdirectiveInject(NG_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_ASYNC_VALIDATORS, 10),
+      ɵɵdirectiveInject(NG_VALUE_ACCESSOR, 10),
+      ɵɵdirectiveInject(NG_MODEL_WITH_FORM_CONTROL_WARNING, 8),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _FormControlName,
@@ -3557,99 +4528,153 @@ var FormControlName = class _FormControlName extends NgControl {
     inputs: {
       name: [0, "formControlName", "name"],
       isDisabled: [0, "disabled", "isDisabled"],
-      model: [0, "ngModel", "model"]
+      model: [0, "ngModel", "model"],
     },
     outputs: {
-      update: "ngModelChange"
+      update: "ngModelChange",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([controlNameBinding]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature]
+    features: [
+      ɵɵProvidersFeature([controlNameBinding]),
+      ɵɵInheritDefinitionFeature,
+      ɵɵNgOnChangesFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormControlName, [{
-    type: Directive,
-    args: [{
-      selector: "[formControlName]",
-      providers: [controlNameBinding],
-      standalone: false
-    }]
-  }], () => [{
-    type: ControlContainer,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }, {
-      type: SkipSelf
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_ASYNC_VALIDATORS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Self
-    }, {
-      type: Inject,
-      args: [NG_VALUE_ACCESSOR]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [NG_MODEL_WITH_FORM_CONTROL_WARNING]
-    }]
-  }], {
-    name: [{
-      type: Input,
-      args: ["formControlName"]
-    }],
-    isDisabled: [{
-      type: Input,
-      args: ["disabled"]
-    }],
-    model: [{
-      type: Input,
-      args: ["ngModel"]
-    }],
-    update: [{
-      type: Output,
-      args: ["ngModelChange"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormControlName,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formControlName]",
+              providers: [controlNameBinding],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ControlContainer,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+            {
+              type: SkipSelf,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_ASYNC_VALIDATORS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Self,
+            },
+            {
+              type: Inject,
+              args: [NG_VALUE_ACCESSOR],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [NG_MODEL_WITH_FORM_CONTROL_WARNING],
+            },
+          ],
+        },
+      ],
+      {
+        name: [
+          {
+            type: Input,
+            args: ["formControlName"],
+          },
+        ],
+        isDisabled: [
+          {
+            type: Input,
+            args: ["disabled"],
+          },
+        ],
+        model: [
+          {
+            type: Input,
+            args: ["ngModel"],
+          },
+        ],
+        update: [
+          {
+            type: Output,
+            args: ["ngModelChange"],
+          },
+        ],
+      },
+    );
 })();
 function checkParentType(parent, name) {
-  if (!(parent instanceof FormGroupName) && parent instanceof AbstractFormGroupDirective) {
+  if (
+    !(parent instanceof FormGroupName) &&
+    parent instanceof AbstractFormGroupDirective
+  ) {
     throw ngModelGroupException();
-  } else if (!(parent instanceof FormGroupName) && !(parent instanceof AbstractFormDirective) && !(parent instanceof FormArrayName)) {
+  } else if (
+    !(parent instanceof FormGroupName) &&
+    !(parent instanceof AbstractFormDirective) &&
+    !(parent instanceof FormArrayName)
+  ) {
     throw controlParentException(name);
   }
 }
 var formDirectiveProvider = {
   provide: ControlContainer,
-  useExisting: forwardRef(() => FormGroupDirective)
+  useExisting: forwardRef(() => FormGroupDirective),
 };
 var FormGroupDirective = class _FormGroupDirective extends AbstractFormDirective {
   form = null;
@@ -3660,7 +4685,11 @@ var FormGroupDirective = class _FormGroupDirective extends AbstractFormDirective
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFormGroupDirective_BaseFactory;
     return function FormGroupDirective_Factory(__ngFactoryType__) {
-      return (ɵFormGroupDirective_BaseFactory || (ɵFormGroupDirective_BaseFactory = ɵɵgetInheritedFactory(_FormGroupDirective)))(__ngFactoryType__ || _FormGroupDirective);
+      return (
+        ɵFormGroupDirective_BaseFactory ||
+        (ɵFormGroupDirective_BaseFactory =
+          ɵɵgetInheritedFactory(_FormGroupDirective))
+      )(__ngFactoryType__ || _FormGroupDirective);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
@@ -3668,51 +4697,71 @@ var FormGroupDirective = class _FormGroupDirective extends AbstractFormDirective
     selectors: [["", "formGroup", ""]],
     hostBindings: function FormGroupDirective_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("submit", function FormGroupDirective_submit_HostBindingHandler($event) {
-          return ctx.onSubmit($event);
-        })("reset", function FormGroupDirective_reset_HostBindingHandler() {
+        ɵɵlistener(
+          "submit",
+          function FormGroupDirective_submit_HostBindingHandler($event) {
+            return ctx.onSubmit($event);
+          },
+        )("reset", function FormGroupDirective_reset_HostBindingHandler() {
           return ctx.onReset();
         });
       }
     },
     inputs: {
-      form: [0, "formGroup", "form"]
+      form: [0, "formGroup", "form"],
     },
     outputs: {
-      ngSubmit: "ngSubmit"
+      ngSubmit: "ngSubmit",
     },
     exportAs: ["ngForm"],
     standalone: false,
-    features: [ɵɵProvidersFeature([formDirectiveProvider]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([formDirectiveProvider]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormGroupDirective, [{
-    type: Directive,
-    args: [{
-      selector: "[formGroup]",
-      providers: [formDirectiveProvider],
-      host: {
-        "(submit)": "onSubmit($event)",
-        "(reset)": "onReset()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormGroupDirective,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "[formGroup]",
+              providers: [formDirectiveProvider],
+              host: {
+                "(submit)": "onSubmit($event)",
+                "(reset)": "onReset()",
+              },
+              exportAs: "ngForm",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        form: [
+          {
+            type: Input,
+            args: ["formGroup"],
+          },
+        ],
+        ngSubmit: [
+          {
+            type: Output,
+          },
+        ],
       },
-      exportAs: "ngForm",
-      standalone: false
-    }]
-  }], null, {
-    form: [{
-      type: Input,
-      args: ["formGroup"]
-    }],
-    ngSubmit: [{
-      type: Output
-    }]
-  });
+    );
 })();
 var SELECT_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SelectControlValueAccessor),
-  multi: true
+  multi: true,
 };
 function _buildValueString$1(id, value) {
   if (id == null) return `${value}`;
@@ -3727,8 +4776,14 @@ var SelectControlValueAccessor = class _SelectControlValueAccessor extends Built
   _optionMap = /* @__PURE__ */ new Map();
   _idCounter = 0;
   set compareWith(fn) {
-    if (typeof fn !== "function" && (typeof ngDevMode === "undefined" || ngDevMode)) {
-      throw new RuntimeError(1201, `compareWith must be a function, but received ${JSON.stringify(fn)}`);
+    if (
+      typeof fn !== "function" &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
+      throw new RuntimeError(
+        1201,
+        `compareWith must be a function, but received ${JSON.stringify(fn)}`,
+      );
     }
     this._compareWith = fn;
   }
@@ -3742,17 +4797,20 @@ var SelectControlValueAccessor = class _SelectControlValueAccessor extends Built
       return;
     }
     this._queuedWrite = true;
-    afterNextRender({
-      write: () => {
-        if (this.destroyRef.destroyed) {
-          return;
-        }
-        this._queuedWrite = false;
-        this.writeValue(this.value);
-      }
-    }, {
-      injector: this.appRefInjector
-    });
+    afterNextRender(
+      {
+        write: () => {
+          if (this.destroyRef.destroyed) {
+            return;
+          }
+          this._queuedWrite = false;
+          this.writeValue(this.value);
+        },
+      },
+      {
+        injector: this.appRefInjector,
+      },
+    );
   }
   writeValue(value) {
     this.cdr.markForCheck();
@@ -3783,45 +4841,78 @@ var SelectControlValueAccessor = class _SelectControlValueAccessor extends Built
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵSelectControlValueAccessor_BaseFactory;
     return function SelectControlValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵSelectControlValueAccessor_BaseFactory || (ɵSelectControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_SelectControlValueAccessor)))(__ngFactoryType__ || _SelectControlValueAccessor);
+      return (
+        ɵSelectControlValueAccessor_BaseFactory ||
+        (ɵSelectControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(
+          _SelectControlValueAccessor,
+        ))
+      )(__ngFactoryType__ || _SelectControlValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _SelectControlValueAccessor,
-    selectors: [["select", "formControlName", "", 3, "multiple", ""], ["select", "formControl", "", 3, "multiple", ""], ["select", "ngModel", "", 3, "multiple", ""]],
+    selectors: [
+      ["select", "formControlName", "", 3, "multiple", ""],
+      ["select", "formControl", "", 3, "multiple", ""],
+      ["select", "ngModel", "", 3, "multiple", ""],
+    ],
     hostBindings: function SelectControlValueAccessor_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("change", function SelectControlValueAccessor_change_HostBindingHandler($event) {
-          return ctx.onChange($event.target.value);
-        })("blur", function SelectControlValueAccessor_blur_HostBindingHandler() {
-          return ctx.onTouched();
-        });
+        ɵɵlistener(
+          "change",
+          function SelectControlValueAccessor_change_HostBindingHandler(
+            $event,
+          ) {
+            return ctx.onChange($event.target.value);
+          },
+        )(
+          "blur",
+          function SelectControlValueAccessor_blur_HostBindingHandler() {
+            return ctx.onTouched();
+          },
+        );
       }
     },
     inputs: {
-      compareWith: "compareWith"
+      compareWith: "compareWith",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([SELECT_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([SELECT_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(SelectControlValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]",
-      host: {
-        "(change)": "onChange($any($event.target).value)",
-        "(blur)": "onTouched()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      SelectControlValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]",
+              host: {
+                "(change)": "onChange($any($event.target).value)",
+                "(blur)": "onTouched()",
+              },
+              providers: [SELECT_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        compareWith: [
+          {
+            type: Input,
+          },
+        ],
       },
-      providers: [SELECT_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], null, {
-    compareWith: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var NgSelectOption = class _NgSelectOption {
   _element;
@@ -3854,51 +4945,76 @@ var NgSelectOption = class _NgSelectOption {
     }
   }
   static ɵfac = function NgSelectOption_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _NgSelectOption)(ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(SelectControlValueAccessor, 9));
+    return new (__ngFactoryType__ || _NgSelectOption)(
+      ɵɵdirectiveInject(ElementRef),
+      ɵɵdirectiveInject(Renderer2),
+      ɵɵdirectiveInject(SelectControlValueAccessor, 9),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _NgSelectOption,
     selectors: [["option"]],
     inputs: {
       ngValue: "ngValue",
-      value: "value"
+      value: "value",
     },
-    standalone: false
+    standalone: false,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NgSelectOption, [{
-    type: Directive,
-    args: [{
-      selector: "option",
-      standalone: false
-    }]
-  }], () => [{
-    type: ElementRef
-  }, {
-    type: Renderer2
-  }, {
-    type: SelectControlValueAccessor,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }]
-  }], {
-    ngValue: [{
-      type: Input,
-      args: ["ngValue"]
-    }],
-    value: [{
-      type: Input,
-      args: ["value"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NgSelectOption,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "option",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ElementRef,
+        },
+        {
+          type: Renderer2,
+        },
+        {
+          type: SelectControlValueAccessor,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+          ],
+        },
+      ],
+      {
+        ngValue: [
+          {
+            type: Input,
+            args: ["ngValue"],
+          },
+        ],
+        value: [
+          {
+            type: Input,
+            args: ["value"],
+          },
+        ],
+      },
+    );
 })();
 var SELECT_MULTIPLE_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SelectMultipleControlValueAccessor),
-  multi: true
+  multi: true,
 };
 function _buildValueString(id, value) {
   if (id == null) return `${value}`;
@@ -3914,8 +5030,14 @@ var SelectMultipleControlValueAccessor = class _SelectMultipleControlValueAccess
   _optionMap = /* @__PURE__ */ new Map();
   _idCounter = 0;
   set compareWith(fn) {
-    if (typeof fn !== "function" && (typeof ngDevMode === "undefined" || ngDevMode)) {
-      throw new RuntimeError(1201, `compareWith must be a function, but received ${JSON.stringify(fn)}`);
+    if (
+      typeof fn !== "function" &&
+      (typeof ngDevMode === "undefined" || ngDevMode)
+    ) {
+      throw new RuntimeError(
+        1201,
+        `compareWith must be a function, but received ${JSON.stringify(fn)}`,
+      );
     }
     this._compareWith = fn;
   }
@@ -3973,50 +5095,89 @@ var SelectMultipleControlValueAccessor = class _SelectMultipleControlValueAccess
   }
   _getOptionValue(valueString) {
     const id = _extractId(valueString);
-    return this._optionMap.has(id) ? this._optionMap.get(id)._value : valueString;
+    return this._optionMap.has(id)
+      ? this._optionMap.get(id)._value
+      : valueString;
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵSelectMultipleControlValueAccessor_BaseFactory;
-    return function SelectMultipleControlValueAccessor_Factory(__ngFactoryType__) {
-      return (ɵSelectMultipleControlValueAccessor_BaseFactory || (ɵSelectMultipleControlValueAccessor_BaseFactory = ɵɵgetInheritedFactory(_SelectMultipleControlValueAccessor)))(__ngFactoryType__ || _SelectMultipleControlValueAccessor);
+    return function SelectMultipleControlValueAccessor_Factory(
+      __ngFactoryType__,
+    ) {
+      return (
+        ɵSelectMultipleControlValueAccessor_BaseFactory ||
+        (ɵSelectMultipleControlValueAccessor_BaseFactory =
+          ɵɵgetInheritedFactory(_SelectMultipleControlValueAccessor))
+      )(__ngFactoryType__ || _SelectMultipleControlValueAccessor);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _SelectMultipleControlValueAccessor,
-    selectors: [["select", "multiple", "", "formControlName", ""], ["select", "multiple", "", "formControl", ""], ["select", "multiple", "", "ngModel", ""]],
-    hostBindings: function SelectMultipleControlValueAccessor_HostBindings(rf, ctx) {
+    selectors: [
+      ["select", "multiple", "", "formControlName", ""],
+      ["select", "multiple", "", "formControl", ""],
+      ["select", "multiple", "", "ngModel", ""],
+    ],
+    hostBindings: function SelectMultipleControlValueAccessor_HostBindings(
+      rf,
+      ctx,
+    ) {
       if (rf & 1) {
-        ɵɵlistener("change", function SelectMultipleControlValueAccessor_change_HostBindingHandler($event) {
-          return ctx.onChange($event.target);
-        })("blur", function SelectMultipleControlValueAccessor_blur_HostBindingHandler() {
-          return ctx.onTouched();
-        });
+        ɵɵlistener(
+          "change",
+          function SelectMultipleControlValueAccessor_change_HostBindingHandler(
+            $event,
+          ) {
+            return ctx.onChange($event.target);
+          },
+        )(
+          "blur",
+          function SelectMultipleControlValueAccessor_blur_HostBindingHandler() {
+            return ctx.onTouched();
+          },
+        );
       }
     },
     inputs: {
-      compareWith: "compareWith"
+      compareWith: "compareWith",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([SELECT_MULTIPLE_VALUE_ACCESSOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([SELECT_MULTIPLE_VALUE_ACCESSOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(SelectMultipleControlValueAccessor, [{
-    type: Directive,
-    args: [{
-      selector: "select[multiple][formControlName],select[multiple][formControl],select[multiple][ngModel]",
-      host: {
-        "(change)": "onChange($event.target)",
-        "(blur)": "onTouched()"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      SelectMultipleControlValueAccessor,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "select[multiple][formControlName],select[multiple][formControl],select[multiple][ngModel]",
+              host: {
+                "(change)": "onChange($event.target)",
+                "(blur)": "onTouched()",
+              },
+              providers: [SELECT_MULTIPLE_VALUE_ACCESSOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        compareWith: [
+          {
+            type: Input,
+          },
+        ],
       },
-      providers: [SELECT_MULTIPLE_VALUE_ACCESSOR],
-      standalone: false
-    }]
-  }], null, {
-    compareWith: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var ɵNgSelectMultipleOption = class _ɵNgSelectMultipleOption {
   _element;
@@ -4051,7 +5212,11 @@ var ɵNgSelectMultipleOption = class _ɵNgSelectMultipleOption {
     this._renderer.setProperty(this._element.nativeElement, "value", value);
   }
   _setSelected(selected) {
-    this._renderer.setProperty(this._element.nativeElement, "selected", selected);
+    this._renderer.setProperty(
+      this._element.nativeElement,
+      "selected",
+      selected,
+    );
   }
   ngOnDestroy() {
     if (this._select) {
@@ -4060,46 +5225,71 @@ var ɵNgSelectMultipleOption = class _ɵNgSelectMultipleOption {
     }
   }
   static ɵfac = function ɵNgSelectMultipleOption_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _ɵNgSelectMultipleOption)(ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(SelectMultipleControlValueAccessor, 9));
+    return new (__ngFactoryType__ || _ɵNgSelectMultipleOption)(
+      ɵɵdirectiveInject(ElementRef),
+      ɵɵdirectiveInject(Renderer2),
+      ɵɵdirectiveInject(SelectMultipleControlValueAccessor, 9),
+    );
   };
   static ɵdir = ɵɵdefineDirective({
     type: _ɵNgSelectMultipleOption,
     selectors: [["option"]],
     inputs: {
       ngValue: "ngValue",
-      value: "value"
+      value: "value",
     },
-    standalone: false
+    standalone: false,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ɵNgSelectMultipleOption, [{
-    type: Directive,
-    args: [{
-      selector: "option",
-      standalone: false
-    }]
-  }], () => [{
-    type: ElementRef
-  }, {
-    type: Renderer2
-  }, {
-    type: SelectMultipleControlValueAccessor,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Host
-    }]
-  }], {
-    ngValue: [{
-      type: Input,
-      args: ["ngValue"]
-    }],
-    value: [{
-      type: Input,
-      args: ["value"]
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      ɵNgSelectMultipleOption,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector: "option",
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      () => [
+        {
+          type: ElementRef,
+        },
+        {
+          type: Renderer2,
+        },
+        {
+          type: SelectMultipleControlValueAccessor,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Host,
+            },
+          ],
+        },
+      ],
+      {
+        ngValue: [
+          {
+            type: Input,
+            args: ["ngValue"],
+          },
+        ],
+        value: [
+          {
+            type: Input,
+            args: ["value"],
+          },
+        ],
+      },
+    );
 })();
 function toInteger(value) {
   return typeof value === "number" ? value : parseInt(value, 10);
@@ -4115,7 +5305,9 @@ var AbstractValidatorDirective = class _AbstractValidatorDirective {
     if (this.inputName in changes) {
       const input = this.normalizeInput(changes[this.inputName].currentValue);
       this._enabled = this.enabled(input);
-      this._validator = this._enabled ? this.createValidator(input) : nullValidator;
+      this._validator = this._enabled
+        ? this.createValidator(input)
+        : nullValidator;
       if (this._onChange) {
         this._onChange();
       }
@@ -4135,18 +5327,26 @@ var AbstractValidatorDirective = class _AbstractValidatorDirective {
   };
   static ɵdir = ɵɵdefineDirective({
     type: _AbstractValidatorDirective,
-    features: [ɵɵNgOnChangesFeature]
+    features: [ɵɵNgOnChangesFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AbstractValidatorDirective, [{
-    type: Directive
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      AbstractValidatorDirective,
+      [
+        {
+          type: Directive,
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var MAX_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MaxValidator),
-  multi: true
+  multi: true,
 };
 var MaxValidator = class _MaxValidator extends AbstractValidatorDirective {
   max;
@@ -4156,12 +5356,19 @@ var MaxValidator = class _MaxValidator extends AbstractValidatorDirective {
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMaxValidator_BaseFactory;
     return function MaxValidator_Factory(__ngFactoryType__) {
-      return (ɵMaxValidator_BaseFactory || (ɵMaxValidator_BaseFactory = ɵɵgetInheritedFactory(_MaxValidator)))(__ngFactoryType__ || _MaxValidator);
+      return (
+        ɵMaxValidator_BaseFactory ||
+        (ɵMaxValidator_BaseFactory = ɵɵgetInheritedFactory(_MaxValidator))
+      )(__ngFactoryType__ || _MaxValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _MaxValidator,
-    selectors: [["input", "type", "number", "max", "", "formControlName", ""], ["input", "type", "number", "max", "", "formControl", ""], ["input", "type", "number", "max", "", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "number", "max", "", "formControlName", ""],
+      ["input", "type", "number", "max", "", "formControl", ""],
+      ["input", "type", "number", "max", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function MaxValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4169,33 +5376,46 @@ var MaxValidator = class _MaxValidator extends AbstractValidatorDirective {
       }
     },
     inputs: {
-      max: "max"
+      max: "max",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([MAX_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([MAX_VALIDATOR]), ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MaxValidator, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=number][max][formControlName],input[type=number][max][formControl],input[type=number][max][ngModel]",
-      providers: [MAX_VALIDATOR],
-      host: {
-        "[attr.max]": "_enabled ? max : null"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      MaxValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=number][max][formControlName],input[type=number][max][formControl],input[type=number][max][ngModel]",
+              providers: [MAX_VALIDATOR],
+              host: {
+                "[attr.max]": "_enabled ? max : null",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        max: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    max: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var MIN_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MinValidator),
-  multi: true
+  multi: true,
 };
 var MinValidator = class _MinValidator extends AbstractValidatorDirective {
   min;
@@ -4205,12 +5425,19 @@ var MinValidator = class _MinValidator extends AbstractValidatorDirective {
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMinValidator_BaseFactory;
     return function MinValidator_Factory(__ngFactoryType__) {
-      return (ɵMinValidator_BaseFactory || (ɵMinValidator_BaseFactory = ɵɵgetInheritedFactory(_MinValidator)))(__ngFactoryType__ || _MinValidator);
+      return (
+        ɵMinValidator_BaseFactory ||
+        (ɵMinValidator_BaseFactory = ɵɵgetInheritedFactory(_MinValidator))
+      )(__ngFactoryType__ || _MinValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _MinValidator,
-    selectors: [["input", "type", "number", "min", "", "formControlName", ""], ["input", "type", "number", "min", "", "formControl", ""], ["input", "type", "number", "min", "", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "number", "min", "", "formControlName", ""],
+      ["input", "type", "number", "min", "", "formControl", ""],
+      ["input", "type", "number", "min", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function MinValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4218,38 +5445,51 @@ var MinValidator = class _MinValidator extends AbstractValidatorDirective {
       }
     },
     inputs: {
-      min: "min"
+      min: "min",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([MIN_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([MIN_VALIDATOR]), ɵɵInheritDefinitionFeature],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MinValidator, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=number][min][formControlName],input[type=number][min][formControl],input[type=number][min][ngModel]",
-      providers: [MIN_VALIDATOR],
-      host: {
-        "[attr.min]": "_enabled ? min : null"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      MinValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=number][min][formControlName],input[type=number][min][formControl],input[type=number][min][ngModel]",
+              providers: [MIN_VALIDATOR],
+              host: {
+                "[attr.min]": "_enabled ? min : null",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        min: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    min: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var REQUIRED_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => RequiredValidator),
-  multi: true
+  multi: true,
 };
 var CHECKBOX_REQUIRED_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => CheckboxRequiredValidator),
-  multi: true
+  multi: true,
 };
 var RequiredValidator = class _RequiredValidator extends AbstractValidatorDirective {
   required;
@@ -4262,12 +5502,20 @@ var RequiredValidator = class _RequiredValidator extends AbstractValidatorDirect
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵRequiredValidator_BaseFactory;
     return function RequiredValidator_Factory(__ngFactoryType__) {
-      return (ɵRequiredValidator_BaseFactory || (ɵRequiredValidator_BaseFactory = ɵɵgetInheritedFactory(_RequiredValidator)))(__ngFactoryType__ || _RequiredValidator);
+      return (
+        ɵRequiredValidator_BaseFactory ||
+        (ɵRequiredValidator_BaseFactory =
+          ɵɵgetInheritedFactory(_RequiredValidator))
+      )(__ngFactoryType__ || _RequiredValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _RequiredValidator,
-    selectors: [["", "required", "", "formControlName", "", 3, "type", "checkbox"], ["", "required", "", "formControl", "", 3, "type", "checkbox"], ["", "required", "", "ngModel", "", 3, "type", "checkbox"]],
+    selectors: [
+      ["", "required", "", "formControlName", "", 3, "type", "checkbox"],
+      ["", "required", "", "formControl", "", 3, "type", "checkbox"],
+      ["", "required", "", "ngModel", "", 3, "type", "checkbox"],
+    ],
     hostVars: 1,
     hostBindings: function RequiredValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4275,40 +5523,65 @@ var RequiredValidator = class _RequiredValidator extends AbstractValidatorDirect
       }
     },
     inputs: {
-      required: "required"
+      required: "required",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([REQUIRED_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([REQUIRED_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(RequiredValidator, [{
-    type: Directive,
-    args: [{
-      selector: ":not([type=checkbox])[required][formControlName],:not([type=checkbox])[required][formControl],:not([type=checkbox])[required][ngModel]",
-      providers: [REQUIRED_VALIDATOR],
-      host: {
-        "[attr.required]": '_enabled ? "" : null'
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      RequiredValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                ":not([type=checkbox])[required][formControlName],:not([type=checkbox])[required][formControl],:not([type=checkbox])[required][ngModel]",
+              providers: [REQUIRED_VALIDATOR],
+              host: {
+                "[attr.required]": '_enabled ? "" : null',
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        required: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    required: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var CheckboxRequiredValidator = class _CheckboxRequiredValidator extends RequiredValidator {
   createValidator = (input) => requiredTrueValidator;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵCheckboxRequiredValidator_BaseFactory;
     return function CheckboxRequiredValidator_Factory(__ngFactoryType__) {
-      return (ɵCheckboxRequiredValidator_BaseFactory || (ɵCheckboxRequiredValidator_BaseFactory = ɵɵgetInheritedFactory(_CheckboxRequiredValidator)))(__ngFactoryType__ || _CheckboxRequiredValidator);
+      return (
+        ɵCheckboxRequiredValidator_BaseFactory ||
+        (ɵCheckboxRequiredValidator_BaseFactory = ɵɵgetInheritedFactory(
+          _CheckboxRequiredValidator,
+        ))
+      )(__ngFactoryType__ || _CheckboxRequiredValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _CheckboxRequiredValidator,
-    selectors: [["input", "type", "checkbox", "required", "", "formControlName", ""], ["input", "type", "checkbox", "required", "", "formControl", ""], ["input", "type", "checkbox", "required", "", "ngModel", ""]],
+    selectors: [
+      ["input", "type", "checkbox", "required", "", "formControlName", ""],
+      ["input", "type", "checkbox", "required", "", "formControl", ""],
+      ["input", "type", "checkbox", "required", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function CheckboxRequiredValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4316,26 +5589,40 @@ var CheckboxRequiredValidator = class _CheckboxRequiredValidator extends Require
       }
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([CHECKBOX_REQUIRED_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([CHECKBOX_REQUIRED_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CheckboxRequiredValidator, [{
-    type: Directive,
-    args: [{
-      selector: "input[type=checkbox][required][formControlName],input[type=checkbox][required][formControl],input[type=checkbox][required][ngModel]",
-      providers: [CHECKBOX_REQUIRED_VALIDATOR],
-      host: {
-        "[attr.required]": '_enabled ? "" : null'
-      },
-      standalone: false
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      CheckboxRequiredValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "input[type=checkbox][required][formControlName],input[type=checkbox][required][formControl],input[type=checkbox][required][ngModel]",
+              providers: [CHECKBOX_REQUIRED_VALIDATOR],
+              host: {
+                "[attr.required]": '_enabled ? "" : null',
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var EMAIL_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => EmailValidator),
-  multi: true
+  multi: true,
 };
 var EmailValidator = class _EmailValidator extends AbstractValidatorDirective {
   email;
@@ -4348,37 +5635,60 @@ var EmailValidator = class _EmailValidator extends AbstractValidatorDirective {
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵEmailValidator_BaseFactory;
     return function EmailValidator_Factory(__ngFactoryType__) {
-      return (ɵEmailValidator_BaseFactory || (ɵEmailValidator_BaseFactory = ɵɵgetInheritedFactory(_EmailValidator)))(__ngFactoryType__ || _EmailValidator);
+      return (
+        ɵEmailValidator_BaseFactory ||
+        (ɵEmailValidator_BaseFactory = ɵɵgetInheritedFactory(_EmailValidator))
+      )(__ngFactoryType__ || _EmailValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _EmailValidator,
-    selectors: [["", "email", "", "formControlName", ""], ["", "email", "", "formControl", ""], ["", "email", "", "ngModel", ""]],
+    selectors: [
+      ["", "email", "", "formControlName", ""],
+      ["", "email", "", "formControl", ""],
+      ["", "email", "", "ngModel", ""],
+    ],
     inputs: {
-      email: "email"
+      email: "email",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([EMAIL_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([EMAIL_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(EmailValidator, [{
-    type: Directive,
-    args: [{
-      selector: "[email][formControlName],[email][formControl],[email][ngModel]",
-      providers: [EMAIL_VALIDATOR],
-      standalone: false
-    }]
-  }], null, {
-    email: [{
-      type: Input
-    }]
-  });
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      EmailValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "[email][formControlName],[email][formControl],[email][ngModel]",
+              providers: [EMAIL_VALIDATOR],
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        email: [
+          {
+            type: Input,
+          },
+        ],
+      },
+    );
 })();
 var MIN_LENGTH_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MinLengthValidator),
-  multi: true
+  multi: true,
 };
 var MinLengthValidator = class _MinLengthValidator extends AbstractValidatorDirective {
   minlength;
@@ -4388,12 +5698,20 @@ var MinLengthValidator = class _MinLengthValidator extends AbstractValidatorDire
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMinLengthValidator_BaseFactory;
     return function MinLengthValidator_Factory(__ngFactoryType__) {
-      return (ɵMinLengthValidator_BaseFactory || (ɵMinLengthValidator_BaseFactory = ɵɵgetInheritedFactory(_MinLengthValidator)))(__ngFactoryType__ || _MinLengthValidator);
+      return (
+        ɵMinLengthValidator_BaseFactory ||
+        (ɵMinLengthValidator_BaseFactory =
+          ɵɵgetInheritedFactory(_MinLengthValidator))
+      )(__ngFactoryType__ || _MinLengthValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _MinLengthValidator,
-    selectors: [["", "minlength", "", "formControlName", ""], ["", "minlength", "", "formControl", ""], ["", "minlength", "", "ngModel", ""]],
+    selectors: [
+      ["", "minlength", "", "formControlName", ""],
+      ["", "minlength", "", "formControl", ""],
+      ["", "minlength", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function MinLengthValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4401,33 +5719,49 @@ var MinLengthValidator = class _MinLengthValidator extends AbstractValidatorDire
       }
     },
     inputs: {
-      minlength: "minlength"
+      minlength: "minlength",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([MIN_LENGTH_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([MIN_LENGTH_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MinLengthValidator, [{
-    type: Directive,
-    args: [{
-      selector: "[minlength][formControlName],[minlength][formControl],[minlength][ngModel]",
-      providers: [MIN_LENGTH_VALIDATOR],
-      host: {
-        "[attr.minlength]": "_enabled ? minlength : null"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      MinLengthValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "[minlength][formControlName],[minlength][formControl],[minlength][ngModel]",
+              providers: [MIN_LENGTH_VALIDATOR],
+              host: {
+                "[attr.minlength]": "_enabled ? minlength : null",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        minlength: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    minlength: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var MAX_LENGTH_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MaxLengthValidator),
-  multi: true
+  multi: true,
 };
 var MaxLengthValidator = class _MaxLengthValidator extends AbstractValidatorDirective {
   maxlength;
@@ -4437,12 +5771,20 @@ var MaxLengthValidator = class _MaxLengthValidator extends AbstractValidatorDire
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMaxLengthValidator_BaseFactory;
     return function MaxLengthValidator_Factory(__ngFactoryType__) {
-      return (ɵMaxLengthValidator_BaseFactory || (ɵMaxLengthValidator_BaseFactory = ɵɵgetInheritedFactory(_MaxLengthValidator)))(__ngFactoryType__ || _MaxLengthValidator);
+      return (
+        ɵMaxLengthValidator_BaseFactory ||
+        (ɵMaxLengthValidator_BaseFactory =
+          ɵɵgetInheritedFactory(_MaxLengthValidator))
+      )(__ngFactoryType__ || _MaxLengthValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _MaxLengthValidator,
-    selectors: [["", "maxlength", "", "formControlName", ""], ["", "maxlength", "", "formControl", ""], ["", "maxlength", "", "ngModel", ""]],
+    selectors: [
+      ["", "maxlength", "", "formControlName", ""],
+      ["", "maxlength", "", "formControl", ""],
+      ["", "maxlength", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function MaxLengthValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4450,33 +5792,49 @@ var MaxLengthValidator = class _MaxLengthValidator extends AbstractValidatorDire
       }
     },
     inputs: {
-      maxlength: "maxlength"
+      maxlength: "maxlength",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([MAX_LENGTH_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([MAX_LENGTH_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MaxLengthValidator, [{
-    type: Directive,
-    args: [{
-      selector: "[maxlength][formControlName],[maxlength][formControl],[maxlength][ngModel]",
-      providers: [MAX_LENGTH_VALIDATOR],
-      host: {
-        "[attr.maxlength]": "_enabled ? maxlength : null"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      MaxLengthValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "[maxlength][formControlName],[maxlength][formControl],[maxlength][ngModel]",
+              providers: [MAX_LENGTH_VALIDATOR],
+              host: {
+                "[attr.maxlength]": "_enabled ? maxlength : null",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        maxlength: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    maxlength: [{
-      type: Input
-    }]
-  });
+    );
 })();
 var PATTERN_VALIDATOR = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => PatternValidator),
-  multi: true
+  multi: true,
 };
 var PatternValidator = class _PatternValidator extends AbstractValidatorDirective {
   pattern;
@@ -4486,12 +5844,20 @@ var PatternValidator = class _PatternValidator extends AbstractValidatorDirectiv
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPatternValidator_BaseFactory;
     return function PatternValidator_Factory(__ngFactoryType__) {
-      return (ɵPatternValidator_BaseFactory || (ɵPatternValidator_BaseFactory = ɵɵgetInheritedFactory(_PatternValidator)))(__ngFactoryType__ || _PatternValidator);
+      return (
+        ɵPatternValidator_BaseFactory ||
+        (ɵPatternValidator_BaseFactory =
+          ɵɵgetInheritedFactory(_PatternValidator))
+      )(__ngFactoryType__ || _PatternValidator);
     };
   })();
   static ɵdir = ɵɵdefineDirective({
     type: _PatternValidator,
-    selectors: [["", "pattern", "", "formControlName", ""], ["", "pattern", "", "formControl", ""], ["", "pattern", "", "ngModel", ""]],
+    selectors: [
+      ["", "pattern", "", "formControlName", ""],
+      ["", "pattern", "", "formControl", ""],
+      ["", "pattern", "", "ngModel", ""],
+    ],
     hostVars: 1,
     hostBindings: function PatternValidator_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -4499,54 +5865,155 @@ var PatternValidator = class _PatternValidator extends AbstractValidatorDirectiv
       }
     },
     inputs: {
-      pattern: "pattern"
+      pattern: "pattern",
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([PATTERN_VALIDATOR]), ɵɵInheritDefinitionFeature]
+    features: [
+      ɵɵProvidersFeature([PATTERN_VALIDATOR]),
+      ɵɵInheritDefinitionFeature,
+    ],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PatternValidator, [{
-    type: Directive,
-    args: [{
-      selector: "[pattern][formControlName],[pattern][formControl],[pattern][ngModel]",
-      providers: [PATTERN_VALIDATOR],
-      host: {
-        "[attr.pattern]": "_enabled ? pattern : null"
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      PatternValidator,
+      [
+        {
+          type: Directive,
+          args: [
+            {
+              selector:
+                "[pattern][formControlName],[pattern][formControl],[pattern][ngModel]",
+              providers: [PATTERN_VALIDATOR],
+              host: {
+                "[attr.pattern]": "_enabled ? pattern : null",
+              },
+              standalone: false,
+            },
+          ],
+        },
+      ],
+      null,
+      {
+        pattern: [
+          {
+            type: Input,
+          },
+        ],
       },
-      standalone: false
-    }]
-  }], null, {
-    pattern: [{
-      type: Input
-    }]
-  });
+    );
 })();
-var SHARED_FORM_DIRECTIVES = [ɵNgNoValidate, NgSelectOption, ɵNgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, RangeValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, SelectMultipleControlValueAccessor, RadioControlValueAccessor, NgControlStatus, NgControlStatusGroup, RequiredValidator, MinLengthValidator, MaxLengthValidator, PatternValidator, CheckboxRequiredValidator, EmailValidator, MinValidator, MaxValidator];
+var SHARED_FORM_DIRECTIVES = [
+  ɵNgNoValidate,
+  NgSelectOption,
+  ɵNgSelectMultipleOption,
+  DefaultValueAccessor,
+  NumberValueAccessor,
+  RangeValueAccessor,
+  CheckboxControlValueAccessor,
+  SelectControlValueAccessor,
+  SelectMultipleControlValueAccessor,
+  RadioControlValueAccessor,
+  NgControlStatus,
+  NgControlStatusGroup,
+  RequiredValidator,
+  MinLengthValidator,
+  MaxLengthValidator,
+  PatternValidator,
+  CheckboxRequiredValidator,
+  EmailValidator,
+  MinValidator,
+  MaxValidator,
+];
 var TEMPLATE_DRIVEN_DIRECTIVES = [NgModel, NgModelGroup, NgForm];
-var REACTIVE_DRIVEN_DIRECTIVES = [FormControlDirective, FormGroupDirective, FormArrayDirective, FormControlName, FormGroupName, FormArrayName];
+var REACTIVE_DRIVEN_DIRECTIVES = [
+  FormControlDirective,
+  FormGroupDirective,
+  FormArrayDirective,
+  FormControlName,
+  FormGroupName,
+  FormArrayName,
+];
 var ɵInternalFormsSharedModule = class _ɵInternalFormsSharedModule {
   static ɵfac = function ɵInternalFormsSharedModule_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ɵInternalFormsSharedModule)();
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _ɵInternalFormsSharedModule,
-    declarations: [ɵNgNoValidate, NgSelectOption, ɵNgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, RangeValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, SelectMultipleControlValueAccessor, RadioControlValueAccessor, NgControlStatus, NgControlStatusGroup, RequiredValidator, MinLengthValidator, MaxLengthValidator, PatternValidator, CheckboxRequiredValidator, EmailValidator, MinValidator, MaxValidator],
-    exports: [ɵNgNoValidate, NgSelectOption, ɵNgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, RangeValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, SelectMultipleControlValueAccessor, RadioControlValueAccessor, NgControlStatus, NgControlStatusGroup, RequiredValidator, MinLengthValidator, MaxLengthValidator, PatternValidator, CheckboxRequiredValidator, EmailValidator, MinValidator, MaxValidator]
+    declarations: [
+      ɵNgNoValidate,
+      NgSelectOption,
+      ɵNgSelectMultipleOption,
+      DefaultValueAccessor,
+      NumberValueAccessor,
+      RangeValueAccessor,
+      CheckboxControlValueAccessor,
+      SelectControlValueAccessor,
+      SelectMultipleControlValueAccessor,
+      RadioControlValueAccessor,
+      NgControlStatus,
+      NgControlStatusGroup,
+      RequiredValidator,
+      MinLengthValidator,
+      MaxLengthValidator,
+      PatternValidator,
+      CheckboxRequiredValidator,
+      EmailValidator,
+      MinValidator,
+      MaxValidator,
+    ],
+    exports: [
+      ɵNgNoValidate,
+      NgSelectOption,
+      ɵNgSelectMultipleOption,
+      DefaultValueAccessor,
+      NumberValueAccessor,
+      RangeValueAccessor,
+      CheckboxControlValueAccessor,
+      SelectControlValueAccessor,
+      SelectMultipleControlValueAccessor,
+      RadioControlValueAccessor,
+      NgControlStatus,
+      NgControlStatusGroup,
+      RequiredValidator,
+      MinLengthValidator,
+      MaxLengthValidator,
+      PatternValidator,
+      CheckboxRequiredValidator,
+      EmailValidator,
+      MinValidator,
+      MaxValidator,
+    ],
   });
   static ɵinj = ɵɵdefineInjector({});
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ɵInternalFormsSharedModule, [{
-    type: NgModule,
-    args: [{
-      declarations: SHARED_FORM_DIRECTIVES,
-      exports: SHARED_FORM_DIRECTIVES
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      ɵInternalFormsSharedModule,
+      [
+        {
+          type: NgModule,
+          args: [
+            {
+              declarations: SHARED_FORM_DIRECTIVES,
+              exports: SHARED_FORM_DIRECTIVES,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 function isAbstractControlOptions(options) {
-  return !!options && (options.asyncValidators !== void 0 || options.validators !== void 0 || options.updateOn !== void 0);
+  return (
+    !!options &&
+    (options.asyncValidators !== void 0 ||
+      options.validators !== void 0 ||
+      options.updateOn !== void 0)
+  );
 }
 var FormBuilder = class _FormBuilder {
   useNonNullable = false;
@@ -4581,9 +6048,12 @@ var FormBuilder = class _FormBuilder {
       newOptions.validators = validatorOrOpts;
       newOptions.asyncValidators = asyncValidator;
     }
-    return new FormControl(formState, __spreadProps(__spreadValues({}, newOptions), {
-      nonNullable: true
-    }));
+    return new FormControl(
+      formState,
+      __spreadProps(__spreadValues({}, newOptions), {
+        nonNullable: true,
+      }),
+    );
   }
   array(controls, validatorOrOpts, asyncValidator) {
     const createdControls = controls.map((c) => this._createControl(c));
@@ -4616,16 +6086,26 @@ var FormBuilder = class _FormBuilder {
   static ɵprov = ɵɵdefineInjectable({
     token: _FormBuilder,
     factory: _FormBuilder.ɵfac,
-    providedIn: "root"
+    providedIn: "root",
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormBuilder, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormBuilder,
+      [
+        {
+          type: Injectable,
+          args: [
+            {
+              providedIn: "root",
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var NonNullableFormBuilder = class _NonNullableFormBuilder {
   static ɵfac = function NonNullableFormBuilder_Factory(__ngFactoryType__) {
@@ -4634,17 +6114,27 @@ var NonNullableFormBuilder = class _NonNullableFormBuilder {
   static ɵprov = ɵɵdefineInjectable({
     token: _NonNullableFormBuilder,
     factory: () => (() => inject(FormBuilder).nonNullable)(),
-    providedIn: "root"
+    providedIn: "root",
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(NonNullableFormBuilder, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root",
-      useFactory: () => inject(FormBuilder).nonNullable
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      NonNullableFormBuilder,
+      [
+        {
+          type: Injectable,
+          args: [
+            {
+              providedIn: "root",
+              useFactory: () => inject(FormBuilder).nonNullable,
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var UntypedFormBuilder = class _UntypedFormBuilder extends FormBuilder {
   group(controlsConfig, options = null) {
@@ -4659,32 +6149,48 @@ var UntypedFormBuilder = class _UntypedFormBuilder extends FormBuilder {
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵUntypedFormBuilder_BaseFactory;
     return function UntypedFormBuilder_Factory(__ngFactoryType__) {
-      return (ɵUntypedFormBuilder_BaseFactory || (ɵUntypedFormBuilder_BaseFactory = ɵɵgetInheritedFactory(_UntypedFormBuilder)))(__ngFactoryType__ || _UntypedFormBuilder);
+      return (
+        ɵUntypedFormBuilder_BaseFactory ||
+        (ɵUntypedFormBuilder_BaseFactory =
+          ɵɵgetInheritedFactory(_UntypedFormBuilder))
+      )(__ngFactoryType__ || _UntypedFormBuilder);
     };
   })();
   static ɵprov = ɵɵdefineInjectable({
     token: _UntypedFormBuilder,
     factory: _UntypedFormBuilder.ɵfac,
-    providedIn: "root"
+    providedIn: "root",
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(UntypedFormBuilder, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      UntypedFormBuilder,
+      [
+        {
+          type: Injectable,
+          args: [
+            {
+              providedIn: "root",
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var VERSION = new Version("21.0.6");
 var FormsModule = class _FormsModule {
   static withConfig(opts) {
     return {
       ngModule: _FormsModule,
-      providers: [{
-        provide: CALL_SET_DISABLED_STATE,
-        useValue: opts.callSetDisabledState ?? setDisabledStateDefault
-      }]
+      providers: [
+        {
+          provide: CALL_SET_DISABLED_STATE,
+          useValue: opts.callSetDisabledState ?? setDisabledStateDefault,
+        },
+      ],
     };
   }
   static ɵfac = function FormsModule_Factory(__ngFactoryType__) {
@@ -4693,32 +6199,45 @@ var FormsModule = class _FormsModule {
   static ɵmod = ɵɵdefineNgModule({
     type: _FormsModule,
     declarations: [NgModel, NgModelGroup, NgForm],
-    exports: [ɵInternalFormsSharedModule, NgModel, NgModelGroup, NgForm]
+    exports: [ɵInternalFormsSharedModule, NgModel, NgModelGroup, NgForm],
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [ɵInternalFormsSharedModule]
+    imports: [ɵInternalFormsSharedModule],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FormsModule, [{
-    type: NgModule,
-    args: [{
-      declarations: TEMPLATE_DRIVEN_DIRECTIVES,
-      exports: [ɵInternalFormsSharedModule, TEMPLATE_DRIVEN_DIRECTIVES]
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      FormsModule,
+      [
+        {
+          type: NgModule,
+          args: [
+            {
+              declarations: TEMPLATE_DRIVEN_DIRECTIVES,
+              exports: [ɵInternalFormsSharedModule, TEMPLATE_DRIVEN_DIRECTIVES],
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 var ReactiveFormsModule = class _ReactiveFormsModule {
   static withConfig(opts) {
     return {
       ngModule: _ReactiveFormsModule,
-      providers: [{
-        provide: NG_MODEL_WITH_FORM_CONTROL_WARNING,
-        useValue: opts.warnOnNgModelWithFormControl ?? "always"
-      }, {
-        provide: CALL_SET_DISABLED_STATE,
-        useValue: opts.callSetDisabledState ?? setDisabledStateDefault
-      }]
+      providers: [
+        {
+          provide: NG_MODEL_WITH_FORM_CONTROL_WARNING,
+          useValue: opts.warnOnNgModelWithFormControl ?? "always",
+        },
+        {
+          provide: CALL_SET_DISABLED_STATE,
+          useValue: opts.callSetDisabledState ?? setDisabledStateDefault,
+        },
+      ],
     };
   }
   static ɵfac = function ReactiveFormsModule_Factory(__ngFactoryType__) {
@@ -4726,21 +6245,46 @@ var ReactiveFormsModule = class _ReactiveFormsModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _ReactiveFormsModule,
-    declarations: [FormControlDirective, FormGroupDirective, FormArrayDirective, FormControlName, FormGroupName, FormArrayName],
-    exports: [ɵInternalFormsSharedModule, FormControlDirective, FormGroupDirective, FormArrayDirective, FormControlName, FormGroupName, FormArrayName]
+    declarations: [
+      FormControlDirective,
+      FormGroupDirective,
+      FormArrayDirective,
+      FormControlName,
+      FormGroupName,
+      FormArrayName,
+    ],
+    exports: [
+      ɵInternalFormsSharedModule,
+      FormControlDirective,
+      FormGroupDirective,
+      FormArrayDirective,
+      FormControlName,
+      FormGroupName,
+      FormArrayName,
+    ],
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [ɵInternalFormsSharedModule]
+    imports: [ɵInternalFormsSharedModule],
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ReactiveFormsModule, [{
-    type: NgModule,
-    args: [{
-      declarations: [REACTIVE_DRIVEN_DIRECTIVES],
-      exports: [ɵInternalFormsSharedModule, REACTIVE_DRIVEN_DIRECTIVES]
-    }]
-  }], null, null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      ReactiveFormsModule,
+      [
+        {
+          type: NgModule,
+          args: [
+            {
+              declarations: [REACTIVE_DRIVEN_DIRECTIVES],
+              exports: [ɵInternalFormsSharedModule, REACTIVE_DRIVEN_DIRECTIVES],
+            },
+          ],
+        },
+      ],
+      null,
+      null,
+    );
 })();
 export {
   AbstractControl,
@@ -4807,6 +6351,6 @@ export {
   isFormRecord,
   ɵInternalFormsSharedModule,
   ɵNgNoValidate,
-  ɵNgSelectMultipleOption
+  ɵNgSelectMultipleOption,
 };
 //# sourceMappingURL=@angular_forms.js.map

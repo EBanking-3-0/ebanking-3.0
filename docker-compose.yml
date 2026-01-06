@@ -95,7 +95,6 @@ services:
     networks:
       - ebanking-network
 
-
   # ==========================================
   # Infrastructure - Observability
   # ==========================================

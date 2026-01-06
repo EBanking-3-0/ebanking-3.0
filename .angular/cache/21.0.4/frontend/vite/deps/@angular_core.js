@@ -497,7 +497,7 @@ import {
   ɵɵtwoWayProperty,
   ɵɵvalidateAttribute,
   ɵɵviewQuery,
-  ɵɵviewQuerySignal
+  ɵɵviewQuerySignal,
 } from "./chunk-P4KDGOZN.js";
 import "./chunk-4D55VNEQ.js";
 import "./chunk-4NVJHVNJ.js";
@@ -1004,5 +1004,5 @@ export {
   ɵɵtwoWayProperty,
   ɵɵvalidateAttribute,
   ɵɵviewQuery,
-  ɵɵviewQuerySignal
+  ɵɵviewQuerySignal,
 };

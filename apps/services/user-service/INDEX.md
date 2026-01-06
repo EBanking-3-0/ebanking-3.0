@@ -5,23 +5,27 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ## 🎯 By Role
 
 ### 👤 **Je suis un nouveau développeur**
+
 1. **Start here**: [`QUICK_START.md`](QUICK_START.md) - 5 minutes pour démarrer
 2. **Understand architecture**: [`ARCHITECTURE.md`](ARCHITECTURE.md) - Vue globale du design
 3. **Learn to develop**: [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) - Comment ajouter des features
 4. **Test endpoints**: [`API_REFERENCE.md`](API_REFERENCE.md) - Documentation API complète
 
 ### 💻 **Je suis un développeur expérimenté**
+
 1. **Review changes**: [`RESTRUCTURING_SUMMARY.md`](RESTRUCTURING_SUMMARY.md) - Tous les changements
 2. **Understand code**: Lire directement le code source avec les commentaires
 3. **Develop features**: Suivre les 6 étapes dans [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md)
 4. **API integration**: Consulter [`API_REFERENCE.md`](API_REFERENCE.md)
 
 ### 🎓 **Je dois préparer une présentation**
+
 1. **High-level overview**: [`ARCHITECTURE.md`](ARCHITECTURE.md) - Sections "Vue d'ensemble" + "Architecture en couches"
 2. **What changed?**: [`RESTRUCTURING_SUMMARY.md`](RESTRUCTURING_SUMMARY.md) - Résumé des améliorations
 3. **API details**: [`API_REFERENCE.md`](API_REFERENCE.md) - Endpoints et flux
 
 ### 🔍 **Je dois déboguer un problème**
+
 1. **Trace the flow**: [`ARCHITECTURE.md`](ARCHITECTURE.md) - Diagrammes de flux
 2. **Check code**: Sections dans [`UserService.java`](src/main/java/com/ebanking/user/application/service/UserService.java)
 3. **Test endpoint**: [`API_REFERENCE.md`](API_REFERENCE.md) - Exemples cURL
@@ -32,18 +36,22 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ## 📖 By Document Type
 
 ### **Quick Reference** (< 10 minutes)
+
 - [`QUICK_START.md`](QUICK_START.md) - Démarrage rapide en 5 minutes
 - [`API_REFERENCE.md`](API_REFERENCE.md#base-url) - Base URL et authentification
 
 ### **Architecture & Design** (10-30 minutes)
+
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) - Design global complet
 - [`RESTRUCTURING_SUMMARY.md`](RESTRUCTURING_SUMMARY.md) - Avant/après résumé
 
 ### **Development & Implementation** (20-60 minutes)
+
 - [`DEVELOPMENT_GUIDE.md`](DEVELOPMENT_GUIDE.md) - Guide de développement complet
 - Source code avec commentaires JavaDoc
 
 ### **API & Integration** (5-20 minutes)
+
 - [`API_REFERENCE.md`](API_REFERENCE.md) - Documentation API complète
 - Exemples cURL et JavaScript
 
@@ -52,6 +60,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ## 🎯 By Task
 
 ### **Ajouter un nouvel endpoint**
+
 ```
 1. Lire: DEVELOPMENT_GUIDE.md → "Ajouter un nouvel endpoint" (6 étapes)
 2. Référence: API_REFERENCE.md → "Endpoints principaux"
@@ -60,6 +69,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ```
 
 ### **Ajouter une entité JPA**
+
 ```
 1. Lire: ARCHITECTURE.md → "Domain Model Layer"
 2. Exemple: User.java ou KycVerification.java
@@ -68,6 +78,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ```
 
 ### **Écrire des tests**
+
 ```
 1. Référence: DEVELOPMENT_GUIDE.md → "Testing"
 2. Exemples: Copier patterns de tests existants
@@ -75,6 +86,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ```
 
 ### **Comprendre un flux**
+
 ```
 1. Diagrammes: ARCHITECTURE.md → "Flux de création utilisateur"
 2. Code: Tracer le flux dans UserService.java (sections logiques)
@@ -82,6 +94,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ```
 
 ### **Déboguer une erreur**
+
 ```
 1. Erreurs courantes: QUICK_START.md → "Erreurs courantes"
 2. Codes d'erreur: API_REFERENCE.md → "Codes d'erreur HTTP"
@@ -90,6 +103,7 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ```
 
 ### **Déployer le service**
+
 ```
 1. Configuration: ARCHITECTURE.md → "Configuration"
 2. Docker: DEVELOPMENT_GUIDE.md → "Déploiement"
@@ -101,9 +115,11 @@ Welcome to the User Service documentation! This index helps you find what you ne
 ## 📑 Document Guide - What's in each file
 
 ### 📄 **QUICK_START.md**
+
 **Audience**: Tous les développeurs (surtout les nouveaux)
 **Temps**: 5-10 minutes
 **Contient**:
+
 - ✅ Démarrage en 5 minutes
 - ✅ Navigation rapide des fichiers
 - ✅ Points d'entrée du code source
@@ -113,9 +129,11 @@ Welcome to the User Service documentation! This index helps you find what you ne
 - ✅ Support et ressources
 
 ### 📄 **ARCHITECTURE.md**
+
 **Audience**: Architectes, lead dev, dev exp
 **Temps**: 15-30 minutes
 **Contient**:
+
 - ✅ Architecture en 5 couches
 - ✅ Structure détaillée des packages
 - ✅ Diagrammes de flux (création user, KYC)
@@ -131,9 +149,11 @@ Welcome to the User Service documentation! This index helps you find what you ne
 - ✅ Performance
 
 ### 📄 **DEVELOPMENT_GUIDE.md**
+
 **Audience**: Développeurs impliquant du code
 **Temps**: 30-60 minutes (référence)
 **Contient**:
+
 - ✅ Structure des 5 packages (avec code)
 - ✅ Ajouter un nouvel endpoint (6 étapes)
 - ✅ Bonnes pratiques (10 sections)
@@ -142,9 +162,11 @@ Welcome to the User Service documentation! This index helps you find what you ne
 - ✅ Checklist avant commit
 
 ### 📄 **API_REFERENCE.md**
+
 **Audience**: Frontend dev, client du service
 **Temps**: 5-20 minutes (par endpoint)
 **Contient**:
+
 - ✅ Base URL et auth JWT
 - ✅ Tous les endpoints (3 user, 2 kyc)
 - ✅ Parameters et validation
@@ -158,9 +180,11 @@ Welcome to the User Service documentation! This index helps you find what you ne
 - ✅ Cas d'usage complets
 
 ### 📄 **RESTRUCTURING_SUMMARY.md**
+
 **Audience**: Leads, architects, reviewers
 **Temps**: 10-15 minutes
 **Contient**:
+
 - ✅ Résumé des changements (contrôleurs, service, mappers, entités)
 - ✅ Documentation créée (3 fichiers)
 - ✅ Avant/après comparaison
@@ -194,44 +218,53 @@ START
 ## 🔍 Search by Keyword
 
 ### **KYC / Know Your Customer**
+
 - ARCHITECTURE.md → "Flux de vérification KYC"
 - API_REFERENCE.md → Endpoints `/kyc`
 - DEVELOPMENT_GUIDE.md → KYC Management section
 
 ### **JWT / Keycloak**
+
 - ARCHITECTURE.md → "Extraction JWT"
 - API_REFERENCE.md → "Authentification"
 - UserService.java → "JWT EXTRACTION METHODS"
 
 ### **Statuts / Énumérations**
+
 - ARCHITECTURE.md → Diagrams (Statuts utilisateur, KYC)
 - API_REFERENCE.md → "Statuts utilisateur"
 - Entités (User.java, KycVerification.java) → Enums
 
 ### **Endpoints**
+
 - ARCHITECTURE.md → "Endpoints principaux" (tableau)
 - API_REFERENCE.md → Tous les endpoints détaillés
 - UserController.java, KycController.java
 
 ### **Transactions**
+
 - ARCHITECTURE.md → "Transactions"
 - DEVELOPMENT_GUIDE.md → "Bonnes pratiques - Transactions"
 - UserService.java → Annotations @Transactional
 
 ### **Mappers**
+
 - DEVELOPMENT_GUIDE.md → "Mapper Layer"
 - Fichiers: UserMapper.java, KycMapper.java, UserProfileMapper.java
 
 ### **Erreurs / Debugging**
+
 - QUICK_START.md → "Erreurs courantes"
 - API_REFERENCE.md → "Codes d'erreur HTTP"
 - ARCHITECTURE.md → Diagrammes de flux
 
 ### **Tests**
+
 - DEVELOPMENT_GUIDE.md → "Testing"
 - API_REFERENCE.md → "Exemples complets"
 
 ### **Déploiement**
+
 - DEVELOPMENT_GUIDE.md → "Déploiement"
 - ARCHITECTURE.md → "Configuration"
 
@@ -267,24 +300,28 @@ API_REFERENCE.md
 ## ✨ Feature Guide
 
 ### **Feature: Gestion des utilisateurs**
+
 - Concept: ARCHITECTURE.md → "User Management Methods"
 - API: API_REFERENCE.md → Endpoints `/users/*`
 - Code: UserController.java, UserService.java
 - Test: DEVELOPMENT_GUIDE.md → "Tester un Service"
 
 ### **Feature: Vérification KYC**
+
 - Concept: ARCHITECTURE.md → "Flux de vérification KYC"
 - API: API_REFERENCE.md → Endpoints `/kyc`
 - Code: KycController.java, UserService.submitKyc()
 - Test: DEVELOPMENT_GUIDE.md → "Tester un Controller"
 
 ### **Feature: Consentements GDPR**
+
 - Concept: ARCHITECTURE.md → "GDPR Consent Methods"
 - Implémentation: UserService.updateGdprConsents()
 - Model: GdprConsent.java
 - API: Partie de `POST /kyc`
 
 ### **Feature: Stockage de fichiers**
+
 - Concept: ARCHITECTURE.md → "Gestion des fichiers"
 - Implémentation: FileStorageService.java
 - Usage: UserService.submitKyc() (images base64)
@@ -295,18 +332,21 @@ API_REFERENCE.md
 ## 🎓 Learning Path
 
 ### **Semaine 1: Fondamentaux**
+
 1. Lire QUICK_START.md (1h)
 2. Lire ARCHITECTURE.md (2h)
 3. Examiner le code source commenté (2h)
 4. Tester les endpoints (1h)
 
 ### **Semaine 2: Développement**
+
 1. Lire DEVELOPMENT_GUIDE.md (2h)
 2. Faire des petits changements au code existant (3h)
 3. Écrire des tests unitaires (2h)
 4. Ajouter un nouvel endpoint (4h)
 
 ### **Semaine 3+: Maîtrise**
+
 1. Ajouter des features complexes
 2. Optimiser les performances
 3. Implémenter les TODOs
@@ -316,14 +356,14 @@ API_REFERENCE.md
 
 ## 📞 Quick Links
 
-| Besoin | Lien |
-|--------|------|
-| Démarrer | [QUICK_START.md](QUICK_START.md) |
-| Architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| Développer | [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) |
-| API | [API_REFERENCE.md](API_REFERENCE.md) |
-| Changements | [RESTRUCTURING_SUMMARY.md](RESTRUCTURING_SUMMARY.md) |
-| Code Source | [src/main/java/com/ebanking/user/](src/main/java/com/ebanking/user/) |
+| Besoin       | Lien                                                                 |
+| ------------ | -------------------------------------------------------------------- |
+| Démarrer     | [QUICK_START.md](QUICK_START.md)                                     |
+| Architecture | [ARCHITECTURE.md](ARCHITECTURE.md)                                   |
+| Développer   | [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)                         |
+| API          | [API_REFERENCE.md](API_REFERENCE.md)                                 |
+| Changements  | [RESTRUCTURING_SUMMARY.md](RESTRUCTURING_SUMMARY.md)                 |
+| Code Source  | [src/main/java/com/ebanking/user/](src/main/java/com/ebanking/user/) |
 
 ---
 
@@ -360,5 +400,4 @@ API_REFERENCE.md
 
 **Bonne documentation = Meilleur code!** 📚
 
-*Dernière mise à jour: Janvier 2024*
-
+_Dernière mise à jour: Janvier 2024_

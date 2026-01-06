@@ -54,4 +54,3 @@ keycloakx:
     - name: JAVA_OPTS_APPEND
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless -Xmx256m -Xms128m
-

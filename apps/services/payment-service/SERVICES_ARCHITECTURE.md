@@ -3,15 +3,18 @@
 ## ✅ Services Créés
 
 ### 1. **InternalTransferService** 💸
+
 **Rôle :** Gère les virements internes (même banque)
 
 **Caractéristiques :**
+
 - ✅ Synchrone (réponse immédiate)
 - ✅ 24/7 (pas de cut-off)
 - ✅ Débit + Crédit atomiques via `PaymentSagaOrchestrator`
 - ✅ Compensation automatique en cas d'échec
 
 **Flux :**
+
 ```
 PaymentController → PaymentService → InternalTransferService
   ↓
@@ -33,15 +36,18 @@ VALIDATED → ANTI-FRAUDE → AUTHORIZED → PROCESSING (Débit + Crédit) → C
 ---
 
 ### 2. **SepaTransferService** 🇪🇺
+
 **Rôle :** Gère les virements SEPA (Single Euro Payments Area)
 
 **Caractéristiques :**
+
 - ⏱️ Délai : 1-2 jours ouvrables
 - 📅 Cut-off : 16h00 (avant = traitement immédiat, après = batch suivant)
 - 🔄 Communication avec `legacy-adapter` (REST → SOAP → Core Banking)
 - 💰 Compensation si rejeté par le core banking
 
 **Flux :**
+
 ```
 PaymentController → PaymentService → SepaTransferService
   ↓
@@ -70,9 +76,11 @@ Vérification cut-off (16h)
 ---
 
 ### 3. **InstantTransferService** ⚡
+
 **Rôle :** Gère les virements instantanés (SCT Inst)
 
 **Caractéristiques :**
+
 - ⚡ Délai : < 30 secondes
 - 💰 Plafond : 15,000€ (configurable)
 - 🔒 Anti-fraude obligatoire (plus strict)
@@ -80,6 +88,7 @@ Vérification cut-off (16h)
 - ⏱️ Timeout : 30s
 
 **Flux :**
+
 ```
 PaymentController → PaymentService → InstantTransferService
   ↓
@@ -112,15 +121,18 @@ ANTI-FRAUDE OBLIGATOIRE
 ---
 
 ### 4. **MobileRechargeService** 📱
+
 **Rôle :** Gère les recharges mobiles
 
 **Caractéristiques :**
+
 - ✅ Validation du numéro de téléphone et de l'opérateur
 - 🔄 Communication avec système externe (opérateur)
 - ⚠️ Gestion des erreurs critiques (numéro invalide, opérateur indisponible)
 - 💰 Compensation immédiate en cas d'échec
 
 **Flux :**
+
 ```
 PaymentController → PaymentService → MobileRechargeService
   ↓
@@ -156,7 +168,7 @@ Le `PaymentService` agit maintenant comme un **routeur** qui délègue aux servi
 @Transactional
 public PaymentResult initiatePayment(PaymentRequest request, Long userId) {
     PaymentType paymentType = PaymentType.valueOf(request.getType());
-    
+
     return switch (paymentType) {
         case INTERNAL_TRANSFER -> internalTransferService.executeInternalTransfer(request, userId);
         case SEPA_TRANSFER -> sepaTransferService.executeSepaTransfer(request, userId);
@@ -175,13 +187,16 @@ public PaymentResult initiatePayment(PaymentRequest request, Long userId) {
 ## 📋 DTOs Mis à Jour
 
 ### AccountResponse
+
 - ✅ Ajouté `iban` (pour SEPA/Instant transfers)
 
 ### SepaTransferResponse
+
 - ✅ Ajouté `iso20022Reference` (référence ISO 20022)
 - ✅ Status : `ACCEPTED`, `SENT`, `PENDING`, `REJECTED`
 
 ### InstantTransferResponse
+
 - ✅ Ajouté `iso20022Reference` (référence ISO 20022)
 - ✅ Status : `ACK`, `NACK`, `TIMEOUT`
 

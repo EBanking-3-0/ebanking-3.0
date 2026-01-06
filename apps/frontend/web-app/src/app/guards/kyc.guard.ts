@@ -60,6 +60,6 @@ export const kycGuard: CanMatchFn = () => {
       catchError((error) => {
         console.error('KYC Guard - Query error:', error);
         return of(router.createUrlTree(['/kyc']));
-      })
+      }),
     );
 };

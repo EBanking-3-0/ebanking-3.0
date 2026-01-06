@@ -1,23 +1,23 @@
 <div class="app-container">
-<!--  @if (isLoggedIn) {-->
-<!--    <header class="app-header">-->
-<!--      <div class="header-content">-->
-<!--        <h1>🏦 E-Banking <span>3.0</span></h1>-->
-<!--        <div class="auth-controls">-->
-<!--&lt;!&ndash;          <span>Welcome, {{ userProfile?.username }}</span>&ndash;&gt;-->
-<!--          <button (click)="logout()">Logout</button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </header>-->
+  <!--  @if (isLoggedIn) {-->
+  <!--    <header class="app-header">-->
+  <!--      <div class="header-content">-->
+  <!--        <h1>🏦 E-Banking <span>3.0</span></h1>-->
+  <!--        <div class="auth-controls">-->
+  <!--&lt;!&ndash;          <span>Welcome, {{ userProfile?.username }}</span>&ndash;&gt;-->
+  <!--          <button (click)="logout()">Logout</button>-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--    </header>-->
 
-    <nav class="app-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        >Users</a
-      >
-      <a routerLink="/payments" routerLinkActive="active">💳 Payments</a>
-      <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
-      <a routerLink="/kyc" routerLinkActive="active">KYC</a>
-    </nav>
+  <nav class="app-nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Users</a
+    >
+    <a routerLink="/payments" routerLinkActive="active">💳 Payments</a>
+    <a routerLink="/ai-chat" routerLinkActive="active">AI Assistant</a>
+    <a routerLink="/kyc" routerLinkActive="active">KYC</a>
+  </nav>
 
   <main class="app-main">
     <router-outlet></router-outlet>
@@ -31,7 +31,10 @@
             <span class="logo-icon">🏦</span>
             <h3>E-Banking <span>3.0</span></h3>
           </div>
-          <p>The next generation of microservices-based digital banking. Secure, scalable, and resilient.</p>
+          <p>
+            The next generation of microservices-based digital banking. Secure, scalable, and
+            resilient.
+          </p>
         </div>
 
         <div class="footer-links">

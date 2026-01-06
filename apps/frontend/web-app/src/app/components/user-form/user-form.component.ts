@@ -9,14 +9,14 @@ import { User, UserService } from '../../services/user.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.scss']
+  styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
   user: Partial<User> = {
     email: '',
     firstName: '',
     lastName: '',
-    phone: ''
+    phone: '',
   };
   isEditMode = false;
   userId: string | null = null;
@@ -26,7 +26,7 @@ export class UserFormComponent implements OnInit {
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class UserFormComponent implements OnInit {
         this.loading = false;
         console.error('Error loading user:', error);
         alert('Failed to load user data');
-      }
+      },
     });
   }
 
@@ -63,7 +63,8 @@ export class UserFormComponent implements OnInit {
 
     if (this.isEditMode && this.userId) {
       const { firstName, lastName, phone } = this.user;
-      this.userService.updateUser(this.userId, { firstName: firstName!, lastName: lastName!, phone: phone! })
+      this.userService
+        .updateUser(this.userId, { firstName: firstName!, lastName: lastName!, phone: phone! })
         .subscribe({
           next: (updatedUser) => {
             console.log('User updated:', updatedUser);
@@ -75,11 +76,12 @@ export class UserFormComponent implements OnInit {
             this.loading = false;
             console.error('Error updating user:', error);
             alert('Failed to update user: ' + (error.message || 'Unknown error'));
-          }
+          },
         });
     } else {
       const { email, firstName, lastName, phone } = this.user;
-      this.userService.createUser({ email: email!, firstName: firstName!, lastName: lastName!, phone: phone! })
+      this.userService
+        .createUser({ email: email!, firstName: firstName!, lastName: lastName!, phone: phone! })
         .subscribe({
           next: (newUser) => {
             console.log('User created:', newUser);
@@ -91,7 +93,7 @@ export class UserFormComponent implements OnInit {
             this.loading = false;
             console.error('Error creating user:', error);
             alert('Failed to create user: ' + (error.message || 'Unknown error'));
-          }
+          },
         });
     }
   }

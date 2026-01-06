@@ -30,7 +30,8 @@ public class AccountService {
   private final CurrencyService currencyService;
 
   @Transactional
-  public Account createAccount(String userId, String accountType, String currency, String nickname) {
+  public Account createAccount(
+      String userId, String accountType, String currency, String nickname) {
     String accountNumber = generateAccountNumber();
 
     String iban = generateIban(accountNumber);

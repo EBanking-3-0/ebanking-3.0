@@ -24,6 +24,7 @@ public class UserController {
 ```
 
 **Règles**:
+
 - Injecter uniquement le Service (pas le Repository)
 - Valider avec `@Valid`
 - Mapper les erreurs en codes HTTP appropriés
@@ -38,13 +39,14 @@ Responsabilité: Convertir entre Entités et DTOs
 public interface UserMapper {
     // DTO → Entité (pour POST/PUT)
     User toEntity(UserRequest request);
-    
+
     // Entité → DTO (pour GET)
     UserResponse toResponse(User user);
 }
 ```
 
 **Règles**:
+
 - Utiliser MapStruct (pas de logique métier)
 - Documenter les mappages complexes
 - Tester les mappages
@@ -59,22 +61,23 @@ Responsabilité: Logique métier et orchestration
 @Transactional
 public class UserService {
     // Organiser en sections logiques:
-    
+
     // ==================== JWT EXTRACTION ====================
     // Extraire les données du JWT Keycloak
-    
+
     // ==================== USER MANAGEMENT ====================
     // CRUD utilisateurs et profil
-    
+
     // ==================== KYC MANAGEMENT ====================
     // Vérification KYC
-    
+
     // ==================== GDPR MANAGEMENT ====================
     // Consentements GDPR
 }
 ```
 
 **Règles**:
+
 - Une responsabilité par méthode
 - Documenter les pré/post-conditions
 - Utiliser les transactions
@@ -99,6 +102,7 @@ public class User {
 ```
 
 **Règles**:
+
 - Documenter chaque champ
 - Utiliser Lombok (@Getter, @Setter, @Builder)
 - Cascade appropriées (ALL ou PERSIST)
@@ -116,6 +120,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 ```
 
 **Règles**:
+
 - Utiliser JpaRepository
 - Nommage cohérent des méthodes
 - Pas de logique métier
@@ -134,7 +139,7 @@ Fichier: `libs/shared/dto/src/.../YourRequest.java`
 public class YourRequest {
     @NotBlank
     private String field1;
-    
+
     @NotNull
     private Integer field2;
 }
@@ -149,7 +154,7 @@ public class YourEntity {
     @Id
     @GeneratedValue
     private UUID id;
-    
+
     @Column(nullable = false)
     private String field1;
 }
@@ -172,14 +177,14 @@ public YourResponse createYour(YourRequest request, Authentication auth) {
     // 1. Valider l'authentification
     String keycloakId = getKeycloakIdFromJwt(auth);
     User user = getUserByKeycloakIdOptional(keycloakId);
-    
+
     // 2. Logique métier
     YourEntity entity = new YourEntity();
     entity.setField1(request.getField1());
-    
+
     // 3. Persister
     repository.save(entity);
-    
+
     // 4. Retourner la réponse
     return mapper.toResponse(entity);
 }
@@ -215,9 +220,9 @@ Chaque classe et méthode publique doit avoir :
 ```java
 /**
  * Description brève
- * 
+ *
  * Détail plus long si nécessaire
- * 
+ *
  * @param param1 Description du paramètre
  * @return Description de la valeur retournée
  * @throws Exception Quand l'exception est levée
@@ -266,10 +271,10 @@ Organiser le service en sections logiques avec commentaires :
 public class UserService {
     // ==================== JWT EXTRACTION ====================
     public String getKeycloakIdFromJwt(Authentication auth) { }
-    
+
     // ==================== USER MANAGEMENT ====================
     public User getUserByKeycloakId(String keycloakId) { }
-    
+
     // ==================== KYC MANAGEMENT ====================
     public KycVerification submitKyc(User user, KycRequest request) { }
 }
@@ -324,19 +329,19 @@ private User user;
 ```java
 @ExtendWith(MockitoExtension.class)
 class UserMapperTest {
-    
+
     @InjectMocks
     private UserMapper mapper;
-    
+
     @Test
     void testToResponse() {
         User user = User.builder()
             .id(UUID.randomUUID())
             .firstName("John")
             .build();
-            
+
         UserResponse response = mapper.toResponse(user);
-        
+
         assertEquals(user.getFirstName(), response.getFirstName());
     }
 }
@@ -347,21 +352,21 @@ class UserMapperTest {
 ```java
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-    
+
     @Mock
     private UserRepository userRepository;
-    
+
     @InjectMocks
     private UserService userService;
-    
+
     @Test
     void testGetUser() {
         User user = User.builder().keycloakId("123").build();
         when(userRepository.findByKeycloakId("123"))
             .thenReturn(Optional.of(user));
-            
+
         User result = userService.getUserByKeycloakId("123");
-        
+
         assertEquals(user, result);
     }
 }
@@ -372,19 +377,19 @@ class UserServiceTest {
 ```java
 @WebMvcTest(UserController.class)
 class UserControllerTest {
-    
+
     @MockBean
     private UserService userService;
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Test
     void testGetProfile() throws Exception {
         UserProfileResponse response = new UserProfileResponse();
         when(userService.getProfile(any()))
             .thenReturn(response);
-            
+
         mockMvc.perform(get("/api/v1/users/me")
                 .with(jwt()))
             .andExpect(status().isOk());
@@ -411,6 +416,7 @@ docker build -f apps/services/user-service/Dockerfile \
 ### Configuration
 
 Variables d'environnement:
+
 - `SPRING_DATASOURCE_URL`: URL de la BD
 - `SPRING_DATASOURCE_USERNAME`: Username BD
 - `SPRING_DATASOURCE_PASSWORD`: Password BD
@@ -437,4 +443,3 @@ Variables d'environnement:
 - [Jakarta Persistence](https://jakarta.ee/specifications/persistence/3.1/)
 - [MapStruct](https://mapstruct.org/)
 - [OAuth2 Resource Server](https://spring.io/guides/tutorials/spring-security-and-oauth2/)
-

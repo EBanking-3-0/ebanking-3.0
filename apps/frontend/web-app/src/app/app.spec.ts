@@ -30,19 +30,13 @@ describe('App', () => {
     }).compileComponents();
   });
 
-    it('should render title in footer', () => {
+  it('should render title in footer', () => {
+    const fixture = TestBed.createComponent(AppComponent);
 
-      const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
 
-      fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
 
-      const compiled = fixture.nativeElement as HTMLElement;
-
-      expect(compiled.querySelector('div.footer-brand h3')?.textContent).toContain(
-
-        'E-Banking 3.0'
-
-      );
-
-    });
+    expect(compiled.querySelector('div.footer-brand h3')?.textContent).toContain('E-Banking 3.0');
+  });
 });

@@ -6,60 +6,63 @@ import {
   Optional,
   setClassMetadata,
   ɵɵdefineInjectable,
-  ɵɵinject
+  ɵɵinject,
 } from "./chunk-P4KDGOZN.js";
 import "./chunk-4D55VNEQ.js";
-import {
-  ApolloClient,
-  gql
-} from "./chunk-77WSKPK6.js";
+import { ApolloClient, gql } from "./chunk-77WSKPK6.js";
 import "./chunk-WIMS3ZYR.js";
 import "./chunk-6KBCFBRM.js";
-import {
-  queueScheduler
-} from "./chunk-4NVJHVNJ.js";
+import { queueScheduler } from "./chunk-4NVJHVNJ.js";
 import {
   Observable,
   filter,
   from,
   map,
   observeOn,
-  startWith
+  startWith,
 } from "./chunk-NLOMSAMV.js";
-import {
-  __objRest,
-  __spreadProps,
-  __spreadValues
-} from "./chunk-OC4HWNDI.js";
+import { __objRest, __spreadProps, __spreadValues } from "./chunk-OC4HWNDI.js";
 
 // node_modules/apollo-angular/fesm2022/apollo-angular.mjs
 function fromLazyPromise(promiseFn) {
   return new Observable((subscriber) => {
-    promiseFn().then((result) => {
-      if (!subscriber.closed) {
-        subscriber.next(result);
-        subscriber.complete();
-      }
-    }, (error) => {
-      if (!subscriber.closed) {
-        subscriber.error(error);
-      }
-    });
+    promiseFn().then(
+      (result) => {
+        if (!subscriber.closed) {
+          subscriber.next(result);
+          subscriber.complete();
+        }
+      },
+      (error) => {
+        if (!subscriber.closed) {
+          subscriber.error(error);
+        }
+      },
+    );
     return () => subscriber.unsubscribe();
   });
 }
 function useMutationLoading(source, enabled) {
   if (!enabled) {
-    return source.pipe(map((result) => __spreadProps(__spreadValues({}, result), {
-      loading: false
-    })));
+    return source.pipe(
+      map((result) =>
+        __spreadProps(__spreadValues({}, result), {
+          loading: false,
+        }),
+      ),
+    );
   }
-  return source.pipe(map((result) => __spreadProps(__spreadValues({}, result), {
-    loading: false
-  })), startWith({
-    data: void 0,
-    loading: true
-  }));
+  return source.pipe(
+    map((result) =>
+      __spreadProps(__spreadValues({}, result), {
+        loading: false,
+      }),
+    ),
+    startWith({
+      data: void 0,
+      loading: true,
+    }),
+  );
 }
 var ZoneScheduler = class {
   zone;
@@ -131,29 +134,35 @@ var ApolloBase = class {
     this.useMutationLoading = flags?.useMutationLoading ?? false;
   }
   watchQuery(options) {
-    return new QueryRef(this.ensureClient().watchQuery(__spreadValues({}, options)), this.ngZone);
+    return new QueryRef(
+      this.ensureClient().watchQuery(__spreadValues({}, options)),
+      this.ngZone,
+    );
   }
   query(options) {
-    return fromLazyPromise(() => this.ensureClient().query(__spreadValues({}, options)));
+    return fromLazyPromise(() =>
+      this.ensureClient().query(__spreadValues({}, options)),
+    );
   }
   mutate(options) {
-    return useMutationLoading(fromLazyPromise(() => this.ensureClient().mutate(__spreadValues({}, options))), options.useMutationLoading ?? this.useMutationLoading);
+    return useMutationLoading(
+      fromLazyPromise(() =>
+        this.ensureClient().mutate(__spreadValues({}, options)),
+      ),
+      options.useMutationLoading ?? this.useMutationLoading,
+    );
   }
   watchFragment(options) {
-    const _a = options, {
-      useZone
-    } = _a, opts = __objRest(_a, [
-      "useZone"
-    ]);
+    const _a = options,
+      { useZone } = _a,
+      opts = __objRest(_a, ["useZone"]);
     const obs = this.ensureClient().watchFragment(__spreadValues({}, opts));
     return useZone !== true ? obs : wrapWithZone(obs, this.ngZone);
   }
   subscribe(options) {
-    const _a = options, {
-      useZone
-    } = _a, opts = __objRest(_a, [
-      "useZone"
-    ]);
+    const _a = options,
+      { useZone } = _a,
+      opts = __objRest(_a, ["useZone"]);
     const obs = this.ensureClient().subscribe(__spreadValues({}, opts));
     return useZone !== true ? obs : wrapWithZone(obs, this.ngZone);
   }
@@ -240,7 +249,9 @@ var Apollo = class _Apollo extends ApolloBase {
     if (this._client) {
       throw new Error("Apollo has been already created.");
     }
-    this.client = this.ngZone.runOutsideAngular(() => new ApolloClient(options));
+    this.client = this.ngZone.runOutsideAngular(
+      () => new ApolloClient(options),
+    );
   }
   /**
    * Create a named ApolloClient, same as `apollo.create(options, name)`
@@ -251,7 +262,14 @@ var Apollo = class _Apollo extends ApolloBase {
     if (this.map.has(name)) {
       throw new Error(`Client ${name} has been already created`);
     }
-    this.map.set(name, new ApolloBase(this.ngZone, this.flags, this.ngZone.runOutsideAngular(() => new ApolloClient(options))));
+    this.map.set(
+      name,
+      new ApolloBase(
+        this.ngZone,
+        this.flags,
+        this.ngZone.runOutsideAngular(() => new ApolloClient(options)),
+      ),
+    );
   }
   /**
    * Remember to clean up the store before removing a client
@@ -265,64 +283,99 @@ var Apollo = class _Apollo extends ApolloBase {
     }
   }
   static ɵfac = function Apollo_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _Apollo)(ɵɵinject(NgZone), ɵɵinject(APOLLO_OPTIONS, 8), ɵɵinject(APOLLO_NAMED_OPTIONS, 8), ɵɵinject(APOLLO_FLAGS, 8));
+    return new (__ngFactoryType__ || _Apollo)(
+      ɵɵinject(NgZone),
+      ɵɵinject(APOLLO_OPTIONS, 8),
+      ɵɵinject(APOLLO_NAMED_OPTIONS, 8),
+      ɵɵinject(APOLLO_FLAGS, 8),
+    );
   };
   static ɵprov = ɵɵdefineInjectable({
     token: _Apollo,
-    factory: _Apollo.ɵfac
+    factory: _Apollo.ɵfac,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Apollo, [{
-    type: Injectable
-  }], () => [{
-    type: NgZone
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Optional
-    }, {
-      type: Inject,
-      args: [APOLLO_OPTIONS]
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Inject,
-      args: [APOLLO_NAMED_OPTIONS]
-    }, {
-      type: Optional
-    }]
-  }, {
-    type: void 0,
-    decorators: [{
-      type: Inject,
-      args: [APOLLO_FLAGS]
-    }, {
-      type: Optional
-    }]
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      Apollo,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      () => [
+        {
+          type: NgZone,
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Optional,
+            },
+            {
+              type: Inject,
+              args: [APOLLO_OPTIONS],
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Inject,
+              args: [APOLLO_NAMED_OPTIONS],
+            },
+            {
+              type: Optional,
+            },
+          ],
+        },
+        {
+          type: void 0,
+          decorators: [
+            {
+              type: Inject,
+              args: [APOLLO_FLAGS],
+            },
+            {
+              type: Optional,
+            },
+          ],
+        },
+      ],
+      null,
+    );
 })();
 function isNamed(name) {
   return !!name && name !== "default";
 }
 function provideApollo(optionsFactory, flags = {}) {
-  return [Apollo, {
-    provide: APOLLO_OPTIONS,
-    useFactory: optionsFactory
-  }, {
-    provide: APOLLO_FLAGS,
-    useValue: flags
-  }];
+  return [
+    Apollo,
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: optionsFactory,
+    },
+    {
+      provide: APOLLO_FLAGS,
+      useValue: flags,
+    },
+  ];
 }
 function provideNamedApollo(optionsFactory, flags = {}) {
-  return [Apollo, {
-    provide: APOLLO_NAMED_OPTIONS,
-    useFactory: optionsFactory
-  }, {
-    provide: APOLLO_FLAGS,
-    useValue: flags
-  }];
+  return [
+    Apollo,
+    {
+      provide: APOLLO_NAMED_OPTIONS,
+      useFactory: optionsFactory,
+    },
+    {
+      provide: APOLLO_FLAGS,
+      useValue: flags,
+    },
+  ];
 }
 var Query = class _Query {
   apollo;
@@ -331,29 +384,43 @@ var Query = class _Query {
     this.apollo = apollo;
   }
   watch(...[options]) {
-    return this.apollo.use(this.client).watchQuery(__spreadProps(__spreadValues({}, options), {
-      query: this.document
-    }));
+    return this.apollo.use(this.client).watchQuery(
+      __spreadProps(__spreadValues({}, options), {
+        query: this.document,
+      }),
+    );
   }
   fetch(...[options]) {
-    return this.apollo.use(this.client).query(__spreadProps(__spreadValues({}, options), {
-      query: this.document
-    }));
+    return this.apollo.use(this.client).query(
+      __spreadProps(__spreadValues({}, options), {
+        query: this.document,
+      }),
+    );
   }
   static ɵfac = function Query_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _Query)(ɵɵinject(Apollo));
   };
   static ɵprov = ɵɵdefineInjectable({
     token: _Query,
-    factory: _Query.ɵfac
+    factory: _Query.ɵfac,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Query, [{
-    type: Injectable
-  }], () => [{
-    type: Apollo
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      Query,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      () => [
+        {
+          type: Apollo,
+        },
+      ],
+      null,
+    );
 })();
 var Mutation = class _Mutation {
   apollo;
@@ -362,24 +429,36 @@ var Mutation = class _Mutation {
     this.apollo = apollo;
   }
   mutate(...[options]) {
-    return this.apollo.use(this.client).mutate(__spreadProps(__spreadValues({}, options), {
-      mutation: this.document
-    }));
+    return this.apollo.use(this.client).mutate(
+      __spreadProps(__spreadValues({}, options), {
+        mutation: this.document,
+      }),
+    );
   }
   static ɵfac = function Mutation_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _Mutation)(ɵɵinject(Apollo));
   };
   static ɵprov = ɵɵdefineInjectable({
     token: _Mutation,
-    factory: _Mutation.ɵfac
+    factory: _Mutation.ɵfac,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Mutation, [{
-    type: Injectable
-  }], () => [{
-    type: Apollo
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      Mutation,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      () => [
+        {
+          type: Apollo,
+        },
+      ],
+      null,
+    );
 })();
 var Subscription = class _Subscription {
   apollo;
@@ -388,24 +467,36 @@ var Subscription = class _Subscription {
     this.apollo = apollo;
   }
   subscribe(...[options]) {
-    return this.apollo.use(this.client).subscribe(__spreadProps(__spreadValues({}, options), {
-      query: this.document
-    }));
+    return this.apollo.use(this.client).subscribe(
+      __spreadProps(__spreadValues({}, options), {
+        query: this.document,
+      }),
+    );
   }
   static ɵfac = function Subscription_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _Subscription)(ɵɵinject(Apollo));
   };
   static ɵprov = ɵɵdefineInjectable({
     token: _Subscription,
-    factory: _Subscription.ɵfac
+    factory: _Subscription.ɵfac,
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Subscription, [{
-    type: Injectable
-  }], () => [{
-    type: Apollo
-  }], null);
+  (typeof ngDevMode === "undefined" || ngDevMode) &&
+    setClassMetadata(
+      Subscription,
+      [
+        {
+          type: Injectable,
+        },
+      ],
+      () => [
+        {
+          type: Apollo,
+        },
+      ],
+      null,
+    );
 })();
 var typedGQLTag = gql;
 var gql2 = typedGQLTag;
@@ -431,6 +522,6 @@ export {
   onlyCompleteData,
   onlyCompleteFragment,
   provideApollo,
-  provideNamedApollo
+  provideNamedApollo,
 };
 //# sourceMappingURL=apollo-angular.js.map

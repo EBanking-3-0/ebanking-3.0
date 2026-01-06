@@ -11,7 +11,7 @@ import {
   print,
   registerLinkError,
   toErrorLike,
-  wrap
+  wrap,
 } from "./chunk-WIMS3ZYR.js";
 import {
   AutoCleanedWeakCache,
@@ -72,11 +72,9 @@ import {
   toQueryResult,
   variablesUnknownSymbol,
   version,
-  visit
+  visit,
 } from "./chunk-6KBCFBRM.js";
-import {
-  lastValueFrom
-} from "./chunk-4NVJHVNJ.js";
+import { lastValueFrom } from "./chunk-4NVJHVNJ.js";
 import {
   BehaviorSubject,
   EMPTY,
@@ -95,13 +93,13 @@ import {
   share,
   shareReplay,
   tap,
-  throwError
+  throwError,
 } from "./chunk-NLOMSAMV.js";
 import {
   __async,
   __objRest,
   __spreadProps,
-  __spreadValues
+  __spreadValues,
 } from "./chunk-OC4HWNDI.js";
 
 // node_modules/@apollo/client/incremental/handlers/notImplemented.js
@@ -113,8 +111,7 @@ var NotImplementedHandler = class {
     invariant(!hasDirectives(["defer"], request.query), 64);
     return request;
   }
-  extractErrors() {
-  }
+  extractErrors() {}
   // This code path can never be reached, so we won't implement it.
   startRequest = void 0;
 };
@@ -135,9 +132,17 @@ var ApolloCache = class {
   // performTransaction. Subclasses of ApolloCache (such as InMemoryCache) can
   // override the batch method to do more interesting things with its options.
   batch(options) {
-    const optimisticId = typeof options.optimistic === "string" ? options.optimistic : options.optimistic === false ? null : void 0;
+    const optimisticId =
+      typeof options.optimistic === "string"
+        ? options.optimistic
+        : options.optimistic === false
+          ? null
+          : void 0;
     let updateResult;
-    this.performTransaction(() => updateResult = options.update(this), optimisticId);
+    this.performTransaction(
+      () => (updateResult = options.update(this)),
+      optimisticId,
+    );
     return updateResult;
   }
   recordOptimisticTransaction(transaction, optimisticId) {
@@ -164,33 +169,46 @@ var ApolloCache = class {
     return false;
   }
   readQuery(options, optimistic = !!options.optimistic) {
-    return this.read(__spreadProps(__spreadValues({}, options), {
-      rootId: options.id || "ROOT_QUERY",
-      optimistic
-    }));
+    return this.read(
+      __spreadProps(__spreadValues({}, options), {
+        rootId: options.id || "ROOT_QUERY",
+        optimistic,
+      }),
+    );
   }
   /**
-  * Watches the cache store of the fragment according to the options specified
-  * and returns an `Observable`. We can subscribe to this
-  * `Observable` and receive updated results through an
-  * observer when the cache store changes.
-  * 
-  * You must pass in a GraphQL document with a single fragment or a document
-  * with multiple fragments that represent what you are reading. If you pass
-  * in a document with multiple fragments then you must also specify a
-  * `fragmentName`.
-  * 
-  * @since 3.10.0
-  * @param options - An object of type `WatchFragmentOptions` that allows
-  * the cache to identify the fragment and optionally specify whether to react
-  * to optimistic updates.
-  */
+   * Watches the cache store of the fragment according to the options specified
+   * and returns an `Observable`. We can subscribe to this
+   * `Observable` and receive updated results through an
+   * observer when the cache store changes.
+   *
+   * You must pass in a GraphQL document with a single fragment or a document
+   * with multiple fragments that represent what you are reading. If you pass
+   * in a document with multiple fragments then you must also specify a
+   * `fragmentName`.
+   *
+   * @since 3.10.0
+   * @param options - An object of type `WatchFragmentOptions` that allows
+   * the cache to identify the fragment and optionally specify whether to react
+   * to optimistic updates.
+   */
   watchFragment(options) {
-    const _a = options, { fragment, fragmentName, from: from3, optimistic = true } = _a, otherOptions = __objRest(_a, ["fragment", "fragmentName", "from", "optimistic"]);
+    const _a = options,
+      { fragment, fragmentName, from: from3, optimistic = true } = _a,
+      otherOptions = __objRest(_a, [
+        "fragment",
+        "fragmentName",
+        "from",
+        "optimistic",
+      ]);
     const query = this.getFragmentDoc(fragment, fragmentName);
-    const id = typeof from3 === "undefined" || typeof from3 === "string" ? from3 : this.identify(from3);
+    const id =
+      typeof from3 === "undefined" || typeof from3 === "string"
+        ? from3
+        : this.identify(from3);
     if (__DEV__) {
-      const actualFragmentName = fragmentName || getFragmentDefinition(fragment).name.value;
+      const actualFragmentName =
+        fragmentName || getFragmentDefinition(fragment).name.value;
       if (!id) {
         __DEV__ && invariant.warn(110, actualFragmentName);
       }
@@ -199,75 +217,94 @@ var ApolloCache = class {
       returnPartialData: true,
       id,
       query,
-      optimistic
+      optimistic,
     });
     let latestDiff;
     return new Observable((observer) => {
-      return this.watch(__spreadProps(__spreadValues({}, diffOptions), {
-        immediate: true,
-        callback: (diff) => {
-          let data = diff.result;
-          if (data === null) {
-            data = {};
-          }
-          if (
-            // Always ensure we deliver the first result
-            latestDiff && equalByQuery(query, { data: latestDiff.result }, { data }, options.variables)
-          ) {
-            return;
-          }
-          const result = {
-            data,
-            dataState: diff.complete ? "complete" : "partial",
-            complete: !!diff.complete
-          };
-          if (diff.missing) {
-            result.missing = diff.missing.missing;
-          }
-          latestDiff = __spreadProps(__spreadValues({}, diff), { result: data });
-          observer.next(result);
-        }
-      }));
+      return this.watch(
+        __spreadProps(__spreadValues({}, diffOptions), {
+          immediate: true,
+          callback: (diff) => {
+            let data = diff.result;
+            if (data === null) {
+              data = {};
+            }
+            if (
+              // Always ensure we deliver the first result
+              latestDiff &&
+              equalByQuery(
+                query,
+                { data: latestDiff.result },
+                { data },
+                options.variables,
+              )
+            ) {
+              return;
+            }
+            const result = {
+              data,
+              dataState: diff.complete ? "complete" : "partial",
+              complete: !!diff.complete,
+            };
+            if (diff.missing) {
+              result.missing = diff.missing.missing;
+            }
+            latestDiff = __spreadProps(__spreadValues({}, diff), {
+              result: data,
+            });
+            observer.next(result);
+          },
+        }),
+      );
     });
   }
   // Make sure we compute the same (===) fragment query document every
   // time we receive the same fragment in readFragment.
   getFragmentDoc = wrap(getFragmentQueryDocument, {
     max: cacheSizes["cache.fragmentQueryDocuments"] || 1e3,
-    cache: WeakCache
+    cache: WeakCache,
   });
   readFragment(options, optimistic = !!options.optimistic) {
-    return this.read(__spreadProps(__spreadValues({}, options), {
-      query: this.getFragmentDoc(options.fragment, options.fragmentName),
-      rootId: options.id,
-      optimistic
-    }));
+    return this.read(
+      __spreadProps(__spreadValues({}, options), {
+        query: this.getFragmentDoc(options.fragment, options.fragmentName),
+        rootId: options.id,
+        optimistic,
+      }),
+    );
   }
   writeQuery(_a) {
-    var _b = _a, { id, data } = _b, options = __objRest(_b, ["id", "data"]);
-    return this.write(Object.assign(options, {
-      dataId: id || "ROOT_QUERY",
-      result: data
-    }));
+    var _b = _a,
+      { id, data } = _b,
+      options = __objRest(_b, ["id", "data"]);
+    return this.write(
+      Object.assign(options, {
+        dataId: id || "ROOT_QUERY",
+        result: data,
+      }),
+    );
   }
   writeFragment(_c) {
-    var _d = _c, { id, data, fragment, fragmentName } = _d, options = __objRest(_d, ["id", "data", "fragment", "fragmentName"]);
-    return this.write(Object.assign(options, {
-      query: this.getFragmentDoc(fragment, fragmentName),
-      dataId: id,
-      result: data
-    }));
+    var _d = _c,
+      { id, data, fragment, fragmentName } = _d,
+      options = __objRest(_d, ["id", "data", "fragment", "fragmentName"]);
+    return this.write(
+      Object.assign(options, {
+        query: this.getFragmentDoc(fragment, fragmentName),
+        dataId: id,
+        result: data,
+      }),
+    );
   }
   updateQuery(options, update) {
     return this.batch({
       update(cache) {
         const value = cache.readQuery(options);
         const data = update(value);
-        if (data === void 0 || data === null)
-          return value;
+        if (data === void 0 || data === null) return value;
         cache.writeQuery(__spreadProps(__spreadValues({}, options), { data }));
         return data;
-      }
+      },
     });
   }
   updateFragment(options, update) {
@@ -275,11 +312,12 @@ var ApolloCache = class {
       update(cache) {
         const value = cache.readFragment(options);
         const data = update(value);
-        if (data === void 0 || data === null)
-          return value;
-        cache.writeFragment(__spreadProps(__spreadValues({}, options), { data }));
+        if (data === void 0 || data === null) return value;
+        cache.writeFragment(
+          __spreadProps(__spreadValues({}, options), { data }),
+        );
         return data;
-      }
+      },
     });
   }
 };
@@ -330,13 +368,15 @@ function defaultDataIdFromObject({ __typename, id, _id }, context) {
 }
 var defaultConfig = {
   dataIdFromObject: defaultDataIdFromObject,
-  resultCaching: true
+  resultCaching: true,
 };
 function normalizeConfig(config) {
   return compact(defaultConfig, config);
 }
 function getTypenameFromStoreObject(store, objectOrReference) {
-  return isReference(objectOrReference) ? store.get(objectOrReference.__ref, "__typename") : objectOrReference && objectOrReference.__typename;
+  return isReference(objectOrReference)
+    ? store.get(objectOrReference.__ref, "__typename")
+    : objectOrReference && objectOrReference.__typename;
 }
 var TypeOrFieldNameRegExp = /^[_a-z][_0-9a-z]*/i;
 function fieldNameFromStoreName(storeFieldName) {
@@ -345,13 +385,25 @@ function fieldNameFromStoreName(storeFieldName) {
 }
 function selectionSetMatchesResult(selectionSet, result, variables) {
   if (isNonNullObject(result)) {
-    return isArray(result) ? result.every((item) => selectionSetMatchesResult(selectionSet, item, variables)) : selectionSet.selections.every((field) => {
-      if (isField(field) && shouldInclude(field, variables)) {
-        const key = resultKeyNameFromField(field);
-        return hasOwn.call(result, key) && (!field.selectionSet || selectionSetMatchesResult(field.selectionSet, result[key], variables));
-      }
-      return true;
-    });
+    return isArray(result)
+      ? result.every((item) =>
+          selectionSetMatchesResult(selectionSet, item, variables),
+        )
+      : selectionSet.selections.every((field) => {
+          if (isField(field) && shouldInclude(field, variables)) {
+            const key = resultKeyNameFromField(field);
+            return (
+              hasOwn.call(result, key) &&
+              (!field.selectionSet ||
+                selectionSetMatchesResult(
+                  field.selectionSet,
+                  result[key],
+                  variables,
+                ))
+            );
+          }
+          return true;
+        });
   }
   return false;
 }
@@ -371,7 +423,7 @@ function extractFragmentContext(document, fragments) {
         def = fragments.lookup(name);
       }
       return def || null;
-    }
+    },
   };
 }
 
@@ -404,7 +456,10 @@ var EntityStore = class {
         return storeObject[fieldName];
       }
     }
-    if (fieldName === "__typename" && hasOwn.call(this.policies.rootTypenamesById, dataId)) {
+    if (
+      fieldName === "__typename" &&
+      hasOwn.call(this.policies.rootTypenamesById, dataId)
+    ) {
       return this.policies.rootTypenamesById[dataId];
     }
     if (this instanceof Layer) {
@@ -412,8 +467,7 @@ var EntityStore = class {
     }
   }
   lookup(dataId, dependOnExistence) {
-    if (dependOnExistence)
-      this.group.depend(dataId, "__exists");
+    if (dependOnExistence) this.group.depend(dataId, "__exists");
     if (hasOwn.call(this.data, dataId)) {
       return this.data[dataId];
     }
@@ -426,28 +480,35 @@ var EntityStore = class {
   }
   merge(older, newer) {
     let dataId;
-    if (isReference(older))
-      older = older.__ref;
-    if (isReference(newer))
-      newer = newer.__ref;
-    const existing = typeof older === "string" ? this.lookup(dataId = older) : older;
-    const incoming = typeof newer === "string" ? this.lookup(dataId = newer) : newer;
-    if (!incoming)
-      return;
+    if (isReference(older)) older = older.__ref;
+    if (isReference(newer)) newer = newer.__ref;
+    const existing =
+      typeof older === "string" ? this.lookup((dataId = older)) : older;
+    const incoming =
+      typeof newer === "string" ? this.lookup((dataId = newer)) : newer;
+    if (!incoming) return;
     invariant(typeof dataId === "string", 96);
-    const merged = new DeepMerger(storeObjectReconciler).merge(existing, incoming);
+    const merged = new DeepMerger(storeObjectReconciler).merge(
+      existing,
+      incoming,
+    );
     this.data[dataId] = merged;
     if (merged !== existing) {
       delete this.refs[dataId];
       if (this.group.caching) {
         const fieldsToDirty = {};
-        if (!existing)
-          fieldsToDirty.__exists = 1;
+        if (!existing) fieldsToDirty.__exists = 1;
         Object.keys(incoming).forEach((storeFieldName) => {
-          if (!existing || existing[storeFieldName] !== merged[storeFieldName]) {
+          if (
+            !existing ||
+            existing[storeFieldName] !== merged[storeFieldName]
+          ) {
             fieldsToDirty[storeFieldName] = 1;
             const fieldName = fieldNameFromStoreName(storeFieldName);
-            if (fieldName !== storeFieldName && !this.policies.hasKeyArgs(merged.__typename, fieldName)) {
+            if (
+              fieldName !== storeFieldName &&
+              !this.policies.hasKeyArgs(merged.__typename, fieldName)
+            ) {
               fieldsToDirty[fieldName] = 1;
             }
             if (merged[storeFieldName] === void 0 && !(this instanceof Layer)) {
@@ -455,14 +516,19 @@ var EntityStore = class {
             }
           }
         });
-        if (fieldsToDirty.__typename && !(existing && existing.__typename) && // Since we return default root __typename strings
-        // automatically from store.get, we don't need to dirty the
-        // ROOT_QUERY.__typename field if merged.__typename is equal
-        // to the default string (usually "Query").
-        this.policies.rootTypenamesById[dataId] === merged.__typename) {
+        if (
+          fieldsToDirty.__typename &&
+          !(existing && existing.__typename) && // Since we return default root __typename strings
+          // automatically from store.get, we don't need to dirty the
+          // ROOT_QUERY.__typename field if merged.__typename is equal
+          // to the default string (usually "Query").
+          this.policies.rootTypenamesById[dataId] === merged.__typename
+        ) {
           delete fieldsToDirty.__typename;
         }
-        Object.keys(fieldsToDirty).forEach((fieldName) => this.group.dirty(dataId, fieldName));
+        Object.keys(fieldsToDirty).forEach((fieldName) =>
+          this.group.dirty(dataId, fieldName),
+        );
       }
     }
   }
@@ -478,28 +544,41 @@ var EntityStore = class {
         isReference,
         toReference: this.toReference,
         canRead: this.canRead,
-        readField: (fieldNameOrOptions, from3) => this.policies.readField(typeof fieldNameOrOptions === "string" ? {
-          fieldName: fieldNameOrOptions,
-          from: from3 || makeReference(dataId)
-        } : fieldNameOrOptions, { store: this })
+        readField: (fieldNameOrOptions, from3) =>
+          this.policies.readField(
+            typeof fieldNameOrOptions === "string"
+              ? {
+                  fieldName: fieldNameOrOptions,
+                  from: from3 || makeReference(dataId),
+                }
+              : fieldNameOrOptions,
+            { store: this },
+          ),
       };
       Object.keys(storeObject).forEach((storeFieldName) => {
         const fieldName = fieldNameFromStoreName(storeFieldName);
         let fieldValue = storeObject[storeFieldName];
-        if (fieldValue === void 0)
-          return;
-        const modify = typeof fields === "function" ? fields : fields[storeFieldName] || (exact ? void 0 : fields[fieldName]);
+        if (fieldValue === void 0) return;
+        const modify =
+          typeof fields === "function"
+            ? fields
+            : fields[storeFieldName] || (exact ? void 0 : fields[fieldName]);
         if (modify) {
-          let newValue = modify === delModifier ? DELETE : modify(maybeDeepFreeze(fieldValue), __spreadProps(__spreadValues({}, sharedDetails), {
-            fieldName,
-            storeFieldName,
-            storage: this.getStorage(dataId, storeFieldName)
-          }));
+          let newValue =
+            modify === delModifier
+              ? DELETE
+              : modify(
+                  maybeDeepFreeze(fieldValue),
+                  __spreadProps(__spreadValues({}, sharedDetails), {
+                    fieldName,
+                    storeFieldName,
+                    storage: this.getStorage(dataId, storeFieldName),
+                  }),
+                );
           if (newValue === INVALIDATE) {
             this.group.dirty(dataId, storeFieldName);
           } else {
-            if (newValue === DELETE)
-              newValue = void 0;
+            if (newValue === DELETE) newValue = void 0;
             if (newValue !== fieldValue) {
               changedFields[storeFieldName] = newValue;
               needToMerge = true;
@@ -519,8 +598,7 @@ var EntityStore = class {
                   for (const value of newValue) {
                     if (isReference(value)) {
                       seenReference = true;
-                      if (checkReference(value))
-                        break;
+                      if (checkReference(value)) break;
                     } else {
                       if (typeof value === "object" && !!value) {
                         const [id] = this.policies.identify(value);
@@ -568,10 +646,19 @@ var EntityStore = class {
     const storeObject = this.lookup(dataId);
     if (storeObject) {
       const typename = this.getFieldValue(storeObject, "__typename");
-      const storeFieldName = fieldName && args ? this.policies.getStoreFieldName({ typename, fieldName, args }) : fieldName;
-      return this.modify(dataId, storeFieldName ? {
-        [storeFieldName]: delModifier
-      } : delModifier, !!args);
+      const storeFieldName =
+        fieldName && args
+          ? this.policies.getStoreFieldName({ typename, fieldName, args })
+          : fieldName;
+      return this.modify(
+        dataId,
+        storeFieldName
+          ? {
+              [storeFieldName]: delModifier,
+            }
+          : delModifier,
+        !!args,
+      );
     }
     return false;
   }
@@ -613,7 +700,9 @@ var EntityStore = class {
       }
     });
     if (newData) {
-      const _a = newData, { __META } = _a, rest = __objRest(_a, ["__META"]);
+      const _a = newData,
+        { __META } = _a,
+        rest = __objRest(_a, ["__META"]);
       Object.keys(rest).forEach((dataId) => {
         this.merge(dataId, rest[dataId]);
       });
@@ -627,13 +716,12 @@ var EntityStore = class {
   // entities they reference (even indirectly) from being garbage collected.
   rootIds = {};
   retain(rootId) {
-    return this.rootIds[rootId] = (this.rootIds[rootId] || 0) + 1;
+    return (this.rootIds[rootId] = (this.rootIds[rootId] || 0) + 1);
   }
   release(rootId) {
     if (this.rootIds[rootId] > 0) {
       const count = --this.rootIds[rootId];
-      if (!count)
-        delete this.rootIds[rootId];
+      if (!count) delete this.rootIds[rootId];
       return count;
     }
     return 0;
@@ -665,8 +753,7 @@ var EntityStore = class {
     const idsToRemove = Object.keys(snapshot);
     if (idsToRemove.length) {
       let root = this;
-      while (root instanceof Layer)
-        root = root.parent;
+      while (root instanceof Layer) root = root.parent;
       idsToRemove.forEach((id) => root.delete(id));
     }
     return idsToRemove;
@@ -675,10 +762,9 @@ var EntityStore = class {
   refs = {};
   findChildRefIds(dataId) {
     if (!hasOwn.call(this.refs, dataId)) {
-      const found = this.refs[dataId] = {};
+      const found = (this.refs[dataId] = {});
       const root = this.data[dataId];
-      if (!root)
-        return found;
+      if (!root) return found;
       const workSet = /* @__PURE__ */ new Set([root]);
       workSet.forEach((obj) => {
         if (isReference(obj)) {
@@ -701,12 +787,19 @@ var EntityStore = class {
   }
   // Bound function that can be passed around to provide easy access to fields
   // of Reference objects as well as ordinary objects.
-  getFieldValue = (objectOrReference, storeFieldName) => maybeDeepFreeze(isReference(objectOrReference) ? this.get(objectOrReference.__ref, storeFieldName) : objectOrReference && objectOrReference[storeFieldName]);
+  getFieldValue = (objectOrReference, storeFieldName) =>
+    maybeDeepFreeze(
+      isReference(objectOrReference)
+        ? this.get(objectOrReference.__ref, storeFieldName)
+        : objectOrReference && objectOrReference[storeFieldName],
+    );
   // Returns true for non-normalized StoreObjects and non-dangling
   // References, indicating that readField(name, objOrRef) has a chance of
   // working. Useful for filtering out dangling references from lists.
   canRead = (objOrRef) => {
-    return isReference(objOrRef) ? this.has(objOrRef.__ref) : typeof objOrRef === "object";
+    return isReference(objOrRef)
+      ? this.has(objOrRef.__ref)
+      : typeof objOrRef === "object";
   };
   // Bound function that converts an id or an object with a __typename and
   // primary key fields to a Reference object. If called with a Reference object,
@@ -771,7 +864,7 @@ var CacheGroup = class {
         // not only dirty the associated result cache entry, but also remove it
         // completely from the dependency graph. For the optimism implementation
         // details, see https://github.com/benjamn/optimism/pull/195.
-        storeFieldName === "__exists" ? "forget" : "setDirty"
+        storeFieldName === "__exists" ? "forget" : "setDirty",
       );
     }
   }
@@ -787,8 +880,7 @@ function maybeDependOnExistenceOfEntity(store, entityId) {
 var Root = class extends EntityStore {
   constructor({ policies, resultCaching = true, seed }) {
     super(policies, new CacheGroup(resultCaching));
-    if (seed)
-      this.replace(seed);
+    if (seed) this.replace(seed);
   }
   stump = new Stump(this);
   addLayer(layerId, replay) {
@@ -835,7 +927,12 @@ var Layer = class _Layer extends EntityStore {
             });
           } else if (ownStoreObject !== parentStoreObject) {
             Object.keys(ownStoreObject).forEach((storeFieldName) => {
-              if (!equal(ownStoreObject[storeFieldName], parentStoreObject[storeFieldName])) {
+              if (
+                !equal(
+                  ownStoreObject[storeFieldName],
+                  parentStoreObject[storeFieldName],
+                )
+              ) {
                 this.group.dirty(dataId, storeFieldName);
               }
             });
@@ -844,28 +941,38 @@ var Layer = class _Layer extends EntityStore {
       }
       return parent;
     }
-    if (parent === this.parent)
-      return this;
+    if (parent === this.parent) return this;
     return parent.addLayer(this.id, this.replay);
   }
   toObject() {
-    return __spreadValues(__spreadValues({}, this.parent.toObject()), this.data);
+    return __spreadValues(
+      __spreadValues({}, this.parent.toObject()),
+      this.data,
+    );
   }
   findChildRefIds(dataId) {
     const fromParent = this.parent.findChildRefIds(dataId);
-    return hasOwn.call(this.data, dataId) ? __spreadValues(__spreadValues({}, fromParent), super.findChildRefIds(dataId)) : fromParent;
+    return hasOwn.call(this.data, dataId)
+      ? __spreadValues(
+          __spreadValues({}, fromParent),
+          super.findChildRefIds(dataId),
+        )
+      : fromParent;
   }
   getStorage(...args) {
     let p = this.parent;
-    while (p.parent)
-      p = p.parent;
+    while (p.parent) p = p.parent;
     return p.getStorage(...args);
   }
 };
 var Stump = class extends Layer {
   constructor(root) {
-    super("EntityStore.Stump", root, () => {
-    }, new CacheGroup(root.group.caching, root.group));
+    super(
+      "EntityStore.Stump",
+      root,
+      () => {},
+      new CacheGroup(root.group.caching, root.group),
+    );
   }
   removeLayer() {
     return this;
@@ -886,11 +993,15 @@ function supportsResultCaching(store) {
 // node_modules/@apollo/client/masking/utils.js
 var disableWarningsSlot = new Slot();
 function getFragmentMaskMode(fragment) {
-  const directive = fragment.directives?.find(({ name }) => name.value === "unmask");
+  const directive = fragment.directives?.find(
+    ({ name }) => name.value === "unmask",
+  );
   if (!directive) {
     return "mask";
   }
-  const modeArg = directive.arguments?.find(({ name }) => name.value === "mode");
+  const modeArg = directive.arguments?.find(
+    ({ name }) => name.value === "mode",
+  );
   if (__DEV__) {
     if (modeArg) {
       if (modeArg.value.kind === Kind.VARIABLE) {
@@ -902,7 +1013,11 @@ function getFragmentMaskMode(fragment) {
       }
     }
   }
-  if (modeArg && "value" in modeArg.value && modeArg.value.value === "migrate") {
+  if (
+    modeArg &&
+    "value" in modeArg.value &&
+    modeArg.value.value === "migrate"
+  ) {
     return "migrate";
   }
   return "unmask";
@@ -935,7 +1050,13 @@ function maskSelectionSet(data, selectionSet, context, migration, path) {
         memo[index] = null;
         continue;
       }
-      const masked = maskSelectionSet(item, selectionSet, context, migration, __DEV__ ? `${path || ""}[${index}]` : void 0);
+      const masked = maskSelectionSet(
+        item,
+        selectionSet,
+        context,
+        migration,
+        __DEV__ ? `${path || ""}[${index}]` : void 0,
+      );
       if (knownChanged.has(masked)) {
         knownChanged.add(memo);
       }
@@ -956,7 +1077,13 @@ function maskSelectionSet(data, selectionSet, context, migration, path) {
         continue;
       }
       if (childSelectionSet && value !== null) {
-        const masked = maskSelectionSet(data[keyName], childSelectionSet, context, migration, __DEV__ ? `${path || ""}.${keyName}` : void 0);
+        const masked = maskSelectionSet(
+          data[keyName],
+          childSelectionSet,
+          context,
+          migration,
+          __DEV__ ? `${path || ""}.${keyName}` : void 0,
+        );
         if (knownChanged.has(masked)) {
           value = masked;
         }
@@ -965,28 +1092,60 @@ function maskSelectionSet(data, selectionSet, context, migration, path) {
         memo[keyName] = value;
       }
       if (__DEV__) {
-        if (migration && keyName !== "__typename" && // either the field is not present in the memo object
-        // or it has a `get` descriptor, not a `value` descriptor
-        // => it is a warning accessor and we can overwrite it
-        // with another accessor
-        !Object.getOwnPropertyDescriptor(memo, keyName)?.value) {
-          Object.defineProperty(memo, keyName, getAccessorWarningDescriptor(keyName, value, path || "", context.operationName, context.operationType));
+        if (
+          migration &&
+          keyName !== "__typename" && // either the field is not present in the memo object
+          // or it has a `get` descriptor, not a `value` descriptor
+          // => it is a warning accessor and we can overwrite it
+          // with another accessor
+          !Object.getOwnPropertyDescriptor(memo, keyName)?.value
+        ) {
+          Object.defineProperty(
+            memo,
+            keyName,
+            getAccessorWarningDescriptor(
+              keyName,
+              value,
+              path || "",
+              context.operationName,
+              context.operationType,
+            ),
+          );
         } else {
           delete memo[keyName];
           memo[keyName] = value;
         }
       }
     }
-    if (selection.kind === Kind.INLINE_FRAGMENT && (!selection.typeCondition || context.cache.fragmentMatches(selection, data.__typename))) {
-      value = maskSelectionSet(data, selection.selectionSet, context, migration, path);
+    if (
+      selection.kind === Kind.INLINE_FRAGMENT &&
+      (!selection.typeCondition ||
+        context.cache.fragmentMatches(selection, data.__typename))
+    ) {
+      value = maskSelectionSet(
+        data,
+        selection.selectionSet,
+        context,
+        migration,
+        path,
+      );
     }
     if (selection.kind === Kind.FRAGMENT_SPREAD) {
       const fragmentName = selection.name.value;
-      const fragment = context.fragmentMap[fragmentName] || (context.fragmentMap[fragmentName] = context.cache.lookupFragment(fragmentName));
+      const fragment =
+        context.fragmentMap[fragmentName] ||
+        (context.fragmentMap[fragmentName] =
+          context.cache.lookupFragment(fragmentName));
       invariant(fragment, 39, fragmentName);
       const mode = getFragmentMaskMode(selection);
       if (mode !== "mask") {
-        value = maskSelectionSet(data, fragment.selectionSet, context, mode === "migrate", path);
+        value = maskSelectionSet(
+          data,
+          fragment.selectionSet,
+          context,
+          mode === "migrate",
+          path,
+        );
       }
     }
     if (knownChanged.has(value)) {
@@ -1001,12 +1160,25 @@ function maskSelectionSet(data, selectionSet, context, migration, path) {
   }
   return knownChanged.has(memo) ? memo : data;
 }
-function getAccessorWarningDescriptor(fieldName, value, path, operationName, operationType) {
+function getAccessorWarningDescriptor(
+  fieldName,
+  value,
+  path,
+  operationName,
+  operationType,
+) {
   let getValue = () => {
     if (disableWarningsSlot.getValue()) {
       return value;
     }
-    __DEV__ && invariant.warn(40, operationName ? `${operationType} '${operationName}'` : `anonymous ${operationType}`, `${path}.${fieldName}`.replace(/^\./, ""));
+    __DEV__ &&
+      invariant.warn(
+        40,
+        operationName
+          ? `${operationType} '${operationName}'`
+          : `anonymous ${operationType}`,
+        `${path}.${fieldName}`.replace(/^\./, ""),
+      );
     getValue = () => value;
     return value;
   };
@@ -1018,18 +1190,22 @@ function getAccessorWarningDescriptor(fieldName, value, path, operationName, ope
       getValue = () => newValue;
     },
     enumerable: true,
-    configurable: true
+    configurable: true,
   };
 }
 
 // node_modules/@apollo/client/masking/maskFragment.js
 function maskFragment(data, document, cache, fragmentName) {
-  const fragments = document.definitions.filter((node) => node.kind === Kind.FRAGMENT_DEFINITION);
+  const fragments = document.definitions.filter(
+    (node) => node.kind === Kind.FRAGMENT_DEFINITION,
+  );
   if (typeof fragmentName === "undefined") {
     invariant(fragments.length === 1, 41, fragments.length);
     fragmentName = fragments[0].name.value;
   }
-  const fragment = fragments.find((fragment2) => fragment2.name.value === fragmentName);
+  const fragment = fragments.find(
+    (fragment2) => fragment2.name.value === fragmentName,
+  );
   invariant(!!fragment, 42, fragmentName);
   if (data == null) {
     return data;
@@ -1043,7 +1219,7 @@ function maskFragment(data, document, cache, fragmentName) {
     fragmentMap: createFragmentMap(getFragmentDefinitions(document)),
     cache,
     mutableTargets: /* @__PURE__ */ new WeakMap(),
-    knownChanged: /* @__PURE__ */ new WeakSet()
+    knownChanged: /* @__PURE__ */ new WeakSet(),
   });
 }
 
@@ -1060,7 +1236,7 @@ function maskOperation(data, document, cache) {
     fragmentMap: createFragmentMap(getFragmentDefinitions(document)),
     cache,
     mutableTargets: /* @__PURE__ */ new WeakMap(),
-    knownChanged: /* @__PURE__ */ new WeakSet()
+    knownChanged: /* @__PURE__ */ new WeakSet(),
   });
 }
 
@@ -1072,66 +1248,84 @@ function lookupSpecifierInfo(spec) {
 }
 function keyFieldsFnFromSpecifier(specifier) {
   const info = lookupSpecifierInfo(specifier);
-  return info.keyFieldsFn || (info.keyFieldsFn = (object, context) => {
-    const extract = (from3, key) => context.readField(key, from3);
-    const keyObject = context.keyObject = collectSpecifierPaths(specifier, (schemaKeyPath) => {
-      let extracted = extractKeyPath(
-        context.storeObject,
-        schemaKeyPath,
-        // Using context.readField to extract paths from context.storeObject
-        // allows the extraction to see through Reference objects and respect
-        // custom read functions.
-        extract
-      );
-      if (extracted === void 0 && object !== context.storeObject && hasOwn.call(object, schemaKeyPath[0])) {
-        extracted = extractKeyPath(object, schemaKeyPath, extractKey);
-      }
-      invariant(extracted !== void 0, 99, schemaKeyPath.join("."), object);
-      return extracted;
-    });
-    return `${context.typename}:${JSON.stringify(keyObject)}`;
-  });
+  return (
+    info.keyFieldsFn ||
+    (info.keyFieldsFn = (object, context) => {
+      const extract = (from3, key) => context.readField(key, from3);
+      const keyObject = (context.keyObject = collectSpecifierPaths(
+        specifier,
+        (schemaKeyPath) => {
+          let extracted = extractKeyPath(
+            context.storeObject,
+            schemaKeyPath,
+            // Using context.readField to extract paths from context.storeObject
+            // allows the extraction to see through Reference objects and respect
+            // custom read functions.
+            extract,
+          );
+          if (
+            extracted === void 0 &&
+            object !== context.storeObject &&
+            hasOwn.call(object, schemaKeyPath[0])
+          ) {
+            extracted = extractKeyPath(object, schemaKeyPath, extractKey);
+          }
+          invariant(extracted !== void 0, 99, schemaKeyPath.join("."), object);
+          return extracted;
+        },
+      ));
+      return `${context.typename}:${JSON.stringify(keyObject)}`;
+    })
+  );
 }
 function keyArgsFnFromSpecifier(specifier) {
   const info = lookupSpecifierInfo(specifier);
-  return info.keyArgsFn || (info.keyArgsFn = (args, { field, variables, fieldName }) => {
-    const collected = collectSpecifierPaths(specifier, (keyPath) => {
-      const firstKey = keyPath[0];
-      const firstChar = firstKey.charAt(0);
-      if (firstChar === "@") {
-        if (field && isNonEmptyArray(field.directives)) {
-          const directiveName = firstKey.slice(1);
-          const d = field.directives.find((d2) => d2.name.value === directiveName);
-          const directiveArgs = d && argumentsObjectFromField(d, variables);
-          return directiveArgs && extractKeyPath(
-            directiveArgs,
-            // If keyPath.length === 1, this code calls extractKeyPath with an
-            // empty path, which works because it uses directiveArgs as the
-            // extracted value.
-            keyPath.slice(1)
-          );
+  return (
+    info.keyArgsFn ||
+    (info.keyArgsFn = (args, { field, variables, fieldName }) => {
+      const collected = collectSpecifierPaths(specifier, (keyPath) => {
+        const firstKey = keyPath[0];
+        const firstChar = firstKey.charAt(0);
+        if (firstChar === "@") {
+          if (field && isNonEmptyArray(field.directives)) {
+            const directiveName = firstKey.slice(1);
+            const d = field.directives.find(
+              (d2) => d2.name.value === directiveName,
+            );
+            const directiveArgs = d && argumentsObjectFromField(d, variables);
+            return (
+              directiveArgs &&
+              extractKeyPath(
+                directiveArgs,
+                // If keyPath.length === 1, this code calls extractKeyPath with an
+                // empty path, which works because it uses directiveArgs as the
+                // extracted value.
+                keyPath.slice(1),
+              )
+            );
+          }
+          return;
         }
-        return;
-      }
-      if (firstChar === "$") {
-        const variableName = firstKey.slice(1);
-        if (variables && hasOwn.call(variables, variableName)) {
-          const varKeyPath = keyPath.slice(0);
-          varKeyPath[0] = variableName;
-          return extractKeyPath(variables, varKeyPath);
+        if (firstChar === "$") {
+          const variableName = firstKey.slice(1);
+          if (variables && hasOwn.call(variables, variableName)) {
+            const varKeyPath = keyPath.slice(0);
+            varKeyPath[0] = variableName;
+            return extractKeyPath(variables, varKeyPath);
+          }
+          return;
         }
-        return;
+        if (args) {
+          return extractKeyPath(args, keyPath);
+        }
+      });
+      const suffix = JSON.stringify(collected);
+      if (args || suffix !== "{}") {
+        fieldName += ":" + suffix;
       }
-      if (args) {
-        return extractKeyPath(args, keyPath);
-      }
-    });
-    const suffix = JSON.stringify(collected);
-    if (args || suffix !== "{}") {
-      fieldName += ":" + suffix;
-    }
-    return fieldName;
-  });
+      return fieldName;
+    })
+  );
 }
 function collectSpecifierPaths(specifier, extractor) {
   const merger = new DeepMerger();
@@ -1149,7 +1343,7 @@ function collectSpecifierPaths(specifier, extractor) {
 function getSpecifierPaths(spec) {
   const info = lookupSpecifierInfo(spec);
   if (!info.paths) {
-    const paths = info.paths = [];
+    const paths = (info.paths = []);
     const currentPath = [];
     spec.forEach((s, i) => {
       if (isArray(s)) {
@@ -1171,16 +1365,22 @@ function extractKey(object, key) {
 }
 function extractKeyPath(object, path, extract) {
   extract = extract || extractKey;
-  return normalize(path.reduce(function reducer(obj, key) {
-    return isArray(obj) ? obj.map((child) => reducer(child, key)) : obj && extract(obj, key);
-  }, object));
+  return normalize(
+    path.reduce(function reducer(obj, key) {
+      return isArray(obj)
+        ? obj.map((child) => reducer(child, key))
+        : obj && extract(obj, key);
+    }, object),
+  );
 }
 function normalize(value) {
   if (isNonNullObject(value)) {
     if (isArray(value)) {
       return value.map(normalize);
     }
-    return collectSpecifierPaths(Object.keys(value).sort(), (path) => extractKeyPath(value, path));
+    return collectSpecifierPaths(Object.keys(value).sort(), (path) =>
+      extractKeyPath(value, path),
+    );
   }
   return value;
 }
@@ -1191,10 +1391,13 @@ var cacheInfoMap = /* @__PURE__ */ new WeakMap();
 function getCacheInfo(cache) {
   let info = cacheInfoMap.get(cache);
   if (!info) {
-    cacheInfoMap.set(cache, info = {
-      vars: /* @__PURE__ */ new Set(),
-      dep: dep()
-    });
+    cacheInfoMap.set(
+      cache,
+      (info = {
+        vars: /* @__PURE__ */ new Set(),
+        dep: dep(),
+      }),
+    );
   }
   return info;
 }
@@ -1207,7 +1410,7 @@ function recallCache(cache) {
 function makeVar(value) {
   const caches = /* @__PURE__ */ new Set();
   const listeners = /* @__PURE__ */ new Set();
-  const rv = function(newValue) {
+  const rv = function (newValue) {
     if (arguments.length > 0) {
       if (value !== newValue) {
         value = newValue;
@@ -1234,11 +1437,11 @@ function makeVar(value) {
       listeners.delete(listener);
     };
   };
-  const attach = rv.attachCache = (cache) => {
+  const attach = (rv.attachCache = (cache) => {
     caches.add(cache);
     getCacheInfo(cache).vars.add(rv);
     return rv;
-  };
+  });
   rv.forgetCache = (cache) => caches.delete(cache);
   return rv;
 }
@@ -1250,11 +1453,16 @@ function broadcast(cache) {
 
 // node_modules/@apollo/client/cache/inmemory/policies.js
 function argsFromFieldSpecifier(spec) {
-  return spec.args !== void 0 ? spec.args : spec.field ? argumentsObjectFromField(spec.field, spec.variables) : null;
+  return spec.args !== void 0
+    ? spec.args
+    : spec.field
+      ? argumentsObjectFromField(spec.field, spec.variables)
+      : null;
 }
 var nullKeyFieldsFn = () => void 0;
 var simpleKeyArgsFn = (_args, context) => context.fieldName;
-var mergeTrueFn = (existing, incoming, { mergeObjects }) => mergeObjects(existing, incoming);
+var mergeTrueFn = (existing, incoming, { mergeObjects }) =>
+  mergeObjects(existing, incoming);
 var mergeFalseFn = (_, incoming) => incoming;
 var Policies = class {
   config;
@@ -1276,9 +1484,12 @@ var Policies = class {
   usingPossibleTypes = false;
   constructor(config) {
     this.config = config;
-    this.config = __spreadValues({
-      dataIdFromObject: defaultDataIdFromObject
-    }, config);
+    this.config = __spreadValues(
+      {
+        dataIdFromObject: defaultDataIdFromObject,
+      },
+      config,
+    );
     this.cache = this.config.cache;
     this.setRootTypename("Query");
     this.setRootTypename("Mutation");
@@ -1292,28 +1503,37 @@ var Policies = class {
   }
   identify(object, partialContext) {
     const policies = this;
-    const typename = partialContext && (partialContext.typename || partialContext.storeObject?.__typename) || object.__typename;
+    const typename =
+      (partialContext &&
+        (partialContext.typename || partialContext.storeObject?.__typename)) ||
+      object.__typename;
     if (typename === this.rootTypenamesById.ROOT_QUERY) {
       return ["ROOT_QUERY"];
     }
-    const storeObject = partialContext && partialContext.storeObject || object;
+    const storeObject =
+      (partialContext && partialContext.storeObject) || object;
     const context = __spreadProps(__spreadValues({}, partialContext), {
       typename,
       storeObject,
-      readField: partialContext && partialContext.readField || ((...args) => {
-        const options = normalizeReadFieldOptions(args, storeObject);
-        return policies.readField(options, {
-          store: policies.cache["data"],
-          variables: options.variables
-        });
-      })
+      readField:
+        (partialContext && partialContext.readField) ||
+        ((...args) => {
+          const options = normalizeReadFieldOptions(args, storeObject);
+          return policies.readField(options, {
+            store: policies.cache["data"],
+            variables: options.variables,
+          });
+        }),
     });
     let id;
     const policy = typename && this.getTypePolicy(typename);
-    let keyFn = policy && policy.keyFn || this.config.dataIdFromObject;
+    let keyFn = (policy && policy.keyFn) || this.config.dataIdFromObject;
     disableWarningsSlot.withValue(true, () => {
       while (keyFn) {
-        const specifierOrId = keyFn(__spreadValues(__spreadValues({}, object), storeObject), context);
+        const specifierOrId = keyFn(
+          __spreadValues(__spreadValues({}, object), storeObject),
+          context,
+        );
         if (isArray(specifierOrId)) {
           keyFn = keyFieldsFnFromSpecifier(specifierOrId);
         } else {
@@ -1327,13 +1547,16 @@ var Policies = class {
   }
   addTypePolicies(typePolicies) {
     Object.keys(typePolicies).forEach((typename) => {
-      const _a = typePolicies[typename], { queryType, mutationType, subscriptionType } = _a, incoming = __objRest(_a, ["queryType", "mutationType", "subscriptionType"]);
-      if (queryType)
-        this.setRootTypename("Query", typename);
-      if (mutationType)
-        this.setRootTypename("Mutation", typename);
-      if (subscriptionType)
-        this.setRootTypename("Subscription", typename);
+      const _a = typePolicies[typename],
+        { queryType, mutationType, subscriptionType } = _a,
+        incoming = __objRest(_a, [
+          "queryType",
+          "mutationType",
+          "subscriptionType",
+        ]);
+      if (queryType) this.setRootTypename("Query", typename);
+      if (mutationType) this.setRootTypename("Mutation", typename);
+      if (subscriptionType) this.setRootTypename("Subscription", typename);
       if (hasOwn.call(this.toBeAdded, typename)) {
         this.toBeAdded[typename].push(incoming);
       } else {
@@ -1345,11 +1568,24 @@ var Policies = class {
     const existing = this.getTypePolicy(typename);
     const { keyFields, fields } = incoming;
     function setMerge(existing2, merge) {
-      existing2.merge = typeof merge === "function" ? merge : merge === true ? mergeTrueFn : merge === false ? mergeFalseFn : existing2.merge;
+      existing2.merge =
+        typeof merge === "function"
+          ? merge
+          : merge === true
+            ? mergeTrueFn
+            : merge === false
+              ? mergeFalseFn
+              : existing2.merge;
     }
     setMerge(existing, incoming.merge);
     existing.keyFn = // Pass false to disable normalization for this typename.
-    keyFields === false ? nullKeyFieldsFn : isArray(keyFields) ? keyFieldsFnFromSpecifier(keyFields) : typeof keyFields === "function" ? keyFields : existing.keyFn;
+      keyFields === false
+        ? nullKeyFieldsFn
+        : isArray(keyFields)
+          ? keyFieldsFnFromSpecifier(keyFields)
+          : typeof keyFields === "function"
+            ? keyFields
+            : existing.keyFn;
     if (fields) {
       Object.keys(fields).forEach((fieldName) => {
         let existing2 = existingFieldPolicies[fieldName];
@@ -1362,8 +1598,14 @@ var Policies = class {
         } else {
           const { keyArgs, read, merge } = incoming2;
           existing2.keyFn = // Pass false to disable argument-based differentiation of
-          // field identities.
-          keyArgs === false ? simpleKeyArgsFn : isArray(keyArgs) ? keyArgsFnFromSpecifier(keyArgs) : typeof keyArgs === "function" ? keyArgs : existing2.keyFn;
+            // field identities.
+            keyArgs === false
+              ? simpleKeyArgsFn
+              : isArray(keyArgs)
+                ? keyArgsFnFromSpecifier(keyArgs)
+                : typeof keyArgs === "function"
+                  ? keyArgs
+                  : existing2.keyFn;
           if (typeof read === "function") {
             existing2.read = read;
           }
@@ -1380,8 +1622,7 @@ var Policies = class {
     const old = this.rootTypenamesById[rootId];
     if (typename !== old) {
       invariant(!old || old === which, 100, which);
-      if (old)
-        delete this.rootIdsByTypename[old];
+      if (old) delete this.rootIdsByTypename[old];
       this.rootIdsByTypename[typename] = rootId;
       this.rootTypenamesById[rootId] = typename;
     }
@@ -1401,7 +1642,7 @@ var Policies = class {
   }
   getTypePolicy(typename) {
     if (!hasOwn.call(this.typePolicies, typename)) {
-      const policy = this.typePolicies[typename] = {};
+      const policy = (this.typePolicies[typename] = {});
       policy.fields = {};
       let supertypes = this.supertypeMap.get(typename);
       if (!supertypes && this.fuzzySubtypes.size) {
@@ -1417,7 +1658,9 @@ var Policies = class {
       }
       if (supertypes && supertypes.size) {
         supertypes.forEach((supertype) => {
-          const _a = this.getTypePolicy(supertype), { fields } = _a, rest = __objRest(_a, ["fields"]);
+          const _a = this.getTypePolicy(supertype),
+            { fields } = _a,
+            rest = __objRest(_a, ["fields"]);
           Object.assign(policy, rest);
           Object.assign(policy.fields, fields);
         });
@@ -1426,7 +1669,11 @@ var Policies = class {
     const inbox = this.toBeAdded[typename];
     if (inbox && inbox.length) {
       inbox.splice(0).forEach((policy) => {
-        this.updateTypePolicy(typename, policy, this.typePolicies[typename].fields);
+        this.updateTypePolicy(
+          typename,
+          policy,
+          this.typePolicies[typename].fields,
+        );
       });
     }
     return this.typePolicies[typename];
@@ -1439,24 +1686,28 @@ var Policies = class {
   getSupertypeSet(subtype, createIfMissing) {
     let supertypeSet = this.supertypeMap.get(subtype);
     if (!supertypeSet && createIfMissing) {
-      this.supertypeMap.set(subtype, supertypeSet = /* @__PURE__ */ new Set());
+      this.supertypeMap.set(
+        subtype,
+        (supertypeSet = /* @__PURE__ */ new Set()),
+      );
     }
     return supertypeSet;
   }
   fragmentMatches(fragment, typename, result, variables) {
-    if (!fragment.typeCondition)
-      return true;
-    if (!typename)
-      return false;
+    if (!fragment.typeCondition) return true;
+    if (!typename) return false;
     const supertype = fragment.typeCondition.name.value;
-    if (typename === supertype)
-      return true;
+    if (typename === supertype) return true;
     if (this.usingPossibleTypes && this.supertypeMap.has(supertype)) {
       const typenameSupertypeSet = this.getSupertypeSet(typename, true);
       const workQueue = [typenameSupertypeSet];
       const maybeEnqueue = (subtype) => {
         const supertypeSet = this.getSupertypeSet(subtype, false);
-        if (supertypeSet && supertypeSet.size && workQueue.indexOf(supertypeSet) < 0) {
+        if (
+          supertypeSet &&
+          supertypeSet.size &&
+          workQueue.indexOf(supertypeSet) < 0
+        ) {
           workQueue.push(supertypeSet);
         }
       };
@@ -1474,13 +1725,15 @@ var Policies = class {
           return true;
         }
         supertypeSet.forEach(maybeEnqueue);
-        if (needToCheckFuzzySubtypes && // Start checking fuzzy subtypes only after exhausting all
-        // non-fuzzy subtypes (after the final iteration of the loop).
-        i === workQueue.length - 1 && // We could wait to compare fragment.selectionSet to result
-        // after we verify the supertype, but this check is often less
-        // expensive than that search, and we will have to do the
-        // comparison anyway whenever we find a potential match.
-        selectionSetMatchesResult(fragment.selectionSet, result, variables)) {
+        if (
+          needToCheckFuzzySubtypes && // Start checking fuzzy subtypes only after exhausting all
+          // non-fuzzy subtypes (after the final iteration of the loop).
+          i === workQueue.length - 1 && // We could wait to compare fragment.selectionSet to result
+          // after we verify the supertype, but this check is often less
+          // expensive than that search, and we will have to do the
+          // comparison anyway whenever we find a potential match.
+          selectionSetMatchesResult(fragment.selectionSet, result, variables)
+        ) {
           needToCheckFuzzySubtypes = false;
           checkingFuzzySubtypes = true;
           this.fuzzySubtypes.forEach((regExp, fuzzyString) => {
@@ -1508,7 +1761,7 @@ var Policies = class {
         typename,
         fieldName,
         field: fieldSpec.field || null,
-        variables: fieldSpec.variables
+        variables: fieldSpec.variables,
       };
       const args = argsFromFieldSpecifier(fieldSpec);
       while (keyFn) {
@@ -1522,36 +1775,51 @@ var Policies = class {
       }
     }
     if (storeFieldName === void 0) {
-      storeFieldName = fieldSpec.field ? storeKeyNameFromField(fieldSpec.field, fieldSpec.variables) : getStoreKeyName(fieldName, argsFromFieldSpecifier(fieldSpec));
+      storeFieldName = fieldSpec.field
+        ? storeKeyNameFromField(fieldSpec.field, fieldSpec.variables)
+        : getStoreKeyName(fieldName, argsFromFieldSpecifier(fieldSpec));
     }
     if (storeFieldName === false) {
       return fieldName;
     }
-    return fieldName === fieldNameFromStoreName(storeFieldName) ? storeFieldName : fieldName + ":" + storeFieldName;
+    return fieldName === fieldNameFromStoreName(storeFieldName)
+      ? storeFieldName
+      : fieldName + ":" + storeFieldName;
   }
   readField(options, context) {
     const objectOrReference = options.from;
-    if (!objectOrReference)
-      return;
+    if (!objectOrReference) return;
     const nameOrField = options.field || options.fieldName;
-    if (!nameOrField)
-      return;
+    if (!nameOrField) return;
     if (options.typename === void 0) {
-      const typename = context.store.getFieldValue(objectOrReference, "__typename");
-      if (typename)
-        options.typename = typename;
+      const typename = context.store.getFieldValue(
+        objectOrReference,
+        "__typename",
+      );
+      if (typename) options.typename = typename;
     }
     const storeFieldName = this.getStoreFieldName(options);
     const fieldName = fieldNameFromStoreName(storeFieldName);
-    const existing = context.store.getFieldValue(objectOrReference, storeFieldName);
+    const existing = context.store.getFieldValue(
+      objectOrReference,
+      storeFieldName,
+    );
     const policy = this.getFieldPolicy(options.typename, fieldName);
     const read = policy && policy.read;
     if (read) {
-      const readOptions = makeFieldFunctionOptions(this, objectOrReference, options, context, context.store.getStorage(isReference(objectOrReference) ? objectOrReference.__ref : objectOrReference, storeFieldName));
-      return cacheSlot.withValue(this.cache, read, [
-        existing,
-        readOptions
-      ]);
+      const readOptions = makeFieldFunctionOptions(
+        this,
+        objectOrReference,
+        options,
+        context,
+        context.store.getStorage(
+          isReference(objectOrReference)
+            ? objectOrReference.__ref
+            : objectOrReference,
+          storeFieldName,
+        ),
+      );
+      return cacheSlot.withValue(this.cache, read, [existing, readOptions]);
     }
     return existing;
   }
@@ -1568,7 +1836,13 @@ var Policies = class {
     }
     return merge;
   }
-  runMergeFunction(existing, incoming, { field, typename, merge }, context, storage) {
+  runMergeFunction(
+    existing,
+    incoming,
+    { field, typename, merge },
+    context,
+    storage,
+  ) {
     if (merge === mergeTrueFn) {
       return makeMergeObjectsFunction(context.store)(existing, incoming);
     }
@@ -1578,32 +1852,42 @@ var Policies = class {
     if (context.overwrite) {
       existing = void 0;
     }
-    return merge(existing, incoming, makeFieldFunctionOptions(
-      this,
-      // Unlike options.readField for read functions, we do not fall
-      // back to the current object if no foreignObjOrRef is provided,
-      // because it's not clear what the current object should be for
-      // merge functions: the (possibly undefined) existing object, or
-      // the incoming object? If you think your merge function needs
-      // to read sibling fields in order to produce a new value for
-      // the current field, you might want to rethink your strategy,
-      // because that's a recipe for making merge behavior sensitive
-      // to the order in which fields are written into the cache.
-      // However, readField(name, ref) is useful for merge functions
-      // that need to deduplicate child objects and references.
-      void 0,
-      {
-        typename,
-        fieldName: field.name.value,
-        field,
-        variables: context.variables
-      },
-      context,
-      storage || {}
-    ));
+    return merge(
+      existing,
+      incoming,
+      makeFieldFunctionOptions(
+        this,
+        // Unlike options.readField for read functions, we do not fall
+        // back to the current object if no foreignObjOrRef is provided,
+        // because it's not clear what the current object should be for
+        // merge functions: the (possibly undefined) existing object, or
+        // the incoming object? If you think your merge function needs
+        // to read sibling fields in order to produce a new value for
+        // the current field, you might want to rethink your strategy,
+        // because that's a recipe for making merge behavior sensitive
+        // to the order in which fields are written into the cache.
+        // However, readField(name, ref) is useful for merge functions
+        // that need to deduplicate child objects and references.
+        void 0,
+        {
+          typename,
+          fieldName: field.name.value,
+          field,
+          variables: context.variables,
+        },
+        context,
+        storage || {},
+      ),
+    );
   }
 };
-function makeFieldFunctionOptions(policies, objectOrReference, fieldSpec, context, storage) {
+function makeFieldFunctionOptions(
+  policies,
+  objectOrReference,
+  fieldSpec,
+  context,
+  storage,
+) {
   const storeFieldName = policies.getStoreFieldName(fieldSpec);
   const fieldName = fieldNameFromStoreName(storeFieldName);
   const variables = fieldSpec.variables || context.variables;
@@ -1620,12 +1904,19 @@ function makeFieldFunctionOptions(policies, objectOrReference, fieldSpec, contex
     cache: policies.cache,
     canRead,
     readField(...args) {
-      return policies.readField(normalizeReadFieldOptions(args, objectOrReference, variables), context);
+      return policies.readField(
+        normalizeReadFieldOptions(args, objectOrReference, variables),
+        context,
+      );
     },
-    mergeObjects: makeMergeObjectsFunction(context.store)
+    mergeObjects: makeMergeObjectsFunction(context.store),
   };
 }
-function normalizeReadFieldOptions(readFieldArgs, objectOrReference, variables) {
+function normalizeReadFieldOptions(
+  readFieldArgs,
+  objectOrReference,
+  variables,
+) {
   const { 0: fieldNameOrOptions, 1: from3, length: argc } = readFieldArgs;
   let options;
   if (typeof fieldNameOrOptions === "string") {
@@ -1634,7 +1925,7 @@ function normalizeReadFieldOptions(readFieldArgs, objectOrReference, variables) 
       // Default to objectOrReference only when no second argument was
       // passed for the from parameter, not when undefined is explicitly
       // passed as the second argument.
-      from: argc > 1 ? from3 : objectOrReference
+      from: argc > 1 ? from3 : objectOrReference,
     };
   } else {
     options = __spreadValues({}, fieldNameOrOptions);
@@ -1643,7 +1934,8 @@ function normalizeReadFieldOptions(readFieldArgs, objectOrReference, variables) 
     }
   }
   if (__DEV__ && options.from === void 0) {
-    __DEV__ && invariant.warn(102, stringifyForDisplay(Array.from(readFieldArgs)));
+    __DEV__ &&
+      invariant.warn(102, stringifyForDisplay(Array.from(readFieldArgs)));
   }
   if (void 0 === options.variables) {
     options.variables = variables;
@@ -1670,7 +1962,10 @@ function makeMergeObjectsFunction(store) {
         store.merge(existing, incoming.__ref);
         return incoming;
       }
-      if (storeValueIsStoreObject(existing) && storeValueIsStoreObject(incoming)) {
+      if (
+        storeValueIsStoreObject(existing) &&
+        storeValueIsStoreObject(incoming)
+      ) {
         return __spreadValues(__spreadValues({}, existing), incoming);
       }
     }
@@ -1691,72 +1986,117 @@ var StoreReader = class {
   knownResults = /* @__PURE__ */ new WeakMap();
   constructor(config) {
     this.config = config;
-    this.executeSelectionSet = wrap((options) => {
-      const peekArgs = execSelectionSetKeyArgs(options);
-      const other = this.executeSelectionSet.peek(...peekArgs);
-      if (other) {
-        return other;
-      }
-      maybeDependOnExistenceOfEntity(options.context.store, options.enclosingRef.__ref);
-      return this.execSelectionSetImpl(options);
-    }, {
-      max: cacheSizes["inMemoryCache.executeSelectionSet"] || 5e4,
-      keyArgs: execSelectionSetKeyArgs,
-      // Note that the parameters of makeCacheKey are determined by the
-      // array returned by keyArgs.
-      makeCacheKey(selectionSet, parent, context) {
-        if (supportsResultCaching(context.store)) {
-          return context.store.makeCacheKey(selectionSet, isReference(parent) ? parent.__ref : parent, context.varString);
+    this.executeSelectionSet = wrap(
+      (options) => {
+        const peekArgs = execSelectionSetKeyArgs(options);
+        const other = this.executeSelectionSet.peek(...peekArgs);
+        if (other) {
+          return other;
         }
-      }
-    });
-    this.executeSubSelectedArray = wrap((options) => {
-      maybeDependOnExistenceOfEntity(options.context.store, options.enclosingRef.__ref);
-      return this.execSubSelectedArrayImpl(options);
-    }, {
-      max: cacheSizes["inMemoryCache.executeSubSelectedArray"] || 1e4,
-      makeCacheKey({ field, array, context }) {
-        if (supportsResultCaching(context.store)) {
-          return context.store.makeCacheKey(field, array, context.varString);
-        }
-      }
-    });
+        maybeDependOnExistenceOfEntity(
+          options.context.store,
+          options.enclosingRef.__ref,
+        );
+        return this.execSelectionSetImpl(options);
+      },
+      {
+        max: cacheSizes["inMemoryCache.executeSelectionSet"] || 5e4,
+        keyArgs: execSelectionSetKeyArgs,
+        // Note that the parameters of makeCacheKey are determined by the
+        // array returned by keyArgs.
+        makeCacheKey(selectionSet, parent, context) {
+          if (supportsResultCaching(context.store)) {
+            return context.store.makeCacheKey(
+              selectionSet,
+              isReference(parent) ? parent.__ref : parent,
+              context.varString,
+            );
+          }
+        },
+      },
+    );
+    this.executeSubSelectedArray = wrap(
+      (options) => {
+        maybeDependOnExistenceOfEntity(
+          options.context.store,
+          options.enclosingRef.__ref,
+        );
+        return this.execSubSelectedArrayImpl(options);
+      },
+      {
+        max: cacheSizes["inMemoryCache.executeSubSelectedArray"] || 1e4,
+        makeCacheKey({ field, array, context }) {
+          if (supportsResultCaching(context.store)) {
+            return context.store.makeCacheKey(field, array, context.varString);
+          }
+        },
+      },
+    );
   }
   /**
    * Given a store and a query, return as much of the result as possible and
    * identify if any data was missing from the store.
    */
-  diffQueryAgainstStore({ store, query, rootId = "ROOT_QUERY", variables, returnPartialData = true }) {
+  diffQueryAgainstStore({
+    store,
+    query,
+    rootId = "ROOT_QUERY",
+    variables,
+    returnPartialData = true,
+  }) {
     const policies = this.config.cache.policies;
-    variables = __spreadValues(__spreadValues({}, getDefaultValues(getQueryDefinition(query))), variables);
+    variables = __spreadValues(
+      __spreadValues({}, getDefaultValues(getQueryDefinition(query))),
+      variables,
+    );
     const rootRef = makeReference(rootId);
     const execResult = this.executeSelectionSet({
       selectionSet: getMainDefinition(query).selectionSet,
       objectOrReference: rootRef,
       enclosingRef: rootRef,
-      context: __spreadValues({
-        store,
-        query,
-        policies,
-        variables,
-        varString: canonicalStringify(variables)
-      }, extractFragmentContext(query, this.config.fragments))
+      context: __spreadValues(
+        {
+          store,
+          query,
+          policies,
+          variables,
+          varString: canonicalStringify(variables),
+        },
+        extractFragmentContext(query, this.config.fragments),
+      ),
     });
     let missing;
     if (execResult.missing) {
-      missing = new MissingFieldError(firstMissing(execResult.missing), execResult.missing, query, variables);
+      missing = new MissingFieldError(
+        firstMissing(execResult.missing),
+        execResult.missing,
+        query,
+        variables,
+      );
     }
     const complete = !missing;
     const { result } = execResult;
     return {
-      result: complete || returnPartialData ? Object.keys(result).length === 0 ? null : result : null,
+      result:
+        complete || returnPartialData
+          ? Object.keys(result).length === 0
+            ? null
+            : result
+          : null,
       complete,
-      missing
+      missing,
     };
   }
   isFresh(result, parent, selectionSet, context) {
-    if (supportsResultCaching(context.store) && this.knownResults.get(result) === selectionSet) {
-      const latest = this.executeSelectionSet.peek(selectionSet, parent, context);
+    if (
+      supportsResultCaching(context.store) &&
+      this.knownResults.get(result) === selectionSet
+    ) {
+      const latest = this.executeSelectionSet.peek(
+        selectionSet,
+        parent,
+        context,
+      );
       if (latest && result === latest.result) {
         return true;
       }
@@ -1764,11 +2104,20 @@ var StoreReader = class {
     return false;
   }
   // Uncached version of executeSelectionSet.
-  execSelectionSetImpl({ selectionSet, objectOrReference, enclosingRef, context }) {
-    if (isReference(objectOrReference) && !context.policies.rootTypenamesById[objectOrReference.__ref] && !context.store.has(objectOrReference.__ref)) {
+  execSelectionSetImpl({
+    selectionSet,
+    objectOrReference,
+    enclosingRef,
+    context,
+  }) {
+    if (
+      isReference(objectOrReference) &&
+      !context.policies.rootTypenamesById[objectOrReference.__ref] &&
+      !context.store.has(objectOrReference.__ref)
+    ) {
       return {
         result: {},
-        missing: `Dangling reference to missing ${objectOrReference.__ref} object`
+        missing: `Dangling reference to missing ${objectOrReference.__ref} object`,
       };
     }
     const { variables, policies, store } = context;
@@ -1782,52 +2131,63 @@ var StoreReader = class {
     function handleMissing(result2, resultName) {
       if (result2.missing) {
         missing = missingMerger.merge(missing, {
-          [resultName]: result2.missing
+          [resultName]: result2.missing,
         });
       }
       return result2.result;
     }
     const workSet = new Set(selectionSet.selections);
     workSet.forEach((selection) => {
-      if (!shouldInclude(selection, variables))
-        return;
+      if (!shouldInclude(selection, variables)) return;
       if (isField(selection)) {
-        let fieldValue = policies.readField({
-          fieldName: selection.name.value,
-          field: selection,
-          variables: context.variables,
-          from: objectOrReference
-        }, context);
+        let fieldValue = policies.readField(
+          {
+            fieldName: selection.name.value,
+            field: selection,
+            variables: context.variables,
+            from: objectOrReference,
+          },
+          context,
+        );
         const resultName = resultKeyNameFromField(selection);
         if (fieldValue === void 0) {
           if (!addTypenameToDocument.added(selection)) {
             missing = missingMerger.merge(missing, {
-              [resultName]: `Can't find field '${selection.name.value}' on ${isReference(objectOrReference) ? objectOrReference.__ref + " object" : "object " + JSON.stringify(objectOrReference, null, 2)}`
+              [resultName]: `Can't find field '${selection.name.value}' on ${isReference(objectOrReference) ? objectOrReference.__ref + " object" : "object " + JSON.stringify(objectOrReference, null, 2)}`,
             });
           }
         } else if (isArray(fieldValue)) {
           if (fieldValue.length > 0) {
-            fieldValue = handleMissing(this.executeSubSelectedArray({
-              field: selection,
-              array: fieldValue,
-              enclosingRef,
-              context
-            }), resultName);
+            fieldValue = handleMissing(
+              this.executeSubSelectedArray({
+                field: selection,
+                array: fieldValue,
+                enclosingRef,
+                context,
+              }),
+              resultName,
+            );
           }
         } else if (!selection.selectionSet) {
         } else if (fieldValue != null) {
-          fieldValue = handleMissing(this.executeSelectionSet({
-            selectionSet: selection.selectionSet,
-            objectOrReference: fieldValue,
-            enclosingRef: isReference(fieldValue) ? fieldValue : enclosingRef,
-            context
-          }), resultName);
+          fieldValue = handleMissing(
+            this.executeSelectionSet({
+              selectionSet: selection.selectionSet,
+              objectOrReference: fieldValue,
+              enclosingRef: isReference(fieldValue) ? fieldValue : enclosingRef,
+              context,
+            }),
+            resultName,
+          );
         }
         if (fieldValue !== void 0) {
           objectsToMerge.push({ [resultName]: fieldValue });
         }
       } else {
-        const fragment = getFragmentFromSelection(selection, context.lookupFragment);
+        const fragment = getFragmentFromSelection(
+          selection,
+          context.lookupFragment,
+        );
         if (!fragment && selection.kind === Kind.FRAGMENT_SPREAD) {
           throw newInvariantError(104, selection.name.value);
         }
@@ -1862,20 +2222,26 @@ var StoreReader = class {
         return null;
       }
       if (isArray(item)) {
-        return handleMissing(this.executeSubSelectedArray({
-          field,
-          array: item,
-          enclosingRef,
-          context
-        }), i);
+        return handleMissing(
+          this.executeSubSelectedArray({
+            field,
+            array: item,
+            enclosingRef,
+            context,
+          }),
+          i,
+        );
       }
       if (field.selectionSet) {
-        return handleMissing(this.executeSelectionSet({
-          selectionSet: field.selectionSet,
-          objectOrReference: item,
-          enclosingRef: isReference(item) ? item : enclosingRef,
-          context
-        }), i);
+        return handleMissing(
+          this.executeSelectionSet({
+            selectionSet: field.selectionSet,
+            objectOrReference: item,
+            enclosingRef: isReference(item) ? item : enclosingRef,
+            context,
+          }),
+          i,
+        );
       }
       if (__DEV__) {
         assertSelectionSetForIdValue(context.store, field, item);
@@ -1884,15 +2250,14 @@ var StoreReader = class {
     });
     return {
       result: array,
-      missing
+      missing,
     };
   }
 };
 function firstMissing(tree) {
   try {
     JSON.stringify(tree, (_, value) => {
-      if (typeof value === "string")
-        throw value;
+      if (typeof value === "string") throw value;
       return value;
     });
   } catch (result) {
@@ -1908,7 +2273,7 @@ function assertSelectionSetForIdValue(store, field, fieldValue) {
           !isReference(value),
           105,
           getTypenameFromStoreObject(store, value),
-          field.name.value
+          field.name.value,
         );
         Object.values(value).forEach(workSet.add, workSet);
       }
@@ -1921,10 +2286,16 @@ function getContextFlavor(context, clientOnly, deferred) {
   const key = `${clientOnly}${deferred}`;
   let flavored = context.flavors.get(key);
   if (!flavored) {
-    context.flavors.set(key, flavored = context.clientOnly === clientOnly && context.deferred === deferred ? context : __spreadProps(__spreadValues({}, context), {
-      clientOnly,
-      deferred
-    }));
+    context.flavors.set(
+      key,
+      (flavored =
+        context.clientOnly === clientOnly && context.deferred === deferred
+          ? context
+          : __spreadProps(__spreadValues({}, context), {
+              clientOnly,
+              deferred,
+            })),
+    );
   }
   return flavored;
 }
@@ -1940,61 +2311,87 @@ var StoreWriter = class {
   writeToStore(store, { query, result, dataId, variables, overwrite }) {
     const operationDefinition = getOperationDefinition(query);
     const merger = makeProcessedFieldsMerger();
-    variables = __spreadValues(__spreadValues({}, getDefaultValues(operationDefinition)), variables);
-    const context = __spreadProps(__spreadValues({
-      store,
-      written: {},
-      merge(existing, incoming) {
-        return merger.merge(existing, incoming);
-      },
+    variables = __spreadValues(
+      __spreadValues({}, getDefaultValues(operationDefinition)),
       variables,
-      varString: canonicalStringify(variables)
-    }, extractFragmentContext(query, this.fragments)), {
-      overwrite: !!overwrite,
-      incomingById: /* @__PURE__ */ new Map(),
-      clientOnly: false,
-      deferred: false,
-      flavors: /* @__PURE__ */ new Map()
-    });
+    );
+    const context = __spreadProps(
+      __spreadValues(
+        {
+          store,
+          written: {},
+          merge(existing, incoming) {
+            return merger.merge(existing, incoming);
+          },
+          variables,
+          varString: canonicalStringify(variables),
+        },
+        extractFragmentContext(query, this.fragments),
+      ),
+      {
+        overwrite: !!overwrite,
+        incomingById: /* @__PURE__ */ new Map(),
+        clientOnly: false,
+        deferred: false,
+        flavors: /* @__PURE__ */ new Map(),
+      },
+    );
     const ref = this.processSelectionSet({
       result: result || {},
       dataId,
       selectionSet: operationDefinition.selectionSet,
       mergeTree: { map: /* @__PURE__ */ new Map() },
-      context
+      context,
     });
     if (!isReference(ref)) {
       throw newInvariantError(106, result);
     }
-    context.incomingById.forEach(({ storeObject, mergeTree, fieldNodeSet }, dataId2) => {
-      const entityRef = makeReference(dataId2);
-      if (mergeTree && mergeTree.map.size) {
-        const applied = this.applyMerges(mergeTree, entityRef, storeObject, context);
-        if (isReference(applied)) {
-          return;
+    context.incomingById.forEach(
+      ({ storeObject, mergeTree, fieldNodeSet }, dataId2) => {
+        const entityRef = makeReference(dataId2);
+        if (mergeTree && mergeTree.map.size) {
+          const applied = this.applyMerges(
+            mergeTree,
+            entityRef,
+            storeObject,
+            context,
+          );
+          if (isReference(applied)) {
+            return;
+          }
+          storeObject = applied;
         }
-        storeObject = applied;
-      }
-      if (__DEV__ && !context.overwrite) {
-        const fieldsWithSelectionSets = {};
-        fieldNodeSet.forEach((field) => {
-          if (field.selectionSet) {
-            fieldsWithSelectionSets[field.name.value] = true;
-          }
-        });
-        const hasSelectionSet = (storeFieldName) => fieldsWithSelectionSets[fieldNameFromStoreName(storeFieldName)] === true;
-        const hasMergeFunction = (storeFieldName) => {
-          const childTree = mergeTree && mergeTree.map.get(storeFieldName);
-          return Boolean(childTree && childTree.info && childTree.info.merge);
-        };
-        Object.keys(storeObject).forEach((storeFieldName) => {
-          if (hasSelectionSet(storeFieldName) && !hasMergeFunction(storeFieldName)) {
-            warnAboutDataLoss(entityRef, storeObject, storeFieldName, context.store);
-          }
-        });
-      }
-      store.merge(dataId2, storeObject);
-    });
+        if (__DEV__ && !context.overwrite) {
+          const fieldsWithSelectionSets = {};
+          fieldNodeSet.forEach((field) => {
+            if (field.selectionSet) {
+              fieldsWithSelectionSets[field.name.value] = true;
+            }
+          });
+          const hasSelectionSet = (storeFieldName) =>
+            fieldsWithSelectionSets[fieldNameFromStoreName(storeFieldName)] ===
+            true;
+          const hasMergeFunction = (storeFieldName) => {
+            const childTree = mergeTree && mergeTree.map.get(storeFieldName);
+            return Boolean(childTree && childTree.info && childTree.info.merge);
+          };
+          Object.keys(storeObject).forEach((storeFieldName) => {
+            if (
+              hasSelectionSet(storeFieldName) &&
+              !hasMergeFunction(storeFieldName)
+            ) {
+              warnAboutDataLoss(
+                entityRef,
+                storeObject,
+                storeFieldName,
+                context.store,
+              );
+            }
+          });
+        }
+        store.merge(dataId2, storeObject);
+      },
+    );
     store.retain(ref.__ref);
     return ref;
   }
@@ -2005,22 +2402,32 @@ var StoreWriter = class {
     context,
     // This object allows processSelectionSet to report useful information
     // to its callers without explicitly returning that information.
-    mergeTree
+    mergeTree,
   }) {
     const { policies } = this.cache;
     let incoming = {};
-    const typename = dataId && policies.rootTypenamesById[dataId] || getTypenameFromResult(result, selectionSet, context.fragmentMap) || dataId && context.store.get(dataId, "__typename");
+    const typename =
+      (dataId && policies.rootTypenamesById[dataId]) ||
+      getTypenameFromResult(result, selectionSet, context.fragmentMap) ||
+      (dataId && context.store.get(dataId, "__typename"));
     if ("string" === typeof typename) {
       incoming.__typename = typename;
     }
     const readField = (...args) => {
-      const options = normalizeReadFieldOptions(args, incoming, context.variables);
+      const options = normalizeReadFieldOptions(
+        args,
+        incoming,
+        context.variables,
+      );
       if (isReference(options.from)) {
         const info = context.incomingById.get(options.from.__ref);
         if (info) {
-          const result2 = policies.readField(__spreadProps(__spreadValues({}, options), {
-            from: info.storeObject
-          }), context);
+          const result2 = policies.readField(
+            __spreadProps(__spreadValues({}, options), {
+              from: info.storeObject,
+            }),
+            context,
+          );
           if (result2 !== void 0) {
             return result2;
           }
@@ -2036,7 +2443,7 @@ var StoreWriter = class {
       // by the flattenFields method, but some fields may be assigned a modified
       // context, depending on the presence of @client and other directives.
       context,
-      typename
+      typename,
     ).forEach((context2, field) => {
       const resultFieldKey = resultKeyNameFromField(field);
       const value = result[resultFieldKey];
@@ -2046,7 +2453,7 @@ var StoreWriter = class {
           typename,
           fieldName: field.name.value,
           field,
-          variables: context2.variables
+          variables: context2.variables,
         });
         const childTree = getChildMergeTree(mergeTree, storeFieldName);
         let incomingValue = this.processFieldValue(
@@ -2054,31 +2461,45 @@ var StoreWriter = class {
           field,
           // Reset context.clientOnly and context.deferred to their default
           // values before processing nested selection sets.
-          field.selectionSet ? getContextFlavor(context2, false, false) : context2,
-          childTree
+          field.selectionSet
+            ? getContextFlavor(context2, false, false)
+            : context2,
+          childTree,
         );
         let childTypename;
-        if (field.selectionSet && (isReference(incomingValue) || storeValueIsStoreObject(incomingValue))) {
+        if (
+          field.selectionSet &&
+          (isReference(incomingValue) || storeValueIsStoreObject(incomingValue))
+        ) {
           childTypename = readField("__typename", incomingValue);
         }
-        const merge = policies.getMergeFunction(typename, field.name.value, childTypename);
+        const merge = policies.getMergeFunction(
+          typename,
+          field.name.value,
+          childTypename,
+        );
         if (merge) {
           childTree.info = {
             // TODO Check compatibility against any existing childTree.field?
             field,
             typename,
-            merge
+            merge,
           };
         } else {
           maybeRecycleChildMergeTree(mergeTree, storeFieldName);
         }
         incoming = context2.merge(incoming, {
-          [storeFieldName]: incomingValue
+          [storeFieldName]: incomingValue,
         });
-      } else if (__DEV__ && !context2.clientOnly && !context2.deferred && !addTypenameToDocument.added(field) && // If the field has a read function, it may be a synthetic field or
-      // provide a default value, so its absence from the written data should
-      // not be cause for alarm.
-      !policies.getReadFunction(typename, field.name.value)) {
+      } else if (
+        __DEV__ &&
+        !context2.clientOnly &&
+        !context2.deferred &&
+        !addTypenameToDocument.added(field) && // If the field has a read function, it may be a synthetic field or
+        // provide a default value, so its absence from the written data should
+        // not be cause for alarm.
+        !policies.getReadFunction(typename, field.name.value)
+      ) {
         invariant.error(107, resultKeyNameFromField(field), result);
       }
     });
@@ -2088,23 +2509,24 @@ var StoreWriter = class {
         selectionSet,
         fragmentMap: context.fragmentMap,
         storeObject: incoming,
-        readField
+        readField,
       });
       dataId = dataId || id;
       if (keyObject) {
         incoming = context.merge(incoming, keyObject);
       }
     } catch (e) {
-      if (!dataId)
-        throw e;
+      if (!dataId) throw e;
     }
     if ("string" === typeof dataId) {
       const dataRef = makeReference(dataId);
       const sets = context.written[dataId] || (context.written[dataId] = []);
-      if (sets.indexOf(selectionSet) >= 0)
-        return dataRef;
+      if (sets.indexOf(selectionSet) >= 0) return dataRef;
       sets.push(selectionSet);
-      if (this.reader && this.reader.isFresh(result, dataRef, selectionSet, context)) {
+      if (
+        this.reader &&
+        this.reader.isFresh(result, dataRef, selectionSet, context)
+      ) {
         return dataRef;
       }
       const previous = context.incomingById.get(dataId);
@@ -2119,7 +2541,7 @@ var StoreWriter = class {
           // empty MergeTrees may be recycled by maybeRecycleChildMergeTree and
           // reused for entirely different parts of the result tree.
           mergeTree: mergeTreeIsEmpty(mergeTree) ? void 0 : mergeTree,
-          fieldNodeSet
+          fieldNodeSet,
         });
       }
       return dataRef;
@@ -2132,7 +2554,12 @@ var StoreWriter = class {
     }
     if (isArray(value)) {
       return value.map((item, i) => {
-        const value2 = this.processFieldValue(item, field, context, getChildMergeTree(mergeTree, i));
+        const value2 = this.processFieldValue(
+          item,
+          field,
+          context,
+          getChildMergeTree(mergeTree, i),
+        );
         maybeRecycleChildMergeTree(mergeTree, i);
         return value2;
       });
@@ -2141,12 +2568,17 @@ var StoreWriter = class {
       result: value,
       selectionSet: field.selectionSet,
       context,
-      mergeTree
+      mergeTree,
     });
   }
   // Implements https://spec.graphql.org/draft/#sec-Field-Collection, but with
   // some additions for tracking @client and @defer directives.
-  flattenFields(selectionSet, result, context, typename = getTypenameFromResult(result, selectionSet, context.fragmentMap)) {
+  flattenFields(
+    selectionSet,
+    result,
+    context,
+    typename = getTypenameFromResult(result, selectionSet, context.fragmentMap),
+  ) {
     const fieldMap = /* @__PURE__ */ new Map();
     const { policies } = this.cache;
     const limitingTrie = new Trie(false);
@@ -2158,25 +2590,23 @@ var StoreWriter = class {
         // the same selection set to be flattened more than once, if it appears
         // in the query with different @client and/or @directive configurations.
         inheritedContext.clientOnly,
-        inheritedContext.deferred
+        inheritedContext.deferred,
       );
-      if (visitedNode.visited)
-        return;
+      if (visitedNode.visited) return;
       visitedNode.visited = true;
       selectionSet2.selections.forEach((selection) => {
-        if (!shouldInclude(selection, context.variables))
-          return;
+        if (!shouldInclude(selection, context.variables)) return;
         let { clientOnly, deferred } = inheritedContext;
         if (
           // Since the presence of @client or @defer on this field can only
           // cause clientOnly or deferred to become true, we can skip the
           // forEach loop if both clientOnly and deferred are already true.
-          !(clientOnly && deferred) && isNonEmptyArray(selection.directives)
+          !(clientOnly && deferred) &&
+          isNonEmptyArray(selection.directives)
         ) {
           selection.directives.forEach((dir) => {
             const name = dir.name.value;
-            if (name === "client")
-              clientOnly = true;
+            if (name === "client") clientOnly = true;
             if (name === "defer") {
               const args = argumentsObjectFromField(dir, context.variables);
               if (!args || args.if !== false) {
@@ -2191,14 +2621,31 @@ var StoreWriter = class {
             clientOnly = clientOnly && existing.clientOnly;
             deferred = deferred && existing.deferred;
           }
-          fieldMap.set(selection, getContextFlavor(context, clientOnly, deferred));
+          fieldMap.set(
+            selection,
+            getContextFlavor(context, clientOnly, deferred),
+          );
         } else {
-          const fragment = getFragmentFromSelection(selection, context.lookupFragment);
+          const fragment = getFragmentFromSelection(
+            selection,
+            context.lookupFragment,
+          );
           if (!fragment && selection.kind === Kind.FRAGMENT_SPREAD) {
             throw newInvariantError(108, selection.name.value);
           }
-          if (fragment && policies.fragmentMatches(fragment, typename, result, context.variables)) {
-            flatten(fragment.selectionSet, getContextFlavor(context, clientOnly, deferred));
+          if (
+            fragment &&
+            policies.fragmentMatches(
+              fragment,
+              typename,
+              result,
+              context.variables,
+            )
+          ) {
+            flatten(
+              fragment.selectionSet,
+              getContextFlavor(context, clientOnly, deferred),
+            );
           }
         }
       });
@@ -2207,32 +2654,42 @@ var StoreWriter = class {
   }
   applyMerges(mergeTree, existing, incoming, context, getStorageArgs) {
     if (mergeTree.map.size && !isReference(incoming)) {
-      const e = (
+      const e =
         // Items in the same position in different arrays are not
         // necessarily related to each other, so when incoming is an array
         // we process its elements as if there was no existing data.
         !isArray(incoming) && // Likewise, existing must be either a Reference or a StoreObject
         // in order for its fields to be safe to merge with the fields of
         // the incoming object.
-        (isReference(existing) || storeValueIsStoreObject(existing)) ? existing : void 0
-      );
+        (isReference(existing) || storeValueIsStoreObject(existing))
+          ? existing
+          : void 0;
       const i = incoming;
       if (e && !getStorageArgs) {
         getStorageArgs = [isReference(e) ? e.__ref : e];
       }
       let changedFields;
       const getValue = (from3, name) => {
-        return isArray(from3) ? typeof name === "number" ? from3[name] : void 0 : context.store.getFieldValue(from3, String(name));
+        return isArray(from3)
+          ? typeof name === "number"
+            ? from3[name]
+            : void 0
+          : context.store.getFieldValue(from3, String(name));
       };
       mergeTree.map.forEach((childTree, storeFieldName) => {
         const eVal = getValue(e, storeFieldName);
         const iVal = getValue(i, storeFieldName);
-        if (void 0 === iVal)
-          return;
+        if (void 0 === iVal) return;
         if (getStorageArgs) {
           getStorageArgs.push(storeFieldName);
         }
-        const aVal = this.applyMerges(childTree, eVal, iVal, context, getStorageArgs);
+        const aVal = this.applyMerges(
+          childTree,
+          eVal,
+          iVal,
+          context,
+          getStorageArgs,
+        );
         if (aVal !== iVal) {
           changedFields = changedFields || /* @__PURE__ */ new Map();
           changedFields.set(storeFieldName, aVal);
@@ -2249,7 +2706,13 @@ var StoreWriter = class {
       }
     }
     if (mergeTree.info) {
-      return this.cache.policies.runMergeFunction(existing, incoming, mergeTree.info, context, getStorageArgs && context.store.getStorage(...getStorageArgs));
+      return this.cache.policies.runMergeFunction(
+        existing,
+        incoming,
+        mergeTree.info,
+        context,
+        getStorageArgs && context.store.getStorage(...getStorageArgs),
+      );
     }
     return incoming;
   }
@@ -2257,18 +2720,26 @@ var StoreWriter = class {
 var emptyMergeTreePool = [];
 function getChildMergeTree({ map: map2 }, name) {
   if (!map2.has(name)) {
-    map2.set(name, emptyMergeTreePool.pop() || { map: /* @__PURE__ */ new Map() });
+    map2.set(
+      name,
+      emptyMergeTreePool.pop() || { map: /* @__PURE__ */ new Map() },
+    );
   }
   return map2.get(name);
 }
 function mergeMergeTrees(left, right) {
-  if (left === right || !right || mergeTreeIsEmpty(right))
-    return left;
-  if (!left || mergeTreeIsEmpty(left))
-    return right;
-  const info = left.info && right.info ? __spreadValues(__spreadValues({}, left.info), right.info) : left.info || right.info;
+  if (left === right || !right || mergeTreeIsEmpty(right)) return left;
+  if (!left || mergeTreeIsEmpty(left)) return right;
+  const info =
+    left.info && right.info
+      ? __spreadValues(__spreadValues({}, left.info), right.info)
+      : left.info || right.info;
   const needToMergeMaps = left.map.size && right.map.size;
-  const map2 = needToMergeMaps ? /* @__PURE__ */ new Map() : left.map.size ? left.map : right.map;
+  const map2 = needToMergeMaps
+    ? /* @__PURE__ */ new Map()
+    : left.map.size
+      ? left.map
+      : right.map;
   const merged = { info, map: map2 };
   if (needToMergeMaps) {
     const remainingRightKeys = new Set(right.map.keys());
@@ -2277,7 +2748,10 @@ function mergeMergeTrees(left, right) {
       remainingRightKeys.delete(key);
     });
     remainingRightKeys.forEach((key) => {
-      merged.map.set(key, mergeMergeTrees(right.map.get(key), left.map.get(key)));
+      merged.map.set(
+        key,
+        mergeMergeTrees(right.map.get(key), left.map.get(key)),
+      );
     });
   }
   return merged;
@@ -2299,23 +2773,24 @@ function warnAboutDataLoss(existingRef, incomingObj, storeFieldName, store) {
     return typeof child === "object" && child;
   };
   const existing = getChild(existingRef);
-  if (!existing)
-    return;
+  if (!existing) return;
   const incoming = getChild(incomingObj);
-  if (!incoming)
-    return;
-  if (isReference(existing))
-    return;
-  if (equal(existing, incoming))
-    return;
-  if (Object.keys(existing).every((key) => store.getFieldValue(incoming, key) !== void 0)) {
+  if (!incoming) return;
+  if (isReference(existing)) return;
+  if (equal(existing, incoming)) return;
+  if (
+    Object.keys(existing).every(
+      (key) => store.getFieldValue(incoming, key) !== void 0,
+    )
+  ) {
     return;
   }
-  const parentType = store.getFieldValue(existingRef, "__typename") || store.getFieldValue(incomingObj, "__typename");
+  const parentType =
+    store.getFieldValue(existingRef, "__typename") ||
+    store.getFieldValue(incomingObj, "__typename");
   const fieldName = fieldNameFromStoreName(storeFieldName);
   const typeDotName = `${parentType}.${fieldName}`;
-  if (warnings.has(typeDotName))
-    return;
+  if (warnings.has(typeDotName)) return;
   warnings.add(typeDotName);
   const childTypenames = [];
   if (!isArray(existing) && !isArray(incoming)) {
@@ -2326,7 +2801,20 @@ function warnAboutDataLoss(existingRef, incomingObj, storeFieldName, store) {
       }
     });
   }
-  __DEV__ && invariant.warn(109, fieldName, parentType, childTypenames.length ? "either ensure all objects of type " + childTypenames.join(" and ") + " have an ID or a custom merge function, or " : "", typeDotName, __spreadValues({}, existing), __spreadValues({}, incoming));
+  __DEV__ &&
+    invariant.warn(
+      109,
+      fieldName,
+      parentType,
+      childTypenames.length
+        ? "either ensure all objects of type " +
+            childTypenames.join(" and ") +
+            " have an ID or a custom merge function, or "
+        : "",
+      typeDotName,
+      __spreadValues({}, existing),
+      __spreadValues({}, incoming),
+    );
 }
 function getTypenameFromResult(result, selectionSet, fragmentMap) {
   let fragments;
@@ -2346,7 +2834,11 @@ function getTypenameFromResult(result, selectionSet, fragmentMap) {
   }
   if (fragments) {
     for (const selection of fragments) {
-      const typename = getTypenameFromResult(result, getFragmentFromSelection(selection, fragmentMap).selectionSet, fragmentMap);
+      const typename = getTypenameFromResult(
+        result,
+        getFragmentFromSelection(selection, fragmentMap).selectionSet,
+        fragmentMap,
+      );
       if (typeof typename === "string") {
         return typename;
       }
@@ -2379,15 +2871,15 @@ var InMemoryCache = class extends ApolloCache {
       cache: this,
       dataIdFromObject: this.config.dataIdFromObject,
       possibleTypes: this.config.possibleTypes,
-      typePolicies: this.config.typePolicies
+      typePolicies: this.config.typePolicies,
     });
     this.init();
   }
   init() {
-    const rootStore = this.data = new EntityStore.Root({
+    const rootStore = (this.data = new EntityStore.Root({
       policies: this.policies,
-      resultCaching: this.config.resultCaching
-    });
+      resultCaching: this.config.resultCaching,
+    }));
     this.optimisticData = rootStore.stump;
     this.resetResultCache();
   }
@@ -2395,35 +2887,44 @@ var InMemoryCache = class extends ApolloCache {
     const { fragments } = this.config;
     this.addTypenameTransform.resetCache();
     fragments?.resetCaches();
-    this.storeWriter = new StoreWriter(this, this.storeReader = new StoreReader({ cache: this, fragments }), fragments);
-    this.maybeBroadcastWatch = wrap((c, options) => {
-      return this.broadcastWatch(c, options);
-    }, {
-      max: cacheSizes["inMemoryCache.maybeBroadcastWatch"] || 5e3,
-      makeCacheKey: (c) => {
-        const store = c.optimistic ? this.optimisticData : this.data;
-        if (supportsResultCaching(store)) {
-          const { optimistic, id, variables } = c;
-          return store.makeCacheKey(
-            c.query,
-            // Different watches can have the same query, optimistic
-            // status, rootId, and variables, but if their callbacks are
-            // different, the (identical) result needs to be delivered to
-            // each distinct callback. The easiest way to achieve that
-            // separation is to include c.callback in the cache key for
-            // maybeBroadcastWatch calls. See issue #5733.
-            c.callback,
-            canonicalStringify({ optimistic, id, variables })
-          );
-        }
-      }
-    });
-    (/* @__PURE__ */ new Set([this.data.group, this.optimisticData.group])).forEach((group) => group.resetCaching());
+    this.storeWriter = new StoreWriter(
+      this,
+      (this.storeReader = new StoreReader({ cache: this, fragments })),
+      fragments,
+    );
+    this.maybeBroadcastWatch = wrap(
+      (c, options) => {
+        return this.broadcastWatch(c, options);
+      },
+      {
+        max: cacheSizes["inMemoryCache.maybeBroadcastWatch"] || 5e3,
+        makeCacheKey: (c) => {
+          const store = c.optimistic ? this.optimisticData : this.data;
+          if (supportsResultCaching(store)) {
+            const { optimistic, id, variables } = c;
+            return store.makeCacheKey(
+              c.query,
+              // Different watches can have the same query, optimistic
+              // status, rootId, and variables, but if their callbacks are
+              // different, the (identical) result needs to be delivered to
+              // each distinct callback. The easiest way to achieve that
+              // separation is to include c.callback in the cache key for
+              // maybeBroadcastWatch calls. See issue #5733.
+              c.callback,
+              canonicalStringify({ optimistic, id, variables }),
+            );
+          }
+        },
+      },
+    );
+    /* @__PURE__ */ new Set([
+      this.data.group,
+      this.optimisticData.group,
+    ]).forEach((group) => group.resetCaching());
   }
   restore(data) {
     this.init();
-    if (data)
-      this.data.replace(data);
+    if (data) this.data.replace(data);
     return this;
   }
   extract(optimistic = false) {
@@ -2438,13 +2939,15 @@ var InMemoryCache = class extends ApolloCache {
       // integrity of the T in the return type. However, partial data may
       // be useful in some cases, so returnPartialData:true may be
       // specified explicitly.
-      returnPartialData = false
+      returnPartialData = false,
     } = options;
-    return this.storeReader.diffQueryAgainstStore(__spreadProps(__spreadValues({}, options), {
-      store: options.optimistic ? this.optimisticData : this.data,
-      config: this.config,
-      returnPartialData
-    })).result;
+    return this.storeReader.diffQueryAgainstStore(
+      __spreadProps(__spreadValues({}, options), {
+        store: options.optimistic ? this.optimisticData : this.data,
+        config: this.config,
+        returnPartialData,
+      }),
+    ).result;
   }
   write(options) {
     try {
@@ -2471,11 +2974,13 @@ var InMemoryCache = class extends ApolloCache {
     }
   }
   diff(options) {
-    return this.storeReader.diffQueryAgainstStore(__spreadProps(__spreadValues({}, options), {
-      store: options.optimistic ? this.optimisticData : this.data,
-      rootId: options.id || "ROOT_QUERY",
-      config: this.config
-    }));
+    return this.storeReader.diffQueryAgainstStore(
+      __spreadProps(__spreadValues({}, options), {
+        store: options.optimistic ? this.optimisticData : this.data,
+        rootId: options.id || "ROOT_QUERY",
+        config: this.config,
+      }),
+    );
   }
   watch(watch) {
     if (!this.watches.size) {
@@ -2526,8 +3031,7 @@ var InMemoryCache = class extends ApolloCache {
   // sure that none of the primary key fields have been renamed by aliasing.
   // If you pass a Reference object, its __ref ID string will be returned.
   identify(object) {
-    if (isReference(object))
-      return object.__ref;
+    if (isReference(object)) return object.__ref;
     try {
       return this.policies.identify(object)[0];
     } catch (e) {
@@ -2539,7 +3043,9 @@ var InMemoryCache = class extends ApolloCache {
       if (hasOwn.call(options, "id")) {
         return false;
       }
-      options = __spreadProps(__spreadValues({}, options), { id: "ROOT_QUERY" });
+      options = __spreadProps(__spreadValues({}, options), {
+        id: "ROOT_QUERY",
+      });
     }
     try {
       ++this.txCount;
@@ -2571,7 +3077,12 @@ var InMemoryCache = class extends ApolloCache {
   }
   txCount = 0;
   batch(options) {
-    const { update, optimistic = true, removeOptimistic, onWatchUpdated } = options;
+    const {
+      update,
+      optimistic = true,
+      removeOptimistic,
+      onWatchUpdated,
+    } = options;
     let updateResult;
     const perform = (layer) => {
       const { data, optimisticData } = this;
@@ -2580,7 +3091,7 @@ var InMemoryCache = class extends ApolloCache {
         this.data = this.optimisticData = layer;
       }
       try {
-        return updateResult = update(this);
+        return (updateResult = update(this));
       } finally {
         --this.txCount;
         this.data = data;
@@ -2589,12 +3100,14 @@ var InMemoryCache = class extends ApolloCache {
     };
     const alreadyDirty = /* @__PURE__ */ new Set();
     if (onWatchUpdated && !this.txCount) {
-      this.broadcastWatches(__spreadProps(__spreadValues({}, options), {
-        onWatchUpdated(watch) {
-          alreadyDirty.add(watch);
-          return false;
-        }
-      }));
+      this.broadcastWatches(
+        __spreadProps(__spreadValues({}, options), {
+          onWatchUpdated(watch) {
+            alreadyDirty.add(watch);
+            return false;
+          },
+        }),
+      );
     }
     if (typeof optimistic === "string") {
       this.optimisticData = this.optimisticData.addLayer(optimistic, perform);
@@ -2607,15 +3120,17 @@ var InMemoryCache = class extends ApolloCache {
       this.optimisticData = this.optimisticData.removeLayer(removeOptimistic);
     }
     if (onWatchUpdated && alreadyDirty.size) {
-      this.broadcastWatches(__spreadProps(__spreadValues({}, options), {
-        onWatchUpdated(watch, diff) {
-          const result = onWatchUpdated.call(this, watch, diff);
-          if (result !== false) {
-            alreadyDirty.delete(watch);
-          }
-          return result;
-        }
-      }));
+      this.broadcastWatches(
+        __spreadProps(__spreadValues({}, options), {
+          onWatchUpdated(watch, diff) {
+            const result = onWatchUpdated.call(this, watch, diff);
+            if (result !== false) {
+              alreadyDirty.delete(watch);
+            }
+            return result;
+          },
+        }),
+      );
       if (alreadyDirty.size) {
         alreadyDirty.forEach((watch) => this.maybeBroadcastWatch.dirty(watch));
       }
@@ -2627,11 +3142,13 @@ var InMemoryCache = class extends ApolloCache {
   performTransaction(update, optimisticId) {
     return this.batch({
       update,
-      optimistic: optimisticId || optimisticId !== null
+      optimistic: optimisticId || optimisticId !== null,
     });
   }
   transformDocument(document) {
-    return this.addTypenameTransform.transformDocument(this.addFragmentsToDocument(document));
+    return this.addTypenameTransform.transformDocument(
+      this.addFragmentsToDocument(document),
+    );
   }
   fragmentMatches(fragment, typename) {
     return this.policies.fragmentMatches(fragment, typename);
@@ -2661,12 +3178,15 @@ var InMemoryCache = class extends ApolloCache {
       if (c.optimistic && typeof options.optimistic === "string") {
         diff.fromOptimisticTransaction = true;
       }
-      if (options.onWatchUpdated && options.onWatchUpdated.call(this, c, diff, lastDiff) === false) {
+      if (
+        options.onWatchUpdated &&
+        options.onWatchUpdated.call(this, c, diff, lastDiff) === false
+      ) {
         return;
       }
     }
     if (!lastDiff || !equal(lastDiff.result, diff.result)) {
-      c.callback(c.lastDiff = diff, lastDiff);
+      c.callback((c.lastDiff = diff), lastDiff);
     }
   }
 };
@@ -2676,15 +3196,15 @@ if (__DEV__) {
 
 // node_modules/@apollo/client/core/networkStatus.js
 var NetworkStatus;
-(function(NetworkStatus2) {
-  NetworkStatus2[NetworkStatus2["loading"] = 1] = "loading";
-  NetworkStatus2[NetworkStatus2["setVariables"] = 2] = "setVariables";
-  NetworkStatus2[NetworkStatus2["fetchMore"] = 3] = "fetchMore";
-  NetworkStatus2[NetworkStatus2["refetch"] = 4] = "refetch";
-  NetworkStatus2[NetworkStatus2["poll"] = 6] = "poll";
-  NetworkStatus2[NetworkStatus2["ready"] = 7] = "ready";
-  NetworkStatus2[NetworkStatus2["error"] = 8] = "error";
-  NetworkStatus2[NetworkStatus2["streaming"] = 9] = "streaming";
+(function (NetworkStatus2) {
+  NetworkStatus2[(NetworkStatus2["loading"] = 1)] = "loading";
+  NetworkStatus2[(NetworkStatus2["setVariables"] = 2)] = "setVariables";
+  NetworkStatus2[(NetworkStatus2["fetchMore"] = 3)] = "fetchMore";
+  NetworkStatus2[(NetworkStatus2["refetch"] = 4)] = "refetch";
+  NetworkStatus2[(NetworkStatus2["poll"] = 6)] = "poll";
+  NetworkStatus2[(NetworkStatus2["ready"] = 7)] = "ready";
+  NetworkStatus2[(NetworkStatus2["error"] = 8)] = "error";
+  NetworkStatus2[(NetworkStatus2["streaming"] = 9)] = "streaming";
 })(NetworkStatus || (NetworkStatus = {}));
 
 // node_modules/@apollo/client/core/ObservableQuery.js
@@ -2694,24 +3214,24 @@ var uninitialized = {
   networkStatus: NetworkStatus.loading,
   data: void 0,
   dataState: "empty",
-  partial: true
+  partial: true,
 };
 var empty = {
   loading: false,
   networkStatus: NetworkStatus.ready,
   data: void 0,
   dataState: "empty",
-  partial: true
+  partial: true,
 };
 var ObservableQuery = class {
   options;
   queryName;
   variablesUnknown = false;
   /**
-  * @internal will be read and written from `QueryInfo`
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal will be read and written from `QueryInfo`
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   _lastWrite;
   // The `query` computed property will always reflect the document transformed
   // by the last run query. `this.options.query` will always reflect the raw
@@ -2744,17 +3264,25 @@ var ObservableQuery = class {
   get networkStatus() {
     return this.subject.getValue().result.networkStatus;
   }
-  constructor({ queryManager, options, transformedQuery = queryManager.transform(options.query) }) {
+  constructor({
+    queryManager,
+    options,
+    transformedQuery = queryManager.transform(options.query),
+  }) {
     this.queryManager = queryManager;
     this.waitForNetworkResult = options.fetchPolicy === "network-only";
     this.isTornDown = false;
     this.subscribeToMore = this.subscribeToMore.bind(this);
     this.maskResult = this.maskResult.bind(this);
-    const { watchQuery: { fetchPolicy: defaultFetchPolicy = "cache-first" } = {} } = queryManager.defaultOptions;
+    const {
+      watchQuery: { fetchPolicy: defaultFetchPolicy = "cache-first" } = {},
+    } = queryManager.defaultOptions;
     const {
       fetchPolicy = defaultFetchPolicy,
       // Make sure we don't store "standby" as the initialFetchPolicy.
-      initialFetchPolicy = fetchPolicy === "standby" ? defaultFetchPolicy : fetchPolicy
+      initialFetchPolicy = fetchPolicy === "standby"
+        ? defaultFetchPolicy
+        : fetchPolicy,
     } = options;
     if (options[variablesUnknownSymbol]) {
       invariant(fetchPolicy === "standby", 77);
@@ -2769,7 +3297,7 @@ var ObservableQuery = class {
       // This ensures this.options.fetchPolicy always has a string value, in
       // case options.fetchPolicy was not provided.
       fetchPolicy,
-      variables: this.getVariablesWithDefaults(options.variables)
+      variables: this.getVariablesWithDefaults(options.variables),
     });
     this.initializeObservablesQueue();
     this["@@observable"] = () => this;
@@ -2784,55 +3312,68 @@ var ObservableQuery = class {
       query: this.query,
       variables: this.variables,
       result: uninitialized,
-      meta: {}
+      meta: {},
     });
-    const observable = this.subject.pipe(tap({
-      subscribe: () => {
-        if (!this.subject.observed) {
-          this.reobserve();
-          setTimeout(() => this.updatePolling());
-        }
-      },
-      unsubscribe: () => {
-        if (!this.subject.observed) {
-          this.tearDownQuery();
-        }
-      }
-    }), filterMap(({ query, variables, result: current, meta }, context) => {
-      const { shouldEmit } = meta;
-      if (current === uninitialized) {
-        context.previous = void 0;
-        context.previousVariables = void 0;
-      }
-      if (this.options.fetchPolicy === "standby" || shouldEmit === 2)
-        return;
-      if (shouldEmit === 1)
-        return emit();
-      const { previous, previousVariables } = context;
-      if (previous) {
-        const documentInfo = this.queryManager.getDocumentInfo(query);
-        const dataMasking = this.queryManager.dataMasking;
-        const maskedQuery = dataMasking ? documentInfo.nonReactiveQuery : query;
-        const resultIsEqual = dataMasking || documentInfo.hasNonreactiveDirective ? equalByQuery(maskedQuery, previous, current, variables) : equal(previous, current);
-        if (resultIsEqual && equal(previousVariables, variables)) {
-          return;
-        }
-      }
-      if (shouldEmit === 3 && (!this.options.notifyOnNetworkStatusChange || equal(previous, current))) {
-        return;
-      }
-      return emit();
-      function emit() {
-        context.previous = current;
-        context.previousVariables = variables;
-        return current;
-      }
-    }, () => ({})));
+    const observable = this.subject.pipe(
+      tap({
+        subscribe: () => {
+          if (!this.subject.observed) {
+            this.reobserve();
+            setTimeout(() => this.updatePolling());
+          }
+        },
+        unsubscribe: () => {
+          if (!this.subject.observed) {
+            this.tearDownQuery();
+          }
+        },
+      }),
+      filterMap(
+        ({ query, variables, result: current, meta }, context) => {
+          const { shouldEmit } = meta;
+          if (current === uninitialized) {
+            context.previous = void 0;
+            context.previousVariables = void 0;
+          }
+          if (this.options.fetchPolicy === "standby" || shouldEmit === 2)
+            return;
+          if (shouldEmit === 1) return emit();
+          const { previous, previousVariables } = context;
+          if (previous) {
+            const documentInfo = this.queryManager.getDocumentInfo(query);
+            const dataMasking = this.queryManager.dataMasking;
+            const maskedQuery = dataMasking
+              ? documentInfo.nonReactiveQuery
+              : query;
+            const resultIsEqual =
+              dataMasking || documentInfo.hasNonreactiveDirective
+                ? equalByQuery(maskedQuery, previous, current, variables)
+                : equal(previous, current);
+            if (resultIsEqual && equal(previousVariables, variables)) {
+              return;
+            }
+          }
+          if (
+            shouldEmit === 3 &&
+            (!this.options.notifyOnNetworkStatusChange ||
+              equal(previous, current))
+          ) {
+            return;
+          }
+          return emit();
+          function emit() {
+            context.previous = current;
+            context.previousVariables = variables;
+            return current;
+          }
+        },
+        () => ({}),
+      ),
+    );
     this.pipe = observable.pipe.bind(observable);
     this.subscribe = observable.subscribe.bind(observable);
     this.input = new Subject();
-    this.input.complete = () => {
-    };
+    this.input.complete = () => {};
     this.input.pipe(this.operator).subscribe(this.subject);
   }
   // We can't use Observable['subscribe'] here as the type as it conflicts with
@@ -2868,36 +3409,47 @@ var ObservableQuery = class {
   [Symbol.observable];
   ["@@observable"];
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   getCacheDiff({ optimistic = true } = {}) {
     return this.queryManager.cache.diff({
       query: this.query,
       variables: this.variables,
       returnPartialData: true,
-      optimistic
+      optimistic,
     });
   }
   getInitialResult(initialFetchPolicy) {
-    const fetchPolicy = this.queryManager.prioritizeCacheValues ? "cache-first" : initialFetchPolicy || this.options.fetchPolicy;
+    const fetchPolicy = this.queryManager.prioritizeCacheValues
+      ? "cache-first"
+      : initialFetchPolicy || this.options.fetchPolicy;
     const cacheResult = () => {
       const diff = this.getCacheDiff();
-      const data = this.options.returnPartialData || diff.complete ? diff.result ?? void 0 : void 0;
+      const data =
+        this.options.returnPartialData || diff.complete
+          ? (diff.result ?? void 0)
+          : void 0;
       return this.maskResult({
         data,
-        dataState: diff.complete ? "complete" : data === void 0 ? "empty" : "partial",
+        dataState: diff.complete
+          ? "complete"
+          : data === void 0
+            ? "empty"
+            : "partial",
         loading: !diff.complete,
-        networkStatus: diff.complete ? NetworkStatus.ready : NetworkStatus.loading,
-        partial: !diff.complete
+        networkStatus: diff.complete
+          ? NetworkStatus.ready
+          : NetworkStatus.loading,
+        partial: !diff.complete,
       });
     };
     switch (fetchPolicy) {
       case "cache-only": {
         return __spreadProps(__spreadValues({}, cacheResult()), {
           loading: false,
-          networkStatus: NetworkStatus.ready
+          networkStatus: NetworkStatus.ready,
         });
       }
       case "cache-first":
@@ -2905,7 +3457,7 @@ var ObservableQuery = class {
       case "cache-and-network":
         return __spreadProps(__spreadValues({}, cacheResult()), {
           loading: true,
-          networkStatus: NetworkStatus.loading
+          networkStatus: NetworkStatus.loading,
         });
       case "standby":
         return empty;
@@ -2916,8 +3468,13 @@ var ObservableQuery = class {
   resubscribeCache() {
     const { variables, fetchPolicy } = this.options;
     const query = this.query;
-    const shouldUnsubscribe = fetchPolicy === "standby" || fetchPolicy === "no-cache" || this.waitForNetworkResult;
-    const shouldResubscribe = !isEqualQuery({ query, variables }, this.unsubscribeFromCache) && !this.waitForNetworkResult;
+    const shouldUnsubscribe =
+      fetchPolicy === "standby" ||
+      fetchPolicy === "no-cache" ||
+      this.waitForNetworkResult;
+    const shouldResubscribe =
+      !isEqualQuery({ query, variables }, this.unsubscribeFromCache) &&
+      !this.waitForNetworkResult;
     if (shouldUnsubscribe || shouldResubscribe) {
       this.unsubscribeFromCache?.();
     }
@@ -2938,36 +3495,42 @@ var ObservableQuery = class {
           return;
         }
         const { result: previousResult } = this.subject.getValue();
-        if (!diff.complete && // If we are trying to deliver an incomplete cache result, we avoid
-        // reporting it if the query has errored, otherwise we let the broadcast try
-        // and repair the partial result by refetching the query. This check avoids
-        // a situation where a query that errors and another succeeds with
-        // overlapping data does not report the partial data result to the errored
-        // query.
-        //
-        // See https://github.com/apollographql/apollo-client/issues/11400 for more
-        // information on this issue.
-        (previousResult.error || // Prevent to schedule a notify directly after the `ObservableQuery`
-        // has been `reset` (which will set the `previousResult` to `uninitialized` or `empty`)
-        // as in those cases, `resetCache` will manually call `refetch` with more intentional timing.
-        previousResult === uninitialized || previousResult === empty)) {
+        if (
+          !diff.complete && // If we are trying to deliver an incomplete cache result, we avoid
+          // reporting it if the query has errored, otherwise we let the broadcast try
+          // and repair the partial result by refetching the query. This check avoids
+          // a situation where a query that errors and another succeeds with
+          // overlapping data does not report the partial data result to the errored
+          // query.
+          //
+          // See https://github.com/apollographql/apollo-client/issues/11400 for more
+          // information on this issue.
+          (previousResult.error || // Prevent to schedule a notify directly after the `ObservableQuery`
+            // has been `reset` (which will set the `previousResult` to `uninitialized` or `empty`)
+            // as in those cases, `resetCache` will manually call `refetch` with more intentional timing.
+            previousResult === uninitialized ||
+            previousResult === empty)
+        ) {
           return;
         }
         if (!equal(previousResult.data, diff.result)) {
           this.scheduleNotify();
         }
-      }
+      },
     };
     const cancelWatch = this.queryManager.cache.watch(watch);
-    this.unsubscribeFromCache = Object.assign(() => {
-      this.unsubscribeFromCache = void 0;
-      cancelWatch();
-    }, { query, variables });
+    this.unsubscribeFromCache = Object.assign(
+      () => {
+        this.unsubscribeFromCache = void 0;
+        cancelWatch();
+      },
+      { query, variables },
+    );
   }
   stableLastResult;
   getCurrentResult() {
     const { result: current } = this.subject.getValue();
-    let value = (
+    let value =
       // if the `current` result is in an error state, we will always return that
       // error state, even if we have no observers
       current.networkStatus === NetworkStatus.error || // if we have observers, we are watching the cache and
@@ -2975,8 +3538,9 @@ var ObservableQuery = class {
       this.hasObservers() || // if we are using a `no-cache` fetch policy in which case this
       // `ObservableQuery` cannot have been updated from the outside - in
       // that case, we prefer to keep the current value
-      this.options.fetchPolicy === "no-cache" ? current : this.getInitialResult()
-    );
+      this.options.fetchPolicy === "no-cache"
+        ? current
+        : this.getInitialResult();
     if (value === uninitialized) {
       value = this.getInitialResult();
     }
@@ -3003,7 +3567,7 @@ var ObservableQuery = class {
     const { fetchPolicy } = this.options;
     const reobserveOptions = {
       // Always disable polling for refetches.
-      pollInterval: 0
+      pollInterval: 0,
     };
     if (fetchPolicy === "no-cache") {
       reobserveOptions.fetchPolicy = "no-cache";
@@ -3014,115 +3578,152 @@ var ObservableQuery = class {
       const queryDef = getQueryDefinition(this.query);
       const vars = queryDef.variableDefinitions;
       if (!vars || !vars.some((v) => v.variable.name.value === "variables")) {
-        __DEV__ && invariant.warn(78, variables, queryDef.name?.value || queryDef);
+        __DEV__ &&
+          invariant.warn(78, variables, queryDef.name?.value || queryDef);
       }
     }
     if (variables && !equal(this.variables, variables)) {
-      reobserveOptions.variables = this.options.variables = this.getVariablesWithDefaults(__spreadValues(__spreadValues({}, this.variables), variables));
+      reobserveOptions.variables = this.options.variables =
+        this.getVariablesWithDefaults(
+          __spreadValues(__spreadValues({}, this.variables), variables),
+        );
     }
     this._lastWrite = void 0;
     return this._reobserve(reobserveOptions, {
-      newNetworkStatus: NetworkStatus.refetch
+      newNetworkStatus: NetworkStatus.refetch,
     });
   }
   fetchMore({ query, variables, context, errorPolicy, updateQuery }) {
     invariant(
       this.options.fetchPolicy !== "cache-only",
       79,
-      getOperationName(this.query, "(anonymous)")
+      getOperationName(this.query, "(anonymous)"),
     );
-    const combinedOptions = __spreadProps(__spreadValues({}, compact(this.options, { errorPolicy: "none" }, {
-      query,
-      context,
-      errorPolicy
-    })), {
-      variables: query ? variables : __spreadValues(__spreadValues({}, this.variables), variables),
-      // The fetchMore request goes immediately to the network and does
-      // not automatically write its result to the cache (hence no-cache
-      // instead of network-only), because we allow the caller of
-      // fetchMore to provide an updateQuery callback that determines how
-      // the data gets written to the cache.
-      fetchPolicy: "no-cache",
-      notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange
-    });
+    const combinedOptions = __spreadProps(
+      __spreadValues(
+        {},
+        compact(
+          this.options,
+          { errorPolicy: "none" },
+          {
+            query,
+            context,
+            errorPolicy,
+          },
+        ),
+      ),
+      {
+        variables: query
+          ? variables
+          : __spreadValues(__spreadValues({}, this.variables), variables),
+        // The fetchMore request goes immediately to the network and does
+        // not automatically write its result to the cache (hence no-cache
+        // instead of network-only), because we allow the caller of
+        // fetchMore to provide an updateQuery callback that determines how
+        // the data gets written to the cache.
+        fetchPolicy: "no-cache",
+        notifyOnNetworkStatusChange: this.options.notifyOnNetworkStatusChange,
+      },
+    );
     combinedOptions.query = this.transformDocument(combinedOptions.query);
-    this.lastQuery = query ? this.transformDocument(this.options.query) : combinedOptions.query;
+    this.lastQuery = query
+      ? this.transformDocument(this.options.query)
+      : combinedOptions.query;
     let wasUpdated = false;
     const isCached = this.options.fetchPolicy !== "no-cache";
     if (!isCached) {
       invariant(updateQuery, 80);
     }
-    const { finalize: finalize2, pushNotification } = this.pushOperation(NetworkStatus.fetchMore);
-    pushNotification({
-      source: "newNetworkStatus",
-      kind: "N",
-      value: {}
-    }, {
-      shouldEmit: 3
-      /* EmitBehavior.networkStatusChange */
-    });
-    return this.queryManager.fetchQuery(combinedOptions, NetworkStatus.fetchMore).then((fetchMoreResult) => {
-      finalize2();
-      if (isCached) {
-        const lastDiff = this.getCacheDiff();
-        this.queryManager.cache.batch({
-          update: (cache) => {
-            if (updateQuery) {
-              cache.updateQuery({
-                query: this.query,
-                variables: this.variables,
-                returnPartialData: true,
-                optimistic: false
-              }, (previous) => updateQuery(previous, {
-                fetchMoreResult: fetchMoreResult.data,
-                variables: combinedOptions.variables
-              }));
-            } else {
-              cache.writeQuery({
-                query: combinedOptions.query,
-                variables: combinedOptions.variables,
-                data: fetchMoreResult.data
-              });
-            }
-          },
-          onWatchUpdated: (watch, diff) => {
-            if (watch.watcher === this && !equal(diff.result, lastDiff.result)) {
-              wasUpdated = true;
-            }
-          }
-        });
-      } else {
-        const lastResult = this.getCurrentResult();
-        const data = updateQuery(lastResult.data, {
-          fetchMoreResult: fetchMoreResult.data,
-          variables: combinedOptions.variables
-        });
-        pushNotification({
-          kind: "N",
-          value: __spreadProps(__spreadValues({}, lastResult), {
-            networkStatus: NetworkStatus.ready,
-            // will be overwritten anyways, just here for types sake
-            loading: false,
-            data,
-            dataState: lastResult.dataState === "streaming" ? "streaming" : "complete"
-          }),
-          source: "network"
-        });
-      }
-      return this.maskResult(fetchMoreResult);
-    }).finally(() => {
-      finalize2();
-      if (isCached && !wasUpdated) {
-        pushNotification({
-          kind: "N",
-          source: "newNetworkStatus",
-          value: {}
-        }, {
-          shouldEmit: 1
-          /* EmitBehavior.force */
-        });
-      }
-    });
+    const { finalize: finalize2, pushNotification } = this.pushOperation(
+      NetworkStatus.fetchMore,
+    );
+    pushNotification(
+      {
+        source: "newNetworkStatus",
+        kind: "N",
+        value: {},
+      },
+      {
+        shouldEmit: 3,
+        /* EmitBehavior.networkStatusChange */
+      },
+    );
+    return this.queryManager
+      .fetchQuery(combinedOptions, NetworkStatus.fetchMore)
+      .then((fetchMoreResult) => {
+        finalize2();
+        if (isCached) {
+          const lastDiff = this.getCacheDiff();
+          this.queryManager.cache.batch({
+            update: (cache) => {
+              if (updateQuery) {
+                cache.updateQuery(
+                  {
+                    query: this.query,
+                    variables: this.variables,
+                    returnPartialData: true,
+                    optimistic: false,
+                  },
+                  (previous) =>
+                    updateQuery(previous, {
+                      fetchMoreResult: fetchMoreResult.data,
+                      variables: combinedOptions.variables,
+                    }),
+                );
+              } else {
+                cache.writeQuery({
+                  query: combinedOptions.query,
+                  variables: combinedOptions.variables,
+                  data: fetchMoreResult.data,
+                });
+              }
+            },
+            onWatchUpdated: (watch, diff) => {
+              if (
+                watch.watcher === this &&
+                !equal(diff.result, lastDiff.result)
+              ) {
+                wasUpdated = true;
+              }
+            },
+          });
+        } else {
+          const lastResult = this.getCurrentResult();
+          const data = updateQuery(lastResult.data, {
+            fetchMoreResult: fetchMoreResult.data,
+            variables: combinedOptions.variables,
+          });
+          pushNotification({
+            kind: "N",
+            value: __spreadProps(__spreadValues({}, lastResult), {
+              networkStatus: NetworkStatus.ready,
+              // will be overwritten anyways, just here for types sake
+              loading: false,
+              data,
+              dataState:
+                lastResult.dataState === "streaming" ? "streaming" : "complete",
+            }),
+            source: "network",
+          });
+        }
+        return this.maskResult(fetchMoreResult);
+      })
+      .finally(() => {
+        finalize2();
+        if (isCached && !wasUpdated) {
+          pushNotification(
+            {
+              kind: "N",
+              source: "newNetworkStatus",
+              value: {},
+            },
+            {
+              shouldEmit: 1,
+              /* EmitBehavior.force */
+            },
+          );
+        }
+      });
   }
   // XXX the subscription variables are separate from the query variables.
   // if you want to update subscription variables, right now you have to do that separately,
@@ -3133,29 +3734,39 @@ var ObservableQuery = class {
    * This function returns _another_ function that you can call to terminate the subscription.
    */
   subscribeToMore(options) {
-    const subscription = this.queryManager.startGraphQLSubscription({
-      query: options.document,
-      variables: options.variables,
-      context: options.context
-    }).subscribe({
-      next: (subscriptionData) => {
-        const { updateQuery, onError } = options;
-        const { error } = subscriptionData;
-        if (error) {
-          if (onError) {
-            onError(error);
-          } else {
-            invariant.error(81, error);
+    const subscription = this.queryManager
+      .startGraphQLSubscription({
+        query: options.document,
+        variables: options.variables,
+        context: options.context,
+      })
+      .subscribe({
+        next: (subscriptionData) => {
+          const { updateQuery, onError } = options;
+          const { error } = subscriptionData;
+          if (error) {
+            if (onError) {
+              onError(error);
+            } else {
+              invariant.error(81, error);
+            }
+            return;
           }
-          return;
-        }
-        if (updateQuery) {
-          this.updateQuery((previous, updateOptions) => updateQuery(previous, __spreadValues({
-            subscriptionData
-          }, updateOptions)));
-        }
-      }
-    });
+          if (updateQuery) {
+            this.updateQuery((previous, updateOptions) =>
+              updateQuery(
+                previous,
+                __spreadValues(
+                  {
+                    subscriptionData,
+                  },
+                  updateOptions,
+                ),
+              ),
+            );
+          }
+        },
+      });
     this.subscriptions.add(subscription);
     return () => {
       if (this.subscriptions.delete(subscription)) {
@@ -3164,10 +3775,10 @@ var ObservableQuery = class {
     };
   }
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   applyOptions(newOptions) {
     const mergedOptions = compact(this.options, newOptions || {});
     assign(this.options, mergedOptions);
@@ -3199,11 +3810,14 @@ var ObservableQuery = class {
       if (!this.hasObservers()) {
         return toQueryResult(this.getCurrentResult());
       }
-      return this._reobserve({
-        // Reset options.fetchPolicy to its original value.
-        fetchPolicy: this.options.initialFetchPolicy,
-        variables
-      }, { newNetworkStatus: NetworkStatus.setVariables });
+      return this._reobserve(
+        {
+          // Reset options.fetchPolicy to its original value.
+          fetchPolicy: this.options.initialFetchPolicy,
+          variables,
+        },
+        { newNetworkStatus: NetworkStatus.setVariables },
+      );
     });
   }
   /**
@@ -3217,13 +3831,13 @@ var ObservableQuery = class {
     const newResult = mapFn(result, {
       variables: this.variables,
       complete: !!complete,
-      previousData: result
+      previousData: result,
     });
     if (newResult) {
       queryManager.cache.writeQuery({
         query: this.options.query,
         data: newResult,
-        variables: this.variables
+        variables: this.variables,
       });
       queryManager.broadcastQueries();
     }
@@ -3245,10 +3859,15 @@ var ObservableQuery = class {
   // Update options.fetchPolicy according to options.nextFetchPolicy.
   applyNextFetchPolicy(reason, options) {
     if (options.nextFetchPolicy) {
-      const { fetchPolicy = "cache-first", initialFetchPolicy = fetchPolicy } = options;
+      const { fetchPolicy = "cache-first", initialFetchPolicy = fetchPolicy } =
+        options;
       if (fetchPolicy === "standby") {
       } else if (typeof options.nextFetchPolicy === "function") {
-        options.fetchPolicy = options.nextFetchPolicy.call(options, fetchPolicy, { reason, options, observable: this, initialFetchPolicy });
+        options.fetchPolicy = options.nextFetchPolicy.call(
+          options,
+          fetchPolicy,
+          { reason, options, observable: this, initialFetchPolicy },
+        );
       } else if (reason === "variables-changed") {
         options.fetchPolicy = initialFetchPolicy;
       } else {
@@ -3264,83 +3883,106 @@ var ObservableQuery = class {
     const onCacheHit = () => {
       synchronouslyEmitted = true;
     };
-    const fetchQueryOperator = (
+    const fetchQueryOperator =
       // we cannot use `tap` here, since it allows only for a "before subscription"
       // hook with `subscribe` and we care for "directly before and after subscription"
-      (source) => new Observable((subscriber) => {
-        try {
-          return source.subscribe({
-            next(value) {
-              synchronouslyEmitted = true;
-              subscriber.next(value);
-            },
-            error: (error) => subscriber.error(error),
-            complete: () => subscriber.complete()
-          });
-        } finally {
-          if (!synchronouslyEmitted) {
-            operation.override = networkStatus;
-            this.input.next({
-              kind: "N",
-              source: "newNetworkStatus",
-              value: {
-                resetError: true
+      (source) =>
+        new Observable((subscriber) => {
+          try {
+            return source.subscribe({
+              next(value) {
+                synchronouslyEmitted = true;
+                subscriber.next(value);
               },
-              query,
-              variables,
-              meta: {
-                shouldEmit: 3,
-                /*
-                 * The moment this notification is emitted, `nextFetchPolicy`
-                 * might already have switched from a `network-only` to a
-                 * `cache-something` policy, so we want to ensure that the
-                 * loading state emit doesn't accidentally read from the cache
-                 * in those cases.
-                 */
-                fetchPolicy: initialFetchPolicy
-              }
+              error: (error) => subscriber.error(error),
+              complete: () => subscriber.complete(),
             });
+          } finally {
+            if (!synchronouslyEmitted) {
+              operation.override = networkStatus;
+              this.input.next({
+                kind: "N",
+                source: "newNetworkStatus",
+                value: {
+                  resetError: true,
+                },
+                query,
+                variables,
+                meta: {
+                  shouldEmit: 3,
+                  /*
+                   * The moment this notification is emitted, `nextFetchPolicy`
+                   * might already have switched from a `network-only` to a
+                   * `cache-something` policy, so we want to ensure that the
+                   * loading state emit doesn't accidentally read from the cache
+                   * in those cases.
+                   */
+                  fetchPolicy: initialFetchPolicy,
+                },
+              });
+            }
           }
-        }
-      })
+        });
+    let { observable, fromLink } = this.queryManager.fetchObservableWithInfo(
+      options,
+      {
+        networkStatus,
+        query: fetchQuery,
+        onCacheHit,
+        fetchQueryOperator,
+        observableQuery: this,
+      },
     );
-    let { observable, fromLink } = this.queryManager.fetchObservableWithInfo(options, {
-      networkStatus,
-      query: fetchQuery,
-      onCacheHit,
-      fetchQueryOperator,
-      observableQuery: this
-    });
     const { query, variables } = this;
     const operation = {
       abort: () => {
         subscription.unsubscribe();
       },
       query,
-      variables
+      variables,
     };
     this.activeOperations.add(operation);
-    let forceFirstValueEmit = networkStatus == NetworkStatus.refetch || networkStatus == NetworkStatus.setVariables;
+    let forceFirstValueEmit =
+      networkStatus == NetworkStatus.refetch ||
+      networkStatus == NetworkStatus.setVariables;
     observable = observable.pipe(operator, share());
-    const subscription = observable.pipe(tap({
-      next: (notification) => {
-        if (notification.source === "newNetworkStatus" || notification.kind === "N" && notification.value.loading) {
-          operation.override = networkStatus;
-        } else {
-          delete operation.override;
-        }
-      },
-      finalize: () => this.activeOperations.delete(operation)
-    })).subscribe({
-      next: (value) => {
-        const meta = {};
-        if (forceFirstValueEmit && value.kind === "N" && "loading" in value.value && !value.value.loading) {
-          forceFirstValueEmit = false;
-          meta.shouldEmit = 1;
-        }
-        this.input.next(__spreadProps(__spreadValues({}, value), { query, variables, meta }));
-      }
-    });
+    const subscription = observable
+      .pipe(
+        tap({
+          next: (notification) => {
+            if (
+              notification.source === "newNetworkStatus" ||
+              (notification.kind === "N" && notification.value.loading)
+            ) {
+              operation.override = networkStatus;
+            } else {
+              delete operation.override;
+            }
+          },
+          finalize: () => this.activeOperations.delete(operation),
+        }),
+      )
+      .subscribe({
+        next: (value) => {
+          const meta = {};
+          if (
+            forceFirstValueEmit &&
+            value.kind === "N" &&
+            "loading" in value.value &&
+            !value.value.loading
+          ) {
+            forceFirstValueEmit = false;
+            meta.shouldEmit = 1;
+          }
+          this.input.next(
+            __spreadProps(__spreadValues({}, value), {
+              query,
+              variables,
+              meta,
+            }),
+          );
+        },
+      });
     return { fromLink, subscription, observable };
   }
   // Turns polling on or off based on this.options.pollInterval.
@@ -3349,11 +3991,19 @@ var ObservableQuery = class {
     if (this.queryManager.ssrMode) {
       return;
     }
-    const { pollingInfo, options: { fetchPolicy, pollInterval } } = this;
+    const {
+      pollingInfo,
+      options: { fetchPolicy, pollInterval },
+    } = this;
     if (!pollInterval || !this.hasObservers() || fetchPolicy === "cache-only") {
       if (__DEV__) {
-        if (!this.didWarnCacheOnlyPolling && pollInterval && fetchPolicy === "cache-only") {
-          __DEV__ && invariant.warn(82, getOperationName(this.query, "(anonymous)"));
+        if (
+          !this.didWarnCacheOnlyPolling &&
+          pollInterval &&
+          fetchPolicy === "cache-only"
+        ) {
+          __DEV__ &&
+            invariant.warn(82, getOperationName(this.query, "(anonymous)"));
           this.didWarnCacheOnlyPolling = true;
         }
       }
@@ -3367,16 +4017,25 @@ var ObservableQuery = class {
     info.interval = pollInterval;
     const maybeFetch = () => {
       if (this.pollingInfo) {
-        if (!isNetworkRequestInFlight(this.networkStatus) && !this.options.skipPollAttempt?.()) {
-          this._reobserve({
-            // Most fetchPolicy options don't make sense to use in a polling context, as
-            // users wouldn't want to be polling the cache directly. However, network-only and
-            // no-cache are both useful for when the user wants to control whether or not the
-            // polled results are written to the cache.
-            fetchPolicy: this.options.initialFetchPolicy === "no-cache" ? "no-cache" : "network-only"
-          }, {
-            newNetworkStatus: NetworkStatus.poll
-          }).then(poll, poll);
+        if (
+          !isNetworkRequestInFlight(this.networkStatus) &&
+          !this.options.skipPollAttempt?.()
+        ) {
+          this._reobserve(
+            {
+              // Most fetchPolicy options don't make sense to use in a polling context, as
+              // users wouldn't want to be polling the cache directly. However, network-only and
+              // no-cache are both useful for when the user wants to control whether or not the
+              // polled results are written to the cache.
+              fetchPolicy:
+                this.options.initialFetchPolicy === "no-cache"
+                  ? "no-cache"
+                  : "network-only",
+            },
+            {
+              newNetworkStatus: NetworkStatus.poll,
+            },
+          ).then(poll, poll);
         } else {
           poll();
         }
@@ -3412,23 +4071,22 @@ var ObservableQuery = class {
     this.isTornDown = false;
     let { newNetworkStatus } = internalOptions || {};
     this.queryManager.obsQueries.add(this);
-    const useDisposableObservable = (
+    const useDisposableObservable =
       // Refetching uses a disposable Observable to allow refetches using different
       // options, without permanently altering the options of the
       // original ObservableQuery.
       newNetworkStatus === NetworkStatus.refetch || // Polling uses a disposable Observable so the polling options (which force
       // fetchPolicy to be "network-only" or "no-cache") won't override the original options.
-      newNetworkStatus === NetworkStatus.poll
-    );
+      newNetworkStatus === NetworkStatus.poll;
     const oldVariables = this.variables;
     const oldFetchPolicy = this.options.fetchPolicy;
     const mergedOptions = compact(this.options, newOptions || {});
     this.variablesUnknown &&= mergedOptions.fetchPolicy === "standby";
-    const options = useDisposableObservable ? (
-      // Disposable Observable fetches receive a shallow copy of this.options
-      // (merged with newOptions), leaving this.options unmodified.
-      mergedOptions
-    ) : assign(this.options, mergedOptions);
+    const options = useDisposableObservable
+      ? // Disposable Observable fetches receive a shallow copy of this.options
+        // (merged with newOptions), leaving this.options unmodified.
+        mergedOptions
+      : assign(this.options, mergedOptions);
     const query = this.transformDocument(options.query);
     this.lastQuery = query;
     if (newOptions && "variables" in newOptions) {
@@ -3436,12 +4094,16 @@ var ObservableQuery = class {
     }
     if (!useDisposableObservable) {
       this.updatePolling();
-      if (newOptions && newOptions.variables && !equal(newOptions.variables, oldVariables) && // Don't mess with the fetchPolicy if it's currently "standby".
-      options.fetchPolicy !== "standby" && // If we're changing the fetchPolicy anyway, don't try to change it here
-      // using applyNextFetchPolicy. The explicit options.fetchPolicy wins.
-      (options.fetchPolicy === oldFetchPolicy || // A `nextFetchPolicy` function has even higher priority, though,
-      // so in that case `applyNextFetchPolicy` must be called.
-      typeof options.nextFetchPolicy === "function")) {
+      if (
+        newOptions &&
+        newOptions.variables &&
+        !equal(newOptions.variables, oldVariables) && // Don't mess with the fetchPolicy if it's currently "standby".
+        options.fetchPolicy !== "standby" && // If we're changing the fetchPolicy anyway, don't try to change it here
+        // using applyNextFetchPolicy. The explicit options.fetchPolicy wins.
+        (options.fetchPolicy === oldFetchPolicy || // A `nextFetchPolicy` function has even higher priority, though,
+          // so in that case `applyNextFetchPolicy` must be called.
+          typeof options.nextFetchPolicy === "function")
+      ) {
         this.applyNextFetchPolicy("variables-changed", options);
         if (newNetworkStatus === void 0) {
           newNetworkStatus = NetworkStatus.setVariables;
@@ -3451,7 +4113,11 @@ var ObservableQuery = class {
     const oldNetworkStatus = this.networkStatus;
     if (!newNetworkStatus) {
       newNetworkStatus = NetworkStatus.loading;
-      if (oldNetworkStatus !== NetworkStatus.loading && newOptions?.variables && !equal(newOptions.variables, oldVariables)) {
+      if (
+        oldNetworkStatus !== NetworkStatus.loading &&
+        newOptions?.variables &&
+        !equal(newOptions.variables, oldVariables)
+      ) {
         newNetworkStatus = NetworkStatus.setVariables;
       }
       if (options.fetchPolicy === "standby") {
@@ -3476,27 +4142,39 @@ var ObservableQuery = class {
       // `standby` since that fetch policy completes without emitting a
       // result. Since we are converting this to a QueryResult type, we
       // omit the extra fields from ApolloQueryResult in the default value.
-      options.fetchPolicy === "standby" ? { data: void 0 } : void 0
+      options.fetchPolicy === "standby" ? { data: void 0 } : void 0,
     );
-    const { subscription, observable, fromLink } = this.fetch(options, newNetworkStatus, query, promiseOperator);
+    const { subscription, observable, fromLink } = this.fetch(
+      options,
+      newNetworkStatus,
+      query,
+      promiseOperator,
+    );
     if (!useDisposableObservable && (fromLink || !this.linkSubscription)) {
       if (this.linkSubscription) {
         this.linkSubscription.unsubscribe();
       }
       this.linkSubscription = subscription;
     }
-    const ret = Object.assign(preventUnhandledRejection(promise.then((result) => toQueryResult(this.maskResult(result))).finally(() => {
-      if (!this.hasObservers() && this.activeOperations.size === 0) {
-        this.tearDownQuery();
-      }
-    })), {
-      retain: () => {
-        const subscription2 = observable.subscribe({});
-        const unsubscribe = () => subscription2.unsubscribe();
-        promise.then(unsubscribe, unsubscribe);
-        return ret;
-      }
-    });
+    const ret = Object.assign(
+      preventUnhandledRejection(
+        promise
+          .then((result) => toQueryResult(this.maskResult(result)))
+          .finally(() => {
+            if (!this.hasObservers() && this.activeOperations.size === 0) {
+              this.tearDownQuery();
+            }
+          }),
+      ),
+      {
+        retain: () => {
+          const subscription2 = observable.subscribe({});
+          const unsubscribe = () => subscription2.unsubscribe();
+          promise.then(unsubscribe, unsubscribe);
+          return ret;
+        },
+      },
+    );
     return ret;
   }
   hasObservers() {
@@ -3511,8 +4189,7 @@ var ObservableQuery = class {
     this.tearDownQuery();
   }
   tearDownQuery() {
-    if (this.isTornDown)
-      return;
+    if (this.isTornDown) return;
     this.resetNotifications();
     this.unsubscribeFromCache?.();
     if (this.linkSubscription) {
@@ -3535,17 +4212,19 @@ var ObservableQuery = class {
       document: this.query,
       data: result.data,
       fetchPolicy: this.options.fetchPolicy,
-      cause: this
+      cause: this,
     });
-    return masked === result.data ? result : __spreadProps(__spreadValues({}, result), { data: masked });
+    return masked === result.data
+      ? result
+      : __spreadProps(__spreadValues({}, result), { data: masked });
   }
   dirty = false;
   notifyTimeout;
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   resetNotifications() {
     if (this.notifyTimeout) {
       clearTimeout(this.notifyTimeout);
@@ -3554,23 +4233,22 @@ var ObservableQuery = class {
     this.dirty = false;
   }
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   scheduleNotify() {
-    if (this.dirty)
-      return;
+    if (this.dirty) return;
     this.dirty = true;
     if (!this.notifyTimeout) {
       this.notifyTimeout = setTimeout(() => this.notify(true), 0);
     }
   }
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   notify(scheduled = false) {
     if (!scheduled) {
       const info = this.queryManager.getDocumentInfo(this.query);
@@ -3580,7 +4258,12 @@ var ObservableQuery = class {
     }
     const { dirty } = this;
     this.resetNotifications();
-    if (dirty && (this.options.fetchPolicy == "cache-only" || this.options.fetchPolicy == "cache-and-network" || !this.activeOperations.size)) {
+    if (
+      dirty &&
+      (this.options.fetchPolicy == "cache-only" ||
+        this.options.fetchPolicy == "cache-and-network" ||
+        !this.activeOperations.size)
+    ) {
       const diff = this.getCacheDiff();
       if (
         // `fromOptimisticTransaction` is not available through the `cache.diff`
@@ -3593,16 +4276,20 @@ var ObservableQuery = class {
           kind: "N",
           value: {
             data: diff.result,
-            dataState: diff.complete ? "complete" : diff.result ? "partial" : "empty",
+            dataState: diff.complete
+              ? "complete"
+              : diff.result
+                ? "partial"
+                : "empty",
             networkStatus: NetworkStatus.ready,
             loading: false,
             error: void 0,
-            partial: !diff.complete
+            partial: !diff.complete,
           },
           source: "cache",
           query: this.query,
           variables: this.variables,
-          meta: {}
+          meta: {},
         });
       }
     }
@@ -3621,53 +4308,60 @@ var ObservableQuery = class {
         finalize2();
       },
       query,
-      variables
+      variables,
     };
     this.activeOperations.add(operation);
     return {
       finalize: finalize2,
       pushNotification: (notification, additionalMeta) => {
         if (!aborted) {
-          this.input.next(__spreadProps(__spreadValues({}, notification), {
-            query,
-            variables,
-            meta: __spreadValues({}, additionalMeta)
-          }));
+          this.input.next(
+            __spreadProps(__spreadValues({}, notification), {
+              query,
+              variables,
+              meta: __spreadValues({}, additionalMeta),
+            }),
+          );
         }
-      }
+      },
     };
   }
   calculateNetworkStatus(baseNetworkStatus) {
     if (baseNetworkStatus === NetworkStatus.streaming) {
       return baseNetworkStatus;
     }
-    const operation = Array.from(this.activeOperations.values()).reverse().find((operation2) => isEqualQuery(operation2, this) && operation2.override !== void 0);
+    const operation = Array.from(this.activeOperations.values())
+      .reverse()
+      .find(
+        (operation2) =>
+          isEqualQuery(operation2, this) && operation2.override !== void 0,
+      );
     return operation?.override ?? baseNetworkStatus;
   }
   abortActiveOperations() {
     this.activeOperations.forEach((operation) => operation.abort());
   }
   /**
-  * @internal
-  * Called from `clearStore`.
-  *
-  * - resets the query to its initial state
-  * - cancels all active operations and their subscriptions
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   * Called from `clearStore`.
+   *
+   * - resets the query to its initial state
+   * - cancels all active operations and their subscriptions
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   reset() {
     const resetToEmpty = this.options.fetchPolicy === "cache-only";
     this.setResult(resetToEmpty ? empty : uninitialized, {
-      shouldEmit: resetToEmpty ? 1 : 2
+      shouldEmit: resetToEmpty ? 1 : 2,
     });
     this.abortActiveOperations();
   }
   /**
-  * @internal
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   setResult(result, additionalMeta) {
     this.input.next({
       source: "setResult",
@@ -3675,7 +4369,7 @@ var ObservableQuery = class {
       value: result,
       query: this.query,
       variables: this.variables,
-      meta: __spreadValues({}, additionalMeta)
+      meta: __spreadValues({}, additionalMeta),
     });
   }
   operator = filterMap((notification) => {
@@ -3690,7 +4384,13 @@ var ObservableQuery = class {
     const previous = this.subject.getValue();
     if (notification.source === "cache") {
       result = notification.value;
-      if (result.networkStatus === NetworkStatus.ready && result.partial && (!this.options.returnPartialData || previous.result.networkStatus === NetworkStatus.error) && this.options.fetchPolicy !== "cache-only") {
+      if (
+        result.networkStatus === NetworkStatus.ready &&
+        result.partial &&
+        (!this.options.returnPartialData ||
+          previous.result.networkStatus === NetworkStatus.error) &&
+        this.options.fetchPolicy !== "cache-only"
+      ) {
         return;
       }
     } else if (notification.source === "network") {
@@ -3698,11 +4398,22 @@ var ObservableQuery = class {
         this.waitForNetworkResult = false;
         this.resubscribeCache();
       }
-      result = notification.kind === "E" ? __spreadProps(__spreadValues({}, isEqualQuery(previous, notification) ? previous.result : { data: void 0, dataState: "empty", partial: true }), {
-        error: notification.error,
-        networkStatus: NetworkStatus.error,
-        loading: false
-      }) : notification.value;
+      result =
+        notification.kind === "E"
+          ? __spreadProps(
+              __spreadValues(
+                {},
+                isEqualQuery(previous, notification)
+                  ? previous.result
+                  : { data: void 0, dataState: "empty", partial: true },
+              ),
+              {
+                error: notification.error,
+                networkStatus: NetworkStatus.error,
+                loading: false,
+              },
+            )
+          : notification.value;
       if (notification.kind === "E" && result.dataState === "streaming") {
         result.dataState = "complete";
       }
@@ -3710,18 +4421,19 @@ var ObservableQuery = class {
         meta.shouldEmit = 1;
       }
     } else if (notification.source === "newNetworkStatus") {
-      const baseResult = isEqualQuery(previous, notification) ? previous.result : this.getInitialResult(meta.fetchPolicy);
+      const baseResult = isEqualQuery(previous, notification)
+        ? previous.result
+        : this.getInitialResult(meta.fetchPolicy);
       const { resetError } = notification.value;
       const error = resetError ? void 0 : baseResult.error;
       const networkStatus = error ? NetworkStatus.error : NetworkStatus.ready;
       result = __spreadProps(__spreadValues({}, baseResult), {
         error,
-        networkStatus
+        networkStatus,
       });
     }
     invariant(result);
-    if (!result.error)
-      delete result.error;
+    if (!result.error) delete result.error;
     result.networkStatus = this.calculateNetworkStatus(result.networkStatus);
     result.loading = isNetworkRequestInFlight(result.networkStatus);
     result = this.maskResult(result);
@@ -3747,7 +4459,7 @@ var ObservableQuery = class {
             return this.nextFetchPolicy(currentFetchPolicy, context);
           }
           return fetchPolicy;
-        }
+        },
       });
     } else {
       this.reobserve();
@@ -3766,7 +4478,9 @@ function isEqualQuery(a, b) {
   return !!(a && b && a.query === b.query && equal(a.variables, b.variables));
 }
 function getTrackingOperatorPromise(filterMapCb, defaultValue) {
-  let lastValue = defaultValue, resolve, reject;
+  let lastValue = defaultValue,
+    resolve,
+    reject;
   const promise = new Promise((res, rej) => {
     resolve = res;
     reject = rej;
@@ -3788,9 +4502,13 @@ function getTrackingOperatorPromise(filterMapCb, defaultValue) {
       } else {
         const message = "The operation was aborted.";
         const name = "AbortError";
-        reject(typeof DOMException !== "undefined" ? new DOMException(message, name) : Object.assign(new Error(message), { name }));
+        reject(
+          typeof DOMException !== "undefined"
+            ? new DOMException(message, name)
+            : Object.assign(new Error(message), { name }),
+        );
       }
-    }
+    },
   });
   return { promise, operator };
 }
@@ -3801,14 +4519,14 @@ var destructiveMethodCounts = /* @__PURE__ */ new WeakMap();
 function wrapDestructiveCacheMethod(cache, methodName) {
   const original = cache[methodName];
   if (typeof original === "function") {
-    cache[methodName] = function() {
+    cache[methodName] = function () {
       destructiveMethodCounts.set(
         cache,
         // The %1e15 allows the count to wrap around to 0 safely every
         // quadrillion evictions, so there's no risk of overflow. To be
         // clear, this is more of a pedantic principle than something
         // that matters in any conceivable practical scenario.
-        (destructiveMethodCounts.get(cache) + 1) % 1e15
+        (destructiveMethodCounts.get(cache) + 1) % 1e15,
       );
       return original.apply(this, arguments);
     };
@@ -3824,7 +4542,7 @@ var QueryInfo = class {
   observableQuery;
   incremental;
   constructor(queryManager, observableQuery) {
-    const cache = this.cache = queryManager.cache;
+    const cache = (this.cache = queryManager.cache);
     const id = (queryInfoIds.get(queryManager) || 0) + 1;
     queryInfoIds.set(queryManager, id);
     this.id = id + "";
@@ -3838,12 +4556,12 @@ var QueryInfo = class {
     }
   }
   /**
-  * @internal
-  * For feud-preventing behaviour, `lastWrite` should be shared by all `QueryInfo` instances of an `ObservableQuery`.
-  * In the case of a standalone `QueryInfo`, we will keep a local version.
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   * For feud-preventing behaviour, `lastWrite` should be shared by all `QueryInfo` instances of an `ObservableQuery`.
+   * In the case of a standalone `QueryInfo`, we will keep a local version.
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   _lastWrite;
   get lastWrite() {
     return (this.observableQuery || this)._lastWrite;
@@ -3856,10 +4574,14 @@ var QueryInfo = class {
   }
   shouldWrite(result, variables) {
     const { lastWrite } = this;
-    return !(lastWrite && // If cache.evict has been called since the last time we wrote this
-    // data into the cache, there's a chance writing this result into
-    // the cache will repair what was evicted.
-    lastWrite.dmCount === destructiveMethodCounts.get(this.cache) && equal(variables, lastWrite.variables) && equal(result.data, lastWrite.result.data));
+    return !(
+      lastWrite && // If cache.evict has been called since the last time we wrote this
+      // data into the cache, there's a chance writing this result into
+      // the cache will repair what was evicted.
+      lastWrite.dmCount === destructiveMethodCounts.get(this.cache) &&
+      equal(variables, lastWrite.variables) &&
+      equal(result.data, lastWrite.result.data)
+    );
   }
   get hasNext() {
     return this.incremental ? this.incremental.hasNext : false;
@@ -3868,23 +4590,30 @@ var QueryInfo = class {
     const { incrementalHandler } = this.queryManager;
     if (incrementalHandler.isIncrementalResult(incoming)) {
       this.incremental ||= incrementalHandler.startRequest({
-        query
+        query,
       });
       return this.incremental.handle(cacheData, incoming);
     }
     return incoming;
   }
-  markQueryResult(incoming, { document: query, variables, errorPolicy, cacheWriteBehavior }) {
+  markQueryResult(
+    incoming,
+    { document: query, variables, errorPolicy, cacheWriteBehavior },
+  ) {
     const diffOptions = {
       query,
       variables,
       returnPartialData: true,
-      optimistic: true
+      optimistic: true,
     };
     this.observableQuery?.["resetNotifications"]();
     const skipCache = cacheWriteBehavior === 0;
     const lastDiff = skipCache ? void 0 : this.cache.diff(diffOptions);
-    let result = this.maybeHandleIncrementalResult(lastDiff?.result, incoming, query);
+    let result = this.maybeHandleIncrementalResult(
+      lastDiff?.result,
+      incoming,
+      query,
+    );
     if (skipCache) {
       return result;
     }
@@ -3901,24 +4630,28 @@ var QueryInfo = class {
               query,
               data: result.data,
               variables,
-              overwrite: cacheWriteBehavior === 1
+              overwrite: cacheWriteBehavior === 1,
             });
             this.lastWrite = {
               result,
               variables,
-              dmCount: destructiveMethodCounts.get(this.cache)
+              dmCount: destructiveMethodCounts.get(this.cache),
             };
           } else {
             if (lastDiff && lastDiff.complete) {
-              result = __spreadProps(__spreadValues({}, result), { data: lastDiff.result });
+              result = __spreadProps(__spreadValues({}, result), {
+                data: lastDiff.result,
+              });
               return;
             }
           }
           const diff = cache.diff(diffOptions);
           if (diff.complete) {
-            result = __spreadProps(__spreadValues({}, result), { data: diff.result });
+            result = __spreadProps(__spreadValues({}, result), {
+              data: diff.result,
+            });
           }
-        }
+        },
       });
     } else {
       this.lastWrite = void 0;
@@ -3928,118 +4661,140 @@ var QueryInfo = class {
   markMutationResult(incoming, mutation, cache = this.cache) {
     const cacheWrites = [];
     const skipCache = mutation.cacheWriteBehavior === 0;
-    let result = this.maybeHandleIncrementalResult(skipCache ? void 0 : cache.diff({
-      id: "ROOT_MUTATION",
-      // The cache complains if passed a mutation where it expects a
-      // query, so we transform mutations and subscriptions to queries
-      // (only once, thanks to this.transformCache).
-      query: this.queryManager.getDocumentInfo(mutation.document).asQuery,
-      variables: mutation.variables,
-      optimistic: false,
-      returnPartialData: true
-    }).result, incoming, mutation.document);
+    let result = this.maybeHandleIncrementalResult(
+      skipCache
+        ? void 0
+        : cache.diff({
+            id: "ROOT_MUTATION",
+            // The cache complains if passed a mutation where it expects a
+            // query, so we transform mutations and subscriptions to queries
+            // (only once, thanks to this.transformCache).
+            query: this.queryManager.getDocumentInfo(mutation.document).asQuery,
+            variables: mutation.variables,
+            optimistic: false,
+            returnPartialData: true,
+          }).result,
+      incoming,
+      mutation.document,
+    );
     if (mutation.errorPolicy === "ignore") {
       result = __spreadProps(__spreadValues({}, result), { errors: [] });
     }
     if (graphQLResultHasError(result) && mutation.errorPolicy === "none") {
       return Promise.resolve(result);
     }
-    const getResultWithDataState = () => __spreadProps(__spreadValues({}, result), {
-      dataState: this.hasNext ? "streaming" : "complete"
-    });
+    const getResultWithDataState = () =>
+      __spreadProps(__spreadValues({}, result), {
+        dataState: this.hasNext ? "streaming" : "complete",
+      });
     if (!skipCache && shouldWriteResult(result, mutation.errorPolicy)) {
       cacheWrites.push({
         result: result.data,
         dataId: "ROOT_MUTATION",
         query: mutation.document,
-        variables: mutation.variables
+        variables: mutation.variables,
       });
       const { updateQueries } = mutation;
       if (updateQueries) {
-        this.queryManager.getObservableQueries("all").forEach((observableQuery) => {
-          const queryName = observableQuery && observableQuery.queryName;
-          if (!queryName || !Object.hasOwnProperty.call(updateQueries, queryName)) {
-            return;
-          }
-          const updater = updateQueries[queryName];
-          const { query: document, variables } = observableQuery;
-          const { result: currentQueryResult, complete } = observableQuery.getCacheDiff({ optimistic: false });
-          if (complete && currentQueryResult) {
-            const nextQueryResult = updater(currentQueryResult, {
-              mutationResult: getResultWithDataState(),
-              queryName: document && getOperationName(document) || void 0,
-              queryVariables: variables
-            });
-            if (nextQueryResult) {
-              cacheWrites.push({
-                result: nextQueryResult,
-                dataId: "ROOT_QUERY",
-                query: document,
-                variables
-              });
+        this.queryManager
+          .getObservableQueries("all")
+          .forEach((observableQuery) => {
+            const queryName = observableQuery && observableQuery.queryName;
+            if (
+              !queryName ||
+              !Object.hasOwnProperty.call(updateQueries, queryName)
+            ) {
+              return;
             }
-          }
-        });
+            const updater = updateQueries[queryName];
+            const { query: document, variables } = observableQuery;
+            const { result: currentQueryResult, complete } =
+              observableQuery.getCacheDiff({ optimistic: false });
+            if (complete && currentQueryResult) {
+              const nextQueryResult = updater(currentQueryResult, {
+                mutationResult: getResultWithDataState(),
+                queryName: (document && getOperationName(document)) || void 0,
+                queryVariables: variables,
+              });
+              if (nextQueryResult) {
+                cacheWrites.push({
+                  result: nextQueryResult,
+                  dataId: "ROOT_QUERY",
+                  query: document,
+                  variables,
+                });
+              }
+            }
+          });
       }
     }
     let refetchQueries = mutation.refetchQueries;
     if (typeof refetchQueries === "function") {
       refetchQueries = refetchQueries(getResultWithDataState());
     }
-    if (cacheWrites.length > 0 || (refetchQueries || "").length > 0 || mutation.update || mutation.onQueryUpdated || mutation.removeOptimistic) {
+    if (
+      cacheWrites.length > 0 ||
+      (refetchQueries || "").length > 0 ||
+      mutation.update ||
+      mutation.onQueryUpdated ||
+      mutation.removeOptimistic
+    ) {
       const results = [];
-      this.queryManager.refetchQueries({
-        updateCache: (cache2) => {
-          if (!skipCache) {
-            cacheWrites.forEach((write) => cache2.write(write));
-          }
-          const { update } = mutation;
-          if (update) {
+      this.queryManager
+        .refetchQueries({
+          updateCache: (cache2) => {
             if (!skipCache) {
-              const diff = cache2.diff({
-                id: "ROOT_MUTATION",
-                // The cache complains if passed a mutation where it expects a
-                // query, so we transform mutations and subscriptions to queries
-                // (only once, thanks to this.transformCache).
-                query: this.queryManager.getDocumentInfo(mutation.document).asQuery,
-                variables: mutation.variables,
-                optimistic: false,
-                returnPartialData: true
-              });
-              if (diff.complete) {
-                result = __spreadProps(__spreadValues({}, result), {
-                  data: diff.result
+              cacheWrites.forEach((write) => cache2.write(write));
+            }
+            const { update } = mutation;
+            if (update) {
+              if (!skipCache) {
+                const diff = cache2.diff({
+                  id: "ROOT_MUTATION",
+                  // The cache complains if passed a mutation where it expects a
+                  // query, so we transform mutations and subscriptions to queries
+                  // (only once, thanks to this.transformCache).
+                  query: this.queryManager.getDocumentInfo(mutation.document)
+                    .asQuery,
+                  variables: mutation.variables,
+                  optimistic: false,
+                  returnPartialData: true,
+                });
+                if (diff.complete) {
+                  result = __spreadProps(__spreadValues({}, result), {
+                    data: diff.result,
+                  });
+                }
+              }
+              if (!this.hasNext) {
+                update(cache2, result, {
+                  context: mutation.context,
+                  variables: mutation.variables,
                 });
               }
             }
-            if (!this.hasNext) {
-              update(cache2, result, {
-                context: mutation.context,
-                variables: mutation.variables
+            if (!skipCache && !mutation.keepRootFields && !this.hasNext) {
+              cache2.modify({
+                id: "ROOT_MUTATION",
+                fields(value, { fieldName, DELETE: DELETE2 }) {
+                  return fieldName === "__typename" ? value : DELETE2;
+                },
               });
             }
-          }
-          if (!skipCache && !mutation.keepRootFields && !this.hasNext) {
-            cache2.modify({
-              id: "ROOT_MUTATION",
-              fields(value, { fieldName, DELETE: DELETE2 }) {
-                return fieldName === "__typename" ? value : DELETE2;
-              }
-            });
-          }
-        },
-        include: refetchQueries,
-        // Write the final mutation.result to the root layer of the cache.
-        optimistic: false,
-        // Remove the corresponding optimistic layer at the same time as we
-        // write the final non-optimistic result.
-        removeOptimistic: mutation.removeOptimistic,
-        // Let the caller of client.mutate optionally determine the refetching
-        // behavior for watched queries after the mutation.update function runs.
-        // If no onQueryUpdated function was provided for this mutation, pass
-        // null instead of undefined to disable the default refetching behavior.
-        onQueryUpdated: mutation.onQueryUpdated || null
-      }).forEach((result2) => results.push(result2));
+          },
+          include: refetchQueries,
+          // Write the final mutation.result to the root layer of the cache.
+          optimistic: false,
+          // Remove the corresponding optimistic layer at the same time as we
+          // write the final non-optimistic result.
+          removeOptimistic: mutation.removeOptimistic,
+          // Let the caller of client.mutate optionally determine the refetching
+          // behavior for watched queries after the mutation.update function runs.
+          // If no onQueryUpdated function was provided for this mutation, pass
+          // null instead of undefined to disable the default refetching behavior.
+          onQueryUpdated: mutation.onQueryUpdated || null,
+        })
+        .forEach((result2) => results.push(result2));
       if (mutation.awaitRefetchQueries || mutation.onQueryUpdated) {
         return Promise.all(results).then(() => result);
       }
@@ -4047,7 +4802,10 @@ var QueryInfo = class {
     return Promise.resolve(result);
   }
   markMutationOptimistic(optimisticResponse, mutation) {
-    const data = typeof optimisticResponse === "function" ? optimisticResponse(mutation.variables, { IGNORE }) : optimisticResponse;
+    const data =
+      typeof optimisticResponse === "function"
+        ? optimisticResponse(mutation.variables, { IGNORE })
+        : optimisticResponse;
     if (data === IGNORE) {
       return false;
     }
@@ -4060,14 +4818,17 @@ var QueryInfo = class {
     }, this.id);
     return true;
   }
-  markSubscriptionResult(result, { document, variables, errorPolicy, cacheWriteBehavior }) {
+  markSubscriptionResult(
+    result,
+    { document, variables, errorPolicy, cacheWriteBehavior },
+  ) {
     if (cacheWriteBehavior !== 0) {
       if (shouldWriteResult(result, errorPolicy)) {
         this.cache.write({
           query: document,
           result: result.data,
           dataId: "ROOT_SUBSCRIPTION",
-          variables
+          variables,
         });
       }
       this.queryManager.broadcastQueries();
@@ -4125,7 +4886,7 @@ var QueryManager = class {
     const defaultDocumentTransform = new DocumentTransform(
       (document) => this.cache.transformDocument(document),
       // Allow the apollo cache to manage its own transform caches
-      { cache: false }
+      { cache: false },
     );
     this.client = options.client;
     this.defaultOptions = options.defaultOptions;
@@ -4137,9 +4898,13 @@ var QueryManager = class {
     this.localState = options.localState;
     this.incrementalHandler = options.incrementalHandler;
     const documentTransform = options.documentTransform;
-    this.documentTransform = documentTransform ? defaultDocumentTransform.concat(documentTransform).concat(defaultDocumentTransform) : defaultDocumentTransform;
+    this.documentTransform = documentTransform
+      ? defaultDocumentTransform
+          .concat(documentTransform)
+          .concat(defaultDocumentTransform)
+      : defaultDocumentTransform;
     this.defaultContext = options.defaultContext || {};
-    if (this.onBroadcast = options.onBroadcast) {
+    if ((this.onBroadcast = options.onBroadcast)) {
       this.mutationStore = {};
     }
   }
@@ -4162,137 +4927,184 @@ var QueryManager = class {
     this.fetchCancelFns.clear();
   }
   mutate(_0) {
-    return __async(this, arguments, function* ({ mutation, variables, optimisticResponse, updateQueries, refetchQueries = [], awaitRefetchQueries = false, update: updateWithProxyFn, onQueryUpdated, fetchPolicy, errorPolicy, keepRootFields, context }) {
-      const queryInfo = new QueryInfo(this);
-      mutation = this.cache.transformForLink(this.transform(mutation));
-      const { hasClientExports } = this.getDocumentInfo(mutation);
-      variables = this.getVariables(mutation, variables);
-      if (hasClientExports) {
-        if (__DEV__) {
-          invariant(this.localState, 85, getOperationName(mutation, "(anonymous)"));
-        }
-        variables = yield this.localState.getExportedVariables({
-          client: this.client,
-          document: mutation,
-          variables,
-          context
-        });
-      }
-      const mutationStoreValue = this.mutationStore && (this.mutationStore[queryInfo.id] = {
+    return __async(
+      this,
+      arguments,
+      function* ({
         mutation,
         variables,
-        loading: true,
-        error: null
-      });
-      const isOptimistic = optimisticResponse && queryInfo.markMutationOptimistic(optimisticResponse, {
-        document: mutation,
-        variables,
-        cacheWriteBehavior: fetchPolicy === "no-cache" ? 0 : 2,
-        errorPolicy,
-        context,
+        optimisticResponse,
         updateQueries,
+        refetchQueries = [],
+        awaitRefetchQueries = false,
         update: updateWithProxyFn,
-        keepRootFields
-      });
-      this.broadcastQueries();
-      return new Promise((resolve, reject) => {
-        const cause = {};
-        return this.getObservableFromLink(mutation, __spreadProps(__spreadValues({}, context), {
-          optimisticResponse: isOptimistic ? optimisticResponse : void 0
-        }), variables, {}, false).observable.pipe(validateDidEmitValue(), mergeMap((result) => {
-          const storeResult = __spreadValues({}, result);
-          return from(queryInfo.markMutationResult(storeResult, {
+        onQueryUpdated,
+        fetchPolicy,
+        errorPolicy,
+        keepRootFields,
+        context,
+      }) {
+        const queryInfo = new QueryInfo(this);
+        mutation = this.cache.transformForLink(this.transform(mutation));
+        const { hasClientExports } = this.getDocumentInfo(mutation);
+        variables = this.getVariables(mutation, variables);
+        if (hasClientExports) {
+          if (__DEV__) {
+            invariant(
+              this.localState,
+              85,
+              getOperationName(mutation, "(anonymous)"),
+            );
+          }
+          variables = yield this.localState.getExportedVariables({
+            client: this.client,
+            document: mutation,
+            variables,
+            context,
+          });
+        }
+        const mutationStoreValue =
+          this.mutationStore &&
+          (this.mutationStore[queryInfo.id] = {
+            mutation,
+            variables,
+            loading: true,
+            error: null,
+          });
+        const isOptimistic =
+          optimisticResponse &&
+          queryInfo.markMutationOptimistic(optimisticResponse, {
             document: mutation,
             variables,
             cacheWriteBehavior: fetchPolicy === "no-cache" ? 0 : 2,
             errorPolicy,
             context,
-            update: updateWithProxyFn,
             updateQueries,
-            awaitRefetchQueries,
-            refetchQueries,
-            removeOptimistic: isOptimistic ? queryInfo.id : void 0,
-            onQueryUpdated,
-            keepRootFields
-          }));
-        })).pipe(map((storeResult) => {
-          const hasErrors = graphQLResultHasError(storeResult);
-          if (hasErrors && errorPolicy === "none") {
-            throw new CombinedGraphQLErrors(storeResult);
-          }
-          if (mutationStoreValue) {
-            mutationStoreValue.loading = false;
-            mutationStoreValue.error = null;
-          }
-          return storeResult;
-        })).subscribe({
-          next: (storeResult) => {
-            this.broadcastQueries();
-            if (!queryInfo.hasNext) {
-              const result = {
-                data: this.maskOperation({
-                  document: mutation,
-                  data: storeResult.data,
-                  fetchPolicy,
-                  cause
-                })
-              };
-              if (graphQLResultHasError(storeResult)) {
-                result.error = new CombinedGraphQLErrors(storeResult);
-              }
-              if (Object.keys(storeResult.extensions || {}).length) {
-                result.extensions = storeResult.extensions;
-              }
-              resolve(result);
-            }
-          },
-          error: (error) => {
-            if (mutationStoreValue) {
-              mutationStoreValue.loading = false;
-              mutationStoreValue.error = error;
-            }
-            if (isOptimistic) {
-              this.cache.removeOptimistic(queryInfo.id);
-            }
-            this.broadcastQueries();
-            if (errorPolicy === "ignore") {
-              return resolve({ data: void 0 });
-            }
-            if (errorPolicy === "all") {
-              return resolve({ data: void 0, error });
-            }
-            reject(error);
-          }
+            update: updateWithProxyFn,
+            keepRootFields,
+          });
+        this.broadcastQueries();
+        return new Promise((resolve, reject) => {
+          const cause = {};
+          return this.getObservableFromLink(
+            mutation,
+            __spreadProps(__spreadValues({}, context), {
+              optimisticResponse: isOptimistic ? optimisticResponse : void 0,
+            }),
+            variables,
+            {},
+            false,
+          )
+            .observable.pipe(
+              validateDidEmitValue(),
+              mergeMap((result) => {
+                const storeResult = __spreadValues({}, result);
+                return from(
+                  queryInfo.markMutationResult(storeResult, {
+                    document: mutation,
+                    variables,
+                    cacheWriteBehavior: fetchPolicy === "no-cache" ? 0 : 2,
+                    errorPolicy,
+                    context,
+                    update: updateWithProxyFn,
+                    updateQueries,
+                    awaitRefetchQueries,
+                    refetchQueries,
+                    removeOptimistic: isOptimistic ? queryInfo.id : void 0,
+                    onQueryUpdated,
+                    keepRootFields,
+                  }),
+                );
+              }),
+            )
+            .pipe(
+              map((storeResult) => {
+                const hasErrors = graphQLResultHasError(storeResult);
+                if (hasErrors && errorPolicy === "none") {
+                  throw new CombinedGraphQLErrors(storeResult);
+                }
+                if (mutationStoreValue) {
+                  mutationStoreValue.loading = false;
+                  mutationStoreValue.error = null;
+                }
+                return storeResult;
+              }),
+            )
+            .subscribe({
+              next: (storeResult) => {
+                this.broadcastQueries();
+                if (!queryInfo.hasNext) {
+                  const result = {
+                    data: this.maskOperation({
+                      document: mutation,
+                      data: storeResult.data,
+                      fetchPolicy,
+                      cause,
+                    }),
+                  };
+                  if (graphQLResultHasError(storeResult)) {
+                    result.error = new CombinedGraphQLErrors(storeResult);
+                  }
+                  if (Object.keys(storeResult.extensions || {}).length) {
+                    result.extensions = storeResult.extensions;
+                  }
+                  resolve(result);
+                }
+              },
+              error: (error) => {
+                if (mutationStoreValue) {
+                  mutationStoreValue.loading = false;
+                  mutationStoreValue.error = error;
+                }
+                if (isOptimistic) {
+                  this.cache.removeOptimistic(queryInfo.id);
+                }
+                this.broadcastQueries();
+                if (errorPolicy === "ignore") {
+                  return resolve({ data: void 0 });
+                }
+                if (errorPolicy === "all") {
+                  return resolve({ data: void 0, error });
+                }
+                reject(error);
+              },
+            });
         });
-      });
-    });
+      },
+    );
   }
   fetchQuery(options, networkStatus) {
     checkDocument(options.query, OperationTypeNode.QUERY);
-    return (() => __async(this, null, function* () {
-      return lastValueFrom(this.fetchObservableWithInfo(options, {
-        networkStatus
-      }).observable.pipe(filterMap((value) => {
-        switch (value.kind) {
-          case "E":
-            throw value.error;
-          case "N": {
-            if (value.source !== "newNetworkStatus")
-              return toQueryResult(value.value);
-          }
-        }
-      })), {
-        // This default is needed when a `standby` fetch policy is used to avoid
-        // an EmptyError from rejecting this promise.
-        defaultValue: { data: void 0 }
-      });
-    }))();
+    return (() =>
+      __async(this, null, function* () {
+        return lastValueFrom(
+          this.fetchObservableWithInfo(options, {
+            networkStatus,
+          }).observable.pipe(
+            filterMap((value) => {
+              switch (value.kind) {
+                case "E":
+                  throw value.error;
+                case "N": {
+                  if (value.source !== "newNetworkStatus")
+                    return toQueryResult(value.value);
+                }
+              }
+            }),
+          ),
+          {
+            // This default is needed when a `standby` fetch policy is used to avoid
+            // an EmptyError from rejecting this promise.
+            defaultValue: { data: void 0 },
+          },
+        );
+      }))();
   }
   transform(document) {
     return this.documentTransform.transformDocument(document);
   }
   transformCache = new AutoCleanedWeakCache(
-    cacheSizes["queryManager.getDocumentInfo"] || 2e3
+    cacheSizes["queryManager.getDocumentInfo"] || 2e3,
     /* defaultCacheSizes["queryManager.getDocumentInfo"] */
   );
   getDocumentInfo(document) {
@@ -4311,24 +5123,32 @@ var QueryManager = class {
         hasIncrementalDirective: hasDirectives(["defer"], document),
         nonReactiveQuery: addNonReactiveToNamedFragments(document),
         clientQuery: hasDirectives(["client"], document) ? document : null,
-        serverQuery: removeDirectivesFromDocument([
-          { name: "client", remove: true },
-          { name: "connection" },
-          { name: "nonreactive" },
-          { name: "unmask" }
-        ], document),
+        serverQuery: removeDirectivesFromDocument(
+          [
+            { name: "client", remove: true },
+            { name: "connection" },
+            { name: "nonreactive" },
+            { name: "unmask" },
+          ],
+          document,
+        ),
         operationType: operationDefinition?.operation,
         defaultVars: getDefaultValues(operationDefinition),
         // Transform any mutation or subscription operations to query operations
         // so we can read/write them from/to the cache.
         asQuery: __spreadProps(__spreadValues({}, document), {
           definitions: document.definitions.map((def) => {
-            if (def.kind === "OperationDefinition" && def.operation !== "query") {
-              return __spreadProps(__spreadValues({}, def), { operation: "query" });
+            if (
+              def.kind === "OperationDefinition" &&
+              def.operation !== "query"
+            ) {
+              return __spreadProps(__spreadValues({}, def), {
+                operation: "query",
+              });
             }
             return def;
-          })
-        })
+          }),
+        }),
       };
       transformCache.set(document, cacheEntry);
     }
@@ -4340,14 +5160,19 @@ var QueryManager = class {
   }
   getVariables(document, variables) {
     const defaultVars = this.getDocumentInfo(document).defaultVars;
-    const varsWithDefaults = Object.entries(variables ?? {}).map(([key, value]) => [key, value === void 0 ? defaultVars[key] : value]);
-    return __spreadValues(__spreadValues({}, defaultVars), Object.fromEntries(varsWithDefaults));
+    const varsWithDefaults = Object.entries(variables ?? {}).map(
+      ([key, value]) => [key, value === void 0 ? defaultVars[key] : value],
+    );
+    return __spreadValues(
+      __spreadValues({}, defaultVars),
+      Object.fromEntries(varsWithDefaults),
+    );
   }
   watchQuery(options) {
     checkDocument(options.query, OperationTypeNode.QUERY);
     const query = this.transform(options.query);
     options = __spreadProps(__spreadValues({}, options), {
-      variables: this.getVariables(query, options.variables)
+      variables: this.getVariables(query, options.variables),
     });
     if (typeof options.notifyOnNetworkStatusChange === "undefined") {
       options.notifyOnNetworkStatusChange = true;
@@ -4355,29 +5180,35 @@ var QueryManager = class {
     const observable = new ObservableQuery({
       queryManager: this,
       options,
-      transformedQuery: query
+      transformedQuery: query,
     });
     return observable;
   }
   query(options) {
     const query = this.transform(options.query);
-    return this.fetchQuery(__spreadProps(__spreadValues({}, options), {
-      query
-    })).then((value) => __spreadProps(__spreadValues({}, value), {
-      data: this.maskOperation({
-        document: query,
-        data: value?.data,
-        fetchPolicy: options.fetchPolicy
-      })
-    }));
+    return this.fetchQuery(
+      __spreadProps(__spreadValues({}, options), {
+        query,
+      }),
+    ).then((value) =>
+      __spreadProps(__spreadValues({}, value), {
+        data: this.maskOperation({
+          document: query,
+          data: value?.data,
+          fetchPolicy: options.fetchPolicy,
+        }),
+      }),
+    );
   }
   requestIdCounter = 1;
   generateRequestId() {
     return this.requestIdCounter++;
   }
-  clearStore(options = {
-    discardWatches: true
-  }) {
+  clearStore(
+    options = {
+      discardWatches: true,
+    },
+  ) {
     this.cancelPendingFetches(newInvariantError(86));
     this.obsQueries.forEach((observableQuery) => {
       observableQuery.reset();
@@ -4412,16 +5243,21 @@ var QueryManager = class {
         queries.add(oq);
         return;
       }
-      const { queryName, options: { fetchPolicy } } = oq;
+      const {
+        queryName,
+        options: { fetchPolicy },
+      } = oq;
       if (include === "active" && fetchPolicy === "standby") {
         return;
       }
-      if (include === "active" || queryName && queryNamesAndQueryStrings.has(queryName) || document && queryNamesAndQueryStrings.has(document)) {
+      if (
+        include === "active" ||
+        (queryName && queryNamesAndQueryStrings.has(queryName)) ||
+        (document && queryNamesAndQueryStrings.has(document))
+      ) {
         queries.add(oq);
-        if (queryName)
-          queryNamesAndQueryStrings.set(queryName, true);
-        if (document)
-          queryNamesAndQueryStrings.set(document, true);
+        if (queryName) queryNamesAndQueryStrings.set(queryName, true);
+        if (document) queryNamesAndQueryStrings.set(document, true);
       }
     });
     if (legacyQueryOptions.size) {
@@ -4429,8 +5265,8 @@ var QueryManager = class {
         const oq = new ObservableQuery({
           queryManager: this,
           options: __spreadProps(__spreadValues({}, options), {
-            fetchPolicy: "network-only"
-          })
+            fetchPolicy: "network-only",
+          }),
         });
         queries.add(oq);
       });
@@ -4451,18 +5287,28 @@ var QueryManager = class {
   }
   refetchObservableQueries(includeStandby = false) {
     const observableQueryPromises = [];
-    this.getObservableQueries(includeStandby ? "all" : "active").forEach((observableQuery) => {
-      const { fetchPolicy } = observableQuery.options;
-      if ((includeStandby || fetchPolicy !== "standby") && fetchPolicy !== "cache-only") {
-        observableQueryPromises.push(observableQuery.refetch());
-      }
-    });
+    this.getObservableQueries(includeStandby ? "all" : "active").forEach(
+      (observableQuery) => {
+        const { fetchPolicy } = observableQuery.options;
+        if (
+          (includeStandby || fetchPolicy !== "standby") &&
+          fetchPolicy !== "cache-only"
+        ) {
+          observableQueryPromises.push(observableQuery.refetch());
+        }
+      },
+    );
     this.broadcastQueries();
     return Promise.all(observableQueryPromises);
   }
   startGraphQLSubscription(options) {
     let { query, variables } = options;
-    const { fetchPolicy, errorPolicy = "none", context = {}, extensions = {} } = options;
+    const {
+      fetchPolicy,
+      errorPolicy = "none",
+      context = {},
+      extensions = {},
+    } = options;
     checkDocument(query, OperationTypeNode.SUBSCRIPTION);
     query = this.transform(query);
     variables = this.getVariables(query, variables);
@@ -4471,80 +5317,102 @@ var QueryManager = class {
       invariant(
         !this.getDocumentInfo(query).hasClientExports || this.localState,
         89,
-        getOperationName(query, "(anonymous)")
+        getOperationName(query, "(anonymous)"),
       );
     }
-    const observable = (this.getDocumentInfo(query).hasClientExports ? from(this.localState.getExportedVariables({
-      client: this.client,
-      document: query,
-      variables,
-      context
-    })) : of(variables)).pipe(mergeMap((variables2) => {
-      const { observable: observable2, restart: res } = this.getObservableFromLink(query, context, variables2, extensions);
-      const queryInfo = new QueryInfo(this);
-      restart = res;
-      return observable2.pipe(map((rawResult) => {
-        queryInfo.markSubscriptionResult(rawResult, {
-          document: query,
-          variables: variables2,
-          errorPolicy,
-          cacheWriteBehavior: fetchPolicy === "no-cache" ? 0 : 2
-        });
-        const result = {
-          data: rawResult.data ?? void 0
-        };
-        if (graphQLResultHasError(rawResult)) {
-          result.error = new CombinedGraphQLErrors(rawResult);
-        } else if (graphQLResultHasProtocolErrors(rawResult)) {
-          result.error = rawResult.extensions[PROTOCOL_ERRORS_SYMBOL];
-          delete rawResult.extensions[PROTOCOL_ERRORS_SYMBOL];
-        }
-        if (rawResult.extensions && Object.keys(rawResult.extensions).length) {
-          result.extensions = rawResult.extensions;
-        }
-        if (result.error && errorPolicy === "none") {
-          result.data = void 0;
-        }
-        if (errorPolicy === "ignore") {
-          delete result.error;
-        }
-        return result;
-      }), catchError((error) => {
-        if (errorPolicy === "ignore") {
-          return of({
-            data: void 0
-          });
-        }
-        return of({ data: void 0, error });
-      }), filter((result) => !!(result.data || result.error)));
-    }));
+    const observable = (
+      this.getDocumentInfo(query).hasClientExports
+        ? from(
+            this.localState.getExportedVariables({
+              client: this.client,
+              document: query,
+              variables,
+              context,
+            }),
+          )
+        : of(variables)
+    ).pipe(
+      mergeMap((variables2) => {
+        const { observable: observable2, restart: res } =
+          this.getObservableFromLink(query, context, variables2, extensions);
+        const queryInfo = new QueryInfo(this);
+        restart = res;
+        return observable2.pipe(
+          map((rawResult) => {
+            queryInfo.markSubscriptionResult(rawResult, {
+              document: query,
+              variables: variables2,
+              errorPolicy,
+              cacheWriteBehavior: fetchPolicy === "no-cache" ? 0 : 2,
+            });
+            const result = {
+              data: rawResult.data ?? void 0,
+            };
+            if (graphQLResultHasError(rawResult)) {
+              result.error = new CombinedGraphQLErrors(rawResult);
+            } else if (graphQLResultHasProtocolErrors(rawResult)) {
+              result.error = rawResult.extensions[PROTOCOL_ERRORS_SYMBOL];
+              delete rawResult.extensions[PROTOCOL_ERRORS_SYMBOL];
+            }
+            if (
+              rawResult.extensions &&
+              Object.keys(rawResult.extensions).length
+            ) {
+              result.extensions = rawResult.extensions;
+            }
+            if (result.error && errorPolicy === "none") {
+              result.data = void 0;
+            }
+            if (errorPolicy === "ignore") {
+              delete result.error;
+            }
+            return result;
+          }),
+          catchError((error) => {
+            if (errorPolicy === "ignore") {
+              return of({
+                data: void 0,
+              });
+            }
+            return of({ data: void 0, error });
+          }),
+          filter((result) => !!(result.data || result.error)),
+        );
+      }),
+    );
     return Object.assign(observable, { restart: () => restart?.() });
   }
   broadcastQueries() {
-    if (this.onBroadcast)
-      this.onBroadcast();
+    if (this.onBroadcast) this.onBroadcast();
     this.obsQueries.forEach((observableQuery) => observableQuery.notify());
   }
   // Use protected instead of private field so
   // @apollo/experimental-nextjs-app-support can access type info.
   inFlightLinkObservables = new Trie(false);
-  getObservableFromLink(query, context, variables, extensions, deduplication = context?.queryDeduplication ?? this.queryDeduplication) {
+  getObservableFromLink(
+    query,
+    context,
+    variables,
+    extensions,
+    deduplication = context?.queryDeduplication ?? this.queryDeduplication,
+  ) {
     let entry = {};
-    const { serverQuery, clientQuery, operationType, hasIncrementalDirective } = this.getDocumentInfo(query);
+    const { serverQuery, clientQuery, operationType, hasIncrementalDirective } =
+      this.getDocumentInfo(query);
     const operationName = getOperationName(query);
     const executeContext = {
-      client: this.client
+      client: this.client,
     };
     if (serverQuery) {
       const { inFlightLinkObservables, link } = this;
       try {
-        let withRestart = function(source) {
+        let withRestart = function (source) {
           return new Observable((observer) => {
             function subscribe() {
               return source.subscribe({
                 next: observer.next.bind(observer),
                 complete: observer.complete.bind(observer),
-                error: observer.error.bind(observer)
+                error: observer.error.bind(observer),
               });
             }
             let subscription = subscribe();
@@ -4561,10 +5429,13 @@ var QueryManager = class {
         const operation = this.incrementalHandler.prepareRequest({
           query: serverQuery,
           variables,
-          context: __spreadProps(__spreadValues(__spreadValues({}, this.defaultContext), context), {
-            queryDeduplication: deduplication
-          }),
-          extensions
+          context: __spreadProps(
+            __spreadValues(__spreadValues({}, this.defaultContext), context),
+            {
+              queryDeduplication: deduplication,
+            },
+          ),
+          extensions,
         });
         context = operation.context;
         if (deduplication) {
@@ -4575,18 +5446,25 @@ var QueryManager = class {
             entry.observable = execute(link, operation, executeContext).pipe(
               withRestart,
               finalize(() => {
-                if (inFlightLinkObservables.peek(printedServerQuery, varJson) === entry) {
+                if (
+                  inFlightLinkObservables.peek(printedServerQuery, varJson) ===
+                  entry
+                ) {
                   inFlightLinkObservables.remove(printedServerQuery, varJson);
                 }
               }),
               // We don't want to replay the last emitted value for
               // subscriptions and instead opt to wait to receive updates until
               // the subscription emits new values.
-              operationType === OperationTypeNode.SUBSCRIPTION ? share() : shareReplay({ refCount: true })
+              operationType === OperationTypeNode.SUBSCRIPTION
+                ? share()
+                : shareReplay({ refCount: true }),
             );
           }
         } else {
-          entry.observable = execute(link, operation, executeContext).pipe(withRestart);
+          entry.observable = execute(link, operation, executeContext).pipe(
+            withRestart,
+          );
         }
       } catch (error) {
         entry.observable = throwError(() => error);
@@ -4601,110 +5479,145 @@ var QueryManager = class {
           this.localState,
           90,
           operation[0].toUpperCase() + operation.slice(1),
-          operationName ?? "(anonymous)"
+          operationName ?? "(anonymous)",
         );
       }
       invariant(
         !hasIncrementalDirective,
         91,
         operation[0].toUpperCase() + operation.slice(1),
-        operationName ?? "(anonymous)"
+        operationName ?? "(anonymous)",
       );
-      entry.observable = entry.observable.pipe(mergeMap((result) => {
-        return from(this.localState.execute({
-          client: this.client,
-          document: clientQuery,
-          remoteResult: result,
-          context,
-          variables
-        }));
-      }));
+      entry.observable = entry.observable.pipe(
+        mergeMap((result) => {
+          return from(
+            this.localState.execute({
+              client: this.client,
+              document: clientQuery,
+              remoteResult: result,
+              context,
+              variables,
+            }),
+          );
+        }),
+      );
     }
     return {
       restart: () => entry.restart?.(),
-      observable: entry.observable.pipe(catchError((error) => {
-        error = toErrorLike(error);
-        registerLinkError(error);
-        throw error;
-      }))
+      observable: entry.observable.pipe(
+        catchError((error) => {
+          error = toErrorLike(error);
+          registerLinkError(error);
+          throw error;
+        }),
+      ),
     };
   }
-  getResultsFromLink(options, { queryInfo, cacheWriteBehavior, observableQuery }) {
-    const requestId = queryInfo.lastRequestId = this.generateRequestId();
+  getResultsFromLink(
+    options,
+    { queryInfo, cacheWriteBehavior, observableQuery },
+  ) {
+    const requestId = (queryInfo.lastRequestId = this.generateRequestId());
     const { errorPolicy } = options;
     const linkDocument = this.cache.transformForLink(options.query);
-    return this.getObservableFromLink(linkDocument, options.context, options.variables).observable.pipe(map((incoming) => {
-      const result = queryInfo.markQueryResult(incoming, __spreadProps(__spreadValues({}, options), {
-        document: linkDocument,
-        cacheWriteBehavior
-      }));
-      const hasErrors = graphQLResultHasError(result);
-      if (hasErrors && errorPolicy === "none") {
-        queryInfo.resetLastWrite();
-        observableQuery?.["resetNotifications"]();
-        throw new CombinedGraphQLErrors(result);
-      }
-      const aqr = __spreadValues({
-        data: result.data
-      }, queryInfo.hasNext ? {
-        loading: true,
-        networkStatus: NetworkStatus.streaming,
-        dataState: "streaming",
-        partial: true
-      } : {
-        dataState: result.data ? "complete" : "empty",
-        loading: false,
-        networkStatus: NetworkStatus.ready,
-        partial: !result.data
-      });
-      if (hasErrors) {
-        if (errorPolicy === "none") {
-          aqr.data = void 0;
-          aqr.dataState = "empty";
+    return this.getObservableFromLink(
+      linkDocument,
+      options.context,
+      options.variables,
+    ).observable.pipe(
+      map((incoming) => {
+        const result = queryInfo.markQueryResult(
+          incoming,
+          __spreadProps(__spreadValues({}, options), {
+            document: linkDocument,
+            cacheWriteBehavior,
+          }),
+        );
+        const hasErrors = graphQLResultHasError(result);
+        if (hasErrors && errorPolicy === "none") {
+          queryInfo.resetLastWrite();
+          observableQuery?.["resetNotifications"]();
+          throw new CombinedGraphQLErrors(result);
         }
-        if (errorPolicy !== "ignore") {
-          aqr.error = new CombinedGraphQLErrors(result);
-          if (aqr.dataState !== "streaming") {
-            aqr.networkStatus = NetworkStatus.error;
+        const aqr = __spreadValues(
+          {
+            data: result.data,
+          },
+          queryInfo.hasNext
+            ? {
+                loading: true,
+                networkStatus: NetworkStatus.streaming,
+                dataState: "streaming",
+                partial: true,
+              }
+            : {
+                dataState: result.data ? "complete" : "empty",
+                loading: false,
+                networkStatus: NetworkStatus.ready,
+                partial: !result.data,
+              },
+        );
+        if (hasErrors) {
+          if (errorPolicy === "none") {
+            aqr.data = void 0;
+            aqr.dataState = "empty";
+          }
+          if (errorPolicy !== "ignore") {
+            aqr.error = new CombinedGraphQLErrors(result);
+            if (aqr.dataState !== "streaming") {
+              aqr.networkStatus = NetworkStatus.error;
+            }
           }
         }
-      }
-      return aqr;
-    }), catchError((error) => {
-      if (requestId >= queryInfo.lastRequestId && errorPolicy === "none") {
-        queryInfo.resetLastWrite();
-        observableQuery?.["resetNotifications"]();
-        throw error;
-      }
-      const aqr = {
-        data: void 0,
-        dataState: "empty",
-        loading: false,
-        networkStatus: NetworkStatus.ready,
-        partial: true
-      };
-      if (errorPolicy !== "ignore") {
-        aqr.error = error;
-        aqr.networkStatus = NetworkStatus.error;
-      }
-      return of(aqr);
-    }));
+        return aqr;
+      }),
+      catchError((error) => {
+        if (requestId >= queryInfo.lastRequestId && errorPolicy === "none") {
+          queryInfo.resetLastWrite();
+          observableQuery?.["resetNotifications"]();
+          throw error;
+        }
+        const aqr = {
+          data: void 0,
+          dataState: "empty",
+          loading: false,
+          networkStatus: NetworkStatus.ready,
+          partial: true,
+        };
+        if (errorPolicy !== "ignore") {
+          aqr.error = error;
+          aqr.networkStatus = NetworkStatus.error;
+        }
+        return of(aqr);
+      }),
+    );
   }
-  fetchObservableWithInfo(options, {
-    // The initial networkStatus for this fetch, most often
-    // NetworkStatus.loading, but also possibly fetchMore, poll, refetch,
-    // or setVariables.
-    networkStatus = NetworkStatus.loading,
-    query = options.query,
-    fetchQueryOperator = (x) => x,
-    onCacheHit = () => {
+  fetchObservableWithInfo(
+    options,
+    {
+      // The initial networkStatus for this fetch, most often
+      // NetworkStatus.loading, but also possibly fetchMore, poll, refetch,
+      // or setVariables.
+      networkStatus = NetworkStatus.loading,
+      query = options.query,
+      fetchQueryOperator = (x) => x,
+      onCacheHit = () => {},
+      observableQuery,
     },
-    observableQuery
-  }) {
+  ) {
     const variables = this.getVariables(query, options.variables);
     const defaults = this.defaultOptions.watchQuery;
-    let { fetchPolicy = defaults && defaults.fetchPolicy || "cache-first", errorPolicy = defaults && defaults.errorPolicy || "none", returnPartialData = false, notifyOnNetworkStatusChange = true, context = {} } = options;
-    if (this.prioritizeCacheValues && (fetchPolicy === "network-only" || fetchPolicy === "cache-and-network")) {
+    let {
+      fetchPolicy = (defaults && defaults.fetchPolicy) || "cache-first",
+      errorPolicy = (defaults && defaults.errorPolicy) || "none",
+      returnPartialData = false,
+      notifyOnNetworkStatusChange = true,
+      context = {},
+    } = options;
+    if (
+      this.prioritizeCacheValues &&
+      (fetchPolicy === "network-only" || fetchPolicy === "cache-and-network")
+    ) {
       fetchPolicy = "cache-first";
     }
     const normalized = Object.assign({}, options, {
@@ -4714,14 +5627,26 @@ var QueryManager = class {
       errorPolicy,
       returnPartialData,
       notifyOnNetworkStatusChange,
-      context
+      context,
     });
     const queryInfo = new QueryInfo(this, observableQuery);
     const fromVariables = (variables2) => {
       normalized.variables = variables2;
-      const cacheWriteBehavior = fetchPolicy === "no-cache" ? 0 : networkStatus === NetworkStatus.refetch && normalized.refetchWritePolicy !== "merge" ? 1 : 2;
-      const observableWithInfo = this.fetchQueryByPolicy(normalized, { queryInfo, cacheWriteBehavior, onCacheHit, observableQuery });
-      observableWithInfo.observable = observableWithInfo.observable.pipe(fetchQueryOperator);
+      const cacheWriteBehavior =
+        fetchPolicy === "no-cache"
+          ? 0
+          : networkStatus === NetworkStatus.refetch &&
+              normalized.refetchWritePolicy !== "merge"
+            ? 1
+            : 2;
+      const observableWithInfo = this.fetchQueryByPolicy(normalized, {
+        queryInfo,
+        cacheWriteBehavior,
+        onCacheHit,
+        observableQuery,
+      });
+      observableWithInfo.observable =
+        observableWithInfo.observable.pipe(fetchQueryOperator);
       if (
         // If we're in standby, postpone advancing options.fetchPolicy using
         // applyNextFetchPolicy.
@@ -4738,21 +5663,27 @@ var QueryManager = class {
       fetchCancelSubject.next({
         kind: "E",
         error,
-        source: "network"
+        source: "network",
       });
     });
     const fetchCancelSubject = new Subject();
     let observable, containsDataFromLink;
     if (this.getDocumentInfo(normalized.query).hasClientExports) {
       if (__DEV__) {
-        invariant(this.localState, 92, getOperationName(normalized.query, "(anonymous)"));
+        invariant(
+          this.localState,
+          92,
+          getOperationName(normalized.query, "(anonymous)"),
+        );
       }
-      observable = from(this.localState.getExportedVariables({
-        client: this.client,
-        document: normalized.query,
-        variables: normalized.variables,
-        context: normalized.context
-      })).pipe(mergeMap((variables2) => fromVariables(variables2).observable));
+      observable = from(
+        this.localState.getExportedVariables({
+          client: this.client,
+          document: normalized.query,
+          variables: normalized.variables,
+          context: normalized.context,
+        }),
+      ).pipe(mergeMap((variables2) => fromVariables(variables2).observable));
       containsDataFromLink = true;
     } else {
       const sourcesWithInfo = fromVariables(normalized.variables);
@@ -4767,10 +5698,16 @@ var QueryManager = class {
         observable.subscribe(observer);
         fetchCancelSubject.subscribe(observer);
       }).pipe(share()),
-      fromLink: containsDataFromLink
+      fromLink: containsDataFromLink,
     };
   }
-  refetchQueries({ updateCache, include, optimistic = false, removeOptimistic = optimistic ? makeUniqueId("refetchQueries") : void 0, onQueryUpdated }) {
+  refetchQueries({
+    updateCache,
+    include,
+    optimistic = false,
+    removeOptimistic = optimistic ? makeUniqueId("refetchQueries") : void 0,
+    onQueryUpdated,
+  }) {
     const includedQueriesByOq = /* @__PURE__ */ new Map();
     if (include) {
       this.getObservableQueries(include).forEach((oq) => {
@@ -4782,8 +5719,8 @@ var QueryManager = class {
           oq,
           lastDiff: {
             result: current?.data,
-            complete: !current?.partial
-          }
+            complete: !current?.partial,
+          },
         });
       });
     }
@@ -4821,7 +5758,7 @@ var QueryManager = class {
         // only the root layer by passing optimistic: false to refetchQueries,
         // or you can read/write a brand new optimistic layer that will be
         // automatically removed by passing optimistic: true.
-        optimistic: optimistic && removeOptimistic || false,
+        optimistic: (optimistic && removeOptimistic) || false,
         // The removeOptimistic option can also be provided by itself, even if
         // optimistic === false, to remove some previously-added optimistic
         // layer safely and efficiently, like we do in markMutationResult.
@@ -4838,20 +5775,25 @@ var QueryManager = class {
               includedQueriesByOq.delete(oq);
               let result = onQueryUpdated(oq, diff, lastDiff);
               if (result === true) {
-                result = oq.refetch().retain(
+                result = oq
+                  .refetch()
+                  .retain
                   /* create a persistent subscription on the query */
-                );
+                  ();
               }
               if (result !== false) {
                 results.set(oq, result);
               }
               return result;
             }
-            if (onQueryUpdated !== null && oq.options.fetchPolicy !== "cache-only") {
+            if (
+              onQueryUpdated !== null &&
+              oq.options.fetchPolicy !== "cache-only"
+            ) {
               includedQueriesByOq.set(oq, { oq, lastDiff, diff });
             }
           }
-        }
+        },
       });
     }
     if (includedQueriesByOq.size) {
@@ -4864,9 +5806,11 @@ var QueryManager = class {
           result = onQueryUpdated(oq, diff, lastDiff);
         }
         if (!onQueryUpdated || result === true) {
-          result = oq.refetch().retain(
+          result = oq
+            .refetch()
+            .retain
             /* create a persistent subscription on the query */
-          );
+            ();
         }
         if (result !== false) {
           results.set(oq, result);
@@ -4884,24 +5828,42 @@ var QueryManager = class {
     if (__DEV__) {
       const { fetchPolicy, cause = {} } = options;
       const operationType = getOperationDefinition(document)?.operation;
-      if (this.dataMasking && fetchPolicy === "no-cache" && !isFullyUnmaskedOperation(document) && !this.noCacheWarningsByCause.has(cause)) {
+      if (
+        this.dataMasking &&
+        fetchPolicy === "no-cache" &&
+        !isFullyUnmaskedOperation(document) &&
+        !this.noCacheWarningsByCause.has(cause)
+      ) {
         this.noCacheWarningsByCause.add(cause);
-        __DEV__ && invariant.warn(93, getOperationName(document, `Unnamed ${operationType ?? "operation"}`));
+        __DEV__ &&
+          invariant.warn(
+            93,
+            getOperationName(
+              document,
+              `Unnamed ${operationType ?? "operation"}`,
+            ),
+          );
       }
     }
     return this.dataMasking ? maskOperation(data, document, this.cache) : data;
   }
   maskFragment(options) {
     const { data, fragment, fragmentName } = options;
-    return this.dataMasking ? maskFragment(data, fragment, this.cache, fragmentName) : data;
+    return this.dataMasking
+      ? maskFragment(data, fragment, this.cache, fragmentName)
+      : data;
   }
-  fetchQueryByPolicy({ query, variables, fetchPolicy, errorPolicy, returnPartialData, context }, { cacheWriteBehavior, onCacheHit, queryInfo, observableQuery }) {
-    const readCache = () => this.cache.diff({
-      query,
-      variables,
-      returnPartialData: true,
-      optimistic: true
-    });
+  fetchQueryByPolicy(
+    { query, variables, fetchPolicy, errorPolicy, returnPartialData, context },
+    { cacheWriteBehavior, onCacheHit, queryInfo, observableQuery },
+  ) {
+    const readCache = () =>
+      this.cache.diff({
+        query,
+        variables,
+        returnPartialData: true,
+        optimistic: true,
+      });
     const resultsFromCache = (diff, networkStatus) => {
       const data = diff.result;
       if (__DEV__ && !returnPartialData && data !== null) {
@@ -4917,58 +5879,81 @@ var QueryManager = class {
           dataState: diff.complete ? "complete" : data2 ? "partial" : "empty",
           loading: isNetworkRequestInFlight(networkStatus),
           networkStatus,
-          partial: !diff.complete
+          partial: !diff.complete,
         };
       };
       const fromData = (data2) => {
         return of({
           kind: "N",
           value: toResult(data2),
-          source: "cache"
+          source: "cache",
         });
       };
       if (
         // Don't attempt to run forced resolvers if we have incomplete cache
         // data and partial isn't allowed since this result would get set to
         // `undefined` anyways in `toResult`.
-        (diff.complete || returnPartialData) && this.getDocumentInfo(query).hasForcedResolvers
+        (diff.complete || returnPartialData) &&
+        this.getDocumentInfo(query).hasForcedResolvers
       ) {
         if (__DEV__) {
-          invariant(this.localState, 94, getOperationName(query, "(anonymous)"));
+          invariant(
+            this.localState,
+            94,
+            getOperationName(query, "(anonymous)"),
+          );
         }
         onCacheHit();
-        return from(this.localState.execute({
-          client: this.client,
-          document: query,
-          remoteResult: data ? { data } : void 0,
-          context,
-          variables,
-          onlyRunForcedResolvers: true,
-          returnPartialData: true
-        }).then((resolved) => ({
-          kind: "N",
-          value: toResult(resolved.data || void 0),
-          source: "cache"
-        })));
+        return from(
+          this.localState
+            .execute({
+              client: this.client,
+              document: query,
+              remoteResult: data ? { data } : void 0,
+              context,
+              variables,
+              onlyRunForcedResolvers: true,
+              returnPartialData: true,
+            })
+            .then((resolved) => ({
+              kind: "N",
+              value: toResult(resolved.data || void 0),
+              source: "cache",
+            })),
+        );
       }
-      if (errorPolicy === "none" && networkStatus === NetworkStatus.refetch && diff.missing) {
+      if (
+        errorPolicy === "none" &&
+        networkStatus === NetworkStatus.refetch &&
+        diff.missing
+      ) {
         return fromData(void 0);
       }
       return fromData(data || void 0);
     };
-    const resultsFromLink = () => this.getResultsFromLink({
-      query,
-      variables,
-      context,
-      fetchPolicy,
-      errorPolicy
-    }, {
-      cacheWriteBehavior,
-      queryInfo,
-      observableQuery
-    }).pipe(validateDidEmitValue(), materialize(), map((result) => __spreadProps(__spreadValues({}, result), {
-      source: "network"
-    })));
+    const resultsFromLink = () =>
+      this.getResultsFromLink(
+        {
+          query,
+          variables,
+          context,
+          fetchPolicy,
+          errorPolicy,
+        },
+        {
+          cacheWriteBehavior,
+          queryInfo,
+          observableQuery,
+        },
+      ).pipe(
+        validateDidEmitValue(),
+        materialize(),
+        map((result) =>
+          __spreadProps(__spreadValues({}, result), {
+            source: "network",
+          }),
+        ),
+      );
     switch (fetchPolicy) {
       default:
       case "cache-first": {
@@ -4976,13 +5961,16 @@ var QueryManager = class {
         if (diff.complete) {
           return {
             fromLink: false,
-            observable: resultsFromCache(diff, NetworkStatus.ready)
+            observable: resultsFromCache(diff, NetworkStatus.ready),
           };
         }
         if (returnPartialData) {
           return {
             fromLink: true,
-            observable: concat(resultsFromCache(diff, NetworkStatus.loading), resultsFromLink())
+            observable: concat(
+              resultsFromCache(diff, NetworkStatus.loading),
+              resultsFromLink(),
+            ),
           };
         }
         return { fromLink: true, observable: resultsFromLink() };
@@ -4992,7 +5980,10 @@ var QueryManager = class {
         if (diff.complete || returnPartialData) {
           return {
             fromLink: true,
-            observable: concat(resultsFromCache(diff, NetworkStatus.loading), resultsFromLink())
+            observable: concat(
+              resultsFromCache(diff, NetworkStatus.loading),
+              resultsFromLink(),
+            ),
           };
         }
         return { fromLink: true, observable: resultsFromLink() };
@@ -5000,7 +5991,9 @@ var QueryManager = class {
       case "cache-only":
         return {
           fromLink: false,
-          observable: concat(resultsFromCache(readCache(), NetworkStatus.ready))
+          observable: concat(
+            resultsFromCache(readCache(), NetworkStatus.ready),
+          ),
         };
       case "network-only":
         return { fromLink: true, observable: resultsFromLink() };
@@ -5019,37 +6012,41 @@ function validateDidEmitValue() {
     },
     complete() {
       invariant(didEmitValue, 95);
-    }
+    },
   });
 }
 function isFullyUnmaskedOperation(document) {
   let isUnmasked = true;
   visit(document, {
     FragmentSpread: (node) => {
-      isUnmasked = !!node.directives && node.directives.some((directive) => directive.name.value === "unmask");
+      isUnmasked =
+        !!node.directives &&
+        node.directives.some((directive) => directive.name.value === "unmask");
       if (!isUnmasked) {
         return BREAK;
       }
-    }
+    },
   });
   return isUnmasked;
 }
 function addNonReactiveToNamedFragments(document) {
   return visit(document, {
     FragmentSpread: (node) => {
-      if (node.directives?.some((directive) => directive.name.value === "unmask")) {
+      if (
+        node.directives?.some((directive) => directive.name.value === "unmask")
+      ) {
         return;
       }
       return __spreadProps(__spreadValues({}, node), {
         directives: [
-          ...node.directives || [],
+          ...(node.directives || []),
           {
             kind: Kind.DIRECTIVE,
-            name: { kind: Kind.NAME, value: "nonreactive" }
-          }
-        ]
+            name: { kind: Kind.NAME, value: "nonreactive" },
+          },
+        ],
       });
-    }
+    },
   });
 }
 
@@ -5115,20 +6112,35 @@ var ApolloClient = class {
       invariant(options.cache, 65);
       invariant(options.link, 66);
     }
-    const { cache, documentTransform, ssrMode = false, ssrForceFetchDelay = 0, queryDeduplication = true, defaultOptions, defaultContext, assumeImmutableResults = cache.assumeImmutableResults, localState, devtools, dataMasking, link, incrementalHandler = new NotImplementedHandler() } = options;
+    const {
+      cache,
+      documentTransform,
+      ssrMode = false,
+      ssrForceFetchDelay = 0,
+      queryDeduplication = true,
+      defaultOptions,
+      defaultContext,
+      assumeImmutableResults = cache.assumeImmutableResults,
+      localState,
+      devtools,
+      dataMasking,
+      link,
+      incrementalHandler = new NotImplementedHandler(),
+    } = options;
     this.link = link;
     this.cache = cache;
     this.queryDeduplication = queryDeduplication;
     this.defaultOptions = defaultOptions || {};
     this.devtoolsConfig = __spreadProps(__spreadValues({}, devtools), {
-      enabled: devtools?.enabled ?? __DEV__
+      enabled: devtools?.enabled ?? __DEV__,
     });
     this.watchQuery = this.watchQuery.bind(this);
     this.query = this.query.bind(this);
     this.mutate = this.mutate.bind(this);
     this.watchFragment = this.watchFragment.bind(this);
     this.resetStore = this.resetStore.bind(this);
-    this.reFetchObservableQueries = this.refetchObservableQueries = this.refetchObservableQueries.bind(this);
+    this.reFetchObservableQueries = this.refetchObservableQueries =
+      this.refetchObservableQueries.bind(this);
     this.version = version;
     this.queryManager = new QueryManager({
       client: this,
@@ -5141,12 +6153,14 @@ var ApolloClient = class {
       clientOptions: options,
       incrementalHandler,
       assumeImmutableResults,
-      onBroadcast: this.devtoolsConfig.enabled ? () => {
-        if (this.devToolsHookCb) {
-          this.devToolsHookCb();
-        }
-      } : void 0,
-      localState
+      onBroadcast: this.devtoolsConfig.enabled
+        ? () => {
+            if (this.devToolsHookCb) {
+              this.devToolsHookCb();
+            }
+          }
+        : void 0,
+      localState,
     });
     this.prioritizeCacheValues = ssrMode || ssrForceFetchDelay > 0;
     if (ssrForceFetchDelay) {
@@ -5154,8 +6168,7 @@ var ApolloClient = class {
         this.prioritizeCacheValues = false;
       }, ssrForceFetchDelay);
     }
-    if (this.devtoolsConfig.enabled)
-      this.connectToDevTools();
+    if (this.devtoolsConfig.enabled) this.connectToDevTools();
   }
   connectToDevTools() {
     if (typeof window === "undefined") {
@@ -5163,11 +6176,16 @@ var ApolloClient = class {
     }
     const windowWithDevTools = window;
     const devtoolsSymbol = Symbol.for("apollo.devtools");
-    (windowWithDevTools[devtoolsSymbol] = windowWithDevTools[devtoolsSymbol] || []).push(this);
+    (windowWithDevTools[devtoolsSymbol] =
+      windowWithDevTools[devtoolsSymbol] || []).push(this);
     windowWithDevTools.__APOLLO_CLIENT__ = this;
     if (!hasSuggestedDevtools && __DEV__) {
       hasSuggestedDevtools = true;
-      if (window.document && window.top === window.self && /^(https?|file):$/.test(window.location.protocol)) {
+      if (
+        window.document &&
+        window.top === window.self &&
+        /^(https?|file):$/.test(window.location.protocol)
+      ) {
         setTimeout(() => {
           if (!window.__APOLLO_DEVTOOLS_GLOBAL_HOOK__) {
             const nav = window.navigator;
@@ -5175,13 +6193,19 @@ var ApolloClient = class {
             let url;
             if (typeof ua === "string") {
               if (ua.indexOf("Chrome/") > -1) {
-                url = "https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm";
+                url =
+                  "https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm";
               } else if (ua.indexOf("Firefox/") > -1) {
-                url = "https://addons.mozilla.org/en-US/firefox/addon/apollo-developer-tools/";
+                url =
+                  "https://addons.mozilla.org/en-US/firefox/addon/apollo-developer-tools/";
               }
             }
             if (url) {
-              __DEV__ && invariant.log("Download the Apollo DevTools for a better development experience: %s", url);
+              __DEV__ &&
+                invariant.log(
+                  "Download the Apollo DevTools for a better development experience: %s",
+                  url,
+                );
             }
           }
         }, 1e4);
@@ -5277,13 +6301,23 @@ var ApolloClient = class {
    * It takes options as an object with the following keys and values:
    */
   mutate(options) {
-    const optionsWithDefaults = mergeOptions(compact({
-      fetchPolicy: "network-only",
-      errorPolicy: "none"
-    }, this.defaultOptions.mutate), options);
+    const optionsWithDefaults = mergeOptions(
+      compact(
+        {
+          fetchPolicy: "network-only",
+          errorPolicy: "none",
+        },
+        this.defaultOptions.mutate,
+      ),
+      options,
+    );
     if (__DEV__) {
       invariant(optionsWithDefaults.mutation, 74);
-      invariant(optionsWithDefaults.fetchPolicy === "network-only" || optionsWithDefaults.fetchPolicy === "no-cache", 75);
+      invariant(
+        optionsWithDefaults.fetchPolicy === "network-only" ||
+          optionsWithDefaults.fetchPolicy === "no-cache",
+        75,
+      );
     }
     checkDocument(optionsWithDefaults.mutation, OperationTypeNode.MUTATION);
     return this.queryManager.mutate(optionsWithDefaults);
@@ -5295,18 +6329,27 @@ var ApolloClient = class {
   subscribe(options) {
     const cause = {};
     const observable = this.queryManager.startGraphQLSubscription(options);
-    const mapped = observable.pipe(map((result) => __spreadProps(__spreadValues({}, result), {
-      data: this.queryManager.maskOperation({
-        document: options.query,
-        data: result.data,
-        fetchPolicy: options.fetchPolicy,
-        cause
-      })
-    })));
+    const mapped = observable.pipe(
+      map((result) =>
+        __spreadProps(__spreadValues({}, result), {
+          data: this.queryManager.maskOperation({
+            document: options.query,
+            data: result.data,
+            fetchPolicy: options.fetchPolicy,
+            cause,
+          }),
+        }),
+      ),
+    );
     return Object.assign(mapped, { restart: observable.restart });
   }
   readQuery(options, optimistic = false) {
-    return this.cache.readQuery(__spreadProps(__spreadValues({}, options), { query: this.transform(options.query) }), optimistic);
+    return this.cache.readQuery(
+      __spreadProps(__spreadValues({}, options), {
+        query: this.transform(options.query),
+      }),
+      optimistic,
+    );
   }
   /**
    * Watches the cache store of the fragment according to the options specified
@@ -5326,22 +6369,35 @@ var ApolloClient = class {
    */
   watchFragment(options) {
     const dataMasking = this.queryManager.dataMasking;
-    return this.cache.watchFragment(__spreadProps(__spreadValues({}, options), {
-      fragment: this.transform(options.fragment, dataMasking)
-    })).pipe(map((result) => {
-      if (__DEV__) {
-        if (dataMasking) {
-          const data = this.queryManager.maskFragment(__spreadProps(__spreadValues({}, options), {
-            data: result.data
-          }));
-          return __spreadProps(__spreadValues({}, result), { data });
-        }
-      }
-      return result;
-    }));
+    return this.cache
+      .watchFragment(
+        __spreadProps(__spreadValues({}, options), {
+          fragment: this.transform(options.fragment, dataMasking),
+        }),
+      )
+      .pipe(
+        map((result) => {
+          if (__DEV__) {
+            if (dataMasking) {
+              const data = this.queryManager.maskFragment(
+                __spreadProps(__spreadValues({}, options), {
+                  data: result.data,
+                }),
+              );
+              return __spreadProps(__spreadValues({}, result), { data });
+            }
+          }
+          return result;
+        }),
+      );
   }
   readFragment(options, optimistic = false) {
-    return this.cache.readFragment(__spreadProps(__spreadValues({}, options), { fragment: this.transform(options.fragment) }), optimistic);
+    return this.cache.readFragment(
+      __spreadProps(__spreadValues({}, options), {
+        fragment: this.transform(options.fragment),
+      }),
+      optimistic,
+    );
   }
   /**
    * Writes some data in the shape of the provided GraphQL query directly to
@@ -5396,18 +6452,27 @@ var ApolloClient = class {
    * active queries.
    */
   resetStore() {
-    return Promise.resolve().then(() => this.queryManager.clearStore({
-      discardWatches: false
-    })).then(() => Promise.all(this.resetStoreCallbacks.map((fn) => fn()))).then(() => this.refetchObservableQueries());
+    return Promise.resolve()
+      .then(() =>
+        this.queryManager.clearStore({
+          discardWatches: false,
+        }),
+      )
+      .then(() => Promise.all(this.resetStoreCallbacks.map((fn) => fn())))
+      .then(() => this.refetchObservableQueries());
   }
   /**
    * Remove all data from the store. Unlike `resetStore`, `clearStore` will
    * not refetch any active queries.
    */
   clearStore() {
-    return Promise.resolve().then(() => this.queryManager.clearStore({
-      discardWatches: true
-    })).then(() => Promise.all(this.clearStoreCallbacks.map((fn) => fn())));
+    return Promise.resolve()
+      .then(() =>
+        this.queryManager.clearStore({
+          discardWatches: true,
+        }),
+      )
+      .then(() => Promise.all(this.clearStoreCallbacks.map((fn) => fn())));
   }
   /**
    * Allows callbacks to be registered that are executed when the store is
@@ -5417,7 +6482,9 @@ var ApolloClient = class {
   onResetStore(cb) {
     this.resetStoreCallbacks.push(cb);
     return () => {
-      this.resetStoreCallbacks = this.resetStoreCallbacks.filter((c) => c !== cb);
+      this.resetStoreCallbacks = this.resetStoreCallbacks.filter(
+        (c) => c !== cb,
+      );
     };
   }
   /**
@@ -5428,7 +6495,9 @@ var ApolloClient = class {
   onClearStore(cb) {
     this.clearStoreCallbacks.push(cb);
     return () => {
-      this.clearStoreCallbacks = this.clearStoreCallbacks.filter((c) => c !== cb);
+      this.clearStoreCallbacks = this.clearStoreCallbacks.filter(
+        (c) => c !== cb,
+      );
     };
   }
   /**
@@ -5544,7 +6613,9 @@ var ApolloClient = class {
   maskedFragmentTransform = new DocumentTransform(removeMaskedFragmentSpreads);
   transform(document, dataMasking = false) {
     const transformed = this.queryManager.transform(document);
-    return dataMasking ? this.maskedFragmentTransform.transformDocument(transformed) : transformed;
+    return dataMasking
+      ? this.maskedFragmentTransform.transformDocument(transformed)
+      : transformed;
   }
 };
 if (__DEV__) {
@@ -5565,17 +6636,24 @@ function cacheKeyFromLoc(loc) {
 function processFragments(ast) {
   var seenKeys = /* @__PURE__ */ new Set();
   var definitions = [];
-  ast.definitions.forEach(function(fragmentDefinition) {
+  ast.definitions.forEach(function (fragmentDefinition) {
     if (fragmentDefinition.kind === "FragmentDefinition") {
       var fragmentName = fragmentDefinition.name.value;
       var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
       var sourceKeySet = fragmentSourceMap.get(fragmentName);
       if (sourceKeySet && !sourceKeySet.has(sourceKey)) {
         if (printFragmentWarnings) {
-          console.warn("Warning: fragment with name " + fragmentName + " already exists.\ngraphql-tag enforces all fragment names across your application to be unique; read more about\nthis in the docs: http://dev.apollodata.com/core/fragments.html#unique-names");
+          console.warn(
+            "Warning: fragment with name " +
+              fragmentName +
+              " already exists.\ngraphql-tag enforces all fragment names across your application to be unique; read more about\nthis in the docs: http://dev.apollodata.com/core/fragments.html#unique-names",
+          );
         }
       } else if (!sourceKeySet) {
-        fragmentSourceMap.set(fragmentName, sourceKeySet = /* @__PURE__ */ new Set());
+        fragmentSourceMap.set(
+          fragmentName,
+          (sourceKeySet = /* @__PURE__ */ new Set()),
+        );
       }
       sourceKeySet.add(sourceKey);
       if (!seenKeys.has(sourceKey)) {
@@ -5590,10 +6668,9 @@ function processFragments(ast) {
 }
 function stripLoc(doc) {
   var workSet = new Set(doc.definitions);
-  workSet.forEach(function(node) {
-    if (node.loc)
-      delete node.loc;
-    Object.keys(node).forEach(function(key) {
+  workSet.forEach(function (node) {
+    if (node.loc) delete node.loc;
+    Object.keys(node).forEach(function (key) {
       var value = node[key];
       if (value && typeof value === "object") {
         workSet.add(value);
@@ -5612,7 +6689,7 @@ function parseDocument(source) {
   if (!docCache.has(cacheKey)) {
     var parsed = parse(source, {
       experimentalFragmentVariables,
-      allowLegacyFragmentVariables: experimentalFragmentVariables
+      allowLegacyFragmentVariables: experimentalFragmentVariables,
     });
     if (!parsed || parsed.kind !== "Document") {
       throw new Error("Not a valid GraphQL document.");
@@ -5630,7 +6707,7 @@ function gql(literals) {
     literals = [literals];
   }
   var result = literals[0];
-  args.forEach(function(arg, i) {
+  args.forEach(function (arg, i) {
     if (arg && arg.kind === "Document") {
       result += arg.loc.source.body;
     } else {
@@ -5658,10 +6735,16 @@ var extras = {
   resetCaches,
   disableFragmentWarnings,
   enableExperimentalFragmentVariables,
-  disableExperimentalFragmentVariables
+  disableExperimentalFragmentVariables,
 };
-(function(gql_1) {
-  gql_1.gql = extras.gql, gql_1.resetCaches = extras.resetCaches, gql_1.disableFragmentWarnings = extras.disableFragmentWarnings, gql_1.enableExperimentalFragmentVariables = extras.enableExperimentalFragmentVariables, gql_1.disableExperimentalFragmentVariables = extras.disableExperimentalFragmentVariables;
+(function (gql_1) {
+  ((gql_1.gql = extras.gql),
+    (gql_1.resetCaches = extras.resetCaches),
+    (gql_1.disableFragmentWarnings = extras.disableFragmentWarnings),
+    (gql_1.enableExperimentalFragmentVariables =
+      extras.enableExperimentalFragmentVariables),
+    (gql_1.disableExperimentalFragmentVariables =
+      extras.disableExperimentalFragmentVariables));
 })(gql || (gql = {}));
 gql["default"] = gql;
 
@@ -5678,6 +6761,6 @@ export {
   resetCaches,
   disableFragmentWarnings,
   enableExperimentalFragmentVariables,
-  disableExperimentalFragmentVariables
+  disableExperimentalFragmentVariables,
 };
 //# sourceMappingURL=chunk-77WSKPK6.js.map

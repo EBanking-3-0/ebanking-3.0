@@ -15,6 +15,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 Le JWT doit contenir :
+
 - `sub`: keycloakId unique
 - `email`: Email de l'utilisateur
 - `given_name`: Prénom (optionnel)
@@ -26,6 +27,7 @@ Le JWT doit contenir :
 ### 1. Récupérer le profil de l'utilisateur actuel
 
 **Endpoint:**
+
 ```
 GET /users/me
 ```
@@ -34,12 +36,14 @@ GET /users/me
 Récupère le profil complet de l'utilisateur actuellement authentifié.
 
 **Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 Content-Type: application/json
 ```
 
 **Réponse (200 OK):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -61,25 +65,28 @@ Content-Type: application/json
 ```
 
 **Erreurs:**
+
 - `401 Unauthorized`: JWT invalide ou expiré
 - `404 Not Found`: Utilisateur n'existe pas (pas de KYC soumis)
 
 **Exemple cURL:**
+
 ```bash
 curl -X GET http://localhost:8083/api/v1/users/me \
   -H "Authorization: Bearer {jwt_token}"
 ```
 
 **Exemple JavaScript:**
+
 ```javascript
-fetch('http://localhost:8083/api/v1/users/me', {
-  method: 'GET',
+fetch("http://localhost:8083/api/v1/users/me", {
+  method: "GET",
   headers: {
-    'Authorization': `Bearer ${jwtToken}`
-  }
+    Authorization: `Bearer ${jwtToken}`,
+  },
 })
-.then(response => response.json())
-.then(data => console.log(data))
+  .then((response) => response.json())
+  .then((data) => console.log(data));
 ```
 
 ---
@@ -87,6 +94,7 @@ fetch('http://localhost:8083/api/v1/users/me', {
 ### 2. Récupérer le profil d'un utilisateur spécifique
 
 **Endpoint:**
+
 ```
 GET /users/{userId}
 ```
@@ -101,11 +109,13 @@ Restreint: Admin ou propriétaire du compte.
 | userId | UUID | UUID de l'utilisateur |
 
 **Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 ```
 
 **Réponse (200 OK):**
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -118,6 +128,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Erreurs:**
+
 - `401 Unauthorized`: JWT invalide
 - `403 Forbidden`: Accès non autorisé
 - `404 Not Found`: Utilisateur non trouvé
@@ -127,6 +138,7 @@ Authorization: Bearer {jwt_token}
 ### 3. Supprimer le compte utilisateur
 
 **Endpoint:**
+
 ```
 DELETE /users/me
 ```
@@ -136,16 +148,19 @@ Supprime le compte de l'utilisateur actuel et toutes les données associées.
 **ATTENTION: Opération irréversible!**
 
 **Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 ```
 
 **Réponse (204 No Content):**
+
 ```
 (Pas de corps)
 ```
 
 **Erreurs:**
+
 - `401 Unauthorized`: JWT invalide
 - `404 Not Found`: Utilisateur non trouvé
 
@@ -156,6 +171,7 @@ Authorization: Bearer {jwt_token}
 ### 1. Soumettre une vérification KYC
 
 **Endpoint:**
+
 ```
 POST /kyc
 ```
@@ -165,12 +181,14 @@ Soumet une vérification KYC pour l'utilisateur actuel.
 Crée l'utilisateur à partir du JWT Keycloak s'il n'existe pas.
 
 **Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 Content-Type: application/json
 ```
 
 **Body (JSON):**
+
 ```json
 {
   "firstName": "John",
@@ -193,6 +211,7 @@ Content-Type: application/json
 ```
 
 **Validation:**
+
 ```
 - firstName: obligatoire, non vide
 - lastName: obligatoire, non vide
@@ -206,6 +225,7 @@ Content-Type: application/json
 ```
 
 **Réponse (201 Created):**
+
 ```json
 {
   "id": "kyc-123-uuid",
@@ -222,12 +242,14 @@ Content-Type: application/json
 ```
 
 **Erreurs:**
+
 - `400 Bad Request`: Validation échouée
 - `401 Unauthorized`: JWT invalide
 - `409 Conflict`: KYC déjà soumise et en attente
 - `500 Internal Server Error`: Erreur lors du traitement
 
 **Exemple cURL:**
+
 ```bash
 curl -X POST http://localhost:8083/api/v1/kyc \
   -H "Authorization: Bearer {jwt_token}" \
@@ -251,6 +273,7 @@ curl -X POST http://localhost:8083/api/v1/kyc \
 ```
 
 **Exemple JavaScript:**
+
 ```javascript
 const kycData = {
   firstName: "John",
@@ -266,21 +289,21 @@ const kycData = {
   gdprConsents: {
     MARKETING: true,
     DATA_PROCESSING: true,
-    THIRD_PARTY: false
-  }
+    THIRD_PARTY: false,
+  },
 };
 
-fetch('http://localhost:8083/api/v1/kyc', {
-  method: 'POST',
+fetch("http://localhost:8083/api/v1/kyc", {
+  method: "POST",
   headers: {
-    'Authorization': `Bearer ${jwtToken}`,
-    'Content-Type': 'application/json'
+    Authorization: `Bearer ${jwtToken}`,
+    "Content-Type": "application/json",
   },
-  body: JSON.stringify(kycData)
+  body: JSON.stringify(kycData),
 })
-.then(response => response.json())
-.then(data => console.log('KYC soumise:', data))
-.catch(error => console.error('Erreur:', error));
+  .then((response) => response.json())
+  .then((data) => console.log("KYC soumise:", data))
+  .catch((error) => console.error("Erreur:", error));
 ```
 
 ---
@@ -288,6 +311,7 @@ fetch('http://localhost:8083/api/v1/kyc', {
 ### 2. Récupérer le statut KYC
 
 **Endpoint:**
+
 ```
 GET /kyc/status
 ```
@@ -296,11 +320,13 @@ GET /kyc/status
 Récupère le statut actuel de la vérification KYC de l'utilisateur.
 
 **Headers:**
+
 ```
 Authorization: Bearer {jwt_token}
 ```
 
 **Réponse (200 OK):**
+
 ```json
 {
   "id": "kyc-123-uuid",
@@ -317,16 +343,19 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Statuts possibles:**
+
 - `PENDING_REVIEW`: En attente de révision manuelle
 - `VERIFIED`: KYC approuvée et vérifiée
 - `REJECTED`: KYC rejetée
 - `MORE_INFO_NEEDED`: Informations supplémentaires requises
 
 **Erreurs:**
+
 - `401 Unauthorized`: JWT invalide
 - `404 Not Found`: Utilisateur ou KYC non trouvés
 
 **Exemple cURL:**
+
 ```bash
 curl -X GET http://localhost:8083/api/v1/kyc/status \
   -H "Authorization: Bearer {jwt_token}"
@@ -336,17 +365,17 @@ curl -X GET http://localhost:8083/api/v1/kyc/status \
 
 ## Codes d'erreur HTTP
 
-| Code | Signification | Cause |
-|------|---------------|-------|
-| 200 | OK | Requête réussie |
-| 201 | Created | Ressource créée avec succès |
-| 204 | No Content | Opération réussie, pas de contenu |
-| 400 | Bad Request | Validation échouée ou paramètres invalides |
-| 401 | Unauthorized | JWT manquant ou invalide |
-| 403 | Forbidden | Accès refusé (permissions insuffisantes) |
-| 404 | Not Found | Ressource non trouvée |
-| 409 | Conflict | Conflit (ex: KYC déjà soumise) |
-| 500 | Internal Server Error | Erreur serveur |
+| Code | Signification         | Cause                                      |
+| ---- | --------------------- | ------------------------------------------ |
+| 200  | OK                    | Requête réussie                            |
+| 201  | Created               | Ressource créée avec succès                |
+| 204  | No Content            | Opération réussie, pas de contenu          |
+| 400  | Bad Request           | Validation échouée ou paramètres invalides |
+| 401  | Unauthorized          | JWT manquant ou invalide                   |
+| 403  | Forbidden             | Accès refusé (permissions insuffisantes)   |
+| 404  | Not Found             | Ressource non trouvée                      |
+| 409  | Conflict              | Conflit (ex: KYC déjà soumise)             |
+| 500  | Internal Server Error | Erreur serveur                             |
 
 ## Formats de données
 
@@ -360,18 +389,19 @@ data:image/jpeg;base64,/9j/4AAQSkZJRg...
 ```
 
 Exemple JavaScript pour convertir :
+
 ```javascript
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 }
 
 // Utilisation
-const cinFile = document.getElementById('cinInput').files[0];
+const cinFile = document.getElementById("cinInput").files[0];
 const base64 = await fileToBase64(cinFile);
 // base64 = "data:image/png;base64,iVBORw0KGgoAAAANS..."
 ```
@@ -379,6 +409,7 @@ const base64 = await fileToBase64(cinFile);
 ### Format de date/heure
 
 Toutes les dates utilisent le format ISO 8601 :
+
 ```
 2024-01-20T14:30:00
 ```
@@ -428,51 +459,51 @@ Topic: user.events
 ```javascript
 async function submitKYC(jwtToken) {
   // 1. Convertir les images
-  const cinFile = document.getElementById('cin').files[0];
-  const selfieFile = document.getElementById('selfie').files[0];
-  
+  const cinFile = document.getElementById("cin").files[0];
+  const selfieFile = document.getElementById("selfie").files[0];
+
   const cinBase64 = await fileToBase64(cinFile);
   const selfieBase64 = await fileToBase64(selfieFile);
-  
+
   // 2. Soumettre KYC
-  const kycResponse = await fetch('/api/v1/kyc', {
-    method: 'POST',
+  const kycResponse = await fetch("/api/v1/kyc", {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${jwtToken}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${jwtToken}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '+216 50 123 456',
-      cinNumber: '12345678',
-      addressLine1: '123 Rue de la Paix',
-      city: 'Tunis',
-      postalCode: '1000',
-      country: 'Tunisia',
+      firstName: "John",
+      lastName: "Doe",
+      phone: "+216 50 123 456",
+      cinNumber: "12345678",
+      addressLine1: "123 Rue de la Paix",
+      city: "Tunis",
+      postalCode: "1000",
+      country: "Tunisia",
       cinImageBase64: cinBase64,
       selfieImageBase64: selfieBase64,
       gdprConsents: {
         MARKETING: true,
         DATA_PROCESSING: true,
-        THIRD_PARTY: false
-      }
-    })
+        THIRD_PARTY: false,
+      },
+    }),
   });
-  
+
   if (kycResponse.status === 201) {
     const kyc = await kycResponse.json();
-    console.log('KYC soumise:', kyc);
-    
+    console.log("KYC soumise:", kyc);
+
     // 3. Récupérer le statut
-    const statusResponse = await fetch('/api/v1/kyc/status', {
+    const statusResponse = await fetch("/api/v1/kyc/status", {
       headers: {
-        'Authorization': `Bearer ${jwtToken}`
-      }
+        Authorization: `Bearer ${jwtToken}`,
+      },
     });
-    
+
     const status = await statusResponse.json();
-    console.log('Statut KYC:', status.status); // PENDING_REVIEW
+    console.log("Statut KYC:", status.status); // PENDING_REVIEW
   }
 }
 
@@ -481,7 +512,7 @@ function fileToBase64(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 }
 ```
@@ -490,19 +521,19 @@ function fileToBase64(file) {
 
 ```javascript
 async function getProfile(jwtToken) {
-  const response = await fetch('/api/v1/users/me', {
+  const response = await fetch("/api/v1/users/me", {
     headers: {
-      'Authorization': `Bearer ${jwtToken}`
-    }
+      Authorization: `Bearer ${jwtToken}`,
+    },
   });
-  
+
   if (response.ok) {
     const profile = await response.json();
-    console.log('Prénom:', profile.firstName);
-    console.log('Statut utilisateur:', profile.status);
-    console.log('Statut KYC:', profile.kycStatus);
+    console.log("Prénom:", profile.firstName);
+    console.log("Statut utilisateur:", profile.status);
+    console.log("Statut KYC:", profile.kycStatus);
   } else if (response.status === 404) {
-    console.log('Utilisateur n\'existe pas (pas de KYC soumis)');
+    console.log("Utilisateur n'existe pas (pas de KYC soumis)");
   }
 }
 ```
@@ -510,7 +541,7 @@ async function getProfile(jwtToken) {
 ## Support et documentation
 
 Pour plus d'informations :
+
 - API Docs: `http://localhost:8083/swagger-ui.html`
 - Architecture: Voir `ARCHITECTURE.md`
 - Guide développement: Voir `DEVELOPMENT_GUIDE.md`
-

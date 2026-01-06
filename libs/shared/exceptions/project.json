@@ -9,10 +9,7 @@
       "executor": "@nx/gradle:gradle",
       "options": {
         "taskName": ":libs:shared:exceptions:build",
-        "args": [
-          "-x",
-          "test"
-        ]
+        "args": ["-x", "test"]
       },
       "configurations": {
         "production": {},

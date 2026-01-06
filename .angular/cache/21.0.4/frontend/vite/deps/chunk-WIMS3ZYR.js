@@ -16,11 +16,9 @@ import {
   maybe,
   print,
   registerGlobalCache,
-  visit
+  visit,
 } from "./chunk-6KBCFBRM.js";
-import {
-  Observable
-} from "./chunk-NLOMSAMV.js";
+import { Observable } from "./chunk-NLOMSAMV.js";
 import {
   __async,
   __asyncGenerator,
@@ -28,94 +26,93 @@ import {
   __forAwait,
   __objRest,
   __spreadProps,
-  __spreadValues
+  __spreadValues,
 } from "./chunk-OC4HWNDI.js";
 
 // node_modules/@wry/context/lib/slot.js
 var currentContext = null;
 var MISSING_VALUE = {};
 var idCounter = 1;
-var makeSlotClass = () => class Slot {
-  constructor() {
-    this.id = [
-      "slot",
-      idCounter++,
-      Date.now(),
-      Math.random().toString(36).slice(2)
-    ].join(":");
-  }
-  hasValue() {
-    for (let context = currentContext; context; context = context.parent) {
-      if (this.id in context.slots) {
-        const value = context.slots[this.id];
-        if (value === MISSING_VALUE)
-          break;
-        if (context !== currentContext) {
-          currentContext.slots[this.id] = value;
+var makeSlotClass = () =>
+  class Slot {
+    constructor() {
+      this.id = [
+        "slot",
+        idCounter++,
+        Date.now(),
+        Math.random().toString(36).slice(2),
+      ].join(":");
+    }
+    hasValue() {
+      for (let context = currentContext; context; context = context.parent) {
+        if (this.id in context.slots) {
+          const value = context.slots[this.id];
+          if (value === MISSING_VALUE) break;
+          if (context !== currentContext) {
+            currentContext.slots[this.id] = value;
+          }
+          return true;
         }
-        return true;
+      }
+      if (currentContext) {
+        currentContext.slots[this.id] = MISSING_VALUE;
+      }
+      return false;
+    }
+    getValue() {
+      if (this.hasValue()) {
+        return currentContext.slots[this.id];
       }
     }
-    if (currentContext) {
-      currentContext.slots[this.id] = MISSING_VALUE;
-    }
-    return false;
-  }
-  getValue() {
-    if (this.hasValue()) {
-      return currentContext.slots[this.id];
-    }
-  }
-  withValue(value, callback, args, thisArg) {
-    const slots = {
-      __proto__: null,
-      [this.id]: value
-    };
-    const parent = currentContext;
-    currentContext = { parent, slots };
-    try {
-      return callback.apply(thisArg, args);
-    } finally {
-      currentContext = parent;
-    }
-  }
-  // Capture the current context and wrap a callback function so that it
-  // reestablishes the captured context when called.
-  static bind(callback) {
-    const context = currentContext;
-    return function() {
-      const saved = currentContext;
+    withValue(value, callback, args, thisArg) {
+      const slots = {
+        __proto__: null,
+        [this.id]: value,
+      };
+      const parent = currentContext;
+      currentContext = { parent, slots };
       try {
-        currentContext = context;
-        return callback.apply(this, arguments);
-      } finally {
-        currentContext = saved;
-      }
-    };
-  }
-  // Immediately run a callback function without any captured context.
-  static noContext(callback, args, thisArg) {
-    if (currentContext) {
-      const saved = currentContext;
-      try {
-        currentContext = null;
         return callback.apply(thisArg, args);
       } finally {
-        currentContext = saved;
+        currentContext = parent;
       }
-    } else {
-      return callback.apply(thisArg, args);
     }
-  }
-};
+    // Capture the current context and wrap a callback function so that it
+    // reestablishes the captured context when called.
+    static bind(callback) {
+      const context = currentContext;
+      return function () {
+        const saved = currentContext;
+        try {
+          currentContext = context;
+          return callback.apply(this, arguments);
+        } finally {
+          currentContext = saved;
+        }
+      };
+    }
+    // Immediately run a callback function without any captured context.
+    static noContext(callback, args, thisArg) {
+      if (currentContext) {
+        const saved = currentContext;
+        try {
+          currentContext = null;
+          return callback.apply(thisArg, args);
+        } finally {
+          currentContext = saved;
+        }
+      } else {
+        return callback.apply(thisArg, args);
+      }
+    }
+  };
 function maybe2(fn) {
   try {
     return fn();
-  } catch (ignored) {
-  }
+  } catch (ignored) {}
 }
 var globalKey = "@wry/context:Slot";
-var host = (
+var host =
   // Prefer globalThis when available.
   // https://github.com/benjamn/wryware/issues/347
   maybe2(() => globalThis) || // Fall back to global, which works in Node.js and may be converted by some
@@ -124,29 +121,30 @@ var host = (
   maybe2(() => global) || // Otherwise, use a dummy host that's local to this module. We used to fall
   // back to using the Array constructor as a namespace, but that was flagged in
   // https://github.com/benjamn/wryware/issues/347, and can be avoided.
-  /* @__PURE__ */ Object.create(null)
-);
+  /* @__PURE__ */ Object.create(null);
 var globalHost = host;
-var Slot = globalHost[globalKey] || // Earlier versions of this package stored the globalKey property on the Array
-// constructor, so we check there as well, to prevent Slot class duplication.
-Array[globalKey] || (function(Slot2) {
-  try {
-    Object.defineProperty(globalHost, globalKey, {
-      value: Slot2,
-      enumerable: false,
-      writable: false,
-      // When it was possible for globalHost to be the Array constructor (a
-      // legacy Slot dedup strategy), it was important for the property to be
-      // configurable:true so it could be deleted. That does not seem to be as
-      // important when globalHost is the global object, but I don't want to
-      // cause similar problems again, and configurable:true seems safest.
-      // https://github.com/endojs/endo/issues/576#issuecomment-1178274008
-      configurable: true
-    });
-  } finally {
-    return Slot2;
-  }
-})(makeSlotClass());
+var Slot =
+  globalHost[globalKey] || // Earlier versions of this package stored the globalKey property on the Array
+  // constructor, so we check there as well, to prevent Slot class duplication.
+  Array[globalKey] ||
+  (function (Slot2) {
+    try {
+      Object.defineProperty(globalHost, globalKey, {
+        value: Slot2,
+        enumerable: false,
+        writable: false,
+        // When it was possible for globalHost to be the Array constructor (a
+        // legacy Slot dedup strategy), it was important for the property to be
+        // configurable:true so it could be deleted. That does not seem to be as
+        // important when globalHost is the global object, but I don't want to
+        // cause similar problems again, and configurable:true seems safest.
+        // https://github.com/endojs/endo/issues/576#issuecomment-1178274008
+        configurable: true,
+      });
+    } finally {
+      return Slot2;
+    }
+  })(makeSlotClass());
 
 // node_modules/@wry/context/lib/index.js
 var { bind, noContext } = Slot;
@@ -156,11 +154,13 @@ var parentEntrySlot = new Slot();
 
 // node_modules/optimism/lib/helpers.js
 var { hasOwnProperty } = Object.prototype;
-var arrayFromSet = Array.from || function(set) {
-  const array = [];
-  set.forEach((item) => array.push(item));
-  return array;
-};
+var arrayFromSet =
+  Array.from ||
+  function (set) {
+    const array = [];
+    set.forEach((item) => array.push(item));
+    return array;
+  };
 function maybeUnsubscribe(entryOrDep) {
   const { unsubscribe } = entryOrDep;
   if (typeof unsubscribe === "function") {
@@ -226,11 +226,12 @@ var Entry = class _Entry {
   recompute(args) {
     assert(!this.recomputing, "already recomputing");
     rememberParent(this);
-    return mightBeDirty(this) ? reallyRecompute(this, args) : valueGet(this.value);
+    return mightBeDirty(this)
+      ? reallyRecompute(this, args)
+      : valueGet(this.value);
   }
   setDirty() {
-    if (this.dirty)
-      return;
+    if (this.dirty) return;
     this.dirty = true;
     reportDirty(this);
     maybeUnsubscribe(this);
@@ -296,11 +297,14 @@ function recomputeNewValue(entry, args) {
   entry.value.length = 0;
   try {
     entry.value[0] = entry.fn.apply(null, args);
-    if (normalizeResult && oldValueCopy && !valueIs(oldValueCopy, entry.value)) {
+    if (
+      normalizeResult &&
+      oldValueCopy &&
+      !valueIs(oldValueCopy, entry.value)
+    ) {
       try {
         entry.value[0] = normalizeResult(entry.value[0], oldValueCopy[0]);
-      } catch (_a) {
-      }
+      } catch (_a) {}
     }
   } catch (e) {
     entry.value[1] = e;
@@ -404,7 +408,7 @@ function maybeSubscribe(entry, args) {
 var EntryMethods = {
   setDirty: true,
   dispose: true,
-  forget: true
+  forget: true,
   // Fully remove parent Entry from LRU cache and computation graph
 };
 function dep(options) {
@@ -415,7 +419,7 @@ function dep(options) {
     if (parent) {
       let dep2 = depsByKey.get(key);
       if (!dep2) {
-        depsByKey.set(key, dep2 = /* @__PURE__ */ new Set());
+        depsByKey.set(key, (dep2 = /* @__PURE__ */ new Set()));
       }
       parent.dependOn(dep2);
       if (typeof subscribe === "function") {
@@ -427,7 +431,10 @@ function dep(options) {
   depend.dirty = function dirty(key, entryMethodName) {
     const dep2 = depsByKey.get(key);
     if (dep2) {
-      const m = entryMethodName && hasOwnProperty.call(EntryMethods, entryMethodName) ? entryMethodName : "setDirty";
+      const m =
+        entryMethodName && hasOwnProperty.call(EntryMethods, entryMethodName)
+          ? entryMethodName
+          : "setDirty";
       arrayFromSet(dep2).forEach((entry) => entry[m]());
       depsByKey.delete(key);
       maybeUnsubscribe(dep2);
@@ -439,20 +446,38 @@ function dep(options) {
 // node_modules/optimism/lib/index.js
 var defaultKeyTrie;
 function defaultMakeCacheKey(...args) {
-  const trie = defaultKeyTrie || (defaultKeyTrie = new Trie(typeof WeakMap === "function"));
+  const trie =
+    defaultKeyTrie ||
+    (defaultKeyTrie = new Trie(typeof WeakMap === "function"));
   return trie.lookupArray(args);
 }
 var caches = /* @__PURE__ */ new Set();
-function wrap(originalFunction, { max = Math.pow(2, 16), keyArgs, makeCacheKey = defaultMakeCacheKey, normalizeResult, subscribe, cache: cacheOption = StrongCache } = /* @__PURE__ */ Object.create(null)) {
-  const cache = typeof cacheOption === "function" ? new cacheOption(max, (entry) => entry.dispose()) : cacheOption;
-  const optimistic = function() {
-    const key = makeCacheKey.apply(null, keyArgs ? keyArgs.apply(null, arguments) : arguments);
+function wrap(
+  originalFunction,
+  {
+    max = Math.pow(2, 16),
+    keyArgs,
+    makeCacheKey = defaultMakeCacheKey,
+    normalizeResult,
+    subscribe,
+    cache: cacheOption = StrongCache,
+  } = /* @__PURE__ */ Object.create(null),
+) {
+  const cache =
+    typeof cacheOption === "function"
+      ? new cacheOption(max, (entry) => entry.dispose())
+      : cacheOption;
+  const optimistic = function () {
+    const key = makeCacheKey.apply(
+      null,
+      keyArgs ? keyArgs.apply(null, arguments) : arguments,
+    );
     if (key === void 0) {
       return originalFunction.apply(null, arguments);
     }
     let entry = cache.get(key);
     if (!entry) {
-      cache.set(key, entry = new Entry(originalFunction));
+      cache.set(key, (entry = new Entry(originalFunction)));
       entry.normalizeResult = normalizeResult;
       entry.subscribe = subscribe;
       entry.forget = () => cache.delete(key);
@@ -469,16 +494,18 @@ function wrap(originalFunction, { max = Math.pow(2, 16), keyArgs, makeCacheKey =
   Object.defineProperty(optimistic, "size", {
     get: () => cache.size,
     configurable: false,
-    enumerable: false
+    enumerable: false,
   });
-  Object.freeze(optimistic.options = {
-    max,
-    keyArgs,
-    makeCacheKey,
-    normalizeResult,
-    subscribe,
-    cache
-  });
+  Object.freeze(
+    (optimistic.options = {
+      max,
+      keyArgs,
+      makeCacheKey,
+      normalizeResult,
+      subscribe,
+      cache,
+    }),
+  );
   function dirtyKey(key) {
     const entry = key && cache.get(key);
     if (entry) {
@@ -507,9 +534,11 @@ function wrap(originalFunction, { max = Math.pow(2, 16), keyArgs, makeCacheKey =
     return forgetKey(makeCacheKey.apply(null, arguments));
   };
   optimistic.makeCacheKey = makeCacheKey;
-  optimistic.getKey = keyArgs ? function getKey() {
-    return makeCacheKey.apply(null, keyArgs.apply(null, arguments));
-  } : makeCacheKey;
+  optimistic.getKey = keyArgs
+    ? function getKey() {
+        return makeCacheKey.apply(null, keyArgs.apply(null, arguments));
+      }
+    : makeCacheKey;
   return Object.freeze(optimistic);
 }
 
@@ -558,14 +587,17 @@ var DocumentTransform = class _DocumentTransform {
    * ```
    */
   static split(predicate, left, right = _DocumentTransform.identity()) {
-    return Object.assign(new _DocumentTransform(
-      (document) => {
-        const documentTransform = predicate(document) ? left : right;
-        return documentTransform.transformDocument(document);
-      },
-      // Reasonably assume both `left` and `right` transforms handle their own caching
-      { cache: false }
-    ), { left, right });
+    return Object.assign(
+      new _DocumentTransform(
+        (document) => {
+          const documentTransform = predicate(document) ? left : right;
+          return documentTransform.transformDocument(document);
+        },
+        // Reasonably assume both `left` and `right` transforms handle their own caching
+        { cache: false },
+      ),
+      { left, right },
+    );
   }
   constructor(transform, options = {}) {
     this.transform = transform;
@@ -581,17 +613,20 @@ var DocumentTransform = class _DocumentTransform {
   resetCache() {
     if (this.cached) {
       const stableCacheKeys = new Trie();
-      this.performWork = wrap(_DocumentTransform.prototype.performWork.bind(this), {
-        makeCacheKey: (document) => {
-          const cacheKeys = this.getCacheKey(document);
-          if (cacheKeys) {
-            invariant(Array.isArray(cacheKeys), 20);
-            return stableCacheKeys.lookupArray(cacheKeys);
-          }
+      this.performWork = wrap(
+        _DocumentTransform.prototype.performWork.bind(this),
+        {
+          makeCacheKey: (document) => {
+            const cacheKeys = this.getCacheKey(document);
+            if (cacheKeys) {
+              invariant(Array.isArray(cacheKeys), 20);
+              return stableCacheKeys.lookupArray(cacheKeys);
+            }
+          },
+          max: cacheSizes["documentTransform.cache"],
+          cache: WeakCache,
         },
-        max: cacheSizes["documentTransform.cache"],
-        cache: WeakCache
-      });
+      );
     }
   }
   performWork(document) {
@@ -646,36 +681,43 @@ var DocumentTransform = class _DocumentTransform {
    * ```
    */
   concat(otherTransform) {
-    return Object.assign(new _DocumentTransform(
-      (document) => {
-        return otherTransform.transformDocument(this.transformDocument(document));
+    return Object.assign(
+      new _DocumentTransform(
+        (document) => {
+          return otherTransform.transformDocument(
+            this.transformDocument(document),
+          );
+        },
+        // Reasonably assume both transforms handle their own caching
+        { cache: false },
+      ),
+      {
+        left: this,
+        right: otherTransform,
       },
-      // Reasonably assume both transforms handle their own caching
-      { cache: false }
-    ), {
-      left: this,
-      right: otherTransform
-    });
+    );
   }
   /**
-  * @internal
-  * Used to iterate through all transforms that are concatenations or `split` links.
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   * Used to iterate through all transforms that are concatenations or `split` links.
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   left;
   /**
-  * @internal
-  * Used to iterate through all transforms that are concatenations or `split` links.
-  * 
-  * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
-  */
+   * @internal
+   * Used to iterate through all transforms that are concatenations or `split` links.
+   *
+   * @deprecated This is an internal API and should not be used directly. This can be removed or changed at any time.
+   */
   right;
 };
 
 // node_modules/@apollo/client/utilities/graphql/storeUtils.js
 function isReference(obj) {
-  return Boolean(obj && typeof obj === "object" && typeof obj.__ref === "string");
+  return Boolean(
+    obj && typeof obj === "object" && typeof obj.__ref === "string",
+  );
 }
 
 // node_modules/@apollo/client/utilities/isNetworkRequestSettled.js
@@ -685,24 +727,27 @@ function isNetworkRequestSettled(networkStatus) {
 
 // node_modules/@apollo/client/utilities/graphql/print.js
 var printCache;
-var print2 = Object.assign((ast) => {
-  let result = printCache.get(ast);
-  if (!result) {
-    result = print(ast);
-    printCache.set(ast, result);
-  }
-  return result;
-}, {
-  reset() {
-    printCache = new AutoCleanedWeakCache(
-      cacheSizes.print || 2e3
-      /* defaultCacheSizes.print */
-    );
-  }
-});
+var print2 = Object.assign(
+  (ast) => {
+    let result = printCache.get(ast);
+    if (!result) {
+      result = print(ast);
+      printCache.set(ast, result);
+    }
+    return result;
+  },
+  {
+    reset() {
+      printCache = new AutoCleanedWeakCache(
+        cacheSizes.print || 2e3,
+        /* defaultCacheSizes.print */
+      );
+    },
+  },
+);
 print2.reset();
 if (__DEV__) {
-  registerGlobalCache("print", () => printCache ? printCache.size : 0);
+  registerGlobalCache("print", () => (printCache ? printCache.size : 0));
 }
 
 // node_modules/@apollo/client/utilities/graphql/transform.js
@@ -710,41 +755,52 @@ var TYPENAME_FIELD = {
   kind: Kind.FIELD,
   name: {
     kind: Kind.NAME,
-    value: "__typename"
-  }
+    value: "__typename",
+  },
 };
-var addTypenameToDocument = Object.assign(function(doc) {
-  return visit(doc, {
-    SelectionSet: {
-      enter(node, _key, parent) {
-        if (parent && parent.kind === Kind.OPERATION_DEFINITION) {
-          return;
-        }
-        const { selections } = node;
-        if (!selections) {
-          return;
-        }
-        const skip = selections.some((selection) => {
-          return selection.kind === Kind.FIELD && (selection.name.value === "__typename" || selection.name.value.lastIndexOf("__", 0) === 0);
-        });
-        if (skip) {
-          return;
-        }
-        const field = parent;
-        if (field.kind === Kind.FIELD && field.directives && field.directives.some((d) => d.name.value === "export")) {
-          return;
-        }
-        return __spreadProps(__spreadValues({}, node), {
-          selections: [...selections, TYPENAME_FIELD]
-        });
-      }
-    }
-  });
-}, {
-  added(field) {
-    return field === TYPENAME_FIELD;
-  }
-});
+var addTypenameToDocument = Object.assign(
+  function (doc) {
+    return visit(doc, {
+      SelectionSet: {
+        enter(node, _key, parent) {
+          if (parent && parent.kind === Kind.OPERATION_DEFINITION) {
+            return;
+          }
+          const { selections } = node;
+          if (!selections) {
+            return;
+          }
+          const skip = selections.some((selection) => {
+            return (
+              selection.kind === Kind.FIELD &&
+              (selection.name.value === "__typename" ||
+                selection.name.value.lastIndexOf("__", 0) === 0)
+            );
+          });
+          if (skip) {
+            return;
+          }
+          const field = parent;
+          if (
+            field.kind === Kind.FIELD &&
+            field.directives &&
+            field.directives.some((d) => d.name.value === "export")
+          ) {
+            return;
+          }
+          return __spreadProps(__spreadValues({}, node), {
+            selections: [...selections, TYPENAME_FIELD],
+          });
+        },
+      },
+    });
+  },
+  {
+    added(field) {
+      return field === TYPENAME_FIELD;
+    },
+  },
+);
 
 // node_modules/@apollo/client/utilities/graphql/operations.js
 function isOperation(document, operation) {
@@ -764,14 +820,18 @@ function isNetworkRequestInFlight(networkStatus) {
 
 // node_modules/@apollo/client/errors/utils.js
 function isBranded(error, name) {
-  return typeof error === "object" && error !== null && error[Symbol.for("apollo.error")] === name;
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    error[Symbol.for("apollo.error")] === name
+  );
 }
 function brand(error) {
   Object.defineProperty(error, Symbol.for("apollo.error"), {
     value: error.name,
     enumerable: false,
     writable: false,
-    configurable: false
+    configurable: false,
   });
 }
 
@@ -797,31 +857,33 @@ var CombinedProtocolErrors = class _CombinedProtocolErrors extends Error {
     return isBranded(error, "CombinedProtocolErrors");
   }
   /**
-  * A function that formats the error message used for the error's `message`
-  * property. Override this method to provide your own formatting.
-  * 
-  * @remarks
-  * 
-  * The `formatMessage` function is called by the `CombinedProtocolErrors`
-  * constructor to provide a formatted message as the `message` property of the
-  * `CombinedProtocolErrors` object. Follow the ["Providing a custom message
-  * formatter"](https://www.apollographql.com/docs/react/api/errors/CombinedProtocolErrors#providing-a-custom-message-formatter) guide to learn how to modify the message format.
-  * 
-  * @param errors - The array of GraphQL errors returned from the server in the
-  * `errors` field of the response.
-  * @param options - Additional context that could be useful when formatting
-  * the message.
-  */
+   * A function that formats the error message used for the error's `message`
+   * property. Override this method to provide your own formatting.
+   *
+   * @remarks
+   *
+   * The `formatMessage` function is called by the `CombinedProtocolErrors`
+   * constructor to provide a formatted message as the `message` property of the
+   * `CombinedProtocolErrors` object. Follow the ["Providing a custom message
+   * formatter"](https://www.apollographql.com/docs/react/api/errors/CombinedProtocolErrors#providing-a-custom-message-formatter) guide to learn how to modify the message format.
+   *
+   * @param errors - The array of GraphQL errors returned from the server in the
+   * `errors` field of the response.
+   * @param options - Additional context that could be useful when formatting
+   * the message.
+   */
   static formatMessage = defaultFormatMessage;
   /**
-  * The raw list of errors returned by the top-level `errors` field in the
-  * multipart HTTP subscription response.
-  */
+   * The raw list of errors returned by the top-level `errors` field in the
+   * multipart HTTP subscription response.
+   */
   errors;
   constructor(protocolErrors) {
-    super(_CombinedProtocolErrors.formatMessage(protocolErrors, {
-      defaultFormatMessage
-    }));
+    super(
+      _CombinedProtocolErrors.formatMessage(protocolErrors, {
+        defaultFormatMessage,
+      }),
+    );
     this.name = "CombinedProtocolErrors";
     this.errors = protocolErrors;
     brand(this);
@@ -857,59 +919,64 @@ var UnconventionalError = class _UnconventionalError extends Error {
 
 // node_modules/@apollo/client/errors/CombinedGraphQLErrors.js
 function defaultFormatMessage2(errors) {
-  return errors.filter((e) => e).map((e) => e.message || "Error message not found.").join("\n");
+  return errors
+    .filter((e) => e)
+    .map((e) => e.message || "Error message not found.")
+    .join("\n");
 }
 var CombinedGraphQLErrors = class _CombinedGraphQLErrors extends Error {
   /**
-  * A method that determines whether an error is a `CombinedGraphQLErrors`
-  * object. This method enables TypeScript to narrow the error type.
-  * 
-  * @example
-  * 
-  * ```ts
-  * if (CombinedGraphQLErrors.is(error)) {
-  *   // TypeScript now knows `error` is a `CombinedGraphQLErrors` object
-  *   console.log(error.errors);
-  * }
-  * ```
-  */
+   * A method that determines whether an error is a `CombinedGraphQLErrors`
+   * object. This method enables TypeScript to narrow the error type.
+   *
+   * @example
+   *
+   * ```ts
+   * if (CombinedGraphQLErrors.is(error)) {
+   *   // TypeScript now knows `error` is a `CombinedGraphQLErrors` object
+   *   console.log(error.errors);
+   * }
+   * ```
+   */
   static is(error) {
     return isBranded(error, "CombinedGraphQLErrors");
   }
   /**
-  * A function that formats the error message used for the error's `message`
-  * property. Override this method to provide your own formatting.
-  * 
-  * @remarks
-  * 
-  * The `formatMessage` function is called by the `CombinedGraphQLErrors`
-  * constructor to provide a formatted message as the `message` property of the
-  * `CombinedGraphQLErrors` object. Follow the ["Providing a custom message
-  * formatter"](https://www.apollographql.com/docs/react/api/errors/CombinedGraphQLErrors#providing-a-custom-message-formatter) guide to learn how to modify the message format.
-  * 
-  * @param errors - The array of GraphQL errors returned from the server in
-  * the `errors` field of the response.
-  * @param options - Additional context that could be useful when formatting
-  * the message.
-  */
+   * A function that formats the error message used for the error's `message`
+   * property. Override this method to provide your own formatting.
+   *
+   * @remarks
+   *
+   * The `formatMessage` function is called by the `CombinedGraphQLErrors`
+   * constructor to provide a formatted message as the `message` property of the
+   * `CombinedGraphQLErrors` object. Follow the ["Providing a custom message
+   * formatter"](https://www.apollographql.com/docs/react/api/errors/CombinedGraphQLErrors#providing-a-custom-message-formatter) guide to learn how to modify the message format.
+   *
+   * @param errors - The array of GraphQL errors returned from the server in
+   * the `errors` field of the response.
+   * @param options - Additional context that could be useful when formatting
+   * the message.
+   */
   static formatMessage = defaultFormatMessage2;
   /**
-  * The raw list of GraphQL errors returned by the `errors` field in the GraphQL response.
-  */
+   * The raw list of GraphQL errors returned by the `errors` field in the GraphQL response.
+   */
   errors;
   /**
-  * Partial data returned in the `data` field of the GraphQL response.
-  */
+   * Partial data returned in the `data` field of the GraphQL response.
+   */
   data;
   /**
-  * Extensions returned by the `extensions` field in the GraphQL response.
-  */
+   * Extensions returned by the `extensions` field in the GraphQL response.
+   */
   extensions;
   constructor(result, errors = result.errors || []) {
-    super(_CombinedGraphQLErrors.formatMessage(errors, {
-      result,
-      defaultFormatMessage: defaultFormatMessage2
-    }));
+    super(
+      _CombinedGraphQLErrors.formatMessage(errors, {
+        result,
+        defaultFormatMessage: defaultFormatMessage2,
+      }),
+    );
     this.errors = errors;
     this.data = result.data;
     this.extensions = result.extensions;
@@ -938,7 +1005,7 @@ var LinkError = {
    * }
    * ```
    */
-  is: (error) => registry.has(error)
+  is: (error) => registry.has(error),
 };
 
 // node_modules/@apollo/client/errors/LocalStateError.js
@@ -960,8 +1027,8 @@ var LocalStateError = class _LocalStateError extends Error {
     return isBranded(error, "LocalStateError");
   }
   /**
-  * The path to the field that caused the error.
-  */
+   * The path to the field that caused the error.
+   */
   path;
   constructor(message, options = {}) {
     super(message, { cause: options.sourceError });
@@ -991,17 +1058,17 @@ var ServerError = class _ServerError extends Error {
     return isBranded(error, "ServerError");
   }
   /**
-  * The raw [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object provided by the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
-  */
+   * The raw [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object provided by the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+   */
   response;
   /**
-  * The status code returned by the server in the response. This is provided as
-  * a shortcut for `response.status`.
-  */
+   * The status code returned by the server in the response. This is provided as
+   * a shortcut for `response.status`.
+   */
   statusCode;
   /**
-  * The raw response body text.
-  */
+   * The raw response body text.
+   */
   bodyText;
   constructor(message, options) {
     super(message);
@@ -1033,20 +1100,25 @@ var ServerParseError = class _ServerParseError extends Error {
     return isBranded(error, "ServerParseError");
   }
   /**
-  * The raw [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object provided by the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
-  */
+   * The raw [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object provided by the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+   */
   response;
   /**
-  * The status code returned by the server in the response. This is provided
-  * as a shortcut for `response.status`.
-  */
+   * The status code returned by the server in the response. This is provided
+   * as a shortcut for `response.status`.
+   */
   statusCode;
   /**
-  * The raw response body text.
-  */
+   * The raw response body text.
+   */
   bodyText;
   constructor(originalParseError, options) {
-    super(originalParseError instanceof Error ? originalParseError.message : "Could not parse server response", { cause: originalParseError });
+    super(
+      originalParseError instanceof Error
+        ? originalParseError.message
+        : "Could not parse server response",
+      { cause: originalParseError },
+    );
     this.name = "ServerParseError";
     this.response = options.response;
     this.statusCode = options.response.status;
@@ -1058,7 +1130,13 @@ var ServerParseError = class _ServerParseError extends Error {
 
 // node_modules/@apollo/client/errors/isErrorLike.js
 function isErrorLike(error) {
-  return error !== null && typeof error === "object" && typeof error.message === "string" && typeof error.name === "string" && (typeof error.stack === "string" || typeof error.stack === "undefined");
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    typeof error.message === "string" &&
+    typeof error.name === "string" &&
+    (typeof error.stack === "string" || typeof error.stack === "undefined")
+  );
 }
 
 // node_modules/@apollo/client/errors/index.js
@@ -1101,17 +1179,22 @@ function consumeMultipartBody(response) {
         \s*                          # optional whitespace
         (?:;|$)                        # match a semicolon or end of string
       */
-      /;\s*boundary=(?:'([^']+)'|"([^"]+)"|([^"'].+?))\s*(?:;|$)/i
+      /;\s*boundary=(?:'([^']+)'|"([^"]+)"|([^"'].+?))\s*(?:;|$)/i,
     );
-    const boundary = "\r\n--" + (match ? match[1] ?? match[2] ?? match[3] ?? "-" : "-");
+    const boundary =
+      "\r\n--" + (match ? (match[1] ?? match[2] ?? match[3] ?? "-") : "-");
     let buffer = "";
-    invariant(response.body && typeof response.body.getReader === "function", 60);
+    invariant(
+      response.body && typeof response.body.getReader === "function",
+      60,
+    );
     const stream = response.body;
     const reader = stream.getReader();
     let done = false;
     let encounteredBoundary = false;
     let value;
-    const passedFinalBoundary = () => encounteredBoundary && buffer[0] == "-" && buffer[1] == "-";
+    const passedFinalBoundary = () =>
+      encounteredBoundary && buffer[0] == "-" && buffer[1] == "-";
     try {
       while (!done) {
         ({ value, done } = yield new __await(reader.read()));
@@ -1124,13 +1207,18 @@ function consumeMultipartBody(response) {
           let message;
           [message, buffer] = [
             buffer.slice(0, bi),
-            buffer.slice(bi + boundary.length)
+            buffer.slice(bi + boundary.length),
           ];
           const i = message.indexOf("\r\n\r\n");
           const headers = parseHeaders(message.slice(0, i));
           const contentType2 = headers["content-type"];
-          if (contentType2 && contentType2.toLowerCase().indexOf("application/json") === -1) {
-            throw new Error("Unsupported patch content type: application/json is required.");
+          if (
+            contentType2 &&
+            contentType2.toLowerCase().indexOf("application/json") === -1
+          ) {
+            throw new Error(
+              "Unsupported patch content type: application/json is required.",
+            );
           }
           const body = message.slice(i);
           if (body) {
@@ -1151,20 +1239,31 @@ function consumeMultipartBody(response) {
 function readMultipartBody(response, nextValue) {
   return __async(this, null, function* () {
     try {
-      for (var iter = __forAwait(consumeMultipartBody(response)), more, temp, error; more = !(temp = yield iter.next()).done; more = false) {
+      for (
+        var iter = __forAwait(consumeMultipartBody(response)),
+          more,
+          temp,
+          error;
+        (more = !(temp = yield iter.next()).done);
+        more = false
+      ) {
         const body = temp.value;
         const result = parseJsonEncoding(response, body);
-        if (Object.keys(result).length == 0)
-          continue;
+        if (Object.keys(result).length == 0) continue;
         if (isApolloPayloadResult(result)) {
           if (Object.keys(result).length === 1 && result.payload === null) {
             return;
           }
           let next = __spreadValues({}, result.payload);
           if ("errors" in result) {
-            next.extensions = __spreadProps(__spreadValues({}, next.extensions), {
-              [PROTOCOL_ERRORS_SYMBOL]: new CombinedProtocolErrors(result.errors ?? [])
-            });
+            next.extensions = __spreadProps(
+              __spreadValues({}, next.extensions),
+              {
+                [PROTOCOL_ERRORS_SYMBOL]: new CombinedProtocolErrors(
+                  result.errors ?? [],
+                ),
+              },
+            );
           }
           nextValue(next);
         } else {
@@ -1177,8 +1276,7 @@ function readMultipartBody(response, nextValue) {
       try {
         more && (temp = iter.return) && (yield temp.call(iter));
       } finally {
-        if (error)
-          throw error[0];
+        if (error) throw error[0];
       }
     }
   });
@@ -1197,7 +1295,10 @@ function parseHeaders(headerText) {
 }
 function parseJsonEncoding(response, bodyText) {
   if (response.status >= 300) {
-    throw new ServerError(`Response not successful: Received status code ${response.status}`, { response, bodyText });
+    throw new ServerError(
+      `Response not successful: Received status code ${response.status}`,
+      { response, bodyText },
+    );
   }
   try {
     return JSON.parse(bodyText);
@@ -1220,20 +1321,28 @@ function parseResponse(response, bodyText) {
   return parseJsonEncoding(response, bodyText);
 }
 function parseAndCheckHttpResponse(operations) {
-  return (response) => response.text().then((bodyText) => {
-    const result = parseResponse(response, bodyText);
-    if (!Array.isArray(result) && !hasOwnProperty2.call(result, "data") && !hasOwnProperty2.call(result, "errors")) {
-      throw new ServerError(`Server response was malformed for query '${Array.isArray(operations) ? operations.map((op) => op.operationName) : operations.operationName}'.`, { response, bodyText });
-    }
-    return result;
-  });
+  return (response) =>
+    response.text().then((bodyText) => {
+      const result = parseResponse(response, bodyText);
+      if (
+        !Array.isArray(result) &&
+        !hasOwnProperty2.call(result, "data") &&
+        !hasOwnProperty2.call(result, "errors")
+      ) {
+        throw new ServerError(
+          `Server response was malformed for query '${Array.isArray(operations) ? operations.map((op) => op.operationName) : operations.operationName}'.`,
+          { response, bodyText },
+        );
+      }
+      return result;
+    });
 }
 
 // node_modules/@apollo/client/link/http/selectHttpOptionsAndBody.js
 var defaultHttpOptions = {
   includeQuery: true,
   includeExtensions: true,
-  preserveHeaderCase: false
+  preserveHeaderCase: false,
 };
 var defaultHeaders = {
   // headers are case insensitive (https://stackoverflow.com/a/5259004)
@@ -1250,44 +1359,58 @@ var defaultHeaders = {
   // with CSRF prevention enabled might block your GET request. See
   // https://www.apollographql.com/docs/apollo-server/security/cors/#preventing-cross-site-request-forgery-csrf
   // for more details.
-  "content-type": "application/json"
+  "content-type": "application/json",
 };
 var defaultOptions = {
-  method: "POST"
+  method: "POST",
 };
 var fallbackHttpConfig = {
   http: defaultHttpOptions,
   headers: defaultHeaders,
-  options: defaultOptions
+  options: defaultOptions,
 };
 var defaultPrinter = (ast, printer) => printer(ast);
 function selectHttpOptionsAndBody(operation, fallbackConfig, ...configs) {
   configs.unshift(fallbackConfig);
-  return selectHttpOptionsAndBodyInternal(operation, defaultPrinter, ...configs);
+  return selectHttpOptionsAndBodyInternal(
+    operation,
+    defaultPrinter,
+    ...configs,
+  );
 }
 function selectHttpOptionsAndBodyInternal(operation, printer, ...configs) {
   let options = {};
   let http = {};
   configs.forEach((config) => {
-    options = __spreadProps(__spreadValues(__spreadValues({}, options), config.options), {
-      headers: __spreadValues(__spreadValues({}, options.headers), config.headers)
-    });
+    options = __spreadProps(
+      __spreadValues(__spreadValues({}, options), config.options),
+      {
+        headers: __spreadValues(
+          __spreadValues({}, options.headers),
+          config.headers,
+        ),
+      },
+    );
     if (config.credentials) {
       options.credentials = config.credentials;
     }
-    options.headers.accept = (config.http?.accept || []).concat(options.headers.accept).join(",");
+    options.headers.accept = (config.http?.accept || [])
+      .concat(options.headers.accept)
+      .join(",");
     http = __spreadValues(__spreadValues({}, http), config.http);
   });
-  options.headers = removeDuplicateHeaders(options.headers, http.preserveHeaderCase);
+  options.headers = removeDuplicateHeaders(
+    options.headers,
+    http.preserveHeaderCase,
+  );
   const { operationName, extensions, variables, query } = operation;
   const body = { operationName, variables };
   if (http.includeExtensions && Object.keys(extensions || {}).length)
     body.extensions = extensions;
-  if (http.includeQuery)
-    body.query = printer(query, print2);
+  if (http.includeQuery) body.query = printer(query, print2);
   return {
     options,
-    body
+    body,
   };
 }
 function removeDuplicateHeaders(headers, preserveHeaderCase) {
@@ -1302,7 +1425,7 @@ function removeDuplicateHeaders(headers, preserveHeaderCase) {
   Object.keys(Object(headers)).forEach((name) => {
     headerData[name.toLowerCase()] = {
       originalName: name,
-      value: headers[name]
+      value: headers[name],
     };
   });
   const normalizedHeaders = {};
@@ -1369,14 +1492,16 @@ function rewriteURIForGET(chosenURI, body) {
     }
     addQueryParam("extensions", serializedExtensions);
   }
-  let fragment = "", preFragment = chosenURI;
+  let fragment = "",
+    preFragment = chosenURI;
   const fragmentStart = chosenURI.indexOf("#");
   if (fragmentStart !== -1) {
     fragment = chosenURI.substr(fragmentStart);
     preFragment = chosenURI.substr(0, fragmentStart);
   }
   const queryParamsPrefix = preFragment.indexOf("?") === -1 ? "?" : "&";
-  const newURI = preFragment + queryParamsPrefix + queryParams.join("&") + fragment;
+  const newURI =
+    preFragment + queryParamsPrefix + queryParams.join("&") + fragment;
   return { newURI };
 }
 
@@ -1388,7 +1513,16 @@ var ClientAwarenessLink = class extends ApolloLink {
       const clientOptions = client["queryManager"].clientOptions;
       const context = operation.getContext();
       {
-        const { name, version, transport = "headers" } = compact({}, clientOptions.clientAwareness, options.clientAwareness, context.clientAwareness);
+        const {
+          name,
+          version,
+          transport = "headers",
+        } = compact(
+          {},
+          clientOptions.clientAwareness,
+          options.clientAwareness,
+          context.clientAwareness,
+        );
         if (transport === "headers") {
           operation.setContext(({ headers, extensions }) => {
             return {
@@ -1396,26 +1530,30 @@ var ClientAwarenessLink = class extends ApolloLink {
                 // setting these first so that they can be overridden by user-provided headers
                 {
                   "apollographql-client-name": name,
-                  "apollographql-client-version": version
+                  "apollographql-client-version": version,
                 },
-                headers
-              )
+                headers,
+              ),
             };
           });
         }
       }
       {
-        const { transport = "extensions" } = compact({}, clientOptions.enhancedClientAwareness, options.enhancedClientAwareness);
+        const { transport = "extensions" } = compact(
+          {},
+          clientOptions.enhancedClientAwareness,
+          options.enhancedClientAwareness,
+        );
         if (transport === "extensions") {
           operation.extensions = compact(
             // setting these first so that it can be overridden by user-provided extensions
             {
               clientLibrary: {
                 name: "@apollo/client",
-                version: client.version
-              }
+                version: client.version,
+              },
             },
-            operation.extensions
+            operation.extensions,
           );
         }
       }
@@ -1426,28 +1564,29 @@ var ClientAwarenessLink = class extends ApolloLink {
 
 // node_modules/@apollo/client/link/http/BaseHttpLink.js
 var backupFetch = maybe(() => fetch);
-function noop() {
-}
+function noop() {}
 var BaseHttpLink = class extends ApolloLink {
   constructor(options = {}) {
-    let _a = options, {
-      uri = "/graphql",
-      fetch: preferredFetch,
-      print: print3 = defaultPrinter,
-      includeExtensions,
-      preserveHeaderCase,
-      useGETForQueries,
-      includeUnusedVariables = false
-    } = _a, requestOptions = __objRest(_a, [
-      "uri",
-      // use default global fetch if nothing passed in
-      "fetch",
-      "print",
-      "includeExtensions",
-      "preserveHeaderCase",
-      "useGETForQueries",
-      "includeUnusedVariables"
-    ]);
+    let _a = options,
+      {
+        uri = "/graphql",
+        fetch: preferredFetch,
+        print: print3 = defaultPrinter,
+        includeExtensions,
+        preserveHeaderCase,
+        useGETForQueries,
+        includeUnusedVariables = false,
+      } = _a,
+      requestOptions = __objRest(_a, [
+        "uri",
+        // use default global fetch if nothing passed in
+        "fetch",
+        "print",
+        "includeExtensions",
+        "preserveHeaderCase",
+        "useGETForQueries",
+        "includeUnusedVariables",
+      ]);
     if (__DEV__) {
       checkFetcher(preferredFetch || backupFetch);
     }
@@ -1455,7 +1594,7 @@ var BaseHttpLink = class extends ApolloLink {
       http: compact({ includeExtensions, preserveHeaderCase }),
       options: requestOptions.fetchOptions,
       credentials: requestOptions.credentials,
-      headers: requestOptions.headers
+      headers: requestOptions.headers,
     };
     super((operation) => {
       let chosenURI = selectURI(operation, uri);
@@ -1464,18 +1603,27 @@ var BaseHttpLink = class extends ApolloLink {
       if (isSubscriptionOperation(operation.query)) {
         http.accept = [
           "multipart/mixed;boundary=graphql;subscriptionSpec=1.0",
-          ...http.accept || []
+          ...(http.accept || []),
         ];
       }
       const contextConfig = {
         http,
         options: context.fetchOptions,
         credentials: context.credentials,
-        headers: context.headers
+        headers: context.headers,
       };
-      const { options: options2, body } = selectHttpOptionsAndBodyInternal(operation, print3, fallbackHttpConfig, linkConfig, contextConfig);
+      const { options: options2, body } = selectHttpOptionsAndBodyInternal(
+        operation,
+        print3,
+        fallbackHttpConfig,
+        linkConfig,
+        contextConfig,
+      );
       if (body.variables && !includeUnusedVariables) {
-        body.variables = filterOperationVariables(body.variables, operation.query);
+        body.variables = filterOperationVariables(
+          body.variables,
+          operation.query,
+        );
       }
       let controller = new AbortController();
       let cleanupController = () => {
@@ -1494,7 +1642,7 @@ var BaseHttpLink = class extends ApolloLink {
           cleanupController = noop;
         };
         controller.signal.addEventListener("abort", cleanupController, {
-          once: true
+          once: true,
         });
       }
       options2.signal = controller.signal;
@@ -1511,26 +1659,31 @@ var BaseHttpLink = class extends ApolloLink {
         } else {
           options2.body = JSON.stringify(body);
         }
-        const currentFetch = preferredFetch || maybe(() => fetch) || backupFetch;
+        const currentFetch =
+          preferredFetch || maybe(() => fetch) || backupFetch;
         const observerNext = observer.next.bind(observer);
-        currentFetch(chosenURI, options2).then((response) => {
-          operation.setContext({ response });
-          const ctype = response.headers?.get("content-type");
-          if (ctype !== null && /^multipart\/mixed/i.test(ctype)) {
-            return readMultipartBody(response, observerNext);
-          } else {
-            return parseAndCheckHttpResponse(operation)(response).then(observerNext);
-          }
-        }).then(() => {
-          cleanupController();
-          observer.complete();
-        }).catch((err) => {
-          cleanupController();
-          observer.error(err);
-        });
+        currentFetch(chosenURI, options2)
+          .then((response) => {
+            operation.setContext({ response });
+            const ctype = response.headers?.get("content-type");
+            if (ctype !== null && /^multipart\/mixed/i.test(ctype)) {
+              return readMultipartBody(response, observerNext);
+            } else {
+              return parseAndCheckHttpResponse(operation)(response).then(
+                observerNext,
+              );
+            }
+          })
+          .then(() => {
+            cleanupController();
+            observer.complete();
+          })
+          .catch((err) => {
+            cleanupController();
+            observer.error(err);
+          });
         return () => {
-          if (controller)
-            controller.abort();
+          if (controller) controller.abort();
         };
       });
     });
@@ -1542,7 +1695,7 @@ var HttpLink = class extends ApolloLink {
   constructor(options = {}) {
     const { left, right, request } = ApolloLink.from([
       new ClientAwarenessLink(options),
-      new BaseHttpLink(options)
+      new BaseHttpLink(options),
     ]);
     super(request);
     Object.assign(this, { left, right });
@@ -1581,6 +1734,6 @@ export {
   selectURI,
   rewriteURIForGET,
   HttpLink,
-  createHttpLink
+  createHttpLink,
 };
 //# sourceMappingURL=chunk-WIMS3ZYR.js.map

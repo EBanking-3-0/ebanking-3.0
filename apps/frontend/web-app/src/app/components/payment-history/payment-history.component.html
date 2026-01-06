@@ -1,9 +1,7 @@
 <div class="history-container">
   <div class="header">
     <h2>📜 Payment History</h2>
-    <button (click)="loadPayments()" [disabled]="loading" class="refresh-btn">
-      🔄 Refresh
-    </button>
+    <button (click)="loadPayments()" [disabled]="loading" class="refresh-btn">🔄 Refresh</button>
   </div>
 
   @if (loading) {
@@ -38,10 +36,10 @@
               </div>
               <div class="message">{{ payment.message }}</div>
               <div class="date">
-                Created: {{ payment.createdAt | date:'medium' }}
+                Created: {{ payment.createdAt | date: 'medium' }}
                 @if (payment.estimatedCompletionDate) {
-                  <br>
-                  Estimated: {{ payment.estimatedCompletionDate | date:'medium' }}
+                  <br />
+                  Estimated: {{ payment.estimatedCompletionDate | date: 'medium' }}
                 }
               </div>
             </div>

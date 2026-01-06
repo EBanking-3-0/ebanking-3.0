@@ -15,11 +15,12 @@ build:
         dockerfile: apps/infrastructure/graphql-gateway/Dockerfile
       hooks:
         before:
-          - command: ["./gradlew", ":apps:infrastructure:graphql-gateway:bootJar"]
+          - command:
+              ["./gradlew", ":apps:infrastructure:graphql-gateway:bootJar"]
       sync:
         manual:
-          - src: 'apps/infrastructure/graphql-gateway/src/main/resources/**/*'
-            dest: '/app/resources'
+          - src: "apps/infrastructure/graphql-gateway/src/main/resources/**/*"
+            dest: "/app/resources"
 
     # --- Core Services ---
     - image: ebanking/user-service
@@ -53,11 +54,12 @@ build:
         dockerfile: apps/frontend/web-app/Dockerfile
       hooks:
         before:
-          - command: ["npx", "nx", "build", "frontend", "--configuration=kubernetes"]
+          - command:
+              ["npx", "nx", "build", "frontend", "--configuration=kubernetes"]
       sync:
         manual:
-          - src: 'apps/frontend/web-app/src/**/*'
-            dest: '/app/src'
+          - src: "apps/frontend/web-app/src/**/*"
+            dest: "/app/src"
 
 deploy:
   helm:
