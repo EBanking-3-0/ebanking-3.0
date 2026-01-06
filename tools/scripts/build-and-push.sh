@@ -2,7 +2,7 @@
 set -e
 
 DOCKER_USER="khabirhakim"
-TAG="prod"
+TAG="staging"
 
 echo "🚀 Starting Build & Push process for user: $DOCKER_USER, tag: $TAG"
 
@@ -40,13 +40,13 @@ build_and_push() {
 # Core
 # build_and_push "user-service" "apps/services/user-service"
 # build_and_push "account-service" "apps/services/account-service"
-# build_and_push "graphql-gateway" "apps/infrastructure/graphql-gateway"
+build_and_push "graphql-gateway" "apps/infrastructure/graphql-gateway"
 # build_and_push "frontend" "apps/frontend/web-app"
 
 # Infrastructure Customizations
-echo "🐳 Building custom Keycloak image..."
-docker build -t $DOCKER_USER/ebanking-keycloak:$TAG -f tools/docker/keycloak/Dockerfile tools/docker/keycloak/
-docker push $DOCKER_USER/ebanking-keycloak:$TAG
+# echo "🐳 Building custom Keycloak image..."
+# docker build -t $DOCKER_USER/ebanking-keycloak:$TAG -f tools/docker/keycloak/Dockerfile tools/docker/keycloak/
+# docker push $DOCKER_USER/ebanking-keycloak:$TAG
 
 
 # Uncomment these as you need them

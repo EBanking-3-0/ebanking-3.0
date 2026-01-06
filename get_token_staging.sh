@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Execute the curl command to get the access token
-response=$(curl -s -X POST http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/token \
+# Execute the curl command to get the access token for staging
+response=$(curl -s -X POST https://bank-auth.h4k5.net/realms/ebanking-realm/protocol/openid-connect/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=password" \
   -d "client_id=ebanking-client" \
@@ -10,18 +10,10 @@ response=$(curl -s -X POST http://localhost:8092/realms/ebanking-realm/protocol/
   -d "password=password" \
   -d "scope=openid profile email")
 
-# Check if jq is installed
-if ! command -v jq &> /dev/null
-then
-    echo "jq could not be found. Please install it to parse the JSON response."
-    echo "Raw response: $response"
-    exit 1
-fi
-
 # Extract the access_token using jq
 access_token=$(echo "$response" | jq -r '.access_token')
 
-if [ -z "$access_token" ]; then
+if [ -z "$access_token" ] || [ "$access_token" == "null" ]; then
     echo "Failed to retrieve access token. Response:"
     echo "$response"
     exit 1

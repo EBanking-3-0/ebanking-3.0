@@ -15,6 +15,7 @@ env:
   EUREKA_CLIENT_ENABLED: "false"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://bank-auth.h4k5.net/realms/ebanking-realm
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://ebanking-infra-keycloakx-http.ebanking.svc.cluster.local:80/realms/ebanking-realm/protocol/openid-connect/certs
+  APP_FILE_STORAGE_PATH: "/tmp/uploads"
 
 extraEnv:
   - name: SPRING_DATASOURCE_PASSWORD
@@ -51,6 +52,7 @@ ingress:
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE, PATCH"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, X-Requested-With, Accept, Origin"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-always-set-header: "true"
   hosts:
     - host: bank-api-staging.h4k5.net
       paths:
