@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 export interface PaymentRequest {
   fromAccountId: number;
@@ -17,7 +16,7 @@ export interface PaymentRequest {
   invoiceReference?: string;
   amount: number;
   currency: string;
-  type?: string; // INTERNAL_TRANSFER, SEPA_TRANSFER, SCT_INSTANT, MOBILE_RECHARGE, etc.
+  type?: string;
   description?: string;
   endToEndId?: string;
   idempotencyKey: string;
@@ -40,85 +39,132 @@ export interface PaymentResponse {
   estimatedCompletionDate?: string;
 }
 
-export interface ScaVerificationRequest {
-  otpCode: string;
-}
+const INITIATE_INTERNAL_TRANSFER = gql`
+  mutation InitiateInternalTransfer($input: PaymentRequest!) {
+    initiateInternalTransfer(input: $input) {
+      paymentId
+      transactionId
+      status
+      amount
+      currency
+      message
+      createdAt
+    }
+  }
+`;
+
+const INITIATE_SEPA_TRANSFER = gql`
+  mutation InitiateSepaTransfer($input: PaymentRequest!) {
+    initiateSepaTransfer(input: $input) {
+      paymentId
+      transactionId
+      status
+      amount
+      currency
+      message
+      createdAt
+    }
+  }
+`;
+
+const INITIATE_INSTANT_TRANSFER = gql`
+  mutation InitiateInstantTransfer($input: PaymentRequest!) {
+    initiateInstantTransfer(input: $input) {
+      paymentId
+      transactionId
+      status
+      amount
+      currency
+      message
+      createdAt
+    }
+  }
+`;
+
+const INITIATE_MOBILE_RECHARGE = gql`
+  mutation InitiateMobileRecharge($input: PaymentRequest!) {
+    initiateMobileRecharge(input: $input) {
+      paymentId
+      transactionId
+      status
+      amount
+      currency
+      message
+      createdAt
+    }
+  }
+`;
+
+const AUTHORIZE_PAYMENT = gql`
+  mutation AuthorizePayment($paymentId: ID!, $otpCode: String!) {
+    authorizePayment(paymentId: $paymentId, otpCode: $otpCode) {
+      paymentId
+      status
+      message
+    }
+  }
+`;
+
+const MY_PAYMENTS = gql`
+  query MyPayments {
+    myPayments {
+      paymentId
+      transactionId
+      status
+      amount
+      currency
+      createdAt
+      paymentType
+    }
+  }
+`;
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = environment.paymentApiUrl;
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) { }
+  constructor(private apollo: Apollo) { }
 
-  private getUserId(userId?: string): string {
-    // If userId is provided, use it. Otherwise, try to get from AuthService.
-    // If AuthService doesn't have it (not logged in?), fallback to empty string or handle error.
-    // Ideally, we should throw if no user ID is available.
-    const id = userId || this.authService.getCurrentUserId();
-    if (!id) {
-      console.warn('No user ID available for payment request');
-      // Fallback or throw? For now, let's return a placeholder or throw.
-      // Given the previous code used '1' as default, maybe we should be careful.
-      // But the goal is to use the real ID.
-      throw new Error('User not authenticated');
-    }
-    return id;
+  createInternalTransfer(request: PaymentRequest): Observable<PaymentResponse> {
+    return this.apollo.mutate<{ initiateInternalTransfer: PaymentResponse }>({
+      mutation: INITIATE_INTERNAL_TRANSFER,
+      variables: { input: request }
+    }).pipe(map(result => result.data!.initiateInternalTransfer));
   }
 
-  createInternalTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
-    const id = this.getUserId(userId);
-    return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/internal?userId=${id}`,
-      request
-    );
+  createSepaTransfer(request: PaymentRequest): Observable<PaymentResponse> {
+    return this.apollo.mutate<{ initiateSepaTransfer: PaymentResponse }>({
+      mutation: INITIATE_SEPA_TRANSFER,
+      variables: { input: request }
+    }).pipe(map(result => result.data!.initiateSepaTransfer));
   }
 
-  createSepaTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
-    const id = this.getUserId(userId);
-    return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/sepa?userId=${id}`,
-      request
-    );
+  createInstantTransfer(request: PaymentRequest): Observable<PaymentResponse> {
+    return this.apollo.mutate<{ initiateInstantTransfer: PaymentResponse }>({
+      mutation: INITIATE_INSTANT_TRANSFER,
+      variables: { input: request }
+    }).pipe(map(result => result.data!.initiateInstantTransfer));
   }
 
-  createInstantTransfer(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
-    const id = this.getUserId(userId);
-    return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/instant?userId=${id}`,
-      request
-    );
+  createMobileRecharge(request: PaymentRequest): Observable<PaymentResponse> {
+    return this.apollo.mutate<{ initiateMobileRecharge: PaymentResponse }>({
+      mutation: INITIATE_MOBILE_RECHARGE,
+      variables: { input: request }
+    }).pipe(map(result => result.data!.initiateMobileRecharge));
   }
 
-  createMobileRecharge(request: PaymentRequest, userId?: string): Observable<PaymentResponse> {
-    const id = this.getUserId(userId);
-    return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/mobile-recharge?userId=${id}`,
-      request
-    );
-  }
-
-  getPayment(paymentId: number): Observable<PaymentResponse> {
-    return this.http.get<PaymentResponse>(
-      `${this.apiUrl}/${paymentId}`
-    );
-  }
-
-  getUserPayments(userId?: string): Observable<PaymentResponse[]> {
-    const id = this.getUserId(userId);
-    return this.http.get<PaymentResponse[]>(
-      `${this.apiUrl}/user?userId=${id}`
-    );
+  getUserPayments(): Observable<PaymentResponse[]> {
+    return this.apollo.query<{ myPayments: PaymentResponse[] }>({
+      query: MY_PAYMENTS,
+      fetchPolicy: 'network-only'
+    }).pipe(map(result => result.data?.myPayments || []));
   }
 
   authorizePayment(paymentId: number, otpCode: string): Observable<PaymentResponse> {
-    return this.http.post<PaymentResponse>(
-      `${this.apiUrl}/${paymentId}/authorize`,
-      { otpCode }
-    );
+    return this.apollo.mutate<{ authorizePayment: PaymentResponse }>({
+      mutation: AUTHORIZE_PAYMENT,
+      variables: { paymentId, otpCode }
+    }).pipe(map(result => result.data!.authorizePayment));
   }
 }

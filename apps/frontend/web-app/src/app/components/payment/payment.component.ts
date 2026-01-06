@@ -104,7 +104,7 @@ export class PaymentComponent implements OnInit {
     if (!this.currentUserId) return;
 
     this.paymentsLoading = true;
-    this.paymentService.getUserPayments(this.currentUserId).subscribe({
+    this.paymentService.getUserPayments().subscribe({
       next: (payments) => {
         this.userPayments = payments;
         this.paymentsLoading = false;
@@ -250,16 +250,16 @@ export class PaymentComponent implements OnInit {
 
     switch (this.activeTab) {
       case 'internal':
-        paymentObservable = this.paymentService.createInternalTransfer(request, userId);
+        paymentObservable = this.paymentService.createInternalTransfer(request);
         break;
       case 'sepa':
-        paymentObservable = this.paymentService.createSepaTransfer(request, userId);
+        paymentObservable = this.paymentService.createSepaTransfer(request);
         break;
       case 'instant':
-        paymentObservable = this.paymentService.createInstantTransfer(request, userId);
+        paymentObservable = this.paymentService.createInstantTransfer(request);
         break;
       case 'mobile':
-        paymentObservable = this.paymentService.createMobileRecharge(request, userId);
+        paymentObservable = this.paymentService.createMobileRecharge(request);
         break;
     }
 

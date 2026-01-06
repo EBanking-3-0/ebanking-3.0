@@ -38,16 +38,17 @@ public class UserController {
    */
   @GetMapping("/me")
   public ResponseEntity<UserProfileResponse> getCurrentUserProfile(Authentication authentication) {
-    // Extraire le keycloakId du JWT
+    System.out.println("DEBUG: getCurrentUserProfile called");
     String keycloakId = userService.getKeycloakIdFromJwt(authentication);
+    System.out.println("DEBUG: keycloakId extracted: " + keycloakId);
 
-    // Récupérer l'utilisateur (sans créer s'il n'existe pas)
     User user = userService.getUserByKeycloakIdOptional(keycloakId);
     if (user == null) {
-      return ResponseEntity.notFound().build();
+      System.out.println("DEBUG: User not found, creating new user from token");
+      user = userService.createUserFromToken(authentication);
     }
 
-    // Mapper et retourner le profil utilisateur
+    System.out.println("DEBUG: User found/created: " + user.getId());
     UserProfileResponse response = userProfileMapper.toResponse(user);
     return ResponseEntity.ok(response);
   }

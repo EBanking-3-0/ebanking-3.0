@@ -10,6 +10,9 @@ type Query {
 
   # AI Assistant queries
   conversation(id: ID!): Conversation
+  
+  # Payment queries
+  myPayments: [PaymentResponse]
 }
 
 type Mutation {
@@ -22,6 +25,13 @@ type Mutation {
   # AI Assistant mutations
   sendChatMessage(input: ChatMessageInput!): ChatResponse
   executeAction(input: ActionExecutionInput!): ActionExecutionResponse
+
+  # Payment mutations
+  initiateInternalTransfer(input: PaymentRequest!): PaymentResponse
+  initiateSepaTransfer(input: PaymentRequest!): PaymentResponse
+  initiateInstantTransfer(input: PaymentRequest!): PaymentResponse
+  initiateMobileRecharge(input: PaymentRequest!): PaymentResponse
+  authorizePayment(paymentId: ID!, otpCode: String!): PaymentResponse
 }
 
 type User {
@@ -148,4 +158,40 @@ input ChatMessageInput {
 input ActionExecutionInput {
   actionName: String!
   parameters: String!
+}
+
+type PaymentResponse {
+  paymentId: ID
+  transactionId: String
+  status: String
+  paymentType: String
+  amount: Float
+  currency: String
+  fees: Float
+  reference: String
+  uetr: String
+  message: String
+  createdAt: String
+  estimatedCompletionDate: String
+}
+
+input PaymentRequest {
+  fromAccountId: ID!
+  toAccountId: ID
+  toAccountNumber: String
+  toIban: String
+  beneficiaryName: String
+  beneficiarySwiftBic: String
+  phoneNumber: String
+  countryCode: String
+  merchantId: String
+  invoiceReference: String
+  amount: Float!
+  currency: String!
+  type: String
+  description: String
+  endToEndId: String
+  idempotencyKey: String!
+  ipAddress: String
+  userAgent: String
 }

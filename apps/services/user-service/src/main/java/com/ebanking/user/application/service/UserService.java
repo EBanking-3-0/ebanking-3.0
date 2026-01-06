@@ -27,8 +27,21 @@ public class UserService {
   // ==================== JWT EXTRACTION ====================
 
   public String getKeycloakIdFromJwt(Authentication authentication) {
-    Jwt jwt = (Jwt) authentication.getPrincipal();
-    return jwt.getClaim("sub");
+    if (authentication == null) {
+      System.err.println("DEBUG: Authentication is null");
+      throw new IllegalStateException("Authentication is null");
+    }
+    System.out.println("DEBUG: Authentication class: " + authentication.getClass().getName());
+    System.out.println(
+        "DEBUG: Principal class: " + authentication.getPrincipal().getClass().getName());
+
+    if (authentication.getPrincipal() instanceof Jwt jwt) {
+      return jwt.getClaim("sub");
+    } else {
+      System.err.println("DEBUG: Principal is not a JWT: " + authentication.getPrincipal());
+      throw new IllegalStateException(
+          "Principal is not a JWT: " + authentication.getPrincipal().getClass().getName());
+    }
   }
 
   public String getEmailFromJwt(Authentication authentication) {
@@ -55,6 +68,27 @@ public class UserService {
   @Transactional(readOnly = true)
   public User getUserByKeycloakIdOptional(String keycloakId) {
     return userRepository.findByKeycloakId(keycloakId).orElse(null);
+  }
+
+  @Transactional
+  public User createUserFromToken(Authentication authentication) {
+    String keycloakId = getKeycloakIdFromJwt(authentication);
+    User user =
+        User.builder()
+            .keycloakId(keycloakId)
+            .email(getEmailFromJwt(authentication) != null ? getEmailFromJwt(authentication) : "")
+            .firstName(
+                getFirstNameFromJwt(authentication) != null
+                    ? getFirstNameFromJwt(authentication)
+                    : "")
+            .lastName(
+                getLastNameFromJwt(authentication) != null
+                    ? getLastNameFromJwt(authentication)
+                    : "")
+            .phone("")
+            .status(User.UserStatus.PENDING_REVIEW)
+            .build();
+    return userRepository.save(user);
   }
 
   // ==================== KYC SUBMISSION (version multipart) ====================
