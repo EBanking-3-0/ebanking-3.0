@@ -40,23 +40,7 @@ public class InAppNotificationStrategy implements NotificationStrategy {
       Notification savedNotification = notificationRepository.save(notification);
 
       // Publish to WebSocket for real-time delivery
-      try {
-        webSocketPublisher.publishToUser(
-            savedNotification.getUserId(), notificationMapper.toDTO(savedNotification));
-
-        // Also update the unread count
-        long unreadCount =
-            notificationRepository.countUnreadInAppNotifications(
-                savedNotification.getUserId(),
-                com.ebanking.notification.enums.NotificationChannel.IN_APP);
-        webSocketPublisher.publishCountUpdate(savedNotification.getUserId(), unreadCount);
-
-      } catch (Exception wsError) {
-        // WebSocket publish failure shouldn't fail the notification
-        log.warn(
-            "Failed to publish notification via WebSocket, notification saved in DB: {}",
-            wsError.getMessage());
-      }
+      publishNotificationToWebSocket(savedNotification);
 
       log.info("In-app notification created successfully (ID: {})", savedNotification.getId());
 
@@ -64,6 +48,32 @@ public class InAppNotificationStrategy implements NotificationStrategy {
       log.error("Failed to create in-app notification for user: {}", notification.getUserId(), e);
       throw new NotificationSendException(
           "Failed to create in-app notification: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Publish in-app notification to WebSocket for real-time delivery to connected clients. WebSocket
+   * failures do not fail the notification operation since it's already persisted.
+   *
+   * @param savedNotification The notification that was persisted to database
+   */
+  private void publishNotificationToWebSocket(Notification savedNotification) {
+    try {
+      webSocketPublisher.publishToUser(
+          savedNotification.getUserId(), notificationMapper.toDTO(savedNotification));
+
+      // Also update the unread count
+      long unreadCount =
+          notificationRepository.countUnreadInAppNotifications(
+              savedNotification.getUserId(),
+              com.ebanking.notification.enums.NotificationChannel.IN_APP);
+      webSocketPublisher.publishCountUpdate(savedNotification.getUserId(), unreadCount);
+
+    } catch (Exception wsError) {
+      // WebSocket publish failure shouldn't fail the notification
+      log.warn(
+          "Failed to publish notification via WebSocket, notification saved in DB: {}",
+          wsError.getMessage());
     }
   }
 

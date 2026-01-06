@@ -19,7 +19,6 @@ import com.ebanking.shared.kafka.producer.EventProducer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -145,7 +144,7 @@ public class NotificationService {
               }
             })
         .filter(java.util.Objects::nonNull)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -172,7 +171,7 @@ public class NotificationService {
         .findUnreadInAppNotifications(userId, NotificationChannel.IN_APP)
         .stream()
         .map(this::toDTO)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**

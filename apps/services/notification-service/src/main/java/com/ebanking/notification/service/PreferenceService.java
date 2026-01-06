@@ -7,7 +7,6 @@ import com.ebanking.notification.enums.NotificationType;
 import com.ebanking.notification.mapper.NotificationPreferenceMapper;
 import com.ebanking.notification.repository.NotificationPreferenceRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,9 +33,7 @@ public class PreferenceService {
   public List<NotificationPreferenceDTO> getUserPreferences(Long userId) {
     log.debug("Fetching preferences for user: {}", userId);
 
-    return preferenceRepository.findByUserId(userId).stream()
-        .map(this::toDTO)
-        .collect(Collectors.toList());
+    return preferenceRepository.findByUserId(userId).stream().map(this::toDTO).toList();
   }
 
   /**
@@ -53,7 +50,7 @@ public class PreferenceService {
 
     return preferenceRepository.findByUserIdAndNotificationType(userId, notificationType).stream()
         .map(this::toDTO)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -139,7 +136,7 @@ public class PreferenceService {
 
     log.info("Saving {} preferences", preferences.size());
 
-    return preferences.stream().map(this::savePreference).collect(Collectors.toList());
+    return preferences.stream().map(this::savePreference).toList();
   }
 
   /**

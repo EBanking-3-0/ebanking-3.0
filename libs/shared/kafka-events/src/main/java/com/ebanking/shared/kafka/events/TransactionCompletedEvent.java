@@ -7,10 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Event published when a transaction is successfully completed. Published by:
- * Payment Service
- * Consumed by: Notification Service, Analytics Service, Account Service, Audit
- * Service
+ * Event published when a transaction is successfully completed. Published by: Payment Service
+ * Consumed by: Notification Service, Analytics Service, Account Service, Audit Service
  */
 @Data
 @SuperBuilder
