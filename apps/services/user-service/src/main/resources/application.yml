@@ -8,7 +8,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-            jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
   datasource:
     url: jdbc:postgresql://localhost:5432/ebanking
     username: ebanking
@@ -16,7 +17,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -33,11 +34,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
       enable-auto-commit: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8092/realms/ebanking-realm}
+
 
 eureka:
   client:
