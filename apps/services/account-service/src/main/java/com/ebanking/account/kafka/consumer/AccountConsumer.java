@@ -1,4 +1,4 @@
-package com.ebanking.account.consumer;
+package com.ebanking.account.kafka.consumer;
 
 import com.ebanking.shared.kafka.KafkaTopics;
 import com.ebanking.shared.kafka.events.TransactionCompletedEvent;

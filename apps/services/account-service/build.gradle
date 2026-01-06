@@ -48,6 +48,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 bootJar {
@@ -66,4 +67,18 @@ sonar {
 
 tasks.named("sonar") {
     dependsOn test
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        // events "passed", "skipped", "failed"
+        events = ["passed", "skipped", "failed"]
+        // exceptionFormat "full"
+        exceptionFormat = "full"
+        showExceptions = true
+        showStackTraces = true
+        showCauses = true
+        showStandardStreams = true
+    }
 }

@@ -7,8 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Event published when a transaction is successfully completed. Published by: Payment Service
- * Consumed by: Notification Service, Analytics Service, Account Service, Audit Service
+ * Event published when a transaction is successfully completed. Published by:
+ * Payment Service
+ * Consumed by: Notification Service, Analytics Service, Account Service, Audit
+ * Service
  */
 @Data
 @SuperBuilder
@@ -16,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class TransactionCompletedEvent extends BaseEvent {
 
   private Long transactionId;
+  private Long userId;
   private Long fromAccountId;
   private Long toAccountId;
   private String fromAccountNumber;
@@ -32,6 +35,7 @@ public class TransactionCompletedEvent extends BaseEvent {
 
   public TransactionCompletedEvent(
       Long transactionId,
+      Long userId,
       Long fromAccountId,
       Long toAccountId,
       String fromAccountNumber,
@@ -43,6 +47,7 @@ public class TransactionCompletedEvent extends BaseEvent {
       String description) {
     super(KafkaTopics.TRANSACTION_COMPLETED);
     this.transactionId = transactionId;
+    this.userId = userId;
     this.fromAccountId = fromAccountId;
     this.toAccountId = toAccountId;
     this.fromAccountNumber = fromAccountNumber;

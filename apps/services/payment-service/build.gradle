@@ -56,6 +56,10 @@ bootJar {
     archiveFileName = 'payment-service.jar'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 
 apply plugin: "org.sonarqube"
 

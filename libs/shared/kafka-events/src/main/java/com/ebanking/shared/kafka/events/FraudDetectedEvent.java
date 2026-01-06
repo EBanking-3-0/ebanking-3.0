@@ -7,7 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
- * Event published when fraud is detected in a transaction. Published by: Payment Service Consumed
+ * Event published when fraud is detected in a transaction. Published by:
+ * Payment Service Consumed
  * by: Notification Service, Audit Service
  */
 @Data
