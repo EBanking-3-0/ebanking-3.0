@@ -13,21 +13,30 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = false) // Désactiver @PreAuthorize pour les tests
+@EnableMethodSecurity
 public class SecurityConfig {
+
+  private final com.ebanking.security.JwtAuthConverter jwtAuthConverter;
+
+  public SecurityConfig(com.ebanking.security.JwtAuthConverter jwtAuthConverter) {
+    this.jwtAuthConverter = jwtAuthConverter;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    log.info(
-        "🔓 SecurityConfig: Configuration de sécurité pour tests (AUTH COMPLÈTEMENT DÉSACTIVÉE)");
+    log.info("🔒 SecurityConfig: Enabling JWT security");
 
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            auth -> auth.anyRequest().permitAll()) // TOUT est permis sans authentification
+            auth ->
+                auth.requestMatchers("/actuator/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()) // Require authentication for everything else
+        .oauth2ResourceServer(
+            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-    log.info("✅ SecurityConfig: Tous les endpoints sont accessibles sans authentification");
 
     return http.build();
   }

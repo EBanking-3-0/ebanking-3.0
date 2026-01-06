@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class AccountCreatedEvent extends BaseEvent {
 
   private Long accountId;
-  private Long userId;
+  private String userId;
   private String accountNumber;
   private String accountType;
   private String currency;
@@ -28,7 +28,7 @@ public class AccountCreatedEvent extends BaseEvent {
 
   public AccountCreatedEvent(
       Long accountId,
-      Long userId,
+      String userId,
       String accountNumber,
       String accountType,
       String currency,

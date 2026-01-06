@@ -34,7 +34,7 @@ public class Account {
   @Column private String iban; // IBAN pour SEPA/Instant transfers
 
   @Column(nullable = false)
-  private Long userId;
+  private String userId;
 
   @Column(nullable = false)
   private BigDecimal balance;

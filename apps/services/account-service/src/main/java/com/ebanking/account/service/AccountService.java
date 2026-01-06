@@ -30,7 +30,7 @@ public class AccountService {
   private final CurrencyService currencyService;
 
   @Transactional
-  public Account createAccount(Long userId, String accountType, String currency) {
+  public Account createAccount(String userId, String accountType, String currency) {
     String accountNumber = generateAccountNumber();
 
     String iban = generateIban(accountNumber);
@@ -108,7 +108,7 @@ public class AccountService {
     return true;
   }
 
-  public List<Account> getAccountsByUserId(Long userId) {
+  public List<Account> getAccountsByUserId(String userId) {
     return accountRepository.findByUserId(userId);
   }
 
@@ -136,8 +136,8 @@ public class AccountService {
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
-    String accountCode =
-        accountNumber.replaceAll("[^0-9]", "").substring(0, Math.min(11, accountNumber.length()));
+    String numericAccount = accountNumber.replaceAll("[^0-9]", "");
+    String accountCode = numericAccount.substring(0, Math.min(11, numericAccount.length()));
     // Compléter avec des zéros si nécessaire
     while (accountCode.length() < 11) {
       accountCode += "0";

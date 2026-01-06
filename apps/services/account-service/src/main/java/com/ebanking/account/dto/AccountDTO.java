@@ -15,7 +15,7 @@ public class AccountDTO {
   private Long id;
   private String accountNumber;
   private String iban; // IBAN pour SEPA/Instant transfers
-  private Long userId;
+  private String userId;
   private BigDecimal balance;
   private String currency;
   private String type;

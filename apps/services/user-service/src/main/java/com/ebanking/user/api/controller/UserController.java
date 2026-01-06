@@ -4,6 +4,8 @@ import com.ebanking.shared.dto.UserProfileResponse;
 import com.ebanking.user.api.mapper.UserProfileMapper;
 import com.ebanking.user.application.service.UserService;
 import com.ebanking.user.domain.model.User;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -92,5 +94,27 @@ public class UserController {
     // - Anonymiser les données sensibles
     // - Publier un événement Kafka pour les autres services
     return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * Endpoint de debug pour vérifier les détails de l'authentification
+   *
+   * @param authentication Authentication Spring Security
+   * @return Map contenant les détails de l'authentification
+   */
+  @GetMapping("/debug-auth")
+  public ResponseEntity<Map<String, Object>> debugAuth(Authentication authentication) {
+    Map<String, Object> debugInfo = new HashMap<>();
+    if (authentication != null) {
+      debugInfo.put("name", authentication.getName());
+      debugInfo.put("authorities", authentication.getAuthorities());
+      debugInfo.put("principal", authentication.getPrincipal());
+      debugInfo.put("details", authentication.getDetails());
+      debugInfo.put("isAuthenticated", authentication.isAuthenticated());
+      debugInfo.put("class", authentication.getClass().getName());
+    } else {
+      debugInfo.put("message", "No authentication found");
+    }
+    return ResponseEntity.ok(debugInfo);
   }
 }

@@ -32,19 +32,12 @@ public class AccountController {
   // @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
-    // todo: In a real app, extract userId from token or look it up.
-    // For simplicity, we trust the request or use a hardcoded/looked-up ID if
-    // available in token.
-    // Ideally: Long userId = Long.parseLong(authentication.getName()); // if
-    // subject is ID
-    // Or using JwtAuthConverter to put ID in principal.
-
-    // For this demo, we'll assume userId is passed in request, but verify it
-    // matches token if
-    // needed.
+    org.springframework.security.oauth2.jwt.Jwt jwt =
+        (org.springframework.security.oauth2.jwt.Jwt) authentication.getPrincipal();
+    String userId = jwt.getClaimAsString("sub");
 
     Account account =
-        accountService.createAccount(request.getUserId(), request.getType(), request.getCurrency());
+        accountService.createAccount(userId, request.getType(), request.getCurrency());
     return ResponseEntity.ok(accountMapper.mapToDTO(account));
   }
 
@@ -71,7 +64,7 @@ public class AccountController {
 
   @GetMapping("/my-accounts")
   // @PreAuthorize("hasRole('user')")
-  public ResponseEntity<List<AccountDTO>> getMyAccounts(@RequestParam Long userId) {
+  public ResponseEntity<List<AccountDTO>> getMyAccounts(@RequestParam String userId) {
     // Again, verify userId matches token in production
     return ResponseEntity.ok(
         accountService.getAccountsByUserId(userId).stream()

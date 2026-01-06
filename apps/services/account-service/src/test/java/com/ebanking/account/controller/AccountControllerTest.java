@@ -1,7 +1,6 @@
 package com.ebanking.account.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,12 +32,15 @@ public class AccountControllerTest {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Test
-  @WithMockUser(roles = "user")
-  void testCreateAccount() throws Exception {
-    AccountDTO request = AccountDTO.builder().userId(1L).type("SAVINGS").currency("USD").build();
+  @MockBean private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
 
-    Account account = Account.builder().id(1L).userId(1L).accountNumber("1234567890").build();
+  @Test
+  void testCreateAccount() throws Exception {
+    AccountDTO request =
+        AccountDTO.builder().userId("user-uuid-123").type("SAVINGS").currency("USD").build();
+
+    Account account =
+        Account.builder().id(1L).userId("user-uuid-123").accountNumber("1234567890").build();
 
     when(accountService.createAccount(any(), any(), any())).thenReturn(account);
     when(accountMapper.mapToDTO(any(Account.class))).thenReturn(request);
@@ -46,6 +48,10 @@ public class AccountControllerTest {
     mockMvc
         .perform(
             post("/api/accounts")
+                .with(
+                    org.springframework.security.test.web.servlet.request
+                        .SecurityMockMvcRequestPostProcessors.jwt()
+                        .jwt(jwt -> jwt.claim("sub", "user-uuid-123")))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -55,11 +61,11 @@ public class AccountControllerTest {
   @Test
   @WithMockUser(roles = "user")
   void testGetMyAccounts() throws Exception {
-    when(accountService.getAccountsByUserId(anyLong())).thenReturn(List.of(new Account()));
+    when(accountService.getAccountsByUserId(any())).thenReturn(List.of(new Account()));
     when(accountMapper.mapToDTO(any())).thenReturn(new AccountDTO());
 
     mockMvc
-        .perform(get("/api/accounts/my-accounts").param("userId", "1"))
+        .perform(get("/api/accounts/my-accounts").param("userId", "user-uuid-123"))
         .andExpect(status().isOk());
   }
 

@@ -36,7 +36,7 @@ public class AccountServiceTest {
 
   @Test
   void testCreateAccount() {
-    Long userId = 1L;
+    String userId = "user-uuid-123";
     AccountType accountType = AccountType.SAVINGS;
     String currency = "USD";
     String accountNumber = generateAccountNumber();
@@ -71,7 +71,8 @@ public class AccountServiceTest {
   @Test
   void testDeleteAccount() throws AccountNotFoundException {
     Long accountId = 1L;
-    Account account = Account.builder().id(accountId).userId(1L).accountNumber("123").build();
+    Account account =
+        Account.builder().id(accountId).userId("user-uuid-123").accountNumber("123").build();
 
     when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
@@ -99,7 +100,7 @@ public class AccountServiceTest {
         Account.builder()
             .id(accountId)
             .balance(initialBalance)
-            .userId(1L)
+            .userId("user-uuid-123")
             .accountNumber("123")
             .build();
 
@@ -127,7 +128,7 @@ public class AccountServiceTest {
 
   @Test
   void testGetAccountsByUserId() {
-    Long userId = 1L;
+    String userId = "user-uuid-123";
     List<Account> accounts =
         List.of(Account.builder().userId(userId).build(), Account.builder().userId(userId).build());
 
@@ -149,7 +150,7 @@ public class AccountServiceTest {
             .id(accountId)
             .balance(BigDecimal.valueOf(100))
             .status("ACTIVE")
-            .userId(1L)
+            .userId("user-uuid-123")
             .accountNumber("123")
             .build();
 
@@ -173,7 +174,7 @@ public class AccountServiceTest {
         Account.builder()
             .id(accountId)
             .balance(initialBalance)
-            .userId(1L)
+            .userId("user-uuid-123")
             .accountNumber("123")
             .build();
 
@@ -229,10 +230,8 @@ public class AccountServiceTest {
     String checkDigits = "76"; // Valeur par défaut pour la démo
     String bankCode = "20041"; // Code banque fictif
     String branchCode = "01005"; // Code agence fictif
-    String accountCode =
-        accountNumber
-            .replaceAll("[^0-9]", "")
-            .substring(0, Math.min(accountNumber.length() + 1, 4));
+    String numericAccount = accountNumber.replaceAll("[^0-9]", "");
+    String accountCode = numericAccount.substring(0, Math.min(11, numericAccount.length()));
     // Compléter avec des zéros si nécessaire
     while (accountCode.length() < 11) {
       accountCode += "0";
