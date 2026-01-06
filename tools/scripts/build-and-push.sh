@@ -37,17 +37,17 @@ build_and_push() {
 
 # --- Services to Process ---
 
-# 1. User Service
-build_and_push "user-service" "apps/services/user-service"
-
-# 2. Account Service
-build_and_push "account-service" "apps/services/account-service"
-
-# 3. GraphQL Gateway
-build_and_push "graphql-gateway" "apps/infrastructure/graphql-gateway"
-
-# 4. Frontend (Web App)
+# Core
+# build_and_push "user-service" "apps/services/user-service"
+# build_and_push "account-service" "apps/services/account-service"
+# build_and_push "graphql-gateway" "apps/infrastructure/graphql-gateway"
 # build_and_push "frontend" "apps/frontend/web-app"
+
+# Infrastructure Customizations
+echo "🐳 Building custom Keycloak image..."
+docker build -t $DOCKER_USER/ebanking-keycloak:$TAG -f tools/docker/keycloak/Dockerfile tools/docker/keycloak/
+docker push $DOCKER_USER/ebanking-keycloak:$TAG
+
 
 # Uncomment these as you need them
 # build_and_push "auth-service" "apps/services/auth-service"
