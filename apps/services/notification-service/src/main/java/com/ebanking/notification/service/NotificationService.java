@@ -17,9 +17,9 @@ import com.ebanking.shared.kafka.events.NotificationFailedEvent;
 import com.ebanking.shared.kafka.events.NotificationSentEvent;
 import com.ebanking.shared.kafka.producer.EventProducer;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -333,9 +333,11 @@ public class NotificationService {
       return request.getContent();
     }
 
-    // Add user info to template variables - create mutable copy to avoid UnsupportedOperationException
-    Map<String, Object> variables = new HashMap<>(
-        (request.getTemplateVariables() != null) ? request.getTemplateVariables() : Map.of());
+    // Add user info to template variables - create mutable copy to avoid
+    // UnsupportedOperationException
+    Map<String, Object> variables =
+        new HashMap<>(
+            (request.getTemplateVariables() != null) ? request.getTemplateVariables() : Map.of());
 
     variables.put("firstName", userContact.getFirstName());
     variables.put("lastName", userContact.getLastName());
