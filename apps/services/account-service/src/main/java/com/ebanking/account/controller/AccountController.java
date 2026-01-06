@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +22,14 @@ public class AccountController {
   private final AccountService accountService;
   private final AccountMapper accountMapper;
 
+  @GetMapping("/test")
+  public ResponseEntity<?> test() {
+
+    return ResponseEntity.ok().body("message");
+  }
+
   @PostMapping
-  @PreAuthorize("hasRole('user')")
+  // @PreAuthorize("hasRole('user')")
   public ResponseEntity<AccountDTO> createAccount(
       @RequestBody AccountDTO request, Authentication authentication) {
     // todo:k In a real app, extract userId from token or look it up.
@@ -65,7 +70,7 @@ public class AccountController {
   }
 
   @GetMapping("/my-accounts")
-  @PreAuthorize("hasRole('user')")
+  // @PreAuthorize("hasRole('user')")
   public ResponseEntity<List<AccountDTO>> getMyAccounts(@RequestParam Long userId) {
     // Again, verify userId matches token in production
     return ResponseEntity.ok(

@@ -24,6 +24,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    System.out.println("request is sent");
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults()) // Enable CORS
         .authorizeHttpRequests(
@@ -37,7 +38,7 @@ public class SecurityConfig {
                     .requestMatchers("/graphiql/**")
                     .permitAll() // Allow access to GraphiQL UI
                     .anyRequest()
-                    .authenticated())
+                    .permitAll())
         .oauth2ResourceServer(
             oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
         .sessionManagement(

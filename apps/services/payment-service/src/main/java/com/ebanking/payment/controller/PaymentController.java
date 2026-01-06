@@ -25,6 +25,12 @@ public class PaymentController {
   private final PaymentQueryService paymentQueryService;
   private final PaymentService paymentService;
 
+  @GetMapping("/test")
+  public ResponseEntity<?> test() {
+
+    return ResponseEntity.ok().body("message");
+  }
+
   @PostMapping("/internal")
   // @PreAuthorize("hasRole('user')") // Commenté temporairement pour les tests
   public ResponseEntity<PaymentResponse> createInternalTransfer(

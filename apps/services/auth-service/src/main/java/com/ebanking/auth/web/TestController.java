@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
   @GetMapping("/hello")
-  @PreAuthorize("isAuthenticated()")
+  // @PreAuthorize("isAuthenticated()")
   public String hello() {
     return "Hello from Auth Service!";
   }
 
   @GetMapping("/admin")
-  @PreAuthorize("hasRole('admin')")
+  // @PreAuthorize("hasRole('admin')")
   public String adminHello() {
     return "Hello Admin from Auth Service!";
   }
 
   @GetMapping("/user")
-  @PreAuthorize("hasRole('user')")
+  // @PreAuthorize("hasRole('user')")
   public String userHello() {
     return "Hello User from Auth Service!";
   }

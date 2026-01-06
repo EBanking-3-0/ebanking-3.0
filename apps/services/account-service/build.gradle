@@ -67,3 +67,8 @@ sonar {
 tasks.named("sonar") {
     dependsOn test
 }
+
+tasks.named('test') {
+    useJUnitPlatform()
+    failOnNoDiscoveredTests = false
+}

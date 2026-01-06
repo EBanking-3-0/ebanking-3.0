@@ -7,5 +7,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GdprConsentRepository extends JpaRepository<GdprConsent, UUID> {
-  Optional<GdprConsent> findByUserAndConsentTypeAndGranted(User user, GdprConsent.ConsentType consentType, boolean granted);
+  Optional<GdprConsent> findByUserAndConsentTypeAndGranted(
+      User user, GdprConsent.ConsentType consentType, boolean granted);
 }

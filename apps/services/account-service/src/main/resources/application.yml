@@ -33,8 +33,22 @@ spring:
   #   oauth2:
   #     resourceserver:
   #       jwt:
-  #         issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080/realms/ebanking}
+  #         issuer-uri: ${JWT_ISSUER_URI:http://localhost:8082/realms/ebanking}
   #         jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8080/realms/ebanking/protocol/openid-connect/certs}
+
+
+
+  # security:
+  #   oauth2:
+  #     resourceserver:
+  #       jwt:
+  #           jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
+  # security:
+  #   oauth2:
+  #     resourceserver:
+  #       jwt:
+  #         issuer-uri: http://localhost:8092/realms/ebanking-realm
+  #         jwk-set-uri: http://localhost:8092/realms/ebanking-realm/protocol/openid-connect/certs
 
 eureka:
   client:
@@ -44,6 +58,12 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
+
+
+# keycloak:
+#   realm: ebanking-realm-realm
+#   auth-server-url: http://localhost:8092
+
 
 management:
   endpoints:

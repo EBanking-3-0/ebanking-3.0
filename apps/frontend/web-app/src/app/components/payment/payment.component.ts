@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentService, PaymentRequest, PaymentResponse } from '../../services/payment.service';
 import { AccountService, AccountDTO } from '../../services/account.service';
-import { KeycloakService } from 'keycloak-angular';
+import Keycloak from 'keycloak-js';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -43,7 +43,7 @@ export class PaymentComponent implements OnInit {
     private fb: FormBuilder,
     private paymentService: PaymentService,
     private accountService: AccountService,
-    private keycloak: KeycloakService
+    private keycloak: Keycloak
   ) {
     this.initializeForms();
     this.initializeOtpForm();
@@ -63,9 +63,8 @@ export class PaymentComponent implements OnInit {
     // Code original commenté pour les tests
     /*
     try {
-      const isLoggedIn = await this.keycloak.isLoggedIn();
-      if (isLoggedIn) {
-        const tokenParsed = this.keycloak.getKeycloakInstance().idTokenParsed;
+      if (this.keycloak.authenticated) {
+        const tokenParsed = this.keycloak.idTokenParsed;
         // Try to get userId from token claims
         const userIdClaim = tokenParsed?.['userId'] || tokenParsed?.['sub'];
         if (userIdClaim) {
